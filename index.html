@@ -3176,7 +3176,7 @@
     { name: 'The Gilded Pit', blurb: 'Gold on every wall, and every wager is paid in blood.', goldMul: 2.2, priceMul: 1.6,
       pools: [['imp', 'hound', 'tithe'], ['hound', 'broker', 'wight', 'gilder', 'ember', 'ratswarm', duo('imp', 'hound')], ['broker', 'wight', 'gilder', 'ember', 'tithe', 'ratswarm', duo('hound', 'wight')]], elites: ['golem', 'chancellor'], boss: 'house' }
   ];
-  var LEVELS = [125, 275, 520, 835, 1225, 1715, 2305, 2990];
+  var LEVELS = [100, 250, 450, 700, 1000, 1350, 1750, 2200];
   function xpFor(def) { if (def.id === 'dummy') return 1; var st = (S && S.player && S.player.ab && S.player.ab.study) || 0; return Math.round((def.dice * 40 + (def.kind === 'boss' ? 100 : 0)) * (def.xpMul || 1) * (1 + 0.15 * st) * (1 + 0.01 * webN('xp'))); }
   // items: buff items you carry in three slots. (Seals are the upgrades you put on your dice.)
   var INV_SLOTS = 3, BAG_SLOTS = 3;
