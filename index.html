@@ -4821,6 +4821,7 @@
     return ev;
   }
   function sumVal(v) { return v === 0 ? 6 : v; }
+  function evVal(v, low) { return v === 0 ? (low ? 1 : 6) : v; }
   function evToggle(i) {
     if (!S.player.dice[i] || !S.player.dice[i].up) return;
     var s = S.event.sel, k = s.indexOf(i);
@@ -4830,7 +4831,7 @@
   function simPick() {
     var ds = S.event.sel.map(function (i) { return S.player.dice[i]; }), N = 1500, w = 0, l = 0, hi = S.event.info.hi, lo = S.event.info.lo, low = !!S.event.info.low;
     for (var t = 0; t < N; t++) {
-      var sum = 0; ds.forEach(function (d) { var r = rollDie(d); sum += sumVal(r.val); r.babies.forEach(function (kb) { sum += sumVal(kb.val); }); });
+      var sum = 0; ds.forEach(function (d) { var r = rollDie(d); sum += evVal(r.val, low); r.babies.forEach(function (kb) { sum += evVal(kb.val, low); }); });
       if (low) { if (sum <= lo) w++; else if (sum >= hi) l++; } else if (sum >= hi) w++; else if (sum <= lo) l++;
     }
     return { win: Math.round(w / N * 100), lose: Math.round(l / N * 100) };
@@ -4843,8 +4844,8 @@
     ev.sel.forEach(function (i) {
       var d = p.dice[i], r = rollDie(d), mods = badgeKeys(d);
       entries.push({ val: r.val, mods: mods, baby: false, gold: r.gold });
-      sum += sumVal(r.val); goldGot += r.gold; healN += r.heal; S.shopLuck = (S.shopLuck || 0) + (r.luck || 0);
-      r.babies.forEach(function (kb) { entries.push({ val: kb.val, mods: kb.bm || [], baby: true, gold: 0 }); sum += sumVal(kb.val); });
+      sum += evVal(r.val, info.low); goldGot += r.gold; healN += r.heal; S.shopLuck = (S.shopLuck || 0) + (r.luck || 0);
+      r.babies.forEach(function (kb) { entries.push({ val: kb.val, mods: kb.bm || [], baby: true, gold: 0 }); sum += evVal(kb.val, info.low); });
     });
     p.gold += goldGot;
     var healedN = healN ? heal(p, healN) : 0;
@@ -5648,7 +5649,7 @@
           }).join('');
           var odds = '';
           if (ev.sel.length === 2) { var o = simPick(); odds = '<p class="odds">With these two dice: about <span class="good">' + o.win + '%</span> to win, <span class="bad">' + o.lose + '%</span> to lose. A wild face counts as 6 here, and baby dice add to the total.</p>'; }
-          else odds = '<p class="odds">Pick two dice. ' + (info.low ? 'Low faces help here. Wild faces count as 6.' : 'Better dice, better odds.') + (ev.type === 'hardy' ? '' : ' Or slink away.') + '</p>';
+          else odds = '<p class="odds">Pick two dice. ' + (info.low ? 'Low faces help here.' : 'Better dice, better odds.') + (ev.type === 'hardy' ? '' : ' Or slink away.') + '</p>';
           h = '<h2>' + info.title + '</h2><p class="muted">' + info.flavor + '</p>' + bands + '<div class="dicegrid">' + cards + '</div>' + odds +
             '<div class="row"><button type="button" class="btn torch" data-act="evRoll"' + (ev.sel.length === 2 ? '' : ' disabled') + '>Roll the dice</button>' + walk + '</div>';
         }
