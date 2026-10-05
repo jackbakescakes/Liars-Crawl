@@ -2239,7 +2239,7 @@
     optimist: { name: 'Optimistic Die', desc: 'Increase its face value by one, a 6 becomes wild.', base: 40, weight: 2 },
     peeper: { name: 'Curious Die', desc: 'Whenever this die rolls a 1, you gain 1 peek.', base: 40, weight: 3 },
     poly: { name: 'Truncated Die', desc: 'This die is cut into a d8. Every side above 6 is wild.', base: 85, weight: 1 },
-    fickle: { name: 'Fickle Die', desc: 'Whenever this die rolls a 1, you gain 1 reroll.', base: 45, weight: 3 }
+    fickle: { name: 'Fickle Die', desc: 'Whenever this die rolls a 1, you have a 50% chance to gain a reroll.', base: 45, weight: 3 }
   };
   var MOD_ORDER = ['golden', 'weighted', 'odd', 'haggler', 'pregnant', 'healer', 'optimist', 'peeper', 'fickle', 'poly'];
   var TINT_ORDER = ['golden', 'healer', 'pregnant', 'optimist', 'weighted', 'odd', 'haggler', 'peeper', 'fickle', 'poly'];
@@ -2274,7 +2274,7 @@
     if (m === 'pregnant') return 'Whenever this die shows a 6, it spawns ' + n + ' baby dice that last one round and inherit all of its upgrades. They count as health while they last.';
     if (m === 'healer') return 'Whenever this die shows a 6, it feeds on the table and you recover ' + n + ' HP.';
     if (m === 'peeper') return 'Whenever this die rolls a 1, you gain ' + n + ' peeks.';
-    if (m === 'fickle') return 'Whenever this die rolls a 1, you gain ' + n + ' rerolls.';
+    if (m === 'fickle') return 'Whenever this die rolls a 1, you get ' + n + ' separate 50% chances to gain a reroll.';
     if (m === 'poly') return 'This die grows to a d' + (6 + 2 * n) + '. Every side above 6 is wild.';
     return 'Increase its face value by ' + (n === 2 ? 'two' : 'three') + ', ' + (n === 2 ? 'a 5 or 6' : 'a 4, 5 or 6') + ' becomes wild.';
   }
@@ -2327,7 +2327,7 @@
     }
     if (nO) v = (v === 0 || v + nO > 6) ? 0 : v + nO;
     var r = { val: v, sv: (v === 0 && polyHi) ? polyHi : 0, gold: 0, heal: 0, baby: 0, babies: [], luck: 0, peek: 0, reroll: 0, poly: ix >= 6 ? 1 : 0, opt: nO }, hi = (v === 6 || v === 0);
-    if (v === 1) { var nHg = modCount(d, 'haggler'); if (nHg) r.luck = HAG[Math.min(3, nHg)]; r.peek = modCount(d, 'peeper'); r.reroll = modCount(d, 'fickle'); }
+    if (v === 1) { var nHg = modCount(d, 'haggler'); if (nHg) r.luck = HAG[Math.min(3, nHg)]; r.peek = modCount(d, 'peeper'); for (var fk = modCount(d, 'fickle'); fk > 0; fk--) { if (Math.random() < 0.5) r.reroll++; } }
     if (hi) { var nG = modCount(d, 'golden'), nH = modCount(d, 'healer'); if (nG) r.gold = bonusGold(GOLD_PER_SIX * nG); if (nH) r.heal = nH; }
     var nP = modCount(d, 'pregnant');
     if (hi && nP && !noBabies) {
@@ -4571,7 +4571,7 @@
   var ITEM_RAR = { gold: 'common', goldU: 'uncommon', goldR: 'rare', goldE: 'epic', poly: 'epic', heal: 'common', peek: 'common', reroll: 'uncommon', face: 'uncommon', load: 'uncommon', golden: 'uncommon', odd: 'common', haggler: 'common', wild: 'rare', weighted: 'rare', healer: 'epic', optimist: 'rare', maxdie: 'epic', cup: 'epic', pregnant: 'epic', maxdie2: 'epic', cup2: 'epic', satchel: 'rare', pendant: 'epic', edge: 'rare' };
   ITEM_ORDER.forEach(function (k) { ITEM_RAR[k] = ITEMS[k].rar; });
   ['potion', 'ring', 'gauntlet', 'crown'].forEach(function (k) { ITEM_RAR[k] = 'common'; });
-  ITEM_RAR.d20 = 'legendary'; ITEM_RAR.odd = 'common'; ITEM_RAR.haggler = 'common'; ITEM_RAR.peeper = 'uncommon'; ITEM_RAR.fickle = 'uncommon'; ITEM_RAR.poly = 'rare';
+  ITEM_RAR.d20 = 'legendary'; ITEM_RAR.odd = 'common'; ITEM_RAR.haggler = 'common'; ITEM_RAR.peeper = 'uncommon'; ITEM_RAR.fickle = 'common'; ITEM_RAR.poly = 'rare';
   function rarLegend(lvl, luck) {
     var tot = 0, k; for (k in RARITY) tot += rarW(k, lvl, luck);
     var dec = (luck || 0) > 0, fmt = function (x) { var v = dec ? Math.round(x * 10) / 10 : Math.round(x); return String(v); };
