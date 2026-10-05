@@ -2076,6 +2076,8 @@
 
     /* scenes (Dealer cards, scratch card, rake, roulette) stay a sensible width and never spill over the portrait */
     body[data-screen="combat"]:not([data-screen="title"]):not([data-screen="char"]):not([data-screen="rules"]):not([data-screen="tree"]) .felt .scene { left: 50%; right: auto; width: 1180px; max-width: 100%; transform: translateX(-50%); gap: 8px; padding: 10px 14px 14px; }
+
+    .shieldtag::after { display: none !important; animation: none !important; }
 </style>
 
 <main class="wrap">
@@ -3213,7 +3215,7 @@
     bleach: { txt: 'Blank an enemy die. It counts for nothing this round.', fl: 'It scrubs out more than stains.', type: 'Target', key: 'bleach' },
     eyeglass: { txt: 'Peek at one enemy die.', fl: 'One lens left. One lie fewer.', type: 'Target', key: 'eye' },
     smoke: { txt: 'Take no damage from the next call.', fl: 'Cough. Vanish. Live.', type: 'Self' },
-    armour: { txt: 'Gain 2 armour. Each point blocks 1 damage.', fl: 'Heavy. Ugly. Worth it.', type: 'Self' },
+    armour: { txt: 'Gain 2 armour. Each point blocks 1 damage.', fl: 'Heavy. Ugly. Worth it.', type: 'Target', key: 'armour' },
     mead: { txt: 'The enemy’s next bid is for the wrong face.', fl: 'Sweet, strong, and not for sharing.', type: 'Self' },
     xp: { txt: 'Gain 100 XP instantly.', fl: 'A dry, bitter lesson.', type: 'Self' },
     frenzy: { txt: 'Berserk once: lose a die, hit harder this fight.', fl: 'Pain is only a price.', type: 'Self' },
@@ -3769,8 +3771,8 @@
     if (Math.abs(e.clientX - sarrow.x0) + Math.abs(e.clientY - sarrow.y0) > 8) sarrow.moved = true;
     var ex = e.clientX, ey = e.clientY, el = document.elementFromPoint(ex, ey), ed = el && el.closest ? el.closest('.edie') : null;
     if (sarrow.kind === 'bless') ed = el && el.closest ? el.closest('[data-blessdie]') : null;
-    if (sarrow.kind === 'potion') { var pps = document.querySelectorAll('[data-portrait]'), pp, pr0, pi; ed = null; for (pi = 0; pi < pps.length; pi++) { pp = pps[pi]; pr0 = pp.getBoundingClientRect(); if (ex > pr0.left - 14 && ex < pr0.right + 14 && ey > pr0.top - 14 && ey < pr0.bottom + 14) { ed = pp; break; } }
-      if (!ed) { var hd = document.querySelectorAll('.hud .dice .die'); for (var q = 0; q < hd.length; q++) { var qr = hd[q].getBoundingClientRect(); if (ex > qr.left - 6 && ex < qr.right + 6 && ey > qr.top - 6 && ey < qr.bottom + 6) { ed = hd[q]; break; } } } }
+    if (sarrow.kind === 'potion' || sarrow.kind === 'armour') { var pps = document.querySelectorAll('[data-portrait]'), pp, pr0, pi; ed = null; for (pi = 0; pi < pps.length; pi++) { pp = pps[pi]; pr0 = pp.getBoundingClientRect(); if (ex > pr0.left - 14 && ex < pr0.right + 14 && ey > pr0.top - 14 && ey < pr0.bottom + 14) { ed = pp; break; } }
+      if (!ed && sarrow.kind === 'potion') { var hd = document.querySelectorAll('.hud .dice .die'); for (var q = 0; q < hd.length; q++) { var qr = hd[q].getBoundingClientRect(); if (ex > qr.left - 6 && ex < qr.right + 6 && ey > qr.top - 6 && ey < qr.bottom + 6) { ed = hd[q]; break; } } } }
     if (ed !== sarrow.hover) { if (sarrow.hover) sarrow.hover.classList.remove('spelltgt'); if (ed) ed.classList.add('spelltgt'); sarrow.hover = ed; }
     if (ed) { var tr = ed.getBoundingClientRect(); ex = tr.left + tr.width / 2; ey = tr.top + tr.height / 2; }
     var sx = sarrow.sx, sy = sarrow.sy, cx = (sx + ex) / 2, cy = Math.min(sy, ey) - 70 - Math.abs(ex - sx) * 0.12;
@@ -3788,13 +3790,14 @@
     if (!mv) return;
     noClickUntil = Date.now() + 300;
     if (kind === 'potion') { if (ed) { closeDeck(); usePotion(); } return; }
+    if (kind === 'armour') { if (ed) { closeDeck(); useArmour(); } return; }
     if (kind === 'bless') { if (ed) castBless(+ed.getAttribute('data-blessdie')); return; }
     if (tp.indexOf('ed:') === 0) { var di = +tp.slice(3); if (kind === 'knife') useKnife(C.en.owner[di], di); else if (kind === 'bleach') useBleach(0, di); else if (kind === 'eyeglass') useEyeglass(0, di); else if (kind === 'razor' || kind === 'serrated') useBleedCard(kind, di); else castSpell(di); closeDeck(); }
   }
   function startSpellArrow(e, btn, kind) {
     stopSpellArrow(); hideTip();
     var r = btn.getBoundingClientRect(), svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-    svg.setAttribute('class', 'spellarrow' + ((kind === 'potion' || kind === 'bless') ? ' healarrow' : kind && kind !== 'spell' ? ' knifearrow' : '')); svg.setAttribute('aria-hidden', 'true');
+    svg.setAttribute('class', 'spellarrow' + ((kind === 'potion' || kind === 'bless' || kind === 'armour') ? ' healarrow' : kind && kind !== 'spell' ? ' knifearrow' : '')); svg.setAttribute('aria-hidden', 'true');
     svg.innerHTML = '<path class="sa-out"/><path class="sa-line"/><path class="sa-head"/>';
     document.documentElement.appendChild(svg);
     sarrow = { kind: kind || 'spell', svg: svg, sx: r.left + r.width / 2, sy: r.top + r.height / 2, x0: e.clientX, y0: e.clientY, moved: false, hover: null };
@@ -6615,7 +6618,7 @@
         tg = tg || ci.type === 'Spell';
         h += tcardHTML(id, { cls: (can ? 'canplay' : 'cantplay') + (id === 'potion' && needPotion() ? ' potionglow' : ''), attrs: at, style: '--r:' + ((i - (n - 1) / 2) * 5).toFixed(1) + 'deg' });
       });
-      var hint = cardsPlayable() ? 'Drag an arrow from a Target card onto an enemy die (or a potion onto your portrait), and other cards onto the table.' : 'You can only play cards on your own turn.';
+      var hint = cardsPlayable() ? 'Drag an arrow from a Target card onto an enemy die (or a potion or iron plate onto your portrait), and other cards onto the table.' : 'You can only play cards on your own turn.';
       return '<div class="trayhint">' + hint + '</div>' + h + '<button type="button" class="btn small trayx" data-closedeck="1">Close</button>';
     }
     d.forEach(function (id, i) { h += tcardHTML(id, id === 'potion' ? { cls: (cardCan(id) ? 'canplay' : 'cantplay') + (needPotion() ? ' potionglow' : ''), attrs: 'data-card="potion" data-i="' + i + '"' } : null); });
@@ -6652,7 +6655,7 @@
     if (t.closest('[data-closedeck]') || t === deckEl && deckEl.className === 'deckmodal') { closeDeck(); return; }
     var c = t.closest('.tcard[data-card]'); if (!c || Date.now() < noClickUntil) return;
     var id = c.getAttribute('data-card'), ci = CARD_INFO[id] || {};
-    if (ci.type === 'Target' || ci.type === 'Spell') { var h = deckEl.querySelector('.trayhint') || deckEl.querySelector('.deckhint'); if (h) h.textContent = id === 'potion' ? (cardCan(id) ? 'Drag the arrow onto your portrait or a fallen die.' : 'None of your dice have fallen.') : cardCan(id) ? 'Drag it onto an enemy die.' : id === 'rend' ? 'Your dice must add up to more than 30, once per round.' : 'Nothing to use it on.'; return; }
+    if (ci.type === 'Target' || ci.type === 'Spell') { var h = deckEl.querySelector('.trayhint') || deckEl.querySelector('.deckhint'); if (h) h.textContent = id === 'potion' ? (cardCan(id) ? 'Drag the arrow onto your portrait or a fallen die.' : 'None of your dice have fallen.') : cardCan(id) ? (id === 'armour' ? 'Drag the arrow onto your portrait.' : 'Drag it onto an enemy die.') : id === 'rend' ? 'Your dice must add up to more than 30, once per round.' : 'Nothing to use it on.'; return; }
     if (!cardCan(id)) { var h2 = deckEl.querySelector('.trayhint'); if (h2) h2.textContent = id === 'potion' ? 'None of your dice have fallen.' : 'You cannot play that now.'; return; }
     playSelfCard(id, c);
   }
