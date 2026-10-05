@@ -4014,7 +4014,7 @@
     R.pick = color; R.num = n; R.color = col; R.step = 'spin'; R.t0 = Date.now(); R.idx = WHEEL_ORDER.indexOf(n);
     C.log.push('You bet on ' + color + '. The wheel spins.');
     render();
-    setTimeout(function () { if (C && C.roulette === R) { R.step = 'done'; R.win = R.pick === R.color; if (!R.win) { takeHit(2, 'self'); R.lost = checkFallen(); } C.log.push('The ball lands on ' + R.num + ', ' + R.color + '. ' + (R.win ? 'You win the bet.' : 'You lose 2 dice.')); render(); setTimeout(function () { finishRoulette(R); }, 1900); } }, 3300);
+    setTimeout(function () { if (C && C.roulette === R) { R.step = 'done'; R.win = R.pick === R.color; if (!R.win) { takeHit(2, 'self'); R.lost = checkFallen(); } else { R.gold = 10; S.player.gold += R.gold; sfx('coin'); } C.log.push('The ball lands on ' + R.num + ', ' + R.color + '. ' + (R.win ? 'You win the bet, and the Croupier pays you ' + R.gold + ' gold.' : 'You lose 2 dice.')); render(); setTimeout(function () { finishRoulette(R); }, 1900); } }, 3300);
   }
   function finishRoulette(R) {
     if (!C || C.roulette !== R) return;
@@ -4025,14 +4025,14 @@
   function rouletteHTML() {
     var R = C.roulette, h = '<div class="roulette">';
     if (R.step === 'bet') {
-      h += '<div class="lbl">The Croupier demands a bet</div><p class="muted">Drag the chip onto red or black, or tap the chip and then a colour. Lose the bet and you lose 2 dice.</p>' +
+      h += '<div class="lbl">The Croupier demands a bet</div><p class="muted">Drag the chip onto red or black, or tap the chip and then a colour. Win the bet and the Croupier pays you 10 gold. Lose it and you lose 2 dice.</p>' +
         '<div class="betrow"><button type="button" class="betbox red" data-act="bet" data-bet="red">Red</button><button type="button" class="pokerchip' + (R.sel ? ' sel' : '') + '" data-chip="1" data-act="chip" aria-label="Poker chip"><span>BET</span></button><button type="button" class="betbox black" data-act="bet" data-bet="black">Black</button></div>';
     } else {
       var end = 5 * 360 - R.idx * 360 / 37, el = Math.min(3.3, (Date.now() - R.t0) / 1000);
       h += '<div class="lbl">You bet on ' + R.pick + '</div><div class="wheelwrap"><div class="wheelptr" aria-hidden="true"></div>' +
         '<div class="wheel" style="--end:' + end.toFixed(2) + 'deg;animation-delay:-' + el.toFixed(2) + 's">' + WHEEL_SVG + '</div>' +
         '<div class="ballring" style="animation-delay:-' + el.toFixed(2) + 's"><i class="ball"></i></div></div>';
-      if (R.step === 'done') h += '<p class="result">The ball lands on <b class="num-' + R.color + '">' + R.num + ' ' + R.color + '</b>. ' + (R.win ? '<span class="good">You win the bet.</span>' : '<span class="crit">You lose 2 dice.</span>') + '</p>';
+      if (R.step === 'done') h += '<p class="result">The ball lands on <b class="num-' + R.color + '">' + R.num + ' ' + R.color + '</b>. ' + (R.win ? '<span class="good">You win the bet. The Croupier pays you ' + R.gold + ' gold.</span>' : '<span class="crit">You lose 2 dice.</span>') + '</p>';
     }
     return h + '</div>';
   }
