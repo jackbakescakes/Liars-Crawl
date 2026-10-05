@@ -2130,6 +2130,9 @@
   .dwrap > .dbadges:has(.mb:nth-child(4)) { top: 0 !important; bottom: 0 !important; align-content: center; align-items: center; flex-wrap: wrap; padding: 4% 2%; }
   .dwrap > .dbadges:has(.mb:nth-child(4)) .mb.mb-seal { width: 33% !important; margin: -2% -3%; }
   .dwrap > .dbadges:has(.mb:nth-child(7)) .mb.mb-seal { width: 25% !important; margin: -1% -2%; }
+
+  /* ability buttons stack in a column at the right so they never run into the deck pile or the card tray */
+  body:not([data-screen="title"]):not([data-screen="char"]):not([data-screen="rules"]):not([data-screen="tree"]) .relicbr .abilrow { flex-direction: column !important; flex-wrap: nowrap !important; align-items: flex-end !important; max-width: none !important; gap: 8px !important; }
 </style>
 
 <main class="wrap">
