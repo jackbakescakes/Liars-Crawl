@@ -2082,6 +2082,22 @@
     /* shield sits just under the portrait: one icon per point of armour */
     body[data-screen="combat"]:not([data-screen="title"]):not([data-screen="char"]):not([data-screen="rules"]):not([data-screen="tree"]) .hudport .shieldrow { position: absolute; left: 50%; bottom: -46px; transform: translateX(-50%); display: flex; gap: 4px; z-index: 5; white-space: nowrap; }
     body[data-screen="combat"]:not([data-screen="title"]):not([data-screen="char"]):not([data-screen="rules"]):not([data-screen="tree"]) .hudport .shieldrow .shieldtag { position: relative; width: 40px; height: 46px; margin: 0; }
+
+  /* bid button sits under liar and exact */
+  body[data-screen="combat"]:not([data-screen="title"]):not([data-screen="char"]):not([data-screen="rules"]):not([data-screen="tree"]) .felt .bidbtnrow .bigbid { order: 2 !important; }
+  body[data-screen="combat"]:not([data-screen="title"]):not([data-screen="char"]):not([data-screen="rules"]):not([data-screen="tree"]) .felt .bidbtnrow .btn.blood { order: 1 !important; }
+  /* Pit Boss: marked dice and the blackjack scene */
+  .marktag { border-radius: 6px; position: absolute; left: 50%; bottom: -14px; transform: translateX(-50%); font-size: calc(20px * var(--k)); line-height: 1.3; font-weight: 700; padding: 0 5px; background: #8c1f2a; color: #f3e9cf; border: 2px solid #14110d; z-index: 3; white-space: nowrap; }
+  .dwrap.marked .die { box-shadow: 0 0 0 3px #ff6a5a, 0 0 10px 3px rgba(255,106,90,.6); }
+  .mkdie { cursor: not-allowed; } .mkdie .dwrap { filter: saturate(.7); }
+  .sc-bj .bjtable { background: rgba(0,0,0,.3); border-color: #8a7048; margin: 0; gap: 10px; padding: 10px 16px; }
+  .sc-bj .bjlbl { min-width: 190px; text-align: left; font-size: 26px; }
+  .sc-bj .pcard { width: 66px; height: 92px; } .sc-bj .pcard b { font-size: 34px; } .sc-bj .pcard .suitsvg { width: 30px; height: 30px; }
+  .sc-bj .bjline { opacity: 1; animation: none; font-size: 22px; }
+  .sc-bj .bjend { display: flex; align-items: center; gap: 18px; justify-content: center; }
+  .sc-bj .bjend .dealresult { opacity: 1; animation: none; }
+  .sc-bj { gap: 6px !important; } .sc-bj .dealresult { font-size: 22px; } .sc-bj .bjend { max-width: 760px; }
+  .sc-bj .pbmark { position: relative; display: inline-block; margin-bottom: 14px; }
 </style>
 
 <main class="wrap">
@@ -2924,8 +2940,8 @@
     o = o || {};
     var mods = o.mods || [];
     var tg = o.trig || [];
-    return '<span class="dwrap' + (polyW(o) ? ' dpw dpw' + polyW(o) : '') + (o.spy ? ' spied' : '') + (o.baby ? ' baby' : '') + (o.fresh ? ' fx-pop' : '') + (o.gone ? ' gone' : '') + tg.map(function (t) { return ' trig-' + t; }).join('') + '">' + dieHTML(v, o) + tg.map(function (t) { return '<span class="trigfx trigfx-' + t + '">' + BICON[t] + '</span>'; }).join('') +
-      (mods.length && (o.s || 40) >= 36 ? badgesHTML(mods) : '') + (o.baby ? '<span class="babytag">baby</span>' : '') + (o.spy ? '<span class="spyeye" title="An enemy can see this die">' + SPY_ICON + '</span>' : '') +
+    return '<span class="dwrap' + (polyW(o) ? ' dpw dpw' + polyW(o) : '') + (o.spy ? ' spied' : '') + (o.marked ? ' marked' : '') + (o.baby ? ' baby' : '') + (o.fresh ? ' fx-pop' : '') + (o.gone ? ' gone' : '') + tg.map(function (t) { return ' trig-' + t; }).join('') + '">' + dieHTML(v, o) + tg.map(function (t) { return '<span class="trigfx trigfx-' + t + '">' + BICON[t] + '</span>'; }).join('') +
+      (mods.length && (o.s || 40) >= 36 ? badgesHTML(mods) : '') + (o.baby ? '<span class="babytag">baby</span>' : '') + (o.marked ? '<span class="marktag">marked</span>' : '') + (o.spy ?'<span class="spyeye" title="An enemy can see this die">' + SPY_ICON + '</span>' : '') +
       (o.fx ? '<span class="floatfx">' + fxHTML(o.fx) + '</span>' : '') + (polyW(o) ? '<span class="dlabel">d' + polyW(o) + '</span>' : '') + '</span>';
   }
   function sampleDie(d, s) { return dieWrap(d.faces[5], { s: s, mods: badgeKeys(d), poly: polyOf(polyN(d)) }); }
@@ -3099,11 +3115,11 @@
     ringer: E('Pale Juggler', 6, 0.74, [22, 30], 'fight', 'imp', '#c8c0a0', '#7a2a2a', '#ffd35c', 'Juggles dice, knives and the odd unlucky head.'),
     bear: E('Chained Bear', 7, 0.84, [38, 50], 'elite', 'beast', '#5a4a3a', '#2a1e14', '#ffb04a', 'The chains made it mean. The rust set it free.'),
     tamer: E('Whip Tamer', 7, 0.86, [40, 52], 'elite', 'hood', '#7a3a2a', '#e0b04a', '#ffd35c', 'Cracks the whip and every cup flinches.'),
-    ringmaster: E('The Ringmaster', 9, 0.98, [80, 95], 'boss', 'dealer', '#d9c8a0', '#7a2a3a', '#ffd35c', 'Step right up. Step right down.')
+    pitboss: E('The Pit Boss', 9, 0.98, [80, 95], 'boss', 'dealer', '#d9c8a0', '#2a2a36', '#ff6a3a', 'Runs the floor. Deals you a hand every round, and marks the losers.')
   };
   Object.keys(MENAGERIE).forEach(function (k) { ENEMIES[k] = MENAGERIE[k]; ENEMIES[k].dice += 1; });
   ENEMIES.toad.sig = 'weighted'; ENEMIES.sporecap.sig = 'healer'; ENEMIES.ringer.sig = 'optimist'; ENEMIES.stag.sig = 'weighted';
-  ENEMIES.toad.drop = 'golden'; ENEMIES.sporecap.drop = 'healer'; ENEMIES.crow.drop = 'peeper'; ENEMIES.stag.drop = 'weighted'; ENEMIES.ringer.drop = 'fickle'; ENEMIES.bear.drop = 'pregnant'; ENEMIES.tamer.drop = 'optimist'; ENEMIES.ringmaster.drop = 'healer'; ENEMIES.crow.peek = true;
+  ENEMIES.toad.drop = 'golden'; ENEMIES.sporecap.drop = 'healer'; ENEMIES.crow.drop = 'peeper'; ENEMIES.stag.drop = 'weighted'; ENEMIES.ringer.drop = 'fickle'; ENEMIES.bear.drop = 'pregnant'; ENEMIES.tamer.drop = 'optimist'; ENEMIES.pitboss.drop = 'healer'; ENEMIES.pitboss.marks = true; ENEMIES.crow.peek = true;
   ['skeleton', 'ghoul', 'wraith', 'warden', 'knight', 'acolyte', 'croupier', 'collector', 'bonedealer', 'mourner', 'seer'].forEach(function (k) { ENEMIES[k].dice += 1; });
   ['imp', 'hound', 'broker', 'wight', 'golem', 'chancellor', 'house', 'gilder', 'ember', 'tithe'].forEach(function (k) { ENEMIES[k].dice += 1; });
   // some foes are known for one seal on their dice, and some peer at your dice
@@ -3133,7 +3149,7 @@
     ringer: ['Round and round the dice go. Do not blink.', 'One knife, two knives, three. Which one is for you?', 'Applause! Applause! No? Then scream.', 'I juggle what I cannot keep. Tonight, that is you.'],
     bear: ['The chains rotted. I did not.', 'They taught me to dance. I remember the whip. I remember all of it.', 'Heavy bid. Heavier paw.', 'I do not roar. I wait until you stop bluffing.'],
     tamer: ['Crack. Everyone bows eventually.', 'The cage is just a table with bars.', 'Step into the ring. The ring is where you break.', 'I trained the bear. I trained the stag. Now sit.'],
-    ringmaster: ['Ladies, gentlemen and the dead! Step right up!', 'Every act ends with the same trick. The vanishing.', 'The show must go on. You are the finale.', 'Dice, cages, knives, flames. You will taste them all.', 'The ring is a mouth. The tent is a throat.'],
+    pitboss: ['Every table on this floor answers to me.', 'Sit. Cut the deck. Lose, and I will remember you.', 'I mark the dice of every loser. The chalk never washes off.', 'Twenty-one is a number. Mine is always a little higher.', 'Nobody cheats on my floor. I do all the cheating.', 'Chalk on your die means I see it. Chalk means it is mine.'],
     ratling: ['Squeak.', 'Nibble nibble.', 'Cheese? No? Fingers, then.'],
     rat: ['Squeak. The last fool left his fingers here.', 'You smell of fear. Rats eat well tonight.', 'Bid high. I like the sound bones make.', 'The walls are full of my kin. They are hungry too.', 'I gnaw. I wait. You always lose in the end.', 'Keep your dice close. Mine are made of toes.'],
     goblin: ['Shiny dice, shiny teeth. I want both.', 'Your pockets are lighter already, stranger.', 'I took these knuckles from a man who bluffed. He stopped bluffing.', 'Hee hee. Dying is just a long losing streak.', 'Call me a liar. I have been called worse by the dead.', 'Keep still. Hold out the die. I will be gentle. Mostly.'],
@@ -3172,7 +3188,7 @@
     { name: 'The Catacombs', blurb: 'Cold air. The dead have been playing for centuries, and they are hungry.', goldMul: 1.5, priceMul: 1.25,
       pools: [['skeleton', 'ghoul', 'mourner'], ['ghoul', 'wraith', 'watcher', 'seer', 'brute', 'bonedealer', 'ratswarm', duo('skeleton', 'ghoul')], ['wraith', 'warden', 'seer', 'bonedealer', 'mourner', 'ratswarm', duo('wraith', 'warden')]], elites: ['knight', 'acolyte'], boss: 'croupier' },
     { name: 'The Mouldering Menagerie', blurb: 'Rusted cages, moss and a circus tent that never came down. Every beast here learned to gamble.', goldMul: 1.8, priceMul: 1.4,
-      pools: [['toad', 'crow', 'sporecap'], ['crow', 'stag', 'ringer', 'toad', 'ratswarm', duo('toad', 'sporecap')], ['stag', 'ringer', 'sporecap', 'crow', 'ratswarm', duo('crow', 'stag')]], elites: ['bear', 'tamer'], boss: 'ringmaster' },
+      pools: [['toad', 'crow', 'sporecap'], ['crow', 'stag', 'ringer', 'toad', 'ratswarm', duo('toad', 'sporecap')], ['stag', 'ringer', 'sporecap', 'crow', 'ratswarm', duo('crow', 'stag')]], elites: ['bear', 'tamer'], boss: 'pitboss' },
     { name: 'The Gilded Pit', blurb: 'Gold on every wall, and every wager is paid in blood.', goldMul: 2.2, priceMul: 1.6,
       pools: [['imp', 'hound', 'tithe'], ['hound', 'broker', 'wight', 'gilder', 'ember', 'ratswarm', duo('imp', 'hound')], ['broker', 'wight', 'gilder', 'ember', 'tithe', 'ratswarm', duo('hound', 'wight')]], elites: ['golem', 'chancellor'], boss: 'house' }
   ];
@@ -3554,7 +3570,7 @@
     C = { bubble: null, node: node, def: def, berserk: false, speaker: -1, en: { n: def.dice, dice: [], owner: [], dmc: [], peeked: {}, smote: {}, bleached: {}, parts: parts }, round: 0, bid: null, turn: 'p', opener: 'p', phase: 'bid',
       pbids: [], shield: own('shield') ? (own('bulwark') ? 3 : 1) : 0, charges: { peek: p.ab.peek + (itm('peek') ? 1 : 0) + ((S.stash || {}).peek || 0), reroll: p.ab.reroll + (itm('reroll') ? 1 : 0) + ((S.stash || {}).reroll || 0), coin: itm('coin') ? 1 : 0, bless: 0, smite: 0 }, target: null, sel: { qty: 1, face: 1 }, result: null, log: [], pv: [], anim: null, fx: {} };
     C.base = { peek: p.ab.peek + (itm('peek') ? 1 : 0), reroll: p.ab.reroll + (itm('reroll') ? 1 : 0) };
-    C.rerollSel = []; C.lastFace = S.lastFace || 0;
+    C.rerollSel = []; C.lastFace = S.lastFace || 0; C.marks = {};
     S.screen = 'combat';
     newRound('p');
   }
@@ -3578,7 +3594,58 @@
       }
       C.log.push('The House’s rake scrapes the felt, but you have only one die left to take.');
     }
+    if (foeAlive('pitboss')) { pbStart(opener); return; }
     rollRound(opener);
+  }
+  // The Pit Boss plays a hand of blackjack with you at the start of every round. Lose it, and one of your dice is marked.
+  var PB_OPEN = ['The Pit Boss shuffles with one hand and watches you with the other. “Cut the deck, friend.”', '“One hand before we roll,” the Pit Boss says, sliding two cards over. “House rules.”', 'He deals without looking at the cards. “Twenty-one. Do try.”', '“Every round starts at my table,” he murmurs. “Every round starts like this.”'];
+  var PB_WIN = ['Your hand is better. The Pit Boss’s jaw works, but his chalk stays in his pocket.', 'You take the hand. The Pit Boss taps the felt twice, and nobody is marked.', 'He slides the cards back with a thin smile. “Beginner’s luck.”'];
+  var PB_PUSH = ['A push. The Pit Boss shrugs and gathers the cards. Nobody is marked.', 'Dead even. He taps the felt, and the table moves on.'];
+  var PB_LOSE = ['The Pit Boss turns his cards over, and his chalk comes out. One of your dice is marked.', '“House wins.” A chalk cross is scrawled on one of your dice.', 'He wins the hand, and the chalk squeaks across your die. Now he sees it every round.'];
+  function pbStart(opener) {
+    var deck = [], r, b;
+    for (r = 2; r <= 14; r++) ['H', 'D', 'S', 'C'].forEach(function (x) { deck.push({ rank: r, suit: x }); });
+    deck = shuffle(deck);
+    b = { deck: deck, you: [deck.pop(), deck.pop()], dealer: [deck.pop(), deck.pop()], phase: 'play', res: null, msg: '', marked: -1 };
+    // the enemy’s cups sit face down and the cards fill the felt
+    C.en.dice = []; C.en.owner = []; C.en.dm = []; C.en.dmc = [];
+    C.en.parts.forEach(function (pt, pi) { for (var i = 0; i < pt.n; i++) { C.en.dice.push(0); C.en.owner.push(pi); C.en.dm.push([]); C.en.dmc.push([]); } });
+    C.scene = { kind: 'bj', t0: Date.now(), bj: b, opener: opener, line: pick(PB_OPEN) };
+    C.phase = 'scene';
+    C.log.push('Round ' + C.round + '. The Pit Boss deals you a hand of blackjack.');
+    clearTimeout(timer);
+    var yb = bjTotal(b.you) === 21, db = bjTotal(b.dealer) === 21;
+    if (yb || db) pbEnd(yb && db ? 'push' : yb ? 'win' : 'lose'); else render();
+  }
+  function pbBj() { return C && C.scene && C.scene.kind === 'bj' ? C.scene.bj : null; }
+  function pbHit() {
+    var b = pbBj(); if (!b || b.phase !== 'play') return;
+    b.you.push(b.deck.pop()); sfx('tick');
+    var t = bjTotal(b.you); if (t > 21) pbEnd('lose'); else if (t === 21) pbStand(); else render();
+  }
+  function pbStand() {
+    var b = pbBj(); if (!b || b.phase !== 'play') return;
+    while (bjTotal(b.dealer) < 17) b.dealer.push(b.deck.pop());
+    var y = bjTotal(b.you), d = bjTotal(b.dealer);
+    pbEnd(d > 21 || y > d ? 'win' : y === d ? 'push' : 'lose');
+  }
+  function pbEnd(res) {
+    var b = pbBj(); if (!b) return;
+    b.phase = 'done'; b.res = res;
+    if (res === 'lose') {
+      var cand = []; S.player.dice.forEach(function (d, i) { if (d.up && !C.marks[i]) cand.push(i); });
+      if (cand.length) {
+        var di = cand[rnd(cand.length)]; C.marks[di] = true; b.marked = di; b.mdie = S.player.dice[di];
+        b.msg = pick(PB_LOSE); C.log.push('You lose the hand. The Pit Boss marks your ' + dieName(S.player.dice[di]) + '. It cannot be rerolled, and he can see it until the fight ends.');
+      } else { b.msg = 'The Pit Boss wins the hand, but every die you have is already marked.'; C.log.push('You lose the hand, but every die you have is already marked.'); }
+      sfx('hurt');
+    } else if (res === 'push') { b.msg = pick(PB_PUSH); C.log.push('The hand is a push. Nobody is marked.'); sfx('tick'); }
+    else { b.msg = pick(PB_WIN); C.log.push('You win the hand. Nobody is marked.'); sfx('win'); }
+    render();
+  }
+  function pbDone() {
+    var b = pbBj(); if (!b || b.phase !== 'done') return;
+    var op = C.scene.opener; C.scene = null; C.phase = 'bid'; rollRound(op);
   }
   function rollRound(opener) {
     C.en.dice = []; C.en.owner = []; C.en.dm = []; C.en.dmc = [];
@@ -3630,6 +3697,8 @@
         C.log.push('Snake eyes! The Snake-Eyes Charm hums.' + (dh ? ' You recover 1 HP.' : '') + ' +5 shop rarity, +5% double damage, +5% block and +5% drop chance.'); sfx('item');
       }
     }
+    var mkN = 0; C.pv.forEach(function (x) { if (!x.baby && C.marks && C.marks[x.i]) { x.spied = true; x.marked = true; mkN++; } });
+    if (mkN) C.log.push('The Pit Boss reads ' + (mkN === 1 ? 'your marked die' : 'your ' + mkN + ' marked dice') + '. Marked dice cannot be rerolled.');
     var peeker = C.en.parts.filter(function (pt) { return pt.def.peek && pt.n > 0; })[0];
     if (peeker && C.pv.length) { var spyK = rnd(C.pv.length); C.pv[spyK].spied = true; C.log.push(peeker.name + ' peers at one of your dice. It knows that one.'); }
     sortPv();
@@ -4400,6 +4469,7 @@
   function pickPeek(i) { if (C.target !== 'peek') return; C.en.peeked[i] = true; spendCharge('peek'); C.target = null; C.log.push('You peer under one of the enemy’s cups.'); render(); }
   function toggleReroll(k) {
     if (C.target !== 'reroll' || !C.pv[k]) return;
+    if (C.pv[k].marked) return;
     var sel = C.rerollSel, at = sel.indexOf(k); if (at > -1) sel.splice(at, 1); else { if (C.coinMode) sel.length = 0; sel.push(k); }
     render();
   }
@@ -5316,6 +5386,16 @@
       return '<div class="scene sc-cards"><div class="lbl">The Dealer deals</div><div class="dealrow"><div class="cardcol"><div class="lbl">Dealer</div>' + bigCard(sc.e, 'e', 1.3, el) + '</div><div class="dealvs">VS</div><div class="cardcol"><div class="lbl">You</div>' + bigCard(sc.p, 'p', 1.5, el) + '</div></div>' +
         '<p class="dealresult ' + sc.res + '" style="' + dly(2.2, el) + '">' + sc.line + '</p><button type="button" class="btn torch dealbtn" data-act="cardsDone" style="' + dly(2.6, el) + '">Continue</button></div>';
     }
+    if (sc.kind === 'bj') {
+      var pb = sc.bj, hideP = pb.phase === 'play', tvP = bjTotal(pb.you), done = pb.phase === 'done';
+      var drow = '<div class="bjrow"><span class="bjlbl">Pit Boss <b>' + (hideP ? bjTotal([pb.dealer[0]]) + '+' : bjTotal(pb.dealer)) + '</b></span><span class="bjcards">' + pb.dealer.map(function (c, k) { return hideP && k === 1 ? '<span class="pcard bjback"></span>' : cardHTML(c, 'e', false); }).join('') + '</span></div>';
+      var yrow = '<div class="bjrow"><span class="bjlbl">You <b>' + (bjSoft(pb.you) && tvP < 21 ? 'soft ' : '') + tvP + '</b></span><span class="bjcards">' + pb.you.map(function (c) { return cardHTML(c, 'p', false); }).join('') + '</span></div>';
+      var mk = done && pb.mdie ? '<span class="pbmark">' + dieWrap(pb.mdie.faces[5], { s: 56, mods: badgeKeys(pb.mdie), poly: polyOf(polyN(pb.mdie)), marked: true, spy: true }) + '</span>' : '';
+      return '<div class="scene sc-bj"><div class="lbl">The Pit Boss deals</div>' + (done ? '' : '<p class="dealresult bjline">' + sc.line + '</p>') +
+        '<div class="bjtable">' + drow + yrow + '</div>' +
+        (done ? '<div class="bjend">' + mk + '<p class="dealresult ' + (pb.res === 'lose' ? 'hit' : pb.res === 'win' ? 'safe' : 'tie') + '">' + pb.msg + '</p></div><button type="button" class="btn torch" data-act="pbDone">Roll the dice</button>'
+          : '<div class="row"><button type="button" class="btn torch" data-act="pbHit">Hit</button><button type="button" class="btn torch" data-act="pbStand">Stand</button></div>') + '</div>';
+    }
     if (sc.kind === 'rake') {
       return '<div class="scene sc-rake"><div class="lbl">The House takes its cut</div><div class="rakestage"><span class="rakedie" style="' + dly(0, el) + '">' + dieWrap(sc.die.faces[5], { s: 84, mods: sc.mods }) + '</span><span class="rakeimg" style="' + dly(0, el) + '">' + RAKE + '</span></div>' +
         '<p class="dealresult hit" style="' + dly(1.7, el) + '">The House’s garden rake hooks your ' + sc.name + ' and drags it off the table.</p></div>';
@@ -5328,7 +5408,7 @@
     return '<span class="slashfx" aria-hidden="true"><b class="slashline" style="animation-delay:-' + el.toFixed(2) + 's"></b>' + sl.drops.map(function (d) { return '<i style="--dx:' + d.dx + 'px;--dy:' + d.dy + 'px;--sz:' + d.sz + 'px;animation-delay:' + (.12 - el).toFixed(2) + 's"></i>'; }).join('') + '</span>';
   }
   function combatHTML() {
-    var def = C.def, En = C.en, showAll = C.phase !== 'bid' && C.phase !== 'bet', hit = function (v) { return showAll && C.bid && (v === C.bid.face || v === 0); };
+    var def = C.def, En = C.en, showAll = C.phase !== 'bid' && C.phase !== 'bet' && !(C.scene && C.scene.kind === 'bj'), hit = function (v) { return showAll && C.bid && (v === C.bid.face || v === 0); };
     var thinking = C.phase === 'bid' && C.turn === 'e' ? '<span class="muted">Scheming…</span>' : '';
     var enemy = '';
     En.parts.forEach(function (pt, pi) {
@@ -5360,7 +5440,7 @@
     if (En.parts.length > 1) enemy = '<div class="foes">' + enemy + '</div>';
 
     var center;
-    if (C.phase === 'scene') center = '<div class="lbl">' + (C.scene && C.scene.kind === 'rake' ? 'The rake is out' : 'Cards on the table') + '</div>';
+    if (C.phase === 'scene') center = '<div class="lbl">' + (C.scene && C.scene.kind === 'rake' ? 'The rake is out' : C.scene && C.scene.kind === 'bj' ? 'A hand before the roll' : 'Cards on the table') + '</div>';
     else if (C.phase === 'bet') center = '<div class="lbl">Place your bet</div><p class="muted">The Croupier will not start the round until you do.</p>';
     else if (C.phase === 'bid') {
       if (C.bid) center = '<div class="lbl">' + (C.bid.by === 'p' ? 'Your bid' : (C.en.parts[C.bid.part || 0].name) + '’s bid') + '</div><div class="bid-main"><span>' + C.bid.qty + ' ×</span>' + dieHTML(C.bid.face, { s: 50 }) + '</div><p class="muted">' + totalDice() + ' dice on the table.</p>';
@@ -5376,13 +5456,14 @@
       var isA = anim === 'all' || anim === k || (Array.isArray(anim) && anim.indexOf(k) > -1);
       var tr = x.trigNew !== false && x.trig && x.trig.length && isA ? x.trig.slice() : null;
       if (x.strip) { tr = (tr || []).concat(['strip']); x.strip = false; }
-      var h = dieWrap(x.val, { s: x.baby ? 44 : 65, poly: x.baby ? polyOf(x.bp) : polyOf(polyN(S.player.dice[x.i])), spy: x.spied, hit: hit(x.val), mods: mods, baby: x.baby, roll: isA, fresh: x.fresh, gone: x.dead, fx: fxmap[k] || '', trig: tr });
+      var h = dieWrap(x.val, { s: x.baby ? 44 : 65, poly: x.baby ? polyOf(x.bp) : polyOf(polyN(S.player.dice[x.i])), spy: x.spied, marked: x.marked, hit: hit(x.val), mods: mods, baby: x.baby, roll: isA, fresh: x.fresh, gone: x.dead, fx: fxmap[k] || '', trig: tr });
       x.fresh = false;
+      if (C.target === 'reroll' && x.marked) return '<span class="pvhov mkdie" data-tip="pv:' + k + '">' + h + '</span>';
       if (C.target === 'reroll' && C.rerollSel.indexOf(k) > -1) return '<span class="rrgone">' + dieHTML(0, { s: 65, ghost: true }) + '</span>';
       if (C.target === 'bless') return '<span class="pvhov" data-blessdie="' + k + '"><button type="button" class="diebtn" data-act="pickBless" data-i="' + k + '" aria-label="Bless your die ' + (k + 1) + '">' + h + '</button></span>';
       return '<span class="pvhov" data-tip="pv:' + k + '"' + (canBless ? ' data-blessdie="' + k + '"' : '') + '>' + (C.target === 'reroll' ? '<button type="button" class="diebtn rrdie" data-act="toggleReroll" data-i="' + k + '" data-dragdie="' + k + '" aria-label="Put your die ' + (k + 1) + ' in the cup">' + h + '</button>' : (C.phase === 'bid' && C.turn === 'p' && !C.target && !x.dead && x.val > 0) ? '<button type="button" class="diebtn bidclick" data-act="dieBid" data-v="' + x.val + '" aria-label="Bid ' + faceName(x.val) + '">' + h + '</button>' : h) + '</span>';
     }).join('');
-    S.player.dice.forEach(function (d, di) { if (!d.up && !C.pv.some(function (x) { return !x.baby && x.i === di; })) mine += dieHTML(0, { s: 65, ghost: true }); });
+    S.player.dice.forEach(function (d, di) { if ((!d.up || (C.scene && C.scene.kind === 'bj' && !C.pv.length)) && !C.pv.some(function (x) { return !x.baby && x.i === di; })) mine += dieHTML(0, { s: 65, ghost: true }); });
 
     var controls = '', myTurn = C.phase === 'bid' && C.turn === 'p';
     if (myTurn) {
@@ -5414,7 +5495,7 @@
           (legalNow || !C.bid ? '' : '<p class="muted">Raise the quantity, or keep ' + C.bid.qty + ' and pick a higher face.</p>');
       }
     } else if (C.phase === 'bet' && C.roulette) controls = '<p class="muted">The Croupier waits for your bet.</p>';
-    else if (C.phase === 'scene') controls = '<p class="muted">' + (C.scene && C.scene.kind === 'rake' ? 'The House is helping itself.' : 'The Dealer deals.') + '</p>';
+    else if (C.phase === 'scene') controls = '<p class="muted">' + (C.scene && C.scene.kind === 'rake' ? 'The House is helping itself.' : C.scene && C.scene.kind === 'bj' ? 'The Pit Boss deals.' : 'The Dealer deals.') + '</p>';
     else if (C.phase === 'reveal') controls = '<div class="row"><button type="button" class="btn torch" data-act="nextRound">Roll on</button></div>';
     else if (C.phase === 'won') controls = '<div class="row"><button type="button" class="btn moss" data-act="claim">' + (C.lootTxt || (C.lootTxt = ['Ransack the carcass', 'Pick the bones clean', 'Examine the remains'][Math.floor(Math.random() * 3)])) + '</button></div>';
     else if (C.phase === 'lost') controls = '<div class="row"><button type="button" class="btn torch" data-act="claim">Continue</button></div>';
@@ -5811,7 +5892,7 @@
       return '<b>' + dieTitle(fd, +arg) + '</b>' + modChips(fd) + strip(fd, { size: 34 }) + fx + (fd.up ? '' : '<p class="bad">Fallen. It does not roll until you recover it.</p>'); }
     if (kind === 'pv' && C) {
       var x = C.pv[+arg]; if (!x) return '';
-      var spyTxt = x.spied ? '<p class="bad">An enemy is peeking at this die.</p>' : '';
+      var spyTxt = x.marked ? '<p class="bad">Marked by the Pit Boss. He can see this die until the fight ends, and it cannot be rerolled.</p>' : x.spied ? '<p class="bad">An enemy is peeking at this die.</p>' : '';
       if (x.baby) return '<b>Baby die</b><p>Shows a ' + (x.val === 0 ? 'wild' : x.val) + '. Lasts one round and counts as health. It inherited its parent’s seals.</p>';
       var d = S.player.dice[x.i], same = C.pv.filter(function (y) { return y.val === x.val; }).length, ms = modList(d);
       h = '<b>' + dieName(d) + ': ' + (x.val === 0 ? 'wild' : x.val) + '</b><p>' + (x.val === 0 ? 'Rolled ' + same + ' wild ' + (same === 1 ? 'face' : 'faces') + ' (counts as any number).' : 'You rolled ' + same + ' × ' + x.val + (same === 1 ? '' : 's') + ' this round.') + '</p>';
@@ -5871,6 +5952,7 @@
           (def.kind === 'fight' ? '' : '<div class="tiprow"><span class="tipic">' + EV_ART.chest + '</span></div>') +
           (def.drop && ITEM_ART[def.drop] ? '<div class="tiprow"><span class="tipic rar-' + rarOf(def.drop) + '">' + ITEM_ART[def.drop] + '</span><b>' + Math.round(dropChance(def) * 100) + '%</b></div>' : '') + '</div>';
         if (def.peek) h += '<p>Peeks at one of your dice every round.</p>';
+        if (def.marks) h += '<p>Plays you at blackjack every round. If you lose the hand, he marks one of your dice: it cannot be rerolled, and he sees it for the rest of the fight.</p>';
         if (def.kind === 'boss') h += '<p>Then the spoils of the floor: 3 wares for sale.</p>';
         return h;
       }
@@ -6377,6 +6459,9 @@
       case 'eyeglass': useEyeglass(); break;
       case 'bjBet': bjDeal(i); break;
       case 'bjHit': bjHit(); break;
+      case 'pbHit': pbHit(); break;
+      case 'pbStand': pbStand(); break;
+      case 'pbDone': pbDone(); break;
       case 'bjStand': bjStand(); break;
       case 'bjDouble': bjDouble(); break;
       case 'scratchFight': scratchFight(); break;
