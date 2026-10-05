@@ -2073,6 +2073,9 @@
     body[data-screen="combat"]:not([data-screen="title"]):not([data-screen="char"]):not([data-screen="rules"]):not([data-screen="tree"]) .felt .bidbox:has(.gbox) { visibility: hidden; }
     body[data-screen="combat"]:not([data-screen="title"]):not([data-screen="char"]):not([data-screen="rules"]):not([data-screen="tree"]) .felt .gbox { display: block; width: 640px; height: 60px; }
     body[data-screen="combat"]:not([data-screen="title"]):not([data-screen="char"]):not([data-screen="rules"]):not([data-screen="tree"]) .felt .alertpop .alertmsg { display: flex; flex-direction: column; gap: 6px; align-items: center; }
+
+    /* scenes (Dealer cards, scratch card, rake, roulette) stay a sensible width and never spill over the portrait */
+    body[data-screen="combat"]:not([data-screen="title"]):not([data-screen="char"]):not([data-screen="rules"]):not([data-screen="tree"]) .felt .scene { left: 50%; right: auto; width: 820px; max-width: 100%; transform: translateX(-50%); }
 </style>
 
 <main class="wrap">
