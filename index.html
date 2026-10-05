@@ -2061,6 +2061,18 @@
 
     /* combat: fixed-height middle so portrait + dice never move between phases */
     body[data-screen="combat"]:not([data-screen="title"]):not([data-screen="char"]):not([data-screen="rules"]):not([data-screen="tree"]) .felt { height: 436px; flex: 0 0 436px; min-height: 436px; }
+
+    /* combat alerts pop up over the (dimmed) dice UI */
+    body[data-screen="combat"]:not([data-screen="title"]):not([data-screen="char"]):not([data-screen="rules"]):not([data-screen="tree"]) .felt { position: relative; }
+    body[data-screen="combat"]:not([data-screen="title"]):not([data-screen="char"]):not([data-screen="rules"]):not([data-screen="tree"]) .felt .ghostctl { opacity: .3; pointer-events: none; filter: saturate(.5); }
+    body[data-screen="combat"]:not([data-screen="title"]):not([data-screen="char"]):not([data-screen="rules"]):not([data-screen="tree"]) .felt .alertpop { position: absolute; left: 50%; top: 46%; transform: translate(-50%, -50%); z-index: 30; min-width: 520px; max-width: 760px; padding: 22px 34px; text-align: center; background: #8a7048; isolation: isolate; display: flex; flex-direction: column; align-items: center; gap: 14px; clip-path: polygon(0 12px,4px 12px,4px 8px,8px 8px,8px 4px,12px 4px,12px 0,calc(100% - 12px) 0,calc(100% - 12px) 4px,calc(100% - 8px) 4px,calc(100% - 8px) 8px,calc(100% - 4px) 8px,calc(100% - 4px) 12px,100% 12px,100% calc(100% - 12px),calc(100% - 4px) calc(100% - 12px),calc(100% - 4px) calc(100% - 8px),calc(100% - 8px) calc(100% - 8px),calc(100% - 8px) calc(100% - 4px),calc(100% - 12px) calc(100% - 4px),calc(100% - 12px) 100%,12px 100%,12px calc(100% - 4px),8px calc(100% - 4px),8px calc(100% - 8px),4px calc(100% - 8px),4px calc(100% - 12px),0 calc(100% - 12px)); }
+    body[data-screen="combat"]:not([data-screen="title"]):not([data-screen="char"]):not([data-screen="rules"]):not([data-screen="tree"]) .felt .alertpop::before { content: ""; position: absolute; inset: 5px; z-index: -1; background: #2a2118 linear-gradient(rgba(0,0,0,.18), rgba(0,0,0,.18)); box-shadow: inset 0 3px 0 rgba(0,0,0,.4); }
+    body[data-screen="combat"]:not([data-screen="title"]):not([data-screen="char"]):not([data-screen="rules"]):not([data-screen="tree"]) .felt .alertpop .bidbox { min-width: 0; }
+    body[data-screen="combat"]:not([data-screen="title"]):not([data-screen="char"]):not([data-screen="rules"]):not([data-screen="tree"]) .felt .alertpop .row { justify-content: center; }
+
+    body[data-screen="combat"]:not([data-screen="title"]):not([data-screen="char"]):not([data-screen="rules"]):not([data-screen="tree"]) .felt .bidbox:has(.gbox) { visibility: hidden; }
+    body[data-screen="combat"]:not([data-screen="title"]):not([data-screen="char"]):not([data-screen="rules"]):not([data-screen="tree"]) .felt .gbox { display: block; width: 640px; height: 60px; }
+    body[data-screen="combat"]:not([data-screen="title"]):not([data-screen="char"]):not([data-screen="rules"]):not([data-screen="tree"]) .felt .alertpop .alertmsg { display: flex; flex-direction: column; gap: 6px; align-items: center; }
 </style>
 
 <main class="wrap">
@@ -5401,8 +5413,16 @@
     if (WIDEUI) { var pq = {}; for (var kq in pp) pq[kq] = pp[kq]; pq.dice = '<div class="mycups cups">' + mine + '</div>'; pq.chips = rollchips; pq.abil = (typeof abil === 'string') ? abil : ''; me = hudBarHTML(pq); rolled = ''; }
     var topbtns = '<div class="topbtns"><button type="button" class="btn ghost small" data-act="toggleDice" aria-expanded="' + S.showDice + '">' + (S.showDice ? 'Hide dice' : 'Dice') + '</button><button type="button" class="btn ghost small" data-act="toggleLog" aria-expanded="' + !!S.showLog + '">' + (S.showLog ? 'Hide log' : 'Log') + '</button></div>';
     var logpop = S.showLog ? '<div class="logpop"><label class="check" for="oddsBox"><input type="checkbox" id="oddsBox" data-act="odds"' + (S.odds ? ' checked' : '') + '> Read the bones</label><div class="lbl">Log</div>' + log + '</div>' : '';
+    // the dice UI always stays in the middle; alerts pop up over it so the portraits never move
+    var alertpop = '';
+    if (WIDEUI && C.phase !== 'bet' && C.phase !== 'scene' && !myTurn) {
+      var gf = '', gq = C.sel ? C.sel.qty : 1; for (var gi = 1; gi <= 6; gi++) gf += '<button type="button" class="facebtn" disabled tabindex="-1">' + dieHTML(gi, { s: 55 }) + '</button>';
+      var ghostBid = '<div class="bidctl ghostctl" aria-hidden="true"><div class="bidline"><div><div class="lbl">Quantity</div><div class="stepper"><button type="button" disabled tabindex="-1">\u2212</button><output>' + gq + '</output><button type="button" disabled tabindex="-1">+</button></div></div><div class="facecol"><div class="lbl">Face</div><div class="facegrid">' + gf + '</div><div class="row bidbtnrow"><button type="button" class="btn torch bigbid" data-act="bid" disabled tabindex="-1">Bid</button><button type="button" class="btn blood" data-act="liar" disabled tabindex="-1">Call liar</button><button type="button" class="btn blood" data-act="exact" disabled tabindex="-1">Call exact</button></div></div></div></div>';
+      if (C.phase !== 'bid') { alertpop = '<div class="alertpop" role="status"><div class="alertmsg">' + center + '</div>' + controls + '</div>'; center = '<span class="gbox"></span>'; }
+      controls = ghostBid;
+    }
     return '<section class="battle">' + topbtns + logpop + enemy +
-      '<div class="felt' + (C.roulette || C.scene ? ' hasscene' : '') + '">' + sceneHTML() + cardRow() + '<div class="bidbox">' + center + '</div>' + (myTurn && !C.target ? oddsLine() : '') + rolled + controls + '</div>' + me + '</section>' + modal;
+      '<div class="felt' + (C.roulette || C.scene ? ' hasscene' : '') + '">' + sceneHTML() + cardRow() + '<div class="bidbox">' + center + '</div>' + (myTurn && !C.target ? oddsLine() : '') + rolled + controls + alertpop + '</div>' + me + '</section>' + modal;
   }
   function noteSeen() { try { return localStorage.getItem('lc_dropnote') === '1'; } catch (e) { return false; } }
   function noteMark() { try { localStorage.setItem('lc_dropnote', '1'); } catch (e) {} }
