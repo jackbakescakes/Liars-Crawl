@@ -2079,8 +2079,9 @@
 
     .shieldtag::after { display: none !important; animation: none !important; }
 
-    /* shield sits just under the portrait */
-    body[data-screen="combat"]:not([data-screen="title"]):not([data-screen="char"]):not([data-screen="rules"]):not([data-screen="tree"]) .hudport .shieldtag { position: absolute; left: 50%; bottom: -44px; margin: 0; transform: translateX(-50%); z-index: 5; }
+    /* shield sits just under the portrait: one icon per point of armour */
+    body[data-screen="combat"]:not([data-screen="title"]):not([data-screen="char"]):not([data-screen="rules"]):not([data-screen="tree"]) .hudport .shieldrow { position: absolute; left: 50%; bottom: -46px; transform: translateX(-50%); display: flex; gap: 4px; z-index: 5; white-space: nowrap; }
+    body[data-screen="combat"]:not([data-screen="title"]):not([data-screen="char"]):not([data-screen="rules"]):not([data-screen="tree"]) .hudport .shieldrow .shieldtag { position: relative; width: 40px; height: 46px; margin: 0; }
 </style>
 
 <main class="wrap">
@@ -5092,7 +5093,12 @@
       '<button type="button" class="btn ghost small" data-act="toggleDice" aria-expanded="' + S.showDice + '">' + (S.showDice ? 'Hide dice' : 'Dice') + '</button>' + '<button type="button" class="btn ghost small' + (needPotion() ? ' potionglow' : '') + '" data-act="deckOpen" data-deckbtn="1">Deck (' + deckOf().length + ')</button>' +
       '</div></div>';
   }
-  function shieldTag() { return (C && S.screen === 'combat' && C.shield) ? '<span class="shieldtag' + (C.shieldFlash && Date.now() - C.shieldFlash < 1100 ? ' blk' : '') + '" data-tip="shieldup:" tabindex="0" aria-label="Shield up, blocks the next ' + C.shield + ' damage">' + SHIELD_ART + (C.shield > 1 ? '<b>x' + C.shield + '</b>' : '') + '</span>' : ''; }
+  function shieldTag() {
+    if (!(C && S.screen === 'combat' && C.shield > 0)) return '';
+    var h = '', i, flash = C.shieldFlash && Date.now() - C.shieldFlash < 1100;
+    for (i = 0; i < C.shield; i++) h += '<span class="shieldtag' + (flash && i === C.shield - 1 ? ' blk' : '') + '" data-tip="shieldup:" tabindex="0" aria-label="Armour point">' + SHIELD_ART + '</span>';
+    return '<span class="shieldrow" aria-label="' + C.shield + ' armour">' + h + '</span>';
+  }
   function hudPortrait(extra) {
     var cl = CLASSES[(S && S.cls) || 'fighter'] || CLASSES.fighter;
     return '<div class="hudport' + (extra ? ' ' + extra : '') + '" data-portrait="1" data-tip="char:"><span class="hudframe"><span class="portrait" style="--c1:' + cl.c1 + ';--c2:' + cl.c2 + ';--eye:' + cl.eye + '">' + ART[cl.art] + '</span></span><span class="lvbadge">' + S.player.level + '</span>' + shieldTag() + '</div>';
@@ -5821,7 +5827,7 @@
       var pc = S.player, cc = CLASSES[S.cls || 'fighter'] || CLASSES.fighter, lv = S.shopLevel || 0, fq = fightLuck({ kind: 'fight' }), cb = critDmg() - 2, hl = (pc.ab.wind || 0) + (own('mending') ? 1 : 0);
       var V = function (t) { return '<span style="color:#ffd37a">' + t + '</span>'; };
       return '<b>' + cc.name + ' · level ' + pc.level + '</b>' +
-        '<p>HP ' + V(hp(pc) + ' / ' + pc.dice.length) + '</p>' + '<p>XP ' + V(pc.xp + (LEVELS[pc.level - 1] !== undefined ? ' / ' + LEVELS[pc.level - 1] : '')) + '</p>' +
+        '<p>HP ' + V(hp(pc) + ' / ' + pc.dice.length) + '</p>' + ((C && S.screen === 'combat' && C.shield > 0) ? '<p>Armour ' + V(C.shield) + '</p>' : '') + '<p>XP ' + V(pc.xp + (LEVELS[pc.level - 1] !== undefined ? ' / ' + LEVELS[pc.level - 1] : '')) + '</p>' +
         '<p>Shop rarity ' + V(shopRarity()) + '</p>' +
         '<p>Drop chance ' + V(Math.round(dropChance({ kind: 'fight' }) * 100) + '%') + '</p>' +
         '<p>Crit damage ' + V(critDmg()) + (cb ? ' <span class="dim">(+' + cb + ' extra)</span>' : '') + '</p>' +
