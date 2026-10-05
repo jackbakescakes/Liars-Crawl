@@ -2098,6 +2098,12 @@
   .sc-bj .bjend .dealresult { opacity: 1; animation: none; }
   .sc-bj { gap: 6px !important; } .sc-bj .dealresult { font-size: 22px; } .sc-bj .bjend { max-width: 760px; }
   .sc-bj .pbmark { position: relative; display: inline-block; margin-bottom: 14px; }
+
+  /* legendary wares */
+  .rar-legendary { color: #ffb23d; } .rarlegend .rar-legendary, .tip .rar-legendary { color: #ffb23d; }
+  .card.r-legendary { border-color: #e6a23a; --rcol: #e6a23a; --rb: #ffb23d; box-shadow: 0 0 14px 2px rgba(255,178,61,.45); }
+  .card.r-legendary:hover:not(:disabled) { box-shadow: inset 0 0 0 3px #ffb23d, 0 0 18px 4px rgba(255,178,61,.6); }
+  .slot.r-legendary, .btn.r-legendary { --sb: #ffb23d; border-color: #e6a23a; } .tcard.r-legendary { --rc: #ffb23d; }
 </style>
 
 <main class="wrap">
@@ -2255,7 +2261,7 @@
   function hasMod(d, m) { return modCount(d, m) > 0; }
   var HAG = [0, 1, 3, 6];
   var MAXT = { golden: 3, weighted: 3, pregnant: 3, healer: 3, optimist: 3, odd: 3, haggler: 3, peeper: 3, fickle: 3, poly: 3 };
-  var TIERS = { poly: ['Truncated', 'Truncated Decahedron', 'Truncated Dodecahedron'], golden: ['Golden', 'Gilded', 'Midas'], weighted: ['Weighted', 'Loaded', 'Rigged'], odd: ['Odd', 'Peculiar', 'Uncanny'], haggler: ['Haggler', 'Merchant', 'Tycoon'], pregnant: ['Pregnant', 'Fertile', 'Broodmother'], healer: ['Vigorous', 'Robust', 'Undying'], optimist: ['Optimistic', 'Incurably Optimistic', 'Delusionally Optimistic'], peeper: ['Curious', 'Prying', 'Omniscient'], fickle: ['Fickle', 'Capricious', 'Mercurial'] };
+  var TIERS = { poly: ['Truncated', 'Truncated Decahedron', 'Truncated Dodecahedron', 'Truncated Dodecahedron', 'Truncated Dodecahedron', 'Truncated Dodecahedron', 'Icosahedron'], golden: ['Golden', 'Gilded', 'Midas'], weighted: ['Weighted', 'Loaded', 'Rigged'], odd: ['Odd', 'Peculiar', 'Uncanny'], haggler: ['Haggler', 'Merchant', 'Tycoon'], pregnant: ['Pregnant', 'Fertile', 'Broodmother'], healer: ['Vigorous', 'Robust', 'Undying'], optimist: ['Optimistic', 'Incurably Optimistic', 'Delusionally Optimistic'], peeper: ['Curious', 'Prying', 'Omniscient'], fickle: ['Fickle', 'Capricious', 'Mercurial'] };
   function tierName(m, n) { return (TIERS[m] || [MODS[m].name.replace(' Die', '')])[Math.max(1, n || 1) - 1] || MODS[m].name.replace(' Die', ''); }
   // a weighted die adds 1, 2 or 3 sixths to its chance of rolling a 6: it forces a 6 face this often, then rolls normally
   var WEIGHT_FORCE = [0, 0.2, 0.4, 0.6];
@@ -2716,7 +2722,9 @@
     gold: ['....kkkk....', '..kkggggkk..', '.kggGGGGggk.', '.kgGggggGgk.', 'kggGgGGgGggk', 'kggGgGGgGggk', 'kggGgGGgGggk', 'kggGggggGgk.', '.kggGGGGggk.', '.kGGggggGGk.', '..kkGGGGkk..', '....kkkk....']
   };
   var ITEM_ART = {};
+  var D20_ROWS = ['....kkkk....', '..kkGGGGkk..', '.kGGgGGgGGk.', 'kGgGGGGGGgGk', 'kGGGgGGgGGGk', 'kGgGGGGGGgGk', 'kGGGgGGgGGGk', 'kGgGGGGGGgGk', '.kGGgGGgGGk.', '..kkGGGGkk..', '....kkkk....', '............'];
   Object.keys(ITEM_ROWS).forEach(function (k) { ITEM_ART[k] = pixSVG(ITEM_ROWS[k], IPAL, { cls: 'itemsvg' }); });
+  ITEM_ART.d20 = pixSVG(D20_ROWS, { k: 'fill="#2a1604"', G: 'fill="#f3c54a"', g: 'fill="#b57a1a"' }, { cls: 'itemsvg' });
   ITEM_ART.potion = ITEM_ART.heal;
   // seals look like blobs of wax pressed with a mark, with a little ribbon tail
   function shadeHex(hex, f) {
@@ -3321,7 +3329,7 @@
     S.hold = null; render();
   }
   function kindOf(key) {
-    if (ITEMS[key] || key === 'heal' || key === 'cup' || key === 'cup2' || key === 'maxdie' || key === 'maxdie2') return 'item';
+    if (ITEMS[key] || key === 'heal' || key === 'cup' || key === 'cup2' || key === 'd20' || key === 'maxdie' || key === 'maxdie2') return 'item';
     if (MODS[key] || key === 'load' || key === 'face' || key === 'wild') return 'sigil';
     return '';
   }
@@ -3442,6 +3450,7 @@
   }
   function heal(p, n) { var h = 0; p.dice.forEach(function (d) { if (!d.up && !d.stolen && h < n) { d.up = true; h++; } }); return h; }
   function returnStolen() { if (S.player) S.player.dice.forEach(function (d) { if (d.stolen) { d.stolen = false; d.up = true; } }); }
+  function addD20(p) { if (p.gotD20 || p.dice.length >= maxDice()) return false; var d = newDie(); for (var k = 0; k < 7; k++) d.mods.push('poly'); p.dice.push(d); p.gotD20 = true; return true; }
   function addDice(p, n) { var k = 0; while (k < n && addMaxDie(p)) k++; return k; }
   function addMaxDie(p) { if (p.dice.length >= maxDice()) return false; p.dice.push(newDie()); return true; }
   function floorCfg() { return FLOORS[S.floorNum - 1]; }
@@ -4558,24 +4567,28 @@
     }
     if (S.pending > 0) openLevelUp(); else afterLevels();
   }
-  var RARITY = { common: { name: 'Common', w: 50 }, uncommon: { name: 'Uncommon', w: 28 }, rare: { name: 'Rare', w: 15 }, epic: { name: 'Epic', w: 7 } };
+  var RARITY = { common: { name: 'Common', w: 50 }, uncommon: { name: 'Uncommon', w: 28 }, rare: { name: 'Rare', w: 15 }, epic: { name: 'Epic', w: 7 }, legendary: { name: 'Legendary', w: 0 } };
   var ITEM_RAR = { gold: 'common', goldU: 'uncommon', goldR: 'rare', goldE: 'epic', poly: 'epic', heal: 'common', peek: 'common', reroll: 'uncommon', face: 'uncommon', load: 'uncommon', golden: 'uncommon', odd: 'common', haggler: 'common', wild: 'rare', weighted: 'rare', healer: 'epic', optimist: 'rare', maxdie: 'epic', cup: 'epic', pregnant: 'epic', maxdie2: 'epic', cup2: 'epic', satchel: 'rare', pendant: 'epic', edge: 'rare' };
   ITEM_ORDER.forEach(function (k) { ITEM_RAR[k] = ITEMS[k].rar; });
   ['potion', 'ring', 'gauntlet', 'crown'].forEach(function (k) { ITEM_RAR[k] = 'common'; });
-  ITEM_RAR.odd = 'common'; ITEM_RAR.haggler = 'common'; ITEM_RAR.peeper = 'uncommon'; ITEM_RAR.fickle = 'uncommon'; ITEM_RAR.poly = 'rare';
+  ITEM_RAR.d20 = 'legendary'; ITEM_RAR.odd = 'common'; ITEM_RAR.haggler = 'common'; ITEM_RAR.peeper = 'uncommon'; ITEM_RAR.fickle = 'uncommon'; ITEM_RAR.poly = 'rare';
   function rarLegend(lvl, luck) {
     var tot = 0, k; for (k in RARITY) tot += rarW(k, lvl, luck);
     var dec = (luck || 0) > 0, fmt = function (x) { var v = dec ? Math.round(x * 10) / 10 : Math.round(x); return String(v); };
-    return '<p class="rarlegend">Chance: ' + Object.keys(RARITY).map(function (k) { return '<span class="rar-' + k + '">' + RARITY[k].name + ' ' + fmt(rarW(k, lvl, luck) / tot * 100) + '%</span>'; }).join(' · ') + (dec ? ' <span class="muted">(haggler luck +' + Math.min(45, luck) + '%)</span>' : '') + '</p>';
+    return '<p class="rarlegend">Chance: ' + Object.keys(RARITY).filter(function (k) { return rarW(k, lvl, luck) > 0; }).map(function (k) { return '<span class="rar-' + k + '">' + RARITY[k].name + ' ' + fmt(rarW(k, lvl, luck) / tot * 100) + '%</span>'; }).join(' · ') + (dec ? ' <span class="muted">(haggler luck +' + Math.min(LUCK_CAP, luck) + '%)</span>' : '') + '</p>';
   }
   function rarOf(key) { return ITEM_RAR[key] || 'common'; }
   function rarTag(key) { var r = rarOf(key); return '<span class="rar rar-' + r + '">' + RARITY[r].name + '</span>'; }
   // draw n distinct entries, rarer ones less likely
-  var LEVEL_MUL = { common: 0.8, uncommon: 1, rare: 1.2, epic: 1.4 };
-  var LUCK_SHARE = { common: -1, uncommon: 0.3, rare: 0.45, epic: 0.25 };
+  var LEVEL_MUL = { common: 0.8, uncommon: 1, rare: 1.2, epic: 1.4, legendary: 1 };
+  var LUCK_CAP = 60;
+  var LUCK_SHARE = { common: -1, uncommon: 0.3, rare: 0.45, epic: 0.25, legendary: 0 };
   function rarW(r, lvl, luck) {
-    var L = Math.min(45, luck || 0), w = RARITY[r].w + LUCK_SHARE[r] * L;
-    return Math.max(2, w) * Math.pow(LEVEL_MUL[r], lvl || 0);
+    var L = Math.min(LUCK_CAP, luck || 0);
+    // legendary wares stay at 0% until luck has squeezed Common out completely, then they start to creep in
+    if (r === 'legendary') return Math.max(0, L - 50);
+    var w = RARITY[r].w + LUCK_SHARE[r] * L;
+    return (r === 'common' ? Math.max(0, w) : Math.max(2, w)) * Math.pow(LEVEL_MUL[r], lvl || 0);
   }
   function drawByRarity(list, n, keyOf, lvl, luck) {
     var pool = list.slice(), out = [];
@@ -4584,6 +4597,9 @@
         var epics = pool.filter(function (e) { return rarOf(keyOf(e)) === 'epic'; });
         if (epics.length) { var ep = epics[rnd(epics.length)]; out.push(pool.splice(pool.indexOf(ep), 1)[0]); continue; }
       }
+      var live = pool.filter(function (e) { return rarW(rarOf(keyOf(e)), lvl, luck) > 0; });
+      if (!live.length) break;
+      pool = live;
       var tot = 0, i; pool.forEach(function (e) { tot += rarW(rarOf(keyOf(e)), lvl, luck); });
       var r = Math.random() * tot;
       for (i = 0; i < pool.length; i++) { r -= rarW(rarOf(keyOf(pool[i])), lvl, luck); if (r <= 0) break; }
@@ -4696,6 +4712,7 @@
       { id: 'cup', name: 'Fill My Cup', desc: 'Permanently add 1 die to your cup.', price: priceOf(55), ok: p.dice.length < maxDice(), why: 'You cannot hold more than ' + maxDice() + ' dice.' },
       { id: 'cup2', name: 'Your Cup Runneth Over', desc: 'Permanently add 2 dice to your cup.', price: priceOf(100), ok: p.dice.length < maxDice(), why: 'You cannot hold more than ' + maxDice() + ' dice.' }
     ];
+    items.push({ id: 'd20', name: 'The D20', desc: 'Permanently add a d20 to your cup. Every side above 6 is wild and scores its number. One per run.', price: priceOf(400), ok: !p.gotD20 && p.dice.length < maxDice(), why: p.gotD20 ? 'You already own the D20.' : 'You cannot hold more than ' + maxDice() + ' dice.' });
     MOD_ORDER.forEach(function (m) { items.push({ id: m, name: MODS[m].name, desc: MODS[m].desc, price: priceOf(MODS[m].base * 1.5), ok: anyApplicable(m), why: 'None of your dice can take this.', mod: m }); });
     ITEM_ORDER.forEach(function (id) {
       var it = ITEMS[id], card = isCard(id), owned = !card && owns(id);
@@ -4731,6 +4748,7 @@
     if (it.id === 'heal') { heal(p, 2); pay(); render(); }
     else if (it.id === 'cup') { addMaxDie(p); pay(); render(); }
     else if (it.id === 'cup2') { addDice(p, 2); pay(); render(); }
+    else if (it.id === 'd20') { if (!addD20(p)) return; pay(); render(); }
     else if (it.inv) { if (!addItem(it.id)) return; pay(); render(); }
     else if (it.id === 'load') openForge('face', { onApply: pay, onDone: toShop, onCancel: toShop });
     else if (it.id === 'wild') openForge('wild', { onApply: pay, onDone: toShop, onCancel: toShop });
