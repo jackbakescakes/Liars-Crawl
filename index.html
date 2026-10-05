@@ -2314,13 +2314,13 @@
   function anyApplicable(m) { return S.player.dice.some(function (d) { return canApply(d, m); }); }
   function rollDie(d, noBabies) {
     var nSides = 6 + 2 * modCount(d, 'poly'), ix = rnd(nSides);
-    var v = ix < 6 ? d.faces[ix] : 0, nW = modCount(d, 'weighted'), nO = modCount(d, 'optimist');
+    var v = ix < 6 ? d.faces[ix] : 0, nW = modCount(d, 'weighted'), nO = modCount(d, 'optimist'), polyHi = ix >= 6 ? ix + 1 : 0;
     if (nW) {
       var sixes = d.faces.filter(function (x) { return x === 6 || x === 0; });
-      if (sixes.length && Math.random() < WEIGHT_FORCE[Math.min(3, nW)]) v = sixes[rnd(sixes.length)];
+      if (sixes.length && Math.random() < WEIGHT_FORCE[Math.min(3, nW)]) { v = sixes[rnd(sixes.length)]; polyHi = 0; }
     }
     if (nO) v = (v === 0 || v + nO > 6) ? 0 : v + nO;
-    var r = { val: v, gold: 0, heal: 0, baby: 0, babies: [], luck: 0, peek: 0, reroll: 0, poly: ix >= 6 ? 1 : 0, opt: nO }, hi = (v === 6 || v === 0);
+    var r = { val: v, sv: (v === 0 && polyHi) ? polyHi : 0, gold: 0, heal: 0, baby: 0, babies: [], luck: 0, peek: 0, reroll: 0, poly: ix >= 6 ? 1 : 0, opt: nO }, hi = (v === 6 || v === 0);
     if (v === 1) { var nHg = modCount(d, 'haggler'); if (nHg) r.luck = HAG[Math.min(3, nHg)]; r.peek = modCount(d, 'peeper'); r.reroll = modCount(d, 'fickle'); }
     if (hi) { var nG = modCount(d, 'golden'), nH = modCount(d, 'healer'); if (nG) r.gold = bonusGold(GOLD_PER_SIX * nG); if (nH) r.heal = nH; }
     var nP = modCount(d, 'pregnant');
@@ -3215,7 +3215,7 @@
     knife: { name: 'Quick Knife', desc: 'Throw it in a fight to deal 1 damage to the enemy. The knife is gone after one throw.', base: 25, rar: 'common' },
     bleach: { name: 'Bleach', desc: 'Drag it onto an enemy die in a fight to wipe every pip off its face-up side.', base: 20, rar: 'common' },
     eyeglass: { name: 'Broken Eyeglass', desc: 'Drag it onto an enemy die in a fight to peer through the crack and see what it shows. One use.', base: 20, rar: 'common' },
-    rend: { name: 'Soul Rend', desc: 'Created whenever your roll adds up to more than 30. Tear one enemy die out of play for good and steal its seals.', base: 0, rar: 'epic' },
+    rend: { name: 'Soul Rend', desc: 'Created whenever your roll adds up to 50 or more. Tear one enemy die out of play for good and steal its seals.', base: 0, rar: 'epic' },
     armour: { name: 'Iron Plate', desc: 'Throw it on in a fight to gain 2 armour. Each point of armour blocks 1 damage. Used up when played.', base: 40, rar: 'uncommon' },
     mead: { name: 'Mead', desc: 'Drink it in a fight: the enemy’s next bid will be for the wrong face. One use.', base: 45, rar: 'uncommon' },
     xp: { name: 'XP Drought', desc: 'Drink it in a fight to gain 100 XP instantly. One use.', base: 55, rar: 'uncommon' },
@@ -3327,7 +3327,8 @@
   }
   function kindTag(key) { var k = kindOf(key); return k ? '<span class="kind kind-' + k + '">' + (k === 'item' ? (isCard(key) ? 'Card' : 'Relic') : 'Seal') + '</span>' : ''; }
   function kindCls(key) { var k = kindOf(key); return k ? ' k-' + k : ''; }
-  function maxDice() { var c = CLASSES[(S && S.cls) || 'fighter']; return (c ? c.max : 16) + (itm('satchel') ? 2 : 0); }
+  var MAX_DICE = 18;
+  function maxDice() { return MAX_DICE + (itm('satchel') ? 2 : 0); }
   var ABIL = {
     peek: { name: 'Carrion Eye', desc: '+1 peek per fight. Look at one of the enemy’s dice.', max: 3 },
     reroll: { name: 'Bone Shake', desc: '+1 reroll per fight.', max: 3 },
@@ -3347,9 +3348,9 @@
   // ---------- meta progression (kept between runs) ----------
   var M = { points: 0, cpoints: 0, total: 0, owned: {}, saved: 0 };
   var CLASSES = {
-    fighter: { name: 'Fighter', art: 'fighter', max: 18, c1: '#8d96a3', c2: '#5a4a3a', eye: '#e8c34a', blurb: 'A scarred sellsword who trusts steel over luck. Earns a skill point with every level, to spend on shield or blade. Holds up to 18 dice.' },
-    cleric: { name: 'Cleric', art: 'cleric', max: 18, c1: '#e6c7a0', c2: '#f0ead6', eye: '#6fb6e8', blurb: 'A fallen priest who still hears the gods. Mends a little after every battle, then walks the path of blessing or the path of wrath. Holds up to 18 dice.' },
-    thief: { name: 'Thief', art: 'thief', max: 18, c1: '#d9b48a', c2: '#4a6a4a', eye: '#e8c34a', blurb: 'A cutpurse who learns to take 50% more gold from everything (first skill, 1 point). Steals from the foe, or lets it bleed. Holds up to 18 dice.' }
+    fighter: { name: 'Fighter', art: 'fighter', c1: '#8d96a3', c2: '#5a4a3a', eye: '#e8c34a', blurb: 'A scarred sellsword who trusts steel over luck. Earns a skill point with every level, to spend on shield or blade. Holds up to 18 dice.' },
+    cleric: { name: 'Cleric', art: 'cleric', c1: '#e6c7a0', c2: '#f0ead6', eye: '#6fb6e8', blurb: 'A fallen priest who still hears the gods. Mends a little after every battle, then walks the path of blessing or the path of wrath. Holds up to 18 dice.' },
+    thief: { name: 'Thief', art: 'thief', c1: '#d9b48a', c2: '#4a6a4a', eye: '#e8c34a', blurb: 'A cutpurse who learns to take 50% more gold from everything (first skill, 1 point). Steals from the foe, or lets it bleed. Holds up to 18 dice.' }
   };
   function pts() { return (S && S.sp) || 0; }
   function addPts(c, n) { S.sp = (S.sp || 0) + n; }
@@ -3669,7 +3670,7 @@
     S.player.dice.forEach(function (d, di) {
       if (!d.up) return;
       var r = rollDie(d), txt = '';
-      C.pv.push({ i: di, val: r.val, baby: false, trig: r.trig });
+      C.pv.push({ i: di, val: r.val, sv: r.sv, baby: false, trig: r.trig });
       if (r.gold) { goldGot += r.gold; txt += '+' + r.gold + ' gold '; }
       if (r.heal) { healN += r.heal; txt += '+' + r.heal + ' HP'; }
       if (r.luck) { luckGot += r.luck; txt += ' +' + r.luck + ' rarity'; }
@@ -3679,7 +3680,7 @@
       if (r.poly) txt += ' Wild';
       if (r.baby) txt += ' +' + r.baby + ' baby';
       if (txt) C.fx[C.pv.length - 1] = txt.trim();
-      r.babies.forEach(function (kb) { C.pv.push({ i: -1, val: kb.val, baby: true, fresh: true, bm: kb.bm, bp: kb.bp, trig: kb.trig }); babies++; });
+      r.babies.forEach(function (kb) { C.pv.push({ i: -1, val: kb.val, sv: kb.sv, baby: true, fresh: true, bm: kb.bm, bp: kb.bp, trig: kb.trig }); babies++; });
     });
     if (own('aura')) {
       C.pv.forEach(function (x, k) { var nv = raise(x.val); if (nv !== x.val || x.val === 0) { if (nv !== x.val) C.fx[k] = (C.fx[k] ? C.fx[k] + ' ' : '') + '+1'; x.val = nv; } x.trig = (x.trig || []).concat(['blessed']); });
@@ -3760,8 +3761,10 @@
     C.anim = C.pv.indexOf(x); C.log.push('You raise a hand and bless one of your dice. ' + (was === 0 ? 'It is already wild.' : 'It rises to ' + (x.val === 0 ? 'a wild face' : faceName(x.val)) + '.'));
     setSel(); render();
   }
-  // the Soul Rend spell: if the dice in your hand add up to more than 30, you may tear one enemy die out of play for good and steal its seals
-  function pvTotal() { return C ? C.pv.reduce(function (a, x) { return a + sumVal(x.val); }, 0) : 0; }
+  // the Soul Rend spell: if the dice in your hand add up to 50 or more, you may tear one enemy die out of play for good and steal its seals
+  function scoreOf(x) { return x.val === 0 && x.sv ? x.sv : sumVal(x.val); }
+  var REND_MIN = 50;
+  function pvTotal() { return C ? C.pv.reduce(function (a, x) { return a + scoreOf(x); }, 0) : 0; }
   function spellReady() { return !!(C && C.phase === 'bid' && C.turn === 'p' && itm('rend')); }
   // takes one enemy die out of play for good (the enemy permanently loses it). Returns the seals it carried.
   function destroyEnemyDie(i) {
@@ -4479,9 +4482,9 @@
     var moved = [];
     C.rerollSel.forEach(function (k) {
       var x = C.pv[k], r = { trig: [] };
-      if (x.baby) x.val = 1 + rnd(6);
+      if (x.baby) { x.val = 1 + rnd(6); x.sv = 0; }
       else {
-        r = rollDie(S.player.dice[x.i], true); x.val = r.val; x.trigNew = true;
+        r = rollDie(S.player.dice[x.i], true); x.val = r.val; x.sv = r.sv; x.trigNew = true;
         if (r.gold) { S.player.gold += r.gold; C.fx[k] = '+' + r.gold + ' gold'; C.log.push('Your golden die pays ' + r.gold + ' gold.'); }
         if (r.luck) { S.shopLuck = (S.shopLuck || 0) + r.luck; C.fx[k] = '+' + r.luck + ' rarity'; C.log.push('Your haggler die raises your shop rarity by ' + r.luck + '.'); }
         if (r.heal && heal(S.player, r.heal)) { C.fx[k] = (C.fx[k] ? C.fx[k] + ' ' : '') + '+' + r.heal + ' HP'; C.log.push('Your vigorous die recovers ' + r.heal + ' HP.'); }
@@ -4821,7 +4824,7 @@
     return ev;
   }
   function sumVal(v) { return v === 0 ? 6 : v; }
-  function evVal(v, low) { return v === 0 ? (low ? 1 : 6) : v; }
+  function evVal(v, low, sv) { return v === 0 ? (low ? 1 : (sv || 6)) : v; }
   function evToggle(i) {
     if (!S.player.dice[i] || !S.player.dice[i].up) return;
     var s = S.event.sel, k = s.indexOf(i);
@@ -4831,7 +4834,7 @@
   function simPick() {
     var ds = S.event.sel.map(function (i) { return S.player.dice[i]; }), N = 1500, w = 0, l = 0, hi = S.event.info.hi, lo = S.event.info.lo, low = !!S.event.info.low;
     for (var t = 0; t < N; t++) {
-      var sum = 0; ds.forEach(function (d) { var r = rollDie(d); sum += evVal(r.val, low); r.babies.forEach(function (kb) { sum += evVal(kb.val, low); }); });
+      var sum = 0; ds.forEach(function (d) { var r = rollDie(d); sum += evVal(r.val, low, r.sv); r.babies.forEach(function (kb) { sum += evVal(kb.val, low, kb.sv); }); });
       if (low) { if (sum <= lo) w++; else if (sum >= hi) l++; } else if (sum >= hi) w++; else if (sum <= lo) l++;
     }
     return { win: Math.round(w / N * 100), lose: Math.round(l / N * 100) };
@@ -4844,8 +4847,8 @@
     ev.sel.forEach(function (i) {
       var d = p.dice[i], r = rollDie(d), mods = badgeKeys(d);
       entries.push({ val: r.val, mods: mods, baby: false, gold: r.gold });
-      sum += evVal(r.val, info.low); goldGot += r.gold; healN += r.heal; S.shopLuck = (S.shopLuck || 0) + (r.luck || 0);
-      r.babies.forEach(function (kb) { entries.push({ val: kb.val, mods: kb.bm || [], baby: true, gold: 0 }); sum += evVal(kb.val, info.low); });
+      sum += evVal(r.val, info.low, r.sv); goldGot += r.gold; healN += r.heal; S.shopLuck = (S.shopLuck || 0) + (r.luck || 0);
+      r.babies.forEach(function (kb) { entries.push({ val: kb.val, mods: kb.bm || [], baby: true, gold: 0 }); sum += evVal(kb.val, info.low, kb.sv); });
     });
     p.gold += goldGot;
     var healedN = healN ? heal(p, healN) : 0;
@@ -5233,7 +5236,7 @@
       '<div class="card"><h3>Drop chance</h3><p>The chance a slain foe drops its seal. It also lifts the quality of the relics, cards and seals you are offered after a fight. The Tarnished Crown, the Grave Robber’s Hook and the Web of Bones raise it.</p></div>' +
       '<div class="card"><h3>Shop rarity</h3><p>How likely shops are to offer rarer relics, cards and seals. Upgrade the Black Market to raise it, and Haggler dice add to it too. Wandering merchants, the Bone Peddler and the card dealer all sell better wares as it rises.</p></div>' +
       '<div class="card"><h3>Grow stronger</h3><p>Win fights for XP and gold. Sharpen your dice and keep descending, or die trying.</p></div></div>' +
-      secretRule('Soul Rend', !!M.seenSoul, 'Some things cannot be explained to someone who has not felt them tear.', '<div class="card"><h3>Soul Rend</h3><p>If the dice in your hand add up to more than 30 (a wild counts as 6), a spell appears. Drag its arrow onto an enemy die, or tap it then tap a die. That die is destroyed for good and you steal its seals, then place them on your dice as you choose. Once per round.</p></div>') +
+      secretRule('Soul Rend', !!M.seenSoul, 'Some things cannot be explained to someone who has not felt them tear.', '<div class="card"><h3>Soul Rend</h3><p>If the dice in your hand add up to 50 or more (a wild counts as 6, and the extra sides of a bigger die count as their number), a spell appears. Drag its arrow onto an enemy die, or tap it then tap a die. That die is destroyed for good and you steal its seals, then place them on your dice as you choose. Once per round.</p></div>') +
       secretRule('Big Big', !!M.seenBig, 'A rumour the dice only whisper to those who have already heard it roar.', '<div class="card"><h3>Big Big</h3><p>If ten or more of your dice show the same number, wilds included, the table explodes. The enemy takes 10 damage at once.</p></div>');
   }
   function keyRow(art, name, txt) { return '<div class="keyrow"><span class="ki">' + art + '</span><p><b>' + name + '</b>' + (txt ? ' ' + txt : '') + '</p></div>'; }
@@ -5263,7 +5266,7 @@
     fold('Gifts', Object.keys(ABIL).map(function (k) { return ABIL_ART[k] ? keyRow(ABIL_ART[k], ABIL[k].name, ABIL[k].desc) : ''; }));
     fold('Odds and ends', [
       keyRow(BICON.poly, 'Truncated', 'An epic seal that cuts a die into a d8, d10 or d12. Every side above 6 is wild.'),
-      keyRow(SPELL_ART, 'Soul Rend', 'Appears when your dice total more than 30. Drag it onto an enemy die to destroy it and steal its seals.'),
+      keyRow(SPELL_ART, 'Soul Rend', 'Appears when your dice total 50 or more. Drag it onto an enemy die to destroy it and steal its seals.'),
       keyRow(BLESS_ICON, 'Blessed', 'A die touched by a blessing.'),
       keyRow(SPY_ICON, 'Spied', 'A die of the enemy’s that you have peeked at.')
     ]);
@@ -5505,8 +5508,8 @@
     var log = '<ul class="log">' + C.log.slice(-14).reverse().map(function (l) { return '<li>' + l + '</li>'; }).join('') + '</ul>';
     var modal = C.confirmBid ? '<div class="modal" role="dialog" aria-modal="true"><div class="modalbox"><h3>Are you certain?</h3><p>You are bidding <b>' + C.confirmBid.qty + ' × ' + faceName(C.confirmBid.face) + '</b>, but your own hand holds only <b>' + C.confirmBid.mine + '</b> of them (wilds count). Most of that bid is resting on the enemy’s dice.</p><div class="row" style="justify-content:center"><button type="button" class="btn torch" data-act="bidSure">Bid anyway</button><button type="button" class="btn ghost" data-act="bidBack">Go back</button></div></div></div>' : '';
     var pp = HPARTS || hudParts() || {};
-    var rolled = '<div class="rollrow"><div class="lbl">Your roll <span class="chip chip-total' + (pvTotal() > 30 ? ' hot' : '') + '" title="When your dice add up to more than 30, the Soul Rend spell appears">Total ' + pvTotal() + '</span>' + (C.pv.some(function (x) { return x.spied; }) ? ' <span class="chip chip-blood">Watched</span>' : '') + '' + (C.berserk ? ' <span class="chip chip-blood">Berserk</span>' : '') + '</div><div class="cups" style="margin-top:6px">' + mine + '</div></div>';
-    var rollchips = '<span class="chip chip-total' + (pvTotal() > 30 ? ' hot' : '') + '" title="When your dice add up to more than 30, the Soul Rend spell appears">Total ' + pvTotal() + '</span>' + (C.pv.some(function (x) { return x.spied; }) ? ' <span class="chip chip-blood">Watched</span>' : '') + '' + (C.berserk ? ' <span class="chip chip-blood">Berserk</span>' : '') + (pp.chips || '');
+    var rolled = '<div class="rollrow"><div class="lbl">Your roll <span class="chip chip-total' + (pvTotal() >= REND_MIN ? ' hot' : '') + '" title="When your dice add up to 50 or more, the Soul Rend spell appears">Total ' + pvTotal() + '</span>' + (C.pv.some(function (x) { return x.spied; }) ? ' <span class="chip chip-blood">Watched</span>' : '') + '' + (C.berserk ? ' <span class="chip chip-blood">Berserk</span>' : '') + '</div><div class="cups" style="margin-top:6px">' + mine + '</div></div>';
+    var rollchips = '<span class="chip chip-total' + (pvTotal() >= REND_MIN ? ' hot' : '') + '" title="When your dice add up to 50 or more, the Soul Rend spell appears">Total ' + pvTotal() + '</span>' + (C.pv.some(function (x) { return x.spied; }) ? ' <span class="chip chip-blood">Watched</span>' : '') + '' + (C.berserk ? ' <span class="chip chip-blood">Berserk</span>' : '') + (pp.chips || '');
     var me = '';
     if (WIDEUI) { var pq = {}; for (var kq in pp) pq[kq] = pp[kq]; pq.dice = '<div class="mycups cups">' + mine + '</div>'; pq.chips = rollchips; pq.abil = (typeof abil === 'string') ? abil : ''; me = hudBarHTML(pq); rolled = ''; }
     var topbtns = '<div class="topbtns"><button type="button" class="btn ghost small" data-act="toggleDice" aria-expanded="' + S.showDice + '">' + (S.showDice ? 'Hide dice' : 'Dice') + '</button><button type="button" class="btn ghost small" data-act="toggleLog" aria-expanded="' + !!S.showLog + '">' + (S.showLog ? 'Hide log' : 'Log') + '</button></div>';
@@ -6659,10 +6662,10 @@
   function closeCardSwap() { if (swapEl && swapEl.parentNode) swapEl.parentNode.removeChild(swapEl); swapEl = null; }
   function checkRend() {
     if (!C || S.screen !== 'combat' || C.phase !== 'bid' || !C.pv || !C.pv.length || C.rendRound === C.round || swapEl) return;
-    if (pvTotal() <= 30) return;
+    if (pvTotal() < REND_MIN) return;
     C.rendRound = C.round;
     if (itm('rend')) return;
-    claimCard('rend', function () { render(); }, 'Your roll adds up to more than 30.');
+    claimCard('rend', function () { render(); }, 'Your roll adds up to 50 or more.');
   }
   var revealQ = [], revealEl = null;
   function queueReveal(id) { revealQ.push(id); if (!revealEl) nextReveal(); }
@@ -6751,7 +6754,7 @@
     if (t.closest('[data-closedeck]') || t === deckEl && deckEl.className === 'deckmodal') { closeDeck(); return; }
     var c = t.closest('.tcard[data-card]'); if (!c || Date.now() < noClickUntil) return;
     var id = c.getAttribute('data-card'), ci = CARD_INFO[id] || {};
-    if (ci.type === 'Target' || ci.type === 'Spell') { var h = deckEl.querySelector('.trayhint') || deckEl.querySelector('.deckhint'); if (h) h.textContent = id === 'potion' ? (cardCan(id) ? 'Drag the arrow onto your portrait or a fallen die.' : 'None of your dice have fallen.') : cardCan(id) ? (id === 'armour' ? 'Drag the arrow onto your portrait.' : 'Drag it onto an enemy die.') : id === 'rend' ? 'Your dice must add up to more than 30, once per round.' : 'Nothing to use it on.'; return; }
+    if (ci.type === 'Target' || ci.type === 'Spell') { var h = deckEl.querySelector('.trayhint') || deckEl.querySelector('.deckhint'); if (h) h.textContent = id === 'potion' ? (cardCan(id) ? 'Drag the arrow onto your portrait or a fallen die.' : 'None of your dice have fallen.') : cardCan(id) ? (id === 'armour' ? 'Drag the arrow onto your portrait.' : 'Drag it onto an enemy die.') : id === 'rend' ? 'Your dice must add up to 50 or more, once per round.' : 'Nothing to use it on.'; return; }
     if (!cardCan(id)) { var h2 = deckEl.querySelector('.trayhint'); if (h2) h2.textContent = id === 'potion' ? 'None of your dice have fallen.' : 'You cannot play that now.'; return; }
     playSelfCard(id, c);
   }
