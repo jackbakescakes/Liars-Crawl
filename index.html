@@ -2104,6 +2104,17 @@
   .card.r-legendary { border-color: #e6a23a; --rcol: #e6a23a; --rb: #ffb23d; box-shadow: 0 0 14px 2px rgba(255,178,61,.45); }
   .card.r-legendary:hover:not(:disabled) { box-shadow: inset 0 0 0 3px #ffb23d, 0 0 18px 4px rgba(255,178,61,.6); }
   .slot.r-legendary, .btn.r-legendary { --sb: #ffb23d; border-color: #e6a23a; } .tcard.r-legendary { --rc: #ffb23d; }
+
+  /* fickle seal: tick or cross after the die flashes */
+  .fkres { position: absolute; inset: 0; pointer-events: none; z-index: 7; }
+  .fkmark { position: absolute; left: 50%; top: 50%; width: 38px; height: 38px; margin: -19px 0 0 -19px; opacity: 0; font-style: normal; }
+  .fkmark svg { width: 100%; height: 100%; display: block; }
+  @keyframes fkpop { 0% { opacity: 0; transform: scale(.3); } 14% { opacity: 1; transform: scale(1.6); } 28% { transform: scale(1); } 80% { opacity: 1; transform: scale(1); } 100% { opacity: 0; transform: translateY(-14px) scale(1); } }
+  @keyframes fkslam { 0% { opacity: 0; transform: scale(1.9); } 14% { opacity: 1; transform: scale(1) translateX(0); } 24% { transform: translateX(-5px); } 34% { transform: translateX(5px); } 44% { transform: translateX(-4px); } 54% { transform: translateX(4px); } 64% { transform: translateX(0); } 82% { opacity: 1; } 100% { opacity: 0; transform: translateY(-14px); } }
+  @media (prefers-reduced-motion: no-preference) {
+    .fkmark.fkok { animation: fkpop .8s steps(8) both; }
+    .fkmark.fkno { animation: fkslam .8s steps(8) both; }
+  }
 </style>
 
 <main class="wrap">
@@ -2327,7 +2338,7 @@
     }
     if (nO) v = (v === 0 || v + nO > 6) ? 0 : v + nO;
     var r = { val: v, sv: (v === 0 && polyHi) ? polyHi : 0, gold: 0, heal: 0, baby: 0, babies: [], luck: 0, peek: 0, reroll: 0, poly: ix >= 6 ? 1 : 0, opt: nO }, hi = (v === 6 || v === 0);
-    if (v === 1) { var nHg = modCount(d, 'haggler'); if (nHg) r.luck = HAG[Math.min(3, nHg)]; r.peek = modCount(d, 'peeper'); for (var fk = modCount(d, 'fickle'); fk > 0; fk--) { if (Math.random() < 0.5) r.reroll++; } }
+    if (v === 1) { var nHg = modCount(d, 'haggler'); if (nHg) r.luck = HAG[Math.min(3, nHg)]; r.peek = modCount(d, 'peeper'); var nFk = modCount(d, 'fickle'); if (nFk) { r.fk = []; for (var fk = 0; fk < nFk; fk++) { var okF = Math.random() < 0.5; r.fk.push(okF); if (okF) r.reroll++; } } }
     if (hi) { var nG = modCount(d, 'golden'), nH = modCount(d, 'healer'); if (nG) r.gold = bonusGold(GOLD_PER_SIX * nG); if (nH) r.heal = nH; }
     var nP = modCount(d, 'pregnant');
     if (hi && nP && !noBabies) {
@@ -2336,7 +2347,7 @@
       for (var b = 0; b < nP; b++) { var kr = rollDie(kid, true); kr.bm = bk; kr.bp = modCount(kid, 'poly'); r.babies.push(kr); r.gold += kr.gold; r.heal += kr.heal; r.luck += kr.luck || 0; r.peek += kr.peek || 0; r.reroll += kr.reroll || 0; }
       r.baby = r.babies.length;
     }
-    r.trig = []; if (nW && hi) r.trig.push('weighted'); if (nO) r.trig.push('optimist'); if (r.gold) r.trig.push('golden'); if (r.heal) r.trig.push('healer'); if (r.baby) r.trig.push('pregnant'); if (r.luck) r.trig.push('haggler'); if (r.peek) r.trig.push('peeper'); if (r.reroll) r.trig.push('fickle'); if (r.poly) r.trig.push('poly');
+    r.trig = []; if (nW && hi) r.trig.push('weighted'); if (nO) r.trig.push('optimist'); if (r.gold) r.trig.push('golden'); if (r.heal) r.trig.push('healer'); if (r.baby) r.trig.push('pregnant'); if (r.luck) r.trig.push('haggler'); if (r.peek) r.trig.push('peeper'); if (r.fk && r.fk.length) r.trig.push('fickle'); if (r.poly) r.trig.push('poly');
     return r;
   }
 
@@ -2942,7 +2953,14 @@
   var TRIGSFX = { golden: 't_golden', healer: 't_healer', pregnant: 't_pregnant', optimist: 't_optimist', weighted: 't_weighted', haggler: 't_haggler', peeper: 't_peeper', fickle: 't_fickle', poly: 't_poly', odd: 't_odd' };
   function playTrigs(list) {
     var seen = {}, n = 0;
-    (list || []).forEach(function (x) { (x.trig || []).forEach(function (t) { if (!seen[t] && TRIGSFX[t]) { seen[t] = 1; (function (nm, at) { setTimeout(function () { sfx(nm); }, at); })(TRIGSFX[t], 480 + n * 140); n++; } }); });
+    (list || []).forEach(function (x) { (x.fk || []).forEach(function (ok, k) { setTimeout(function () { sfx(ok ? 'fk_ok' : 'fk_no'); }, Math.round((FK_START + k * FK_GAP) * 1000)); }); (x.trig || []).forEach(function (t) { if (!seen[t] && TRIGSFX[t]) { seen[t] = 1; (function (nm, at) { setTimeout(function () { sfx(nm); }, at); })(TRIGSFX[t], 480 + n * 140); n++; } }); });
+  }
+  // fickle seal: after the die flashes, each 50% chance shows a green tick or a red cross in turn
+  var FK_TICK = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3.5 12.5l6 6L21 5.5" fill="none" stroke="#0d2a14" stroke-width="7" stroke-linecap="square" stroke-linejoin="miter"/><path d="M3.5 12.5l6 6L21 5.5" fill="none" stroke="#3ddc6a" stroke-width="4" stroke-linecap="square" stroke-linejoin="miter"/></svg>';
+  var FK_CROSS = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4.5 4.5l15 15M19.5 4.5l-15 15" fill="none" stroke="#2a0d0b" stroke-width="7" stroke-linecap="square"/><path d="M4.5 4.5l15 15M19.5 4.5l-15 15" fill="none" stroke="#ff4b3e" stroke-width="4" stroke-linecap="square"/></svg>';
+  var FK_START = 1.55, FK_GAP = 0.8;
+  function fkHTML(fk, el) {
+    return '<span class="fkres" aria-hidden="true">' + fk.map(function (ok, k) { return '<i class="fkmark ' + (ok ? 'fkok' : 'fkno') + '" style="animation-delay:' + (FK_START + k * FK_GAP - el).toFixed(2) + 's">' + (ok ? FK_TICK : FK_CROSS) + '</i>'; }).join('') + '</span>';
   }
   function dieWrap(v, o) {
     o = o || {};
@@ -2950,7 +2968,7 @@
     var tg = o.trig || [];
     return '<span class="dwrap' + (polyW(o) ? ' dpw dpw' + polyW(o) : '') + (o.spy ? ' spied' : '') + (o.marked ? ' marked' : '') + (o.baby ? ' baby' : '') + (o.fresh ? ' fx-pop' : '') + (o.gone ? ' gone' : '') + tg.map(function (t) { return ' trig-' + t; }).join('') + '">' + dieHTML(v, o) + tg.map(function (t) { return '<span class="trigfx trigfx-' + t + '">' + BICON[t] + '</span>'; }).join('') +
       (mods.length && (o.s || 40) >= 36 ? badgesHTML(mods) : '') + (o.baby ? '<span class="babytag">baby</span>' : '') + (o.marked ? '<span class="marktag">marked</span>' : '') + (o.spy ?'<span class="spyeye" title="An enemy can see this die">' + SPY_ICON + '</span>' : '') +
-      (o.fx ? '<span class="floatfx">' + fxHTML(o.fx) + '</span>' : '') + (polyW(o) ? '<span class="dlabel">d' + polyW(o) + '</span>' : '') + '</span>';
+      (o.fk ? fkHTML(o.fk, o.fkEl || 0) : '') + (o.fx ? '<span class="floatfx">' + fxHTML(o.fx) + '</span>' : '') + (polyW(o) ? '<span class="dlabel">d' + polyW(o) + '</span>' : '') + '</span>';
   }
   function sampleDie(d, s) { return dieWrap(d.faces[5], { s: s, mods: badgeKeys(d), poly: polyOf(polyN(d)) }); }
 
@@ -3679,7 +3697,7 @@
     S.player.dice.forEach(function (d, di) {
       if (!d.up) return;
       var r = rollDie(d), txt = '';
-      C.pv.push({ i: di, val: r.val, sv: r.sv, baby: false, trig: r.trig });
+      C.pv.push({ i: di, val: r.val, sv: r.sv, baby: false, trig: r.trig, fk: r.fk, fkT: Date.now() });
       if (r.gold) { goldGot += r.gold; txt += '+' + r.gold + ' gold '; }
       if (r.heal) { healN += r.heal; txt += '+' + r.heal + ' HP'; }
       if (r.luck) { luckGot += r.luck; txt += ' +' + r.luck + ' rarity'; }
@@ -3689,7 +3707,7 @@
       if (r.poly) txt += ' Wild';
       if (r.baby) txt += ' +' + r.baby + ' baby';
       if (txt) C.fx[C.pv.length - 1] = txt.trim();
-      r.babies.forEach(function (kb) { C.pv.push({ i: -1, val: kb.val, sv: kb.sv, baby: true, fresh: true, bm: kb.bm, bp: kb.bp, trig: kb.trig }); babies++; });
+      r.babies.forEach(function (kb) { C.pv.push({ i: -1, val: kb.val, sv: kb.sv, fk: kb.fk, fkT: Date.now(), baby: true, fresh: true, bm: kb.bm, bp: kb.bp, trig: kb.trig }); babies++; });
     });
     if (own('aura')) {
       C.pv.forEach(function (x, k) { var nv = raise(x.val); if (nv !== x.val || x.val === 0) { if (nv !== x.val) C.fx[k] = (C.fx[k] ? C.fx[k] + ' ' : '') + '+1'; x.val = nv; } x.trig = (x.trig || []).concat(['blessed']); });
@@ -4491,9 +4509,9 @@
     var moved = [];
     C.rerollSel.forEach(function (k) {
       var x = C.pv[k], r = { trig: [] };
-      if (x.baby) { x.val = 1 + rnd(6); x.sv = 0; }
+      if (x.baby) { x.val = 1 + rnd(6); x.sv = 0; x.fk = null; }
       else {
-        r = rollDie(S.player.dice[x.i], true); x.val = r.val; x.sv = r.sv; x.trigNew = true;
+        r = rollDie(S.player.dice[x.i], true); x.val = r.val; x.sv = r.sv; x.fk = r.fk; x.fkT = Date.now(); x.trigNew = true;
         if (r.gold) { S.player.gold += r.gold; C.fx[k] = '+' + r.gold + ' gold'; C.log.push('Your golden die pays ' + r.gold + ' gold.'); }
         if (r.luck) { S.shopLuck = (S.shopLuck || 0) + r.luck; C.fx[k] = '+' + r.luck + ' rarity'; C.log.push('Your haggler die raises your shop rarity by ' + r.luck + '.'); }
         if (r.heal && heal(S.player, r.heal)) { C.fx[k] = (C.fx[k] ? C.fx[k] + ' ' : '') + '+' + r.heal + ' HP'; C.log.push('Your vigorous die recovers ' + r.heal + ' HP.'); }
@@ -5478,7 +5496,7 @@
       var isA = anim === 'all' || anim === k || (Array.isArray(anim) && anim.indexOf(k) > -1);
       var tr = x.trigNew !== false && x.trig && x.trig.length && isA ? x.trig.slice() : null;
       if (x.strip) { tr = (tr || []).concat(['strip']); x.strip = false; }
-      var h = dieWrap(x.val, { s: x.baby ? 44 : 65, poly: x.baby ? polyOf(x.bp) : polyOf(polyN(S.player.dice[x.i])), spy: x.spied, marked: x.marked, hit: hit(x.val), mods: mods, baby: x.baby, roll: isA, fresh: x.fresh, gone: x.dead, fx: fxmap[k] || '', trig: tr });
+      var h = dieWrap(x.val, { s: x.baby ? 44 : 65, poly: x.baby ? polyOf(x.bp) : polyOf(polyN(S.player.dice[x.i])), spy: x.spied, marked: x.marked, fk: (x.fk && x.fk.length && x.fkT && Date.now() - x.fkT < (FK_START + FK_GAP * x.fk.length + 0.9) * 1000) ? x.fk : null, fkEl: x.fkT ? (Date.now() - x.fkT) / 1000 : 0, hit: hit(x.val), mods: mods, baby: x.baby, roll: isA, fresh: x.fresh, gone: x.dead, fx: fxmap[k] || '', trig: tr });
       x.fresh = false;
       if (C.target === 'reroll' && x.marked) return '<span class="pvhov mkdie" data-tip="pv:' + k + '">' + h + '</span>';
       if (C.target === 'reroll' && C.rerollSel.indexOf(k) > -1) return '<span class="rrgone">' + dieHTML(0, { s: 65, ghost: true }) + '</span>';
@@ -6229,6 +6247,8 @@
     t_odd: function () { tone({ f: 660, d: 0.05, v: 0.07, t: 'triangle' }); tone({ f: 495, d: 0.08, v: 0.07, t: 'triangle', at: 0.06 }); },
     click: function () { tone({ f: 520, f2: 380, d: 0.05, v: 0.07 }); },
     tick: function () { tone({ f: 760, d: 0.025, v: 0.05, t: 'triangle' }); },
+    fk_ok: function () { tone({ f: 1318, d: 0.5, v: 0.14, t: 'sine' }); tone({ f: 2637, d: 0.35, v: 0.05, t: 'sine' }); tone({ f: 1760, d: 0.45, v: 0.09, t: 'sine', at: 0.09 }); },
+    fk_no: function () { [0, 0.2].forEach(function (a) { tone({ f: 150, f2: 48, d: 0.17, v: 0.38, t: 'square', at: a }); hiss({ d: 0.1, v: 0.25, ft: 'lowpass', fq: 500, at: a }); }); },
     bid: function () { tone({ f: 330, d: 0.09, v: 0.1, t: 'triangle' }); tone({ f: 440, d: 0.1, v: 0.1, t: 'triangle', at: 0.06 }); },
     ebid: function () { tone({ f: 196, d: 0.1, v: 0.12, t: 'sawtooth' }); tone({ f: 165, d: 0.14, v: 0.1, t: 'sawtooth', at: 0.07 }); },
     call: function () { tone({ f: 110, f2: 62, d: 0.28, v: 0.3, t: 'sawtooth' }); hiss({ d: 0.12, v: 0.18, ft: 'lowpass', fq: 700 }); },
