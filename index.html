@@ -2120,6 +2120,11 @@
   body[data-screen="combat"]:not([data-screen="title"]):not([data-screen="char"]):not([data-screen="rules"]):not([data-screen="tree"]) .mycups .dwrap.baby .die { --s: 58px !important; width: 58px !important; height: 58px !important; }
   body[data-screen="combat"]:not([data-screen="title"]):not([data-screen="char"]):not([data-screen="rules"]):not([data-screen="tree"]) .mycups .dwrap.baby { align-self: center; }
   body[data-screen="combat"]:not([data-screen="title"]):not([data-screen="char"]):not([data-screen="rules"]):not([data-screen="tree"]) .mycups .dwrap.baby .babytag { font-size: 15px !important; bottom: -9px; padding: 0 3px; }
+
+  /* seals sit on the bottom edge of their die, scaled to it; overlapping each other is fine */
+  .dwrap > .dbadges:has(.mb-seal) { left: 0 !important; right: 0 !important; bottom: -9% !important; justify-content: center; transform: none !important; gap: 0 !important; z-index: 2; pointer-events: none; }
+  .dwrap > .dbadges .mb.mb-seal { width: 42% !important; height: auto !important; aspect-ratio: 46 / 52; margin: 0 -9%; flex: 0 0 auto; }
+  .dwrap > .dbadges .mb:not(.mb-seal) { margin: 0 1px; }
 </style>
 
 <main class="wrap">
