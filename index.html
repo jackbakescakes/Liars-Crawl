@@ -2115,6 +2115,11 @@
     .fkmark.fkok { animation: fkpop .8s steps(8) both; }
     .fkmark.fkno { animation: fkslam .8s steps(8) both; }
   }
+
+  /* baby dice are smaller than full dice */
+  body[data-screen="combat"]:not([data-screen="title"]):not([data-screen="char"]):not([data-screen="rules"]):not([data-screen="tree"]) .mycups .dwrap.baby .die { --s: 58px !important; width: 58px !important; height: 58px !important; }
+  body[data-screen="combat"]:not([data-screen="title"]):not([data-screen="char"]):not([data-screen="rules"]):not([data-screen="tree"]) .mycups .dwrap.baby { align-self: center; }
+  body[data-screen="combat"]:not([data-screen="title"]):not([data-screen="char"]):not([data-screen="rules"]):not([data-screen="tree"]) .mycups .dwrap.baby .babytag { font-size: 15px !important; bottom: -9px; padding: 0 3px; }
 </style>
 
 <main class="wrap">
