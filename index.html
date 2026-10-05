@@ -2125,6 +2125,11 @@
   .dwrap > .dbadges:has(.mb-seal) { left: 0 !important; right: 0 !important; bottom: -9% !important; justify-content: center; transform: none !important; gap: 0 !important; z-index: 2; pointer-events: none; }
   .dwrap > .dbadges .mb.mb-seal { width: 42% !important; height: auto !important; aspect-ratio: 46 / 52; margin: 0 -9%; flex: 0 0 auto; }
   .dwrap > .dbadges .mb:not(.mb-seal) { margin: 0 1px; }
+
+  /* a die with many seals: they lay over the face of the die so nothing spills out */
+  .dwrap > .dbadges:has(.mb:nth-child(4)) { top: 0 !important; bottom: 0 !important; align-content: center; align-items: center; flex-wrap: wrap; padding: 4% 2%; }
+  .dwrap > .dbadges:has(.mb:nth-child(4)) .mb.mb-seal { width: 33% !important; margin: -2% -3%; }
+  .dwrap > .dbadges:has(.mb:nth-child(7)) .mb.mb-seal { width: 25% !important; margin: -1% -2%; }
 </style>
 
 <main class="wrap">
