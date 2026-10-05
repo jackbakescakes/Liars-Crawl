@@ -2078,6 +2078,9 @@
     body[data-screen="combat"]:not([data-screen="title"]):not([data-screen="char"]):not([data-screen="rules"]):not([data-screen="tree"]) .felt .scene { left: 50%; right: auto; width: 1180px; max-width: 100%; transform: translateX(-50%); gap: 8px; padding: 10px 14px 14px; }
 
     .shieldtag::after { display: none !important; animation: none !important; }
+
+    /* shield sits just under the portrait */
+    body[data-screen="combat"]:not([data-screen="title"]):not([data-screen="char"]):not([data-screen="rules"]):not([data-screen="tree"]) .hudport .shieldtag { position: absolute; left: 50%; bottom: -44px; margin: 0; transform: translateX(-50%); z-index: 5; }
 </style>
 
 <main class="wrap">
@@ -5089,9 +5092,10 @@
       '<button type="button" class="btn ghost small" data-act="toggleDice" aria-expanded="' + S.showDice + '">' + (S.showDice ? 'Hide dice' : 'Dice') + '</button>' + '<button type="button" class="btn ghost small' + (needPotion() ? ' potionglow' : '') + '" data-act="deckOpen" data-deckbtn="1">Deck (' + deckOf().length + ')</button>' +
       '</div></div>';
   }
+  function shieldTag() { return (C && S.screen === 'combat' && C.shield) ? '<span class="shieldtag' + (C.shieldFlash && Date.now() - C.shieldFlash < 1100 ? ' blk' : '') + '" data-tip="shieldup:" tabindex="0" aria-label="Shield up, blocks the next ' + C.shield + ' damage">' + SHIELD_ART + (C.shield > 1 ? '<b>x' + C.shield + '</b>' : '') + '</span>' : ''; }
   function hudPortrait(extra) {
     var cl = CLASSES[(S && S.cls) || 'fighter'] || CLASSES.fighter;
-    return '<div class="hudport' + (extra ? ' ' + extra : '') + '" data-portrait="1" data-tip="char:"><span class="hudframe"><span class="portrait" style="--c1:' + cl.c1 + ';--c2:' + cl.c2 + ';--eye:' + cl.eye + '">' + ART[cl.art] + '</span></span><span class="lvbadge">' + S.player.level + '</span></div>';
+    return '<div class="hudport' + (extra ? ' ' + extra : '') + '" data-portrait="1" data-tip="char:"><span class="hudframe"><span class="portrait" style="--c1:' + cl.c1 + ';--c2:' + cl.c2 + ';--eye:' + cl.eye + '">' + ART[cl.art] + '</span></span><span class="lvbadge">' + S.player.level + '</span>' + shieldTag() + '</div>';
   }
   function slotHTML(loc, iid, locked) {
     var held = S.hold && S.hold.k + ':' + S.hold.i === loc;
@@ -5413,8 +5417,8 @@
     var log = '<ul class="log">' + C.log.slice(-14).reverse().map(function (l) { return '<li>' + l + '</li>'; }).join('') + '</ul>';
     var modal = C.confirmBid ? '<div class="modal" role="dialog" aria-modal="true"><div class="modalbox"><h3>Are you certain?</h3><p>You are bidding <b>' + C.confirmBid.qty + ' × ' + faceName(C.confirmBid.face) + '</b>, but your own hand holds only <b>' + C.confirmBid.mine + '</b> of them (wilds count). Most of that bid is resting on the enemy’s dice.</p><div class="row" style="justify-content:center"><button type="button" class="btn torch" data-act="bidSure">Bid anyway</button><button type="button" class="btn ghost" data-act="bidBack">Go back</button></div></div></div>' : '';
     var pp = HPARTS || hudParts() || {};
-    var rolled = '<div class="rollrow"><div class="lbl">Your roll <span class="chip chip-total' + (pvTotal() > 30 ? ' hot' : '') + '" title="When your dice add up to more than 30, the Soul Rend spell appears">Total ' + pvTotal() + '</span>' + (C.pv.some(function (x) { return x.spied; }) ? ' <span class="chip chip-blood">Watched</span>' : '') + (C.shield ? ' <span class="shieldtag' + (C.shieldFlash && Date.now() - C.shieldFlash < 1100 ? ' blk' : '') + '" data-tip="shieldup:" tabindex="0" aria-label="Shield up, blocks the next ' + C.shield + ' damage">' + SHIELD_ART + (C.shield > 1 ? '<b>x' + C.shield + '</b>' : '') + '</span>' : '') + (C.berserk ? ' <span class="chip chip-blood">Berserk</span>' : '') + '</div><div class="cups" style="margin-top:6px">' + mine + '</div></div>';
-    var rollchips = '<span class="chip chip-total' + (pvTotal() > 30 ? ' hot' : '') + '" title="When your dice add up to more than 30, the Soul Rend spell appears">Total ' + pvTotal() + '</span>' + (C.pv.some(function (x) { return x.spied; }) ? ' <span class="chip chip-blood">Watched</span>' : '') + (C.shield ? ' <span class="shieldtag' + (C.shieldFlash && Date.now() - C.shieldFlash < 1100 ? ' blk' : '') + '" data-tip="shieldup:" tabindex="0" aria-label="Shield up, blocks the next ' + C.shield + ' damage">' + SHIELD_ART + (C.shield > 1 ? '<b>x' + C.shield + '</b>' : '') + '</span>' : '') + (C.berserk ? ' <span class="chip chip-blood">Berserk</span>' : '') + (pp.chips || '');
+    var rolled = '<div class="rollrow"><div class="lbl">Your roll <span class="chip chip-total' + (pvTotal() > 30 ? ' hot' : '') + '" title="When your dice add up to more than 30, the Soul Rend spell appears">Total ' + pvTotal() + '</span>' + (C.pv.some(function (x) { return x.spied; }) ? ' <span class="chip chip-blood">Watched</span>' : '') + '' + (C.berserk ? ' <span class="chip chip-blood">Berserk</span>' : '') + '</div><div class="cups" style="margin-top:6px">' + mine + '</div></div>';
+    var rollchips = '<span class="chip chip-total' + (pvTotal() > 30 ? ' hot' : '') + '" title="When your dice add up to more than 30, the Soul Rend spell appears">Total ' + pvTotal() + '</span>' + (C.pv.some(function (x) { return x.spied; }) ? ' <span class="chip chip-blood">Watched</span>' : '') + '' + (C.berserk ? ' <span class="chip chip-blood">Berserk</span>' : '') + (pp.chips || '');
     var me = '';
     if (WIDEUI) { var pq = {}; for (var kq in pp) pq[kq] = pp[kq]; pq.dice = '<div class="mycups cups">' + mine + '</div>'; pq.chips = rollchips; pq.abil = (typeof abil === 'string') ? abil : ''; me = hudBarHTML(pq); rolled = ''; }
     var topbtns = '<div class="topbtns"><button type="button" class="btn ghost small" data-act="toggleDice" aria-expanded="' + S.showDice + '">' + (S.showDice ? 'Hide dice' : 'Dice') + '</button><button type="button" class="btn ghost small" data-act="toggleLog" aria-expanded="' + !!S.showLog + '">' + (S.showLog ? 'Hide log' : 'Log') + '</button></div>';
