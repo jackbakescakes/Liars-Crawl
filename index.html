@@ -4581,7 +4581,7 @@
   function rarTag(key) { var r = rarOf(key); return '<span class="rar rar-' + r + '">' + RARITY[r].name + '</span>'; }
   // draw n distinct entries, rarer ones less likely
   var LEVEL_MUL = { common: 0.8, uncommon: 1, rare: 1.2, epic: 1.4, legendary: 1 };
-  var LUCK_CAP = 60;
+  var LUCK_CAP = 100;
   var LUCK_SHARE = { common: -1, uncommon: 0.3, rare: 0.45, epic: 0.25, legendary: 0 };
   function rarW(r, lvl, luck) {
     var L = Math.min(LUCK_CAP, luck || 0);
