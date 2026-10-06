@@ -2207,7 +2207,7 @@
   .rn.bump, #rpXp.bump, #rpGold.bump { animation: rpbump .22s ease-out; display: inline-block; }
   .goldtl .bump { animation: rpbump .22s ease-out; display: inline-block; }
   @keyframes rpbump { 0% { transform: scale(1); } 40% { transform: scale(1.25); } 100% { transform: scale(1); } }
-  .rhide { display: none !important; }
+  .rhide { visibility: hidden !important; }
   .rpin { animation: rpin .38s cubic-bezier(.2,1.4,.4,1); }
   @keyframes rpin { 0% { opacity: 0; transform: translateY(14px); } 100% { opacity: 1; transform: none; } }
   .rp-extra { max-width: 940px; margin: 12px auto 0; font-size: 28px; text-align: center; }
@@ -2350,6 +2350,65 @@
   .report .rp-extra > p { color: #3a2410 !important; } .report .rp-extra > p.good { color: #2d6a1e !important; }
   .report .rp-extra > p.crit { color: #8a3d00 !important; }
   .report .dropseal, .report .dropseal * { color: #f3e9cf; } .report .dropseal h3 { color: #f3e9cf !important; text-shadow: 0 2px 0 #000; }
+
+  .splashbtns .btn[data-act="credits"], .splashbtns .btn[data-act="credits"]:hover, .splashbtns .btn[data-act="credits"]:active:not(:disabled) { position: absolute; right: 3%; bottom: 3%; left: auto !important; top: auto !important; }
+  .panel.credits { text-align: center; }
+  .panel.credits .cr-line { font-size: 34px; margin: 18px 0; }
+  .panel.credits .cr-line b { color: #f0c860; }
+
+  /* ---- batch 3 ---- */
+  .beginfx .bf-door { display: none !important; }
+  .clsbtn .portrait:has(img.photo) { width: 128px !important; height: 128px !important; border-radius: 50% !important; overflow: hidden; clip-path: none !important; border: 0 !important; background: none !important; box-shadow: 0 4px 0 rgba(0,0,0,.45) !important; flex: none; }
+  .clsbtn .portrait img.photo { width: 100%; height: 100%; display: block; object-fit: cover; transform: scale(1.07); border-radius: 50%; }
+  .clsbtn .portrait:has(img.photo)::before, .clsbtn .portrait:has(img.photo)::after { display: none !important; }
+  .nlabel, body .node .nlabel { background: none !important; box-shadow: none !important; border: 0 !important; }
+  .node .nt { font-size: calc(24px * var(--k)) !important; color: #f6efdc; text-shadow: 0 2px 0 #000, 0 0 5px #000, 0 0 9px #000; }
+  .node .ns { font-size: calc(19px * var(--k)) !important; color: #d4cdb8; text-shadow: 0 2px 0 #000, 0 0 5px #000; }
+  .node.locked { opacity: .72; } .node.done { opacity: .6; }
+  .goldtl .hudcoin { position: absolute; left: -2px; top: 78px; width: 52px; height: 52px; z-index: 2; pointer-events: none; filter: drop-shadow(0 3px 0 rgba(0,0,0,.5)); }
+  .goldtl .hudcoin svg { width: 100%; height: 100%; display: block; }
+  .goldtl .hudcoin.jig { animation: pouchjig .34s ease-out; }
+  .autowin { position: absolute; top: -40px; left: 50%; transform: translateX(-50%); z-index: 20; background: #7b2fd0; color: #fff; border: 3px solid #c79cff; font: 700 16px var(--display); letter-spacing: .06em; padding: 4px 12px; cursor: pointer; white-space: nowrap; }
+  .autowin:hover { filter: brightness(1.25); }
+  .rptcardbtn { background: none; border: 0; padding: 0; cursor: pointer; transition: transform .18s; } .rptcardbtn:hover { transform: translateY(-6px) rotate(-1.5deg) scale(1.05); }
+  .rptcardbtn .tcard { --cw: 150px; }
+  .rp-extra { display: flex; flex-wrap: wrap; gap: 14px; justify-content: center; }
+  .report .rp-me .rp-port { filter: brightness(1.35) saturate(1.1); }
+  .report .rp-vs { align-self: center; text-align: center; }
+  .report .rp-duel { align-items: center; }
+  .report .rp-ledger { border-radius: 22px; overflow: hidden; }
+
+  .clsbtn .portrait:has(img.photo) { width: 160px !important; height: 160px !important; }
+  .clsbtn.charcard { align-items: center; }
+  .goldtl .hudcoin { width: 64px; height: 64px; top: 70px; left: 6px; }
+  .goldtl .hudcoin svg { width: 64px !important; height: 64px !important; }
+  body:not([data-screen="title"]):not([data-screen="char"]):not([data-screen="rules"]):not([data-screen="tree"]) .goldtl .stat { place-items: center start !important; padding-left: 78px; }
+  body:not([data-screen="title"]):not([data-screen="char"]):not([data-screen="rules"]):not([data-screen="tree"]):not([data-screen="combat"]) #app > .panel:has(.map) { margin-top: 74px; }
+  .panel:has(.map) .mapscroll { max-height: calc((100vh / var(--zk, .64) - 560px) / .96) !important; }
+  .topbtns .btn { zoom: 1.6 !important; }
+
+  .card.abilpop { transition: transform .18s cubic-bezier(.2,1.6,.4,1), filter .18s, box-shadow .18s; cursor: pointer; }
+  .card.abilpop:hover:not(.picked):not(.dimmed) { animation: none; transform: translateY(-14px) scale(1.07) rotate(-1.2deg); filter: brightness(1.2) drop-shadow(0 0 16px rgba(246,214,106,.7)); z-index: 3; }
+  .card.abilpop:hover:not(.picked):not(.dimmed) h3 { animation: abilbob .5s steps(4) infinite; }
+  .card.abilpop:active { transform: translateY(2px) scale(.97); }
+  .card.abilpop.picked { animation: abilpick .65s cubic-bezier(.2,1.5,.4,1) both !important; z-index: 4; }
+  .card.abilpop.dimmed { animation: abildim .5s ease-out both !important; pointer-events: none; }
+  @keyframes abilbob { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-3px); } }
+  @keyframes abilpick { 0% { transform: scale(1); filter: brightness(1); } 35% { transform: translateY(-18px) scale(1.16) rotate(2deg); filter: brightness(1.7) drop-shadow(0 0 28px #ffe08a); } 100% { transform: translateY(-8px) scale(1.1); filter: brightness(1.3) drop-shadow(0 0 18px #ffe08a); } }
+  @keyframes abildim { to { transform: translateY(14px) scale(.9); opacity: .25; filter: grayscale(1); } }
+  #app > .panel:has(> .row [data-act="spendOpen"]) { margin-top: 24vh; }
+  body[data-screen="tree"] #app > .panel { width: 66%; max-width: 760px; margin-inline: auto; }
+  .panel:not(.upgpanel).forge, .forge .panel:not(.upgpanel) { background: #b8975a; }
+  .meb.battleinfo { }
+  body .bidbox { background: #e9d7a4 !important; }
+  body .bidbox::before { background-color: #e9d7a4 !important; background-image: none !important; }
+  body .bidbox, body .bidbox * { color: #3a2810; text-shadow: none; }
+  .meb .hudport { margin-top: 12px; }
+
+  #app > .panel:has(.dropdie):not(.upgpanel) { background: #6b4a22 !important; }
+  #app > .panel:has(.dropdie):not(.upgpanel)::before { inset: 8px !important; background-color: #e4cf97 !important; background-image: radial-gradient(ellipse at 50% 35%, #f3e6bb 0%, #e4cf97 55%, #cdb070 100%), repeating-linear-gradient(97deg, rgba(120,80,20,.06) 0 3px, transparent 3px 9px) !important; box-shadow: inset 0 0 50px rgba(120,80,20,.5) !important; }
+  #app > .panel:has(.dropdie):not(.upgpanel), #app > .panel:has(.dropdie):not(.upgpanel) h2, #app > .panel:has(.dropdie):not(.upgpanel) p { color: #3a2810 !important; text-shadow: none !important; }
+  .meb { margin-top: 16px !important; }
 </style>
 
 <main class="wrap">
@@ -4310,9 +4369,10 @@
   // clicking a face sets the bid to one of it (or the lowest legal amount); clicking the same face again adds one more
   function clickFace(v) {
     var t = totalDice(), q;
-    if (C.sel.face === v) { C.sel.qty = Math.min(t, C.sel.qty + 1); }
+    var ck = C.round + ':' + (C.bid ? C.bid.qty + 'x' + C.bid.face : '-') + ':' + v;
+    if (C.dieKey === ck) { C.sel.qty = Math.min(t, C.sel.qty + 1); }
     else {
-      C.sel.face = v; C.sel.qty = Math.min(C.sel.qty, t);
+      C.dieKey = ck; C.sel.face = v; C.sel.qty = Math.min(C.sel.qty, t);
       for (q = 1; q <= t; q++) { if (isLegalBid(C.bid, q, v, t)) { C.sel.qty = q; break; } }
     }
     render();
@@ -4910,7 +4970,7 @@
     return '<section class="panel"><h2>You have skill points to spend</h2><p>You have <span class="pts">' + n + '</span> skill point' + (n > 1 ? 's' : '') + ', enough to learn a new skill. Every skill is borrowed from the dungeon. It collects at the end of the crawl.</p>' +
       '<div class="row"><button type="button" class="btn torch" data-act="spendOpen">Choose a skill</button><button type="button" class="btn ghost" data-act="spendLater">Not now</button></div></section>';
   }
-  function nextAfterVictory() { if (S.victory && S.victory.loot && !S.victory.lootDone) { S.victory.lootDone = true; giveItems([].concat(S.victory.loot), nextAfterVictory); return; } if (S.pending > 0) openLevelUp(); else afterLevels(); }
+  function nextAfterVictory() { if (S.victory && S.victory.loot && !S.victory.lootDone) { S.victory.lootDone = true; var tk = S.victory.taken || {}; giveItems([].concat(S.victory.loot).filter(function (id) { return !tk[id]; }), nextAfterVictory); return; } if (S.pending > 0) openLevelUp(); else afterLevels(); }
 
   function openLevelUp() {
     var p = S.player;
@@ -5521,7 +5581,7 @@
   fitZoom(); window.addEventListener('resize', fitZoom);
   var renderBase = render; render = function () { var r = renderBase.apply(this, arguments); fitZoom(); try { if (S && S.screen === 'victory') reportStart(); else if (RPT.gen) rptClean(); } catch (e) { } return r; };
   function hudBarHTML(q) {
-    return '<div class="meb"><div class="goldtl"><span class="pouch" aria-hidden="true">' + POUCH_ART + '</span>' + (q.gold || '') + '</div>' +
+    return '<div class="meb"><div class="goldtl"><span class="hudcoin" aria-hidden="true">' + ITEM_ART.coin + '</span>' + (q.gold || '') + '</div>' +
       '<div class="mecenter">' + (q.port || '') + '<div class="mecol"><div class="merow">' + (q.hp || '') + (q.chips || '') + '</div><div class="hpdice">' + (q.dice || '') + '</div></div><div class="deckcorner">' + deckPileHTML() + '</div></div>' +
       '<div class="relicbr">' + (q.abil ? '<div class="abilrow">' + q.abil + '</div>' : '') + (q.inv || '') + '</div></div>';
   }
@@ -5592,7 +5652,7 @@ var BOSS_PORTRAITS = {"dealer": {"normal": "data:image/webp;base64,UklGRiw4AABXR
   }
   function hudPortrait(extra) {
     var cl = CLASSES[(S && S.cls) || 'fighter'] || CLASSES.fighter;
-    return '<div class="hudport' + (extra ? ' ' + extra : '') + '" data-portrait="1" data-tip="char:"><span class="hudframe"><span class="portrait" style="--c1:' + cl.c1 + ';--c2:' + cl.c2 + ';--eye:' + cl.eye + '">' + portraitArt((S && S.cls) || 'fighter', cl, portraitState()) + '</span></span><span class="lvbadge">' + S.player.level + '</span>' + shieldTag() + '</div>';
+    return '<div class="hudport' + (extra ? ' ' + extra : '') + '" data-portrait="1" data-tip="char:">' + (S.screen === 'combat' && C && C.phase !== 'won' ? '<button type="button" class="autowin" data-act="autoWin">Auto-win (test)</button>' : '') + '<span class="hudframe"><span class="portrait" style="--c1:' + cl.c1 + ';--c2:' + cl.c2 + ';--eye:' + cl.eye + '">' + portraitArt((S && S.cls) || 'fighter', cl, portraitState()) + '</span></span><span class="lvbadge">' + S.player.level + '</span>' + shieldTag() + '</div>';
   }
   function slotHTML(loc, iid, locked) {
     var held = S.hold && S.hold.k + ':' + S.hold.i === loc;
@@ -5638,7 +5698,7 @@ var BOSS_PORTRAITS = {"dealer": {"normal": "data:image/webp;base64,UklGRiw4AABXR
   function titleHTML() {
     return '<section class="splash" aria-label="Liar’s Crawl"><div class="splashbtns">' +
       '<button type="button" class="btn wood" data-act="toChar">Enter the tavern</button>' +
-      '<button type="button" class="btn" data-act="web" aria-label="Web of Bones">Web</button><button type="button" class="btn" data-act="rules" aria-label="Help">Help</button></div></section>';
+      '<button type="button" class="btn" data-act="web" aria-label="Web of Bones">Web</button><button type="button" class="btn" data-act="rules" aria-label="Help">Help</button><button type="button" class="btn" data-act="credits">Credits</button></div></section>';
   }
   function secretRule(name, known, hint, card) {
     if (!known) return '<span class="btn secretq" role="img" title="' + hint + '" aria-label="A secret rule, not yet found">?</span>';
@@ -5690,6 +5750,7 @@ var BOSS_PORTRAITS = {"dealer": {"normal": "data:image/webp;base64,UklGRiw4AABXR
     return out;
   }
   function rulesHTML() {
+    if (S.credits) return '<section class="panel credits"><h2>Credits</h2><p class="cr-line">Created by <b>Sonnet 5.5</b></p><p class="cr-line">with help from <b>Suno</b> and <b>Gemini</b></p><div class="row"><button type="button" class="btn ghost" data-act="toTitle">Back</button></div></section>';
     return '<section class="panel"><h2>The House Rules</h2>' + rulesCards() + keyHTML() +
       '<div class="row"><button type="button" class="btn ghost" data-act="toTitle">Back</button></div></section>';
   }
@@ -5984,7 +6045,7 @@ var BOSS_PORTRAITS = {"dealer": {"normal": "data:image/webp;base64,UklGRiw4AABXR
   function repExtraHTML(v) {
     return (v.healed ? '<p class="good">Your wounds knit themselves shut: ' + v.healed + ' HP recovered.</p>' : '') +
       (v.leveled ? '<p class="crit">You claw your way to level ' + S.player.level + '.</p>' : '') + (v.hpUp ? '<p class="good">+' + v.hpUp + ' max health.</p>' : '') + (v.debt ? '<p class="good">The pawnbroker keeps her word: +' + v.debt + ' dice in your cup.</p>' : '') + (v.gained ? '<p class="good">+' + v.gained + ' skill point' + (v.gained > 1 ? 's' : '') + ' for the skill tree.</p>' : '') +
-      (v.loot && v.loot !== 'knife' && !v.lootDone ? '<p class="good">' + v.name + ' also drops the ' + ITEMS[v.loot].name + '. ' + ITEMS[v.loot].desc + '</p>' : '') +
+      (v.loot && !v.lootDone ? [].concat(v.loot).filter(function (id) { return !(v.taken && v.taken[id]); }).map(function (id) { return isCard(id) ? '<button type="button" class="rptcardbtn" data-act="rptCard" data-id="' + id + '" aria-label="Take ' + ITEMS[id].name + '">' + tcardHTML(id, { cls: 'rptcard' }) + '</button>' : '<p class="good">' + v.name + ' also drops the ' + ITEMS[id].name + '. ' + ITEMS[id].desc + '</p>'; }).join('') : '') +
       (v.drop && !v.dropDone ? '<button type="button" class="card r-' + rarOf(v.drop) + ' k-sigil dropseal" data-act="dropClaim" aria-label="Take ' + MODS[v.drop].name + '">' + itemArt(v.drop) + rarTag(v.drop) + kindTag(v.drop) + '<h3>' + MODS[v.drop].name + '</h3><p>' + MODS[v.drop].desc + '</p></button>' : '');
   }
   function victoryHTML() {
@@ -6058,7 +6119,7 @@ var BOSS_PORTRAITS = {"dealer": {"normal": "data:image/webp;base64,UklGRiw4AABXR
     // total explodes into green bubbles that get sucked into the xp bar
     at(t, function () {
       var box = xpEl.parentNode; box.classList.add('boom'); sfx('rpt_boom');
-      var c = vis(xpEl), fx = overlay(), lv = document.querySelector('#xpwrap .xplvl'), tp = lv ? vis(lv) : { x: 60, y: window.innerHeight - 40 }, i, n = 18;
+      var c = vis(xpEl), fx = overlay(), lv = document.querySelector('#xpwrap .xplvl'), tp = lv ? vis(lv) : { x: 60, y: window.innerHeight - 40 }, i, n = Math.min(18, Math.max(1, X.total));
       var burst = document.createElement('i'); burst.className = 'rp-boom'; burst.style.left = c.x + 'px'; burst.style.top = c.y + 'px'; fx.appendChild(burst);
       for (i = 0; i < n; i++) (function (i2) {
         setTimeout(function () {
@@ -6074,19 +6135,19 @@ var BOSS_PORTRAITS = {"dealer": {"normal": "data:image/webp;base64,UklGRiw4AABXR
       })(i);
       setTimeout(function () { if (fx.parentNode) fx.parentNode.removeChild(fx); }, 3400);
     });
-    t += 140 + 18 * 55 + 1900 + 350;
+    t += 140 + Math.min(18, Math.max(1, X.total)) * 55 + 1900 + 350;
     if (v.leveled) t += 2400;
     // gold
     at(t, function () { var gs = q('.rp-gsec'); if (gs) reveal(gs); });
     t += 400;
     var gcur = 0;
     qa('.rp-line.rp-g').forEach(function (l) {
-      at(t, function () { reveal(l); var add = +l.getAttribute('data-add') || 0, g0 = gcur; var gt = q('.rp-totg'); if (gt && gt.classList.contains('rhide')) reveal(gt); tween(0, add, 450, function (val) { gcur = g0 + val; goldEl.textContent = String(gcur); bump(goldEl); }, 'rpt_coin'); });
+      at(t, function () { reveal(l); var add = +l.getAttribute('data-add') || 0, g0 = gcur; var gt = q('.rp-totg'); if (gt && gt.classList.contains('rhide')) reveal(gt); tween(0, add, 450, function (val) { gcur = g0 + val; goldEl.textContent = String(gcur); bump(goldEl); }, add > 1 ? 'rpt_coin' : null); });
       t += 650;
     });
     t += 250;
     at(t, function () {
-      var c = vis(goldEl), hud = document.querySelector('.goldtl'), hp = hud ? vis(hud) : { x: 80, y: 30 }, fx = overlay(), n = Math.min(16, Math.max(6, Math.round(G.total / 3))), i, per = G.total / n, got = 0;
+      var c = vis(goldEl), hud = document.querySelector('.goldtl'), hp = hud ? vis(hud) : { x: 80, y: 30 }, fx = overlay(), n = Math.min(Math.max(1, G.total), Math.min(16, Math.max(6, Math.round(G.total / 3)))), i, per = G.total / n, got = 0;
       goldEl.parentNode.classList.add('boom'); sfx('rpt_boom');
       var burst = document.createElement('i'); burst.className = 'rp-boom gold'; burst.style.left = c.x + 'px'; burst.style.top = c.y + 'px'; fx.appendChild(burst);
       for (i = 0; i < n; i++) (function (i2) {
@@ -6096,14 +6157,14 @@ var BOSS_PORTRAITS = {"dealer": {"normal": "data:image/webp;base64,UklGRiw4AABXR
           var ox = c.x + (Math.random() - .5) * 120, oy = c.y + (Math.random() - .5) * 20, a = Math.random() * 6.283, d = 60 + Math.random() * 90;
           var mx = ox + Math.cos(a) * d, my = oy + Math.sin(a) * d * .6 - 50;
           var kf = [{ transform: 'translate(' + ox + 'px,' + oy + 'px) scale(.5) rotate(0)', opacity: 1 }, { transform: 'translate(' + mx + 'px,' + my + 'px) scale(1.1) rotate(160deg)', opacity: 1, offset: .32 }, { transform: 'translate(' + (hp.x) + 'px,' + (hp.y) + 'px) scale(.45) rotate(540deg)', opacity: .9 }];
-          var arrive = function () { if (b.parentNode) b.parentNode.removeChild(b); if (gen !== RPT.gen) return; got++; var tot = Math.round(per * got); if (got === n) tot = G.total; goldHud = v.oldGold + tot; setGoldHud(goldHud); var hb = document.querySelector('.goldtl .stat b.gold'); if (hb) { hb.classList.remove('bump'); void hb.offsetWidth; hb.classList.add('bump'); } var po = document.querySelector('.goldtl .pouch'); if (po) { po.classList.remove('jig'); void po.offsetWidth; po.classList.add('jig'); } sfx('rpt_coin', i2); };
+          var arrive = function () { if (b.parentNode) b.parentNode.removeChild(b); if (gen !== RPT.gen) return; got++; var tot = Math.round(per * got); if (got === n) tot = G.total; goldHud = v.oldGold + tot; setGoldHud(goldHud); var hb = document.querySelector('.goldtl .stat b.gold'); if (hb) { hb.classList.remove('bump'); void hb.offsetWidth; hb.classList.add('bump'); } var po = document.querySelector('.goldtl .hudcoin'); if (po) { po.classList.remove('jig'); void po.offsetWidth; po.classList.add('jig'); } sfx('rpt_coin', i2); };
           var an = b.animate ? b.animate(kf, { duration: 850, easing: 'cubic-bezier(.4,0,.8,.5)', fill: 'forwards' }) : null;
           if (an) an.onfinish = arrive; else setTimeout(arrive, 850);
         }, 100 + i2 * 70);
       })(i);
       setTimeout(function () { if (fx.parentNode) fx.parentNode.removeChild(fx); }, 2600);
     });
-    t += 100 + 16 * 70 + 850 + 350;
+    t += 100 + Math.min(Math.max(1, G.total), Math.min(16, Math.max(6, Math.round(G.total / 3)))) * 70 + 850 + 350;
     at(t, function () { var ex = q('.rp-extra'), ac = q('.rp-act'); if (ex) reveal(ex); if (ac) reveal(ac); v.anim = 'done'; sfx('rpt_done'); root.classList.add('repdone'); var sk = q('.rp-skip'); if (sk && sk.parentNode) sk.parentNode.removeChild(sk); });
   }
   var LVI = 0;
@@ -6967,7 +7028,8 @@ var BOSS_PORTRAITS = {"dealer": {"normal": "data:image/webp;base64,UklGRiw4AABXR
       case 'toggleLog': S.showLog = !S.showLog; render(); break;
       case 'web': openWeb(); break;
       case 'mapKey': openKey(); break;
-      case 'rules': S.screen = 'rules'; render(); break;
+      case 'rules': S.credits = false; S.screen = 'rules'; render(); break;
+      case 'credits': S.credits = true; S.screen = 'rules'; render(); break;
       case 'dummyFight': dummyFight(); break;
       case 'dummySkip': dummySkip(); break;
       case 'toChar': S.screen = 'char'; S.clsPicked = false; render(); break;
@@ -7030,8 +7092,10 @@ var BOSS_PORTRAITS = {"dealer": {"normal": "data:image/webp;base64,UklGRiw4AABXR
       case 'paperOpen': S.noteOpen = true; render(); break;
       case 'paperClose': S.noteOpen = false; S.noteGone = true; noteMark(); render(); break;
       case 'paperDismiss': S.noteGone = true; noteMark(); render(); break;
+      case 'rptCard': { var vv = S.victory, cid = b.getAttribute('data-id'); if (!vv || !cid) break; vv.taken = vv.taken || {}; vv.taken[cid] = 1; claimCard(cid, function () { if (S.screen === 'victory') render(); }); render(); break; }
+      case 'autoWin': if (C && S.screen === 'combat' && C.phase !== 'won') { clearTimeout(timer); C.en.parts.forEach(function (x) { x.n = 0; }); C.en.n = 0; C.phase = 'won'; C.result = null; C.bleedWin = true; afterCombat(); } break;
       case 'dropLeave': S.victory.dropDone = true; render(); break;
-      case 'ability': chooseAbility(id); break;
+      case 'ability': if (S.abilPick) break; S.abilPick = 1; (function () { var all = document.querySelectorAll('.card.abilpop'), k; for (k = 0; k < all.length; k++) all[k].classList.add(all[k] === b ? 'picked' : 'dimmed'); sfx('item'); setTimeout(function () { S.abilPick = 0; chooseAbility(id); }, REDUCED ? 0 : 650); })(); break;
       case 'reward': chooseReward(i); break;
       case 'campRest': heal(S.player, 2); completeNode(); break;
       case 'campTinker': openForge('face', { onDone: completeNode, onCancel: function () { S.screen = 'camp'; render(); } }); break;
@@ -7282,8 +7346,8 @@ var BOSS_PORTRAITS = {"dealer": {"normal": "data:image/webp;base64,UklGRiw4AABXR
     var done = false;
     var fin = function () {
       if (done) return; done = true; clearTimeout(tm);
-      var card = el.querySelector('.tcard'), pile = document.querySelector('[data-deckbtn]'), after = function () {
-        if (el.parentNode) el.parentNode.removeChild(el); revealEl = null; var pl = document.querySelector('[data-deckbtn]'); if (pl) { pl.classList.remove('pop'); void pl.offsetWidth; pl.classList.add('pop'); } sfx('tick'); nextReveal();
+      var card = el.querySelector('.tcard'), pile = (function () { var l = document.querySelectorAll('.deckpile'), k; for (k = 0; k < l.length; k++) if (l[k].offsetParent) return l[k]; return null; })() || { getBoundingClientRect: function () { return { left: window.innerWidth * .18, top: window.innerHeight - 60, width: 52, height: 72 }; }, classList: { add: function () { }, remove: function () { } }, offsetWidth: 0 }, after = function () {
+        if (el.parentNode) el.parentNode.removeChild(el); revealEl = null; var pl = pile && pile.offsetParent ? pile : null; if (pl) { pl.classList.remove('pop'); void pl.offsetWidth; pl.classList.add('pop'); } sfx('tick'); nextReveal();
       };
       el.style.animation = 'none'; el.style.background = 'transparent'; var cap = el.querySelector('.crcap'); if (cap) cap.style.display = 'none';
       if (!card || !pile || REDUCED) { after(); return; }
