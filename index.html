@@ -2307,6 +2307,49 @@
   @media (prefers-reduced-motion: reduce) { .handtray .tcard:hover { animation: none; } }
   body .paper, body .paperx { width: 150px !important; max-width: 150px !important; margin-left: 650px !important; font-size: 20px !important; }
   body .paper { top: 34% !important; padding: 16px 12px 14px !important; } body .paperx { top: calc(34% + 124px) !important; font-size: 17px !important; }
+
+  /* ===== batch 2 ===== */
+  .muted svg.itemsvg { width: 30px; height: 30px; vertical-align: middle; image-rendering: pixelated; }
+  .muted.tdice { display: flex; align-items: center; justify-content: center; gap: 6px; }
+  body:not([data-screen="title"]):not([data-screen="char"]):not([data-screen="rules"]):not([data-screen="tree"]) .mecenter .deckcorner { margin-left: 4px !important; }
+  body:not([data-screen="title"]):not([data-screen="char"]):not([data-screen="rules"]):not([data-screen="tree"]) .relicbr { right: 110px !important; }
+  body[data-screen="levelup"] #app > .panel { margin-top: 24vh !important; } body[data-screen="levelup"] #app > .panel .cards { margin-top: 36px; }
+  body[data-screen="forge"] .dropdie:hover:not(:disabled) .die, body[data-screen="forge"] .dropdie.over .die, body[data-screen="forge"] .diecard.pick:hover:not(:disabled) .die { animation: happywob .5s ease-in-out infinite; }
+  @keyframes happywob { 0%, 100% { transform: rotate(0) scale(1.08); } 20% { transform: rotate(-9deg) translateY(-4px) scale(1.14); } 50% { transform: rotate(7deg) translateY(0) scale(1.1); } 75% { transform: rotate(-5deg) translateY(-3px) scale(1.14); } }
+  @media (prefers-reduced-motion: reduce) { body[data-screen="forge"] .dropdie .die { animation: none !important; } }
+  .rp-comb { display: none !important; }
+  body:not([data-screen="title"]):not([data-screen="char"]):not([data-screen="rules"]):not([data-screen="tree"]) #app > .panel.report { background-color: #e4cf97 !important; background-image: radial-gradient(ellipse at 50% 35%, #f3e6bb 0%, #e4cf97 55%, #cdb070 100%), repeating-linear-gradient(97deg, rgba(120,80,20,.05) 0 3px, transparent 3px 9px) !important; border: 10px solid #6b4a22 !important; box-shadow: inset 0 0 70px rgba(120,80,20,.55), inset 0 0 0 4px #a8844a, 0 10px 0 rgba(0,0,0,.55) !important; color: #3a2410 !important; padding-bottom: 22px !important; }
+  .report .rp-head h2 { color: #3a2410 !important; font-size: 52px !important; text-shadow: 0 2px 0 rgba(255,240,200,.6); }
+  .report .rp-me b, .report .rp-foe > b { font-size: 32px !important; color: #3a2410 !important; text-shadow: none !important; font-weight: 700; }
+  .report .rp-vs { color: #a02a1a !important; text-shadow: 0 2px 0 rgba(255,240,200,.5) !important; font-size: 44px !important; }
+  .report .rp-port { width: 150px !important; height: 150px !important; border: 7px solid #5a3a16 !important; box-shadow: 0 5px 0 rgba(0,0,0,.4) !important; background: #1d1713 !important; }
+  .report .rp-ledger { background: rgba(120,80,30,.14) !important; border: 7px solid #7a5a2c !important; box-shadow: inset 0 0 0 3px #b9985a !important; padding: 12px 28px 10px !important; gap: 40px !important; }
+  .report .rp-colg { border-left: 7px solid #7a5a2c !important; padding-left: 34px !important; }
+  .report .rp-sec { color: #6b4a22 !important; border-bottom: 6px solid #7a5a2c !important; font-size: 30px !important; font-weight: 700; padding: 6px 0 4px !important; }
+  .report .rp-line, .report .rp-tot { color: #3a2410 !important; font-size: 36px !important; line-height: 1.35 !important; font-weight: 700; }
+  .report .rp-line em { color: #7a5c36 !important; font-size: 26px !important; font-weight: 600; }
+  .report .rp-line .rn { color: #8a5200 !important; min-width: 130px; }
+  .report .rp-line.rp-pct .rn { color: #2d6a1e !important; }
+  .report .rp-foot { border-top: 12px double #7a5a2c !important; padding: 8px 28px !important; gap: 40px !important; }
+  .report .rp-tot { font-size: 44px !important; }
+  .report .rp-tot b { font-size: 54px !important; color: #2d6a1e !important; border-bottom: 12px double #2d6a1e !important; text-shadow: none !important; }
+  .report .rp-tot.rp-totg b { color: #8a5200 !important; border-bottom-color: #8a5200 !important; }
+  .report .rp-extra { font-size: 32px !important; color: #3a2410 !important; font-weight: 700; }
+  .report .rp-skip { font-size: 26px !important; }
+
+  body:not([data-screen="title"]):not([data-screen="char"]):not([data-screen="rules"]):not([data-screen="tree"]) #app > .panel.report { background: #6b4a22 !important; background-image: none !important; box-shadow: 0 10px 0 rgba(0,0,0,.55) !important; border: 0 !important; }
+  body:not([data-screen="title"]):not([data-screen="char"]):not([data-screen="rules"]):not([data-screen="tree"]) #app > .panel.report::before { inset: 10px !important; background-color: #e4cf97 !important; background-image: radial-gradient(ellipse at 50% 35%, #f3e6bb 0%, #e4cf97 55%, #cdb070 100%), repeating-linear-gradient(97deg, rgba(120,80,20,.06) 0 3px, transparent 3px 9px) !important; background-size: auto !important; box-shadow: inset 0 0 70px rgba(120,80,20,.55), inset 0 0 0 4px #a8844a !important; }
+
+  .report .rp-head h2 { font-size: 46px !important; }
+  .report .rp-port { width: 128px !important; height: 128px !important; }
+  .report .rp-line, .report .rp-tot { font-size: 33px !important; line-height: 1.3 !important; }
+  .report .rp-line em { font-size: 23px !important; }
+  .report .rp-tot { font-size: 38px !important; white-space: nowrap; } .report .rp-tot b { font-size: 48px !important; }
+  .report .rp-sec { font-size: 27px !important; }
+  .report .rp-extra { font-size: 28px !important; }
+  .report .rp-extra > p { color: #3a2410 !important; } .report .rp-extra > p.good { color: #2d6a1e !important; }
+  .report .rp-extra > p.crit { color: #8a3d00 !important; }
+  .report .dropseal, .report .dropseal * { color: #f3e9cf; } .report .dropseal h3 { color: #f3e9cf !important; text-shadow: 0 2px 0 #000; }
 </style>
 
 <main class="wrap">
@@ -4244,7 +4287,7 @@
   function rouletteHTML() {
     var R = C.roulette, h = '<div class="roulette">';
     if (R.step === 'bet') {
-      h += '<div class="lbl">The Croupier demands a bet</div><p class="muted">Drag the chip onto red or black, or tap the chip and then a colour. Win the bet and the Croupier pays you 10 gold. Lose it and you lose 2 dice.</p>' +
+      h += '<div class="lbl">The Croupier demands a bet</div><p class="muted">+10 ' + ITEM_ART.coin + ' &nbsp; / &nbsp; −' + lossDice(2, 24) + '</p>' +
         '<div class="betrow"><button type="button" class="betbox red" data-act="bet" data-bet="red">Red</button><button type="button" class="pokerchip' + (R.sel ? ' sel' : '') + '" data-chip="1" data-act="chip" aria-label="Poker chip"><span>BET</span></button><button type="button" class="betbox black" data-act="bet" data-bet="black">Black</button></div>';
     } else {
       var end = 5 * 360 - R.idx * 360 / 37, el = Math.min(3.3, (Date.now() - R.t0) / 1000);
@@ -5469,7 +5512,7 @@
       var w = window.innerWidth || 1100, h = window.innerHeight || 900, z = Math.max(.18, Math.min(.64, .64 * w / 1100, .64 * h / 900));
       var setZ = function (v) { document.body.style.zoom = String(v); document.documentElement.style.setProperty('--zk', String(v)); };
       setZ(z);
-      if (document.body.getAttribute('data-screen') === 'combat') {
+      if (['combat', 'victory'].indexOf(document.body.getAttribute('data-screen')) > -1) {
         var app = document.getElementById('app'), n = 0;
         while (app && n++ < 14 && z > .18 && app.scrollHeight > app.clientHeight + 2) { z = Math.max(.18, z * .96); setZ(z); }
       }
@@ -5562,7 +5605,7 @@ var BOSS_PORTRAITS = {"dealer": {"normal": "data:image/webp;base64,UklGRiw4AABXR
     for (k = 0; k < BAG_SLOTS; k++) g += slotHTML('bag:' + k, b[k], fight);
     for (k = 0; k < INV_SLOTS; k++) e += slotHTML('inv:' + k, p.inv[k], fight);
     return '<div class="bagpanel"><div class="bagtop"><b>Satchel</b><button type="button" class="btn ghost small" data-act="bagClose">Close</button></div>' +
-      '<p class="muted">' + (fight ? 'The satchel stays shut while you fight.' : 'Drag a relic, or click it and click a slot. Drop it on empty ground to destroy it. Only relics in your three hands work. Relics in the satchel sleep.') + '</p>' +
+
       '<div class="lbl">In hand</div><div class="bagrow">' + e + '</div><div class="lbl">Satchel · ' + bagCount() + ' / ' + BAG_SLOTS + '</div><div class="baggrid">' + g + '</div></div>';
   }
   function sellZoneHTML() {
@@ -5819,10 +5862,10 @@ var BOSS_PORTRAITS = {"dealer": {"normal": "data:image/webp;base64,UklGRiw4AABXR
 
     var center;
     if (C.phase === 'scene') center = '<div class="lbl">' + (C.scene && C.scene.kind === 'rake' ? 'The rake is out' : C.scene && C.scene.kind === 'bj' ? 'A hand before the roll' : 'Cards on the table') + '</div>';
-    else if (C.phase === 'bet') center = '<div class="lbl">Place your bet</div><p class="muted">The Croupier will not start the round until you do.</p>';
+    else if (C.phase === 'bet') center = '<div class="lbl">Place your bet</div>';
     else if (C.phase === 'bid') {
-      if (C.bid) center = '<div class="lbl">' + (C.bid.by === 'p' ? 'Your bid' : (C.en.parts[C.bid.part || 0].name) + '’s bid') + '</div><div class="bid-main"><span>' + C.bid.qty + ' ×</span>' + dieHTML(C.bid.face, { s: 50 }) + '</div><p class="muted">' + totalDice() + ' dice on the table.</p>';
-      else center = '<div class="lbl">No bid yet</div><p class="muted">' + (C.turn === 'p' ? 'You open the bidding.' : (En.parts.length > 1 ? 'The enemy opens the bidding.' : def.name + ' opens the bidding.')) + ' ' + totalDice() + ' dice on the table.</p>';
+      if (C.bid) center = '<div class="lbl">' + (C.bid.by === 'p' ? 'Your bid' : (C.en.parts[C.bid.part || 0].name) + '’s bid') + '</div><div class="bid-main"><span>' + C.bid.qty + ' ×</span>' + dieHTML(C.bid.face, { s: 50 }) + '</div>' + '<p class="muted tdice">' + totalDice() + ' ' + dieHTML(0, { s: 34, back: true }) + '</p>';
+      else center = '<div class="lbl">No bid yet</div>' + '<p class="muted tdice">' + totalDice() + ' ' + dieHTML(0, { s: 34, back: true }) + '</p>';
     } else {
       center = C.result ? '<div class="lbl">The cups are lifted</div><p class="result">' + resultHTML() + '</p>' : C.bleedWin ? (C.winNote ? '<div class="lbl">' + C.winNote[0] + '</div><p class="muted">' + C.winNote[1] + '</p>' : '<div class="lbl">Bled out</div><p class="muted">The enemy bleeds out on the table.</p>') : (C.phase === 'lost' ? '<div class="nodice small">No dice</div>' : '<div class="lbl">The round ends</div><p class="muted"></p>');
     }
@@ -5870,7 +5913,7 @@ var BOSS_PORTRAITS = {"dealer": {"normal": "data:image/webp;base64,UklGRiw4AABXR
           '<button type="button" class="btn blood' + (own('judgement') ? ' liargold' : '') + '" data-act="liar"' + (C.bid ? '' : ' disabled') + '>Call liar</button>' +
           '<button type="button" class="btn blood" data-act="exact"' + (C.bid ? '' : ' disabled') + '>Call exact</button></div></div></div></div>' +
           (abil && !WIDEUI ? '<div class="row">' + abil + '</div>' : '') +
-          (legalNow || !C.bid ? '' : '<p class="muted">Raise the quantity, or keep ' + C.bid.qty + ' and pick a higher face.</p>');
+          '';
       }
     } else if (C.phase === 'bet' && C.roulette) controls = '<p class="muted">The Croupier waits for your bet.</p>';
     else if (C.phase === 'scene') controls = '<p class="muted">' + (C.scene && C.scene.kind === 'rake' ? 'The House is helping itself.' : C.scene && C.scene.kind === 'bj' ? 'The Pit Boss deals.' : 'The Dealer deals.') + '</p>';
@@ -6066,7 +6109,7 @@ var BOSS_PORTRAITS = {"dealer": {"normal": "data:image/webp;base64,UklGRiw4AABXR
   var LVI = 0;
   function levelHTML() {
     LVI = 0;
-    return '<section class="panel"><h2>Level ' + S.player.level + '</h2><p class="muted">Something dark stirs in you. Choose a gift.</p><div class="cards">' + S.lvlOpts.map(function (id) {
+    return '<section class="panel"><h2>Level ' + S.player.level + '</h2><div class="cards">' + S.lvlOpts.map(function (id) {
       var a = ABIL[id], have = S.player.ab[id], noHardy = id === 'hardy' && hp(S.player) < 2;
       if (noHardy) return '<button type="button" class="card abilpop disabledcard" disabled style="opacity:.45;filter:grayscale(1);cursor:not-allowed" data-id="' + id + '">' + abilIcon(id) + '<h3>' + a.name + '</h3><p>' + a.desc + ' <span class="bad">Needs two standing dice.</span></p></button>';
       return '<button type="button" class="card abilpop" style="animation-delay:' + (LVI++ * 0.16 + 0.1).toFixed(2) + 's" data-act="ability" data-id="' + id + '">' + abilIcon(id) + '<h3>' + a.name + (have ? ' <span class="muted">(have ' + have + ')</span>' : '') + '</h3><p>' + a.desc + '</p></button>';
@@ -6107,7 +6150,7 @@ var BOSS_PORTRAITS = {"dealer": {"normal": "data:image/webp;base64,UklGRiw4AABXR
     if (F.step === 'die' && F.kind === 'mod') {
       var tint = (typeof TINTS !== 'undefined' && TINTS[F.mod]) || '#b4382e';
       var tk = '<span class="waxtoken" data-token="1" tabindex="0" role="img" aria-label="' + MODS[F.mod].name + ' seal"><span class="sealbig">' + ITEM_ART[F.mod] + '</span></span>';
-      body = '<div class="sealstage">' + tk + '<p class="muted sealdesc">' + MODS[F.mod].desc + '</p><p class="muted sealhint">Drag the seal onto a die, duplicate seals increase power.</p></div><div class="dropgrid">' +
+      body = '<div class="sealstage">' + tk + '<p class="muted sealdesc">' + MODS[F.mod].desc + '</p></div><div class="dropgrid">' +
         p.dice.map(function (d, i) {
           var dis = !canApply(d, F.mod);
           return '<button type="button" class="dropdie" data-act="forgeDie" data-i="' + i + '" data-drop="' + i + '" data-tip="dfaces:' + i + '"' + (dis ? ' disabled' : '') + '>' + sampleDie(d, 56) + '<span class="sr">' + dieTitle(d, i) + '</span></button>';
@@ -6167,8 +6210,8 @@ var BOSS_PORTRAITS = {"dealer": {"normal": "data:image/webp;base64,UklGRiw4AABXR
             return '<button type="button" class="diecard pick' + (sel ? ' sel' : '') + '" data-act="evPick" data-i="' + x.i + '" aria-pressed="' + sel + '">' + sampleDie(x.d, 78) + '<span class="sr">' + dieTitle(x.d, x.i) + '</span>' + strip(x.d, { coll: 1 }) + '</button>';
           }).join('');
           var odds = '';
-          if (ev.sel.length === 2) { var o = simPick(); odds = '<p class="odds">With these two dice: about <span class="good">' + o.win + '%</span> to win, <span class="bad">' + o.lose + '%</span> to lose. A wild face counts as 6 here, and baby dice add to the total.</p>'; }
-          else odds = '<p class="odds">Pick two dice. ' + (info.low ? 'Low faces help here.' : 'Better dice, better odds.') + (ev.type === 'hardy' ? '' : ' Or slink away.') + '</p>';
+          if (ev.sel.length === 2) { var o = simPick(); odds = '<p class="odds">With these two dice: about <span class="good">' + o.win + '%</span> to win, <span class="bad">' + o.lose + '%</span> to lose.</p>'; }
+          else odds = '';
           h = '<h2>' + info.title + '</h2><p class="muted">' + info.flavor + '</p>' + bands + '<div class="dicegrid">' + cards + '</div>' + odds +
             '<div class="row"><button type="button" class="btn torch" data-act="evRoll"' + (ev.sel.length === 2 ? '' : ' disabled') + '>Roll the dice</button>' + walk + '</div>';
         }
@@ -6204,7 +6247,7 @@ var BOSS_PORTRAITS = {"dealer": {"normal": "data:image/webp;base64,UklGRiw4AABXR
       var sdone = ev.step === 'done';
       h = '<h2>' + info.title + '</h2><p class="muted">' + info.flavor + '</p>' +
         '<div class="scratchwrap">' + scratchPrizeHTML(ev) + (sdone ? '' : '<canvas class="scratchcv" width="360" height="200" aria-label="Scratch card foil. Press, hold and rub back and forth to scratch it off."></canvas>') + '</div>' +
-        (sdone ? '<p class="result">' + ev.text + '</p>' : '<p class="muted">Click and hold on the card, then rub back and forth to scratch the foil away.</p>') +
+        (sdone ? '<p class="result">' + ev.text + '</p>' : '') +
         '<div class="row">' + (sdone ? (ev.prize === 'enemy' ? '<button type="button" class="btn blood" data-act="scratchFight">Fight!</button>' : ev.prize === 'seal' ? '<button type="button" class="btn torch" data-act="scratchSeal">Bind the seal</button>' : '<button type="button" class="btn torch" data-act="evLeave">Continue</button>') : '<button type="button" class="btn ghost" data-act="evLeave">Slink away</button>') + '</div>';
     } else if (info.kind === 'bank') {
       if (ev.step === 'done') h = '<h2>' + info.title + '</h2><p>' + ev.text + '</p><div class="row"><button type="button" class="btn torch" data-act="evLeave">Continue</button></div>';
@@ -6241,7 +6284,7 @@ var BOSS_PORTRAITS = {"dealer": {"normal": "data:image/webp;base64,UklGRiw4AABXR
         '<div class="reel' + (fin && !ev.spinning ? ' stopped' : '') + '">' + rsym() + '</div><div class="reel' + (fin && !ev.spinning ? ' stopped' : '') + '">' + rsym() + '</div><div class="reel' + (fin && !ev.spinning ? ' stopped' : '') + '">' + rsym() + '</div></div>' +
         '<button type="button" class="lever' + (ev.spinning ? ' pulled' : '') + (broke ? ' broke' : '') + '" data-act="pull" data-lever="1" aria-label="Pull the lever"' + (broke ? ' aria-disabled="true" data-tip="slotbroke:"' : (canPull ? '' : ' disabled')) + '><span class="lstick"></span><span class="lknob"></span></button></div>' +
         '<div class="slotbase">' + (free ? 'Free spins: <b>' + ev.spins + '</b>' : 'Each pull costs <b class="gold">' + SLOT_COST + ' gold</b>') + (free ? '' : ' · You have <span class="gold">' + p.gold + '</span>') + '</div></div>' +
-        (ev.result ? '<p class="result">' + ev.result.text + '</p>' : '<p class="muted">Pull the lever with your mouse, or press the button below.</p>') +
+        (ev.result ? '<p class="result">' + ev.result.text + '</p>' : '') +
         '<p class="odds">Odds: nothing 40% · gold 20% · lose a die 15% · relic 10% · seal 10% · 3 free spins 5%.</p>' +
         '<div class="row">' + (ev.claim ? '<button type="button" class="btn torch" data-act="slotClaim">Apply the seal</button>' : '<button type="button" class="btn torch' + (broke ? ' broke' : '') + '" data-act="pull"' + (broke ? ' aria-disabled="true" data-tip="slotbroke:"' : (canPull ? '' : ' disabled')) + '>Pull the lever' + (free ? ' (free spin)' : ' (' + SLOT_COST + ' gold)') + '</button>') +
         '<button type="button" class="btn ghost" data-act="slotLeave"' + (ev.spinning || ev.claim ? ' disabled' : '') + '>' + (ev.bossFree ? 'Move on to the spoils' : 'Slink away') + '</button></div>';
@@ -7279,7 +7322,7 @@ var BOSS_PORTRAITS = {"dealer": {"normal": "data:image/webp;base64,UklGRiw4AABXR
         tg = tg || ci.type === 'Spell';
         h += tcardHTML(id, { cls: (can ? 'canplay' : 'cantplay') + (id === 'potion' && needPotion() ? ' potionglow' : ''), attrs: at, style: '--r:' + ((i - (n - 1) / 2) * 5).toFixed(1) + 'deg' });
       });
-      var hint = cardsPlayable() ? 'Drag an arrow from a Target card onto an enemy die (or a potion or iron plate onto your portrait), and other cards onto the table.' : 'You can only play cards on your own turn.';
+      var hint = cardsPlayable() ? 'Drag a card to play it.' : 'Not your turn.';
       return '<div class="trayhint">' + hint + '</div>' + h + '<button type="button" class="btn small trayx" data-closedeck="1">Close</button>';
     }
     d.forEach(function (id, i) { h += tcardHTML(id, id === 'potion' ? { cls: (cardCan(id) ? 'canplay' : 'cantplay') + (needPotion() ? ' potionglow' : ''), attrs: 'data-card="potion" data-i="' + i + '"' } : null); });
