@@ -3830,7 +3830,7 @@
       if (k < 0) { var free = EVENT_TYPES.filter(function (t) { return !EVENT_GOLD[t] && !(noHeal && t === 'fountain') && !(noBank && t === 'bank'); }); return pick(free); }
       return deck.splice(k, 1)[0];
     }
-    var plan = (num === 1 ? [{ types: ['fight'], pool: ['dummy'] }] : []).concat([
+    var plan = num === FLOORS.length ? [{ types: ['boss'] }] : (num === 1 ? [{ types: ['fight'], pool: ['dummy'] }] : []).concat([
       { types: ['fight', 'fight', 'event'], pool: cfg.pools[0] },
       { types: ['event', 'event', 'event'] },
       { types: num === 1 ? ['fight', 'elite', 'camp'] : ['fight', 'fight', 'camp'], pool: cfg.pools[1] },
@@ -3851,7 +3851,7 @@
         if (t === 'boss') enemy = cfg.boss;
         if (t === 'event') ev = takeEv(num === 1 && li < 4, li === (num === 1 ? 2 : 0));
         // the descent starts at the top of the map and ends with the boss at the bottom
-        var n = { id: li + '-' + i, layer: li, idx: i, type: t, enemy: enemy, ev: ev, hid: t === 'event' && Math.random() < 0.4, x: w === 1 ? 50 : w === 2 ? (i === 0 ? 30 : 70) : 14 + i * 36, y: 7 + li * (86 / last), next: [], done: false };
+        var n = { id: li + '-' + i, layer: li, idx: i, type: t, enemy: enemy, ev: ev, hid: t === 'event' && Math.random() < 0.4, x: w === 1 ? 50 : w === 2 ? (i === 0 ? 30 : 70) : 14 + i * 36, y: last ? 7 + li * (86 / last) : 40, next: [], done: false };
         nodes.push(n); byId[n.id] = n; row.push(n);
       });
       layers.push(row);
