@@ -866,8 +866,8 @@ KNOWN ISSUES (art still to come)
   @keyframes lftxt { 0% { opacity: 0; transform: translate(-50%,40px) scale(.3); } 12% { opacity: 1; transform: translate(-50%,-14px) scale(1.25); } 22% { transform: translate(-50%,0) scale(1); } 80% { opacity: 1; } 100% { opacity: 0; transform: translate(-50%,-50px); } }
   @keyframes lfconf { 0% { opacity: 1; transform: translateY(0) rotate(0); } 100% { opacity: 0; transform: translateY(var(--fall)) rotate(540deg); } }
   /* ---- settings ---- */
-  .cog { position: fixed; right: 14px; top: 12px; z-index: 70; width: 52px; height: 52px; padding: 6px; background: #1a1210; border: 7px solid #5a463a; box-shadow: inset 0 0 0 2px #14110d, 3px 3px 0 rgba(0,0,0,.6); cursor: pointer; display: grid; place-items: center; }
-  .cog:hover { border-color: var(--gold); } .cog:hover .cogsvg { animation: cogspin 1.2s steps(8) infinite; }
+  .cog { position: fixed; right: 14px; top: 12px; z-index: 70; width: 52px; height: 52px; padding: 6px; cursor: pointer; display: grid; place-items: center; }
+  .cog:hover { filter: brightness(1.15); } .cog:hover .cogsvg { animation: cogspin 1.2s steps(8) infinite; }
   .cog .cogsvg { width: 100%; height: 100%; display: block; image-rendering: pixelated; }
   .cog.muted::after { content: ""; position: absolute; left: 6px; right: 6px; top: 50%; height: 5px; background: #d0403a; border: 4px solid #14110d; transform: rotate(-40deg); }
   @keyframes cogspin { to { transform: rotate(360deg); } }
@@ -2507,6 +2507,76 @@ KNOWN ISSUES (art still to come)
   body[data-screen="reward"] .card.k-sigil .rar-rare { color: #1f55b0 !important; } body[data-screen="reward"] .card.k-sigil .rar-epic { color: #6a35b8 !important; } body[data-screen="reward"] .card.k-sigil .rar-legendary { color: #a8650a !important; }
   /* intro animations play once; hovering off must never replay them (cards used to vanish and pop back in) */
   .card.abilpop.settled:not(.picked):not(.dimmed) { animation: abilglow 1.4s ease-in-out infinite alternate; opacity: 1; }
+
+  /* HUD moved about an inch (96px) in from the screen edges; cog and top buttons use the standard button window */
+  body:not([data-screen="title"]):not([data-screen="char"]):not([data-screen="rules"]):not([data-screen="tree"]) .goldtl { left: calc(36px + 96px / var(--zk, .64)) !important; }
+  body:not([data-screen="title"]):not([data-screen="char"]):not([data-screen="rules"]):not([data-screen="tree"]) .topbtns { right: calc(112px + 96px / var(--zk, .64)) !important; }
+  .cog.btn { zoom: 1.6 !important; width: 44px !important; height: 44px !important; right: calc((40px + 96px / var(--zk, .64)) / 1.6) !important; top: 27px !important; padding: 3px !important; }
+
+  body[data-credits] .mast { display: none !important; }
+  body[data-credits] .panel.credits { margin-top: 0; }
+
+  /* character select: title and window up about 1cm (38px on screen) */
+  body[data-screen="char"] .tavlogo { margin-top: calc(94px - 38px / var(--zk, .64)) !important; }
+
+  /* the dropped seal sits on parchment, and glows when armed; HUD dice light up as targets */
+  .card.k-sigil.dropseal::before { background-color: #e3d1a0 !important; background-image: linear-gradient(rgba(150,105,40,.10), rgba(150,105,40,.10)) !important; box-shadow: inset 0 0 22px 3px rgba(110,70,20,.45) !important; }
+  .card.k-sigil.dropseal h3 { color: #2b1d0e !important; text-shadow: none !important; }
+  .card.k-sigil.dropseal p { color: #4a3720 !important; }
+  .card.k-sigil.dropseal .rar-common { color: #5a5a66 !important; } .card.k-sigil.dropseal .rar-uncommon { color: #1f7a30 !important; } .card.k-sigil.dropseal .rar-rare { color: #1f55b0 !important; } .card.k-sigil.dropseal .rar-epic { color: #6a35b8 !important; }
+  .card.k-sigil.dropseal.armed { filter: drop-shadow(0 0 14px rgba(246,214,106,.9)); }
+  .card.k-sigil.dropseal .sealhint { font-weight: 700; color: #7a1a16 !important; }
+  body[data-sealarm] .hpdice .die { cursor: pointer; animation: sealtgt .7s ease-in-out infinite alternate; }
+  @keyframes sealtgt { from { filter: drop-shadow(0 0 2px rgba(246,214,106,.4)); transform: translateY(0); } to { filter: drop-shadow(0 0 12px rgba(246,214,106,1)); transform: translateY(-4px); } }
+
+  #seallayer { position: fixed; inset: 0; z-index: 330; pointer-events: none; }
+  .looseseal { position: absolute; width: 72px; height: 72px; pointer-events: auto; cursor: grab; touch-action: none; filter: drop-shadow(0 0 10px var(--rb, #e6d8a8)) drop-shadow(0 4px 0 rgba(0,0,0,.55)); animation: sealbob 1.6s ease-in-out infinite alternate; }
+  .looseseal svg { width: 100%; height: 100%; display: block; image-rendering: pixelated; }
+  .looseseal.r-common { --rb: #a3a8b3; } .looseseal.r-uncommon { --rb: #55c866; } .looseseal.r-rare { --rb: #5a97ec; } .looseseal.r-epic { --rb: #b684ff; }
+  .looseseal.held { cursor: grabbing; animation: none; transform: scale(1.18) rotate(-6deg); z-index: 5; }
+  @keyframes sealbob { from { transform: translateY(0); } to { transform: translateY(-5px); } }
+  .sealslot { display: block; width: 76px; height: 76px; margin: 4px auto 0; }
+  body[data-sealdrag] .hpdice .die.sg1 { animation: sgy .7s ease-in-out infinite alternate; }
+  body[data-sealdrag] .hpdice .die.sg2 { animation: sgo .7s ease-in-out infinite alternate; }
+  body[data-sealdrag] .hpdice .die.sg3 { animation: sgp .7s ease-in-out infinite alternate; }
+  body[data-sealdrag] .hpdice .die.sgx { opacity: .45; }
+  @keyframes sgy { from { filter: drop-shadow(0 0 2px rgba(255,225,70,.5)); } to { filter: drop-shadow(0 0 13px rgba(255,225,70,1)); transform: translateY(-4px); } }
+  @keyframes sgo { from { filter: drop-shadow(0 0 2px rgba(255,140,30,.5)); } to { filter: drop-shadow(0 0 13px rgba(255,140,30,1)); transform: translateY(-4px); } }
+  @keyframes sgp { from { filter: drop-shadow(0 0 2px rgba(180,100,255,.5)); } to { filter: drop-shadow(0 0 13px rgba(190,110,255,1)); transform: translateY(-4px); } }
+
+  /* player dice at the bottom sit a little further apart */
+  body:not([data-screen="title"]):not([data-screen="char"]):not([data-screen="rules"]):not([data-screen="tree"]) .hpdice .dice { gap: 16px !important; }
+  body:not([data-screen="title"]):not([data-screen="char"]):not([data-screen="rules"]):not([data-screen="tree"]) .mycups { gap: 22px !important; }
+
+  #satchelpanel { position: absolute; width: 400px; height: 320px; pointer-events: auto; cursor: grab; touch-action: none; user-select: none; filter: drop-shadow(0 8px 0 rgba(0,0,0,.35)); }
+  #satchelpanel.moving { cursor: grabbing; }
+  #satchelpanel > svg { width: 100%; height: 100%; display: block; image-rendering: pixelated; pointer-events: none; }
+  #satchelpanel .sp-x { position: absolute; right: 2px; top: 2px; width: 44px; height: 44px; padding: 0; border: 0; background: none; cursor: pointer; filter: drop-shadow(0 2px 0 rgba(0,0,0,.5)); }
+  #satchelpanel .sp-x svg { width: 100%; height: 100%; display: block; }
+  #satchelpanel .sp-x:hover { filter: brightness(1.15) drop-shadow(0 2px 0 rgba(0,0,0,.5)); transform: scale(1.08); }
+  body.relicdrag .sellzone { border-style: solid; border-color: #f6d66a; background-color: rgba(120,84,10,.45); animation: sellglow 1s ease-in-out infinite; }
+  body.relicdrag .sellzone .sellamt { opacity: 1; color: #f6d66a; }
+
+  .merchport { position: absolute; left: 22px; top: 18px; z-index: 4; width: 104px; height: 104px; border: 7px solid #6a4a1c; border-radius: 50%; background: radial-gradient(circle at 50% 38%, #3a2c1a, #120c06); box-shadow: inset 0 0 0 3px #14110d, 0 5px 0 rgba(0,0,0,.5); overflow: hidden; }
+  .merchport svg { width: 100%; height: 100%; display: block; image-rendering: pixelated; }
+  .panel:has(.merchport) { position: relative; }
+  #sellpop { position: fixed; z-index: 345; display: none; padding: 8px 16px; background: #f1e3b8; color: #3a2410; border: 4px solid #6a4a1c; font: 700 20px/1.1 var(--display, monospace); pointer-events: none; box-shadow: 0 4px 0 rgba(0,0,0,.5); white-space: nowrap; }
+  #sellpop b { color: #a07c1e; font-size: 24px; }
+  .looseseal.carried { pointer-events: none !important; opacity: .55; z-index: 6; }
+  .looseseal.skid { transition: left .75s cubic-bezier(.12,.8,.25,1), top .75s cubic-bezier(.12,.8,.25,1); animation: none; }
+  #ctxmenu { position: fixed; z-index: 400; min-width: 190px; padding: 6px; background: #1c140c; border: 4px solid #6a4a1c; box-shadow: 0 6px 0 rgba(0,0,0,.55); font-family: var(--display, monospace); }
+  #ctxmenu .ctxt { padding: 4px 10px 6px; color: #e6bd45; font-size: 15px; letter-spacing: .06em; text-transform: uppercase; border-bottom: 2px solid #3a2a14; margin-bottom: 4px; }
+  #ctxmenu .ctxi { display: block; width: 100%; text-align: left; padding: 8px 12px; font: 700 17px/1.1 var(--display, monospace); color: #f3e9cf; background: none; border: 0; cursor: pointer; }
+  #ctxmenu .ctxi { display: flex !important; align-items: center; gap: 10px; }
+  #ctxmenu .ctxic { width: 22px; height: 22px; flex: none; display: inline-block; } #ctxmenu .ctxic svg { width: 100%; height: 100%; display: block; image-rendering: pixelated; }
+  #ctxmenu .ctxi.off .ctxic { opacity: .4; }
+  #ctxmenu .ctxi:hover:not(:disabled) { background: #4a3418; color: #fff; }
+  #ctxmenu .ctxi.off { color: #7a6a52; cursor: not-allowed; }
+  #ctxmenu .ctxi.danger { color: #e8776c; } #ctxmenu .ctxi.armed { background: #7a1a16; color: #fff; }
+
+  .sellplus { position: absolute; display: flex; align-items: center; gap: 6px; transform: translate(-50%, -50%); font: 700 34px/1 var(--display, monospace); color: #f6d66a; text-shadow: 3px 3px 0 #14110d, -1px -1px 0 #14110d; animation: sellrise 1.3s ease-out forwards; }
+  .sellplus .sp-c { width: 34px; height: 34px; display: inline-block; } .sellplus .sp-c svg { width: 100%; height: 100%; display: block; image-rendering: pixelated; }
+  @keyframes sellrise { 0% { opacity: 0; margin-top: 0; } 15% { opacity: 1; } 100% { opacity: 0; margin-top: -90px; } }
 </style>
 
 <main class="wrap">
@@ -2639,7 +2709,7 @@ KNOWN ISSUES (art still to come)
     golden: { name: 'Golden Die', get desc() { return 'Gain ' + bonusGold(GOLD_PER_SIX) + ' gold on a roll of 6.'; }, base: 45, weight: 3 },
     weighted: { name: 'Weighted Die', desc: 'Adds a 1 in 6 chance to roll a 6 (2 in 6 in all).', base: 70, weight: 1 },
     odd: { name: 'Odd Die', desc: 'Its faces become 1, 1, 3, 3, 5 and 5.', base: 30, weight: 3 },
-    haggler: { name: 'Haggler Die', desc: 'Each time this die rolls a 1, your shop rarity rises by 1 for the rest of the run.', base: 35, weight: 3 },
+    haggler: { name: 'Haggler Die', desc: 'Each time this die rolls a 1, your rarity rises by 1% for the rest of the run.', base: 35, weight: 3 },
     pregnant: { name: 'Fecund Die', desc: 'Whenever this die shows a 6, it spawns an extra die that lasts one round and inherits all of its seals. It counts as health while it lasts.', base: 50, weight: 2 },
     healer: { name: 'Vigorous Die', desc: 'Whenever this die shows a 6, you recover 1 HP.', base: 60, weight: 2 },
     optimist: { name: 'Optimistic Die', desc: 'Increase its face value by one, a 6 becomes wild.', base: 40, weight: 2 },
@@ -2676,7 +2746,7 @@ KNOWN ISSUES (art still to come)
     if (m === 'golden') return 'Gain ' + bonusGold(GOLD_PER_SIX * n) + ' gold on a roll of 6.';
     if (m === 'weighted') return 'Adds a ' + (n - 0) + ' in 6 chance to roll a 6 (' + (n + 1) + ' in 6 in all).';
     if (m === 'odd') return n === 2 ? 'Its faces become 1, 1, 1, 5, 5 and 5.' : 'Every face is a 1.';
-    if (m === 'haggler') return 'Each time this die rolls a 1, your shop rarity rises by ' + HAG[Math.min(3, Math.max(1, n))] + ' for the rest of the run.';
+    if (m === 'haggler') return 'Each time this die rolls a 1, your rarity rises by ' + HAG[Math.min(3, Math.max(1, n))] + '% for the rest of the run.';
     if (m === 'pregnant') return 'Whenever this die shows a 6, it spawns ' + n + ' baby dice that last one round and inherit all of its upgrades. They count as health while they last.';
     if (m === 'healer') return 'Whenever this die shows a 6, it feeds on the table and you recover ' + n + ' HP.';
     if (m === 'peeper') return 'Whenever this die rolls a 1, you gain ' + n + ' peeks.';
@@ -3701,8 +3771,8 @@ KNOWN ISSUES (art still to come)
     potion: { name: 'Healing Potion', desc: 'Drink it in a fight to bring back 2 fallen dice. One use.', base: 25, rar: 'common', start: true },
     ring: { name: 'Cutthroat’s Ring', desc: 'A thief’s keepsake. Whenever you wound an enemy, there is a 5% chance the blow lands twice (double damage).', base: 25, rar: 'common', start: true },
     gauntlet: { name: 'Battered Gauntlet', desc: 'A fighter’s keepsake. Each time an enemy would wound you, there is a 5% chance you turn it aside and take no damage.', base: 25, rar: 'common', start: true },
-    crown: { name: 'Tarnished Crown', desc: 'A cleric’s keepsake. Monsters are 5% more likely to drop their seal.', base: 25, rar: 'common', start: true },
-    doublet: { name: 'Snake-Eyes Charm', desc: 'Once per fight, when you roll a double with only 2 dice in your cup: recover 1 HP, and gain +5 shop rarity, +5% double damage, +5% block and +5% drop chance for the rest of the run.', base: 110, rar: 'rare' },
+    crown: { name: 'Tarnished Crown', desc: 'A cleric’s keepsake. +5% rarity.', base: 25, rar: 'common', start: true },
+    doublet: { name: 'Snake-Eyes Charm', desc: 'Once per fight, when you roll a double with only 2 dice in your cup: recover 1 HP, and gain +5% rarity, +5% double damage and +5% block for the rest of the run.', base: 110, rar: 'rare' },
     knife: { name: 'Quick Knife', desc: 'Throw it in a fight to deal 1 damage to the enemy. The knife is gone after one throw.', base: 25, rar: 'common' },
     bleach: { name: 'Bleach', desc: 'Drag it onto an enemy die in a fight to wipe every pip off its face-up side.', base: 20, rar: 'common' },
     eyeglass: { name: 'Broken Eyeglass', desc: 'Drag it onto an enemy die in a fight to peer through the crack and see what it shows. One use.', base: 20, rar: 'common' },
@@ -3742,14 +3812,13 @@ KNOWN ISSUES (art still to come)
   function removeCard(id) { var d = deckOf(), i = d.indexOf(id); if (i > -1) d.splice(i, 1); }
   function itm(id) { if (!S || !S.player) return false; if (isCard(id)) return deckOf().indexOf(id) > -1; return !!(S.player.inv && S.player.inv.indexOf(id) > -1); }
   function bagOf(p) { if (!p.bag) { p.bag = []; } while (p.bag.length < BAG_SLOTS) p.bag.push(null); return p.bag; }
-  function owns(id) { var p = S.player; if (isCard(id)) return deckOf(p).indexOf(id) > -1; return p.inv.indexOf(id) > -1 || bagOf(p).indexOf(id) > -1; }
-  function bagCount() { return bagOf(S.player).filter(function (x) { return x; }).length; }
-  function freeRoom() { return S.player.inv.length < INV_SLOTS || bagCount() < BAG_SLOTS; }
+  function owns(id) { var p = S.player; if (isCard(id)) return deckOf(p).indexOf(id) > -1; return p.inv.indexOf(id) > -1 || bagOf(p).indexOf(id) > -1 || ((S.loose || []).some(function (q) { return q.item === id; })); }
+  function bagCount() { return ((S && S.loose) || []).filter(function (q) { return q.bag; }).length; }
+  function freeRoom() { return true; }
   function addItem(id) {
     var p = S.player; if (isCard(id)) { if (deckOf(p).length >= DECK_MAX) return false; deckOf(p).push(id); sfx('item'); queueReveal(id); return true; }
     (S.newItems = S.newItems || {})[id] = 1; sfx('item');
-    if (p.inv.length < INV_SLOTS) { p.inv.push(id); return true; }
-    var b = bagOf(p), k = b.indexOf(null); if (k > -1) { b[k] = id; return true; } delete S.newItems[id]; return false;
+    S.loose = S.loose || []; S.loose.push({ id: ++LOOSE_ID, item: id, x: 0.93, y: Math.min(0.82, 0.28 + 0.1 * (S.loose.filter(function (q) { return q.item; }).length % 6)) }); return true;
   }
   function sellValue(id) { return Math.max(5, Math.round(ITEMS[id].base * floorCfg().priceMul * 0.5 / 5) * 5); }
   function locParse(str) { if (!str) return null; var a = str.split(':'); return { k: a[0], i: +a[1] || 0 }; }
@@ -3768,6 +3837,7 @@ KNOWN ISSUES (art still to come)
       var v = sellValue(id); locSet(from, null); S.player.gold += v; S.shopMsg = 'Sold ' + ITEMS[id].name + ' for ' + v + ' gold.'; return true;
     }
     if (to.k === 'satchel') {
+      return false;
       if (from.k === 'bag') return false;
       var b = bagOf(S.player), k = b.indexOf(null); if (k < 0) return false;
       locSet(from, null); b[k] = id; return true;
@@ -3829,7 +3899,7 @@ KNOWN ISSUES (art still to come)
     wind: { name: 'Stubborn Pulse', desc: 'Your wounds close on their own. Recover 1 HP after every fight.', max: 2 },
     plunder: { name: 'Plunder', desc: 'Earn 2 extra gold for every enemy die you knock out.', max: 2 },
     hardy: { name: 'Fortify', desc: 'Choose two dice and roll them. On 8 or more, permanently add 1 die to your cup.', max: 2 },
-    grave: { name: 'Grave Robber', desc: 'The dead give up their spoils more easily. +10% <span class="dropic">' + HAND_ART + '</span> drop chance.', max: 3 },
+    grave: { name: 'Grave Robber', desc: 'The dead give up their spoils more easily. +10% rarity.', max: 3 },
     study: { name: 'Quick Study', desc: 'Every lesson the dungeon teaches sticks. Gain 15% more XP from fights.', max: 3 }
   };
 
@@ -4008,7 +4078,7 @@ KNOWN ISSUES (art still to come)
       setTimeout(function () { try { startRun(); } finally { beginning = false; } setTimeout(function () { if (fx.parentNode) fx.parentNode.removeChild(fx); }, 700); fx.classList.add('out'); }, 2100);
     } catch (e) { beginning = false; startRun(); }
   }
-  function startRun() { XP.shown = null; XP.anim = null; AUD.lastGold = null; S.newItems = {}; S.owed = 0; S.shopLuck = webN('luck'); S.bonus = { double: 0, block: 0, drop: 0 }; S.tokBanked = false; S.runKills = 0; S.swap = null; S.discardArm = null; S.hold = null; S.destroy = null; S.bagOpen = false; S.player = newPlayer(); S.player.deck.push('potion'); S.bank = 0; S.bankNote = 0; S.floorNum = 1; S.floor = makeFloor(1); S.cur = null; S.screen = 'map'; S.forge = null; S.upgrade = null; S.event = null; S.pending = 0; S.finalShop = false; S.showDice = false; S.pact = false; S.runPts = 0; S.runWins = 0; S.sk = {}; S.sp = 0; S.shopLevel = 0; render(); }
+  function startRun() { XP.shown = null; XP.anim = null; AUD.lastGold = null; S.newItems = {}; S.loose = []; S.sealArm = null; S.bagOpen = false; S.bagPos = null; S.owed = 0; S.shopLuck = webN('luck'); S.bonus = { double: 0, block: 0, drop: 0 }; S.tokBanked = false; S.runKills = 0; S.swap = null; S.discardArm = null; S.hold = null; S.destroy = null; S.bagOpen = false; S.player = newPlayer(); S.player.deck.push('potion'); S.bank = 0; S.bankNote = 0; S.floorNum = 1; S.floor = makeFloor(1); S.cur = null; S.screen = 'map'; S.forge = null; S.upgrade = null; S.event = null; S.pending = 0; S.finalShop = false; S.showDice = false; S.pact = false; S.runPts = 0; S.runWins = 0; S.sk = {}; S.sp = 0; S.shopLevel = 0; render(); }
   function enterNode(id) {
     if (reachable().indexOf(id) < 0) return;
     var n = S.floor.byId[id]; S.lastNode = id;
@@ -4030,7 +4100,7 @@ KNOWN ISSUES (art still to come)
     closeDeck(); S.shopSel = S.shopSel; S.event = null; completeNode();
   }
   function descend() {
-    S.floorNum++; if (S.bank) { S.bankNote = S.bank * 2; S.player.gold += S.bank * 2; S.bank = 0; sfx('coin'); } else S.bankNote = 0; S.shopLevel = Math.min(LEVEL_COSTS.length, (S.shopLevel || 0) + 1); heal(S.player, 2); S.floor = makeFloor(S.floorNum); S.cur = null; S.finalShop = false; S.screen = 'map'; render();
+    S.floorNum++; if (S.bank) { S.bankNote = S.bank * 2; S.player.gold += S.bank * 2; S.bank = 0; sfx('coin'); } else S.bankNote = 0; var oldSl = S.shopLevel || 0; S.shopLevel = Math.min(LEVEL_COSTS.length, oldSl + 1); S.shopLuck = (S.shopLuck || 0) + 10 * (S.shopLevel - oldSl); heal(S.player, 2); S.floor = makeFloor(S.floorNum); S.cur = null; S.finalShop = false; S.screen = 'map'; render();
   }
 
   // ---------- combat ----------
@@ -4332,7 +4402,7 @@ KNOWN ISSUES (art still to come)
       var lv = C.pv.filter(function (x) { return !x.baby; });
       if (lv.length === 2 && lv[0].val === lv[1].val) {
         C.doubletUsed = true; var dh = heal(S.player, 1); S.shopLuck = (S.shopLuck || 0) + 5; S.bonus = S.bonus || { double: 0, block: 0, drop: 0 }; S.bonus.double += 5; S.bonus.block += 5; S.bonus.drop += 5;
-        C.log.push('Snake eyes! The Snake-Eyes Charm hums.' + (dh ? ' You recover 1 HP.' : '') + ' +5 shop rarity, +5% double damage, +5% block and +5% drop chance.'); sfx('item');
+        C.log.push('Snake eyes! The Snake-Eyes Charm hums.' + (dh ? ' You recover 1 HP.' : '') + ' +5% rarity, +5% double damage, and +5% block.'); sfx('item');
       }
     }
     var mkN = 0; C.pv.forEach(function (x) { var mv = !x.baby && C.marks && C.marks[x.i]; if (mv && (mv === true || mv >= C.round)) { x.spied = true; x.marked = true; if (mv !== true) x.stunned = true; mkN++; } });
@@ -4352,7 +4422,7 @@ KNOWN ISSUES (art still to come)
     if (goldGot) C.log.push('Your golden dice pay ' + goldGot + ' gold.');
     if (peekGot) C.log.push('Your peeping dice open their eyes: +' + peekGot + ' peek' + (peekGot > 1 ? 's' : '') + '.');
     if (rerollGot) C.log.push('Your fickle dice change their minds: +' + rerollGot + ' reroll' + (rerollGot > 1 ? 's' : '') + '.');
-    if (luckGot) C.log.push('Your haggler dice whisper to the shopkeeper: +' + luckGot + ' shop rarity.');
+    if (luckGot) C.log.push('Your haggler dice whisper to the shopkeeper: +' + luckGot + '% rarity.');
     if (healed) C.log.push('Your vigorous dice recover ' + healed + ' HP. The dice rejoin next round.');
     if (babies) C.log.push(babies === 1 ? 'A fecund die spawns a baby die. It counts as health this round.' : babies + ' fecund dice spawn baby dice for this round.');
     bigBigCheck();
@@ -5231,7 +5301,7 @@ KNOWN ISSUES (art still to come)
       else {
         r = rollDie(S.player.dice[x.i], true); x.val = r.val; x.sv = r.sv; x.fk = r.fk; x.fkT = Date.now(); x.trigNew = true;
         if (r.gold) { S.player.gold += r.gold; C.fx[k] = '+' + r.gold + ' gold'; C.log.push('Your golden die pays ' + r.gold + ' gold.'); }
-        if (r.luck) { S.shopLuck = (S.shopLuck || 0) + r.luck; C.fx[k] = '+' + r.luck + ' rarity'; C.log.push('Your haggler die raises your shop rarity by ' + r.luck + '.'); }
+        if (r.luck) { S.shopLuck = (S.shopLuck || 0) + r.luck; C.fx[k] = '+' + r.luck + '% rarity'; C.log.push('Your haggler die raises your rarity by ' + r.luck + '%.'); }
         if (r.heal && heal(S.player, r.heal)) { C.fx[k] = (C.fx[k] ? C.fx[k] + ' ' : '') + '+' + r.heal + ' HP'; C.log.push('Your vigorous die recovers ' + r.heal + ' HP.'); }
         if (r.peek) { C.charges.peek = (C.charges.peek || 0) + r.peek; stashAdd('peek', r.peek); C.fx[k] = (C.fx[k] ? C.fx[k] + ' ' : '') + '+' + r.peek + ' peek'; C.log.push('Your peeping die opens its eye: +' + r.peek + ' peek.'); }
         if (r.reroll) { C.charges.reroll = (C.charges.reroll || 0) + r.reroll; stashAdd('reroll', r.reroll); C.fx[k] = (C.fx[k] ? C.fx[k] + ' ' : '') + '+' + r.reroll + ' reroll'; C.log.push('Your fickle die changes its mind: +' + r.reroll + ' reroll.'); }
@@ -5246,7 +5316,7 @@ KNOWN ISSUES (art still to come)
   }
 
   var DROP_BASE = 0.25; // base seal-drop chance; future boosts add onto this
-  function dropChance(def) { if (def && def.id === 'dummy') return 1; var gr = (S && S.player && S.player.ab && S.player.ab.grave) || 0; return Math.min(1, (DROP_BASE + 0.10 * gr + (itm('crown') ? 0.05 : 0) + 0.01 * webN('drop')) * (itm('hook') ? 2 : 1)); }
+  function dropChance(def) { if (def && def.id === 'dummy') return 1; return Math.min(1, (DROP_BASE + shopRarity() / 100) * (itm('hook') ? 2 : 1)); }
   function afterCombat() {
     var def = C.def, p = S.player;
     returnStolen();
@@ -5265,11 +5335,13 @@ KNOWN ISSUES (art still to come)
       S.victory.drop = def.drop;
       var fl = fightLuck(def);
       if (fl > 0 && Math.random() < fl / 100) { var up = drawByRarity(MOD_ORDER.filter(anyApplicable), 1, function (m) { return m; }, 0, fl * 2)[0]; if (up) S.victory.drop = up; }
+      S.victory.dropId = giveSeal(S.victory.drop, { slot: true }).id;
     }
     if (def.id === 'dummy' && S.victory) S.victory.dummy = true; if (def.id === 'dummy' && !noteSeen() && !S.noteGone) S.noteShow = true;
     if (def.id === 'dummy' && !M.dummyDone) { M.dummyDone = true; saveMeta(); }
     if (S.runWins === 2 && !owns('knife')) S.victory.loot = 'knife';
     if (S.runWins === 3) { var ci = ({ thief: 'ring', fighter: 'gauntlet', cleric: 'crown' })[S.cls || 'fighter']; S.victory.loot = (ci && !owns(ci)) ? [ci, 'mead'] : ['mead']; }
+    if (S.victory.loot) { var lt = [].concat(S.victory.loot), keepL = []; S.victory.slotIds = []; lt.forEach(function (lid) { if (isCard(lid)) keepL.push(lid); else if (!owns(lid)) { var tk = giveRelic(lid, { slot: true }); if (tk) S.victory.slotIds.push(tk.id); } }); S.victory.loot = keepL.length ? keepL : null; }
     S.screen = 'victory'; render();
   }
   function canLearn() { return Object.keys(TREE).some(function (id) { return clsOf(id) === (S.cls || 'fighter') && skillState(id).ok; }); }
@@ -5323,7 +5395,7 @@ KNOWN ISSUES (art still to come)
     // legendary wares stay at 0% until luck has squeezed Common out completely, then they start to creep in
     if (r === 'legendary') return Math.max(0, L - 50);
     var w = RARITY[r].w + LUCK_SHARE[r] * L;
-    return (r === 'common' ? Math.max(0, w) : Math.max(2, w)) * Math.pow(LEVEL_MUL[r], lvl || 0);
+    return (r === 'common' ? Math.max(0, w) : Math.max(2, w));
   }
   function drawByRarity(list, n, keyOf, lvl, luck) {
     var pool = list.slice(), out = [];
@@ -5369,8 +5441,7 @@ KNOWN ISSUES (art still to come)
   }
   function fightLuck(def) {
     if (!def || def.id === 'dummy') return 0;
-    var base = DROP_BASE;
-    return Math.max(0, Math.round((dropChance(def) - base) * 100));
+    return Math.max(0, Math.round(shopRarity()));
   }
   function openReward() {
     var def = ENEMIES[S.floor.byId[S.lastNode].enemy], big = def.kind !== 'fight', p = S.player, opts = [];
@@ -5394,7 +5465,7 @@ KNOWN ISSUES (art still to come)
     else if (o.t === 'maxdie2') { var gotD = addDice(p, 2); if (gotD < 2) p.gold += capGold(2 - gotD); completeNode(); }
     else if (o.t === 'gold') { p.gold += o.gold; completeNode(); }
     else if (o.t === 'item') giveItems([o.item], completeNode);
-    else if (o.t === 'mod') openForge('mod', { mod: o.mod, onDone: completeNode, onCancel: back });
+    else if (o.t === 'mod') { giveSeal(o.mod); completeNode(); }
     else openForge('face', { onDone: completeNode, onCancel: back });
   }
 
@@ -5406,7 +5477,7 @@ KNOWN ISSUES (art still to come)
   }
   // a burst of sparks in the seal's wax colour where it lands on a die
   function sealSparks(i, mod) {
-    var el = document.querySelector('.dropdie[data-i="' + i + '"]'); if (!el) return;
+    var el = document.querySelector('.dropdie[data-i="' + i + '"]') || document.querySelector('.hpdice .die[data-tip="hud:' + i + '"]'); if (!el) return;
     var r = el.getBoundingClientRect(), z = parseFloat(getComputedStyle(document.body).zoom) || 1, cx = r.left + r.width / 2, cy = r.top + r.height / 2;
     var tint = (typeof TINTS !== 'undefined' && TINTS[mod]) || '#e4c35c', cols = [tint, tint, '#fff6c2', '#ffd36a', shadeHex(tint, 1.5)];
     var box = document.createElement('div'); box.className = 'sealfx'; box.setAttribute('aria-hidden', 'true');
@@ -5458,14 +5529,14 @@ KNOWN ISSUES (art still to come)
   function pickSpoils(n) {
     n = n || 6;
     var all = shopItems().filter(function (x) { return !x.mod; }), okl = all.filter(function (x) { return x.ok; }), src = okl.length >= n ? okl : all;
-    var picks = drawByRarity(src, n, function (x) { return x.id; }, S.shopLevel || 0, S.shopLuck || 0).map(function (x) { return x.id; });
+    var picks = drawByRarity(src, n, function (x) { return x.id; }, S.shopLevel || 0, shopRarity()).map(function (x) { return x.id; });
     // one seal is always on the shelf, at a steep price
     var sig = shopItems().filter(function (x) { return x.mod && x.ok; });
-    if (sig.length) picks.push(drawByRarity(sig, 1, function (x) { return x.id; }, S.shopLevel || 0, S.shopLuck || 0)[0].id);
+    if (sig.length) picks.push(drawByRarity(sig, 1, function (x) { return x.id; }, S.shopLevel || 0, shopRarity())[0].id);
     return picks;
   }
   var LEVEL_COSTS = [25, 50, 75, 100];
-  function shopRarity() { return (S.shopLevel || 0) * 10 + (S.shopLuck || 0); }
+  function shopRarity() { var gr = (S && S.player && S.player.ab && S.player.ab.grave) || 0; return (S.shopLuck || 0) + 10 * gr + (itm('crown') ? 5 : 0) + webN('drop'); }
   function rerollCost() { return 5 * ((S.shopRerolls || 0) + 1); }
   function shopReroll() {
     var c = rerollCost(); if (S.player.gold < c) return;
@@ -5473,7 +5544,7 @@ KNOWN ISSUES (art still to come)
   }
   function shopLevelUp() {
     var lv = S.shopLevel || 0; if (lv >= LEVEL_COSTS.length || S.player.gold < LEVEL_COSTS[lv]) return;
-    S.player.gold -= LEVEL_COSTS[lv]; S.shopLevel = lv + 1; S.shopSel = pickSpoils(3); S.shopMsg = 'The shop grows richer. Rarer wares appear.'; S.shopFresh = true; render();
+    S.player.gold -= LEVEL_COSTS[lv]; S.shopLevel = lv + 1; S.shopLuck = (S.shopLuck || 0) + 10; S.shopSel = pickSpoils(3); S.shopMsg = 'The shop grows richer. Rarer wares appear.'; S.shopFresh = true; render();
   }
   function buy(i) {
     var it = shopItems()[i], p = S.player;
@@ -5570,9 +5641,9 @@ KNOWN ISSUES (art still to come)
       ev.enemy = pick(pl); ev.done = false;
     }
     if (type === 'bank') ev.amt = Math.floor(S.player.gold / 2);
-    if (type === 'cardsharp') { ev.offers = drawByRarity(MERCH_IDS.slice(), 3, function (k) { return k; }, S.shopLevel || 0, S.shopLuck || 0).map(function (id) { return { id: id, price: priceOf(ITEMS[id].base * 1.4), sold: false }; }); ev.msg = ''; }
+    if (type === 'cardsharp') { ev.offers = drawByRarity(MERCH_IDS.slice(), 3, function (k) { return k; }, S.shopLevel || 0, shopRarity()).map(function (id) { return { id: id, price: priceOf(ITEMS[id].base * 1.4), sold: false }; }); ev.msg = ''; }
     if (type === 'smith' || type === 'anvil') {
-      ev.offers = drawByRarity(MOD_ORDER.filter(anyApplicable), 3, function (m) { return m; }, S.shopLevel || 0, S.shopLuck || 0).map(function (m) { return { mod: m, price: type === 'anvil' ? 0 : Math.max(5, Math.round(priceOf(MODS[m].base) * 1.7 / 5) * 5) }; });
+      ev.offers = drawByRarity(MOD_ORDER.filter(anyApplicable), 3, function (m) { return m; }, S.shopLevel || 0, shopRarity()).map(function (m) { return { mod: m, price: type === 'anvil' ? 0 : Math.max(5, Math.round(priceOf(MODS[m].base) * 1.7 / 5) * 5) }; });
     }
     return ev;
   }
@@ -5656,13 +5727,12 @@ KNOWN ISSUES (art still to come)
   }
   function idolSeal(i) {
     var ev = S.event, o = ev && ev.result && ev.result.offers; if (!o || !o[i]) return;
-    openForge('mod', { mod: o[i], onDone: completeNode, onCancel: function () { S.screen = 'event'; render(); } });
+    giveSeal(o[i]); completeNode();
   }
   function evContinue() {
     var ev = S.event;
     if (ev.result && ev.result.modId) {
-      var back = function () { S.screen = 'event'; render(); };
-      openForge('mod', { mod: ev.result.modId, onDone: completeNode, onCancel: back });
+      giveSeal(ev.result.modId); completeNode();
     } else completeNode();
   }
   // ---- scratch card ----
@@ -5818,8 +5888,7 @@ KNOWN ISSUES (art still to come)
   }
   function slotClaim() {
     var ev = S.event; if (!ev || !ev.claim) return;
-    var back = function () { S.screen = 'event'; render(); };
-    openForge('mod', { mod: ev.claim.mod, onDone: function () { ev.claim = null; back(); }, onCancel: back });
+    giveSeal(ev.claim.mod); ev.claim = null; S.screen = 'event'; render();
   }
   function slotLeave() {
     var ev = S.event; if (!ev || ev.spinning || ev.claim) return;
@@ -5850,7 +5919,7 @@ KNOWN ISSUES (art still to come)
       S.owed = (S.owed || 0) + 2;
       ev.text = 'She pockets the die with a smile. <span class="good">After your next fight, 2 dice will be added to your cup.</span>'; ev.step = 'done'; render();
     } else if (ev.type === 'peddler') {
-      var ids = drawByRarity(MERCH_IDS.slice(), 2, function (k) { return k; }, S.shopLevel || 0, S.shopLuck || 0);
+      var ids = drawByRarity(MERCH_IDS.slice(), 2, function (k) { return k; }, S.shopLevel || 0, shopRarity());
       ev.text = 'He deals you your trade: <span class="good">' + ids.map(function (k) { return ITEMS[k].name; }).join(' and ') + '</span>.';
       giveItems(ids, function () { ev.step = 'done'; S.screen = 'event'; render(); });
     } else {
@@ -5891,7 +5960,7 @@ KNOWN ISSUES (art still to come)
     } catch (e) { }
   }
   fitZoom(); window.addEventListener('resize', fitZoom);
-  var renderBase = render; render = function () { var r = renderBase.apply(this, arguments); fitZoom(); try { if (S && S.screen === 'victory') reportStart(); else if (RPT.gen) rptClean(); } catch (e) { } return r; };
+  var renderBase = render; render = function () { var r = renderBase.apply(this, arguments); fitZoom(); try { sealLayerSync(); } catch (e) { } try { if (S && S.screen === 'victory') reportStart(); else if (RPT.gen) rptClean(); } catch (e) { } return r; };
   function hudBarHTML(q) {
     return '<div class="meb"><div class="goldtl"><span class="hudcoin" aria-hidden="true">' + ITEM_ART.coin + '</span>' + (q.gold || '') + '</div>' +
       '<div class="mecenter">' + (q.port || '') + noteHTML() + '<div class="mecol"><div class="merow">' + (q.hp || '') + (q.chips || '') + '</div><div class="hpdice">' + (q.dice || '') + '</div></div><div class="deckcorner">' + deckPileHTML() + '</div></div>' +
@@ -5924,13 +5993,13 @@ KNOWN ISSUES (art still to come)
     for (var si = 0; si < INV_SLOTS; si++) slots += slotHTML('inv:' + si, p.inv[si], fight);
     slots = '<div class="invrow">' + slots + '</div>';
     var bn = bagCount();
-    slots += '<button type="button" class="slot bagicon' + (S.bagOpen ? ' open' : '') + (fight ? ' dim' : '') + '" data-act="loc" data-id="satchel" data-loc="satchel" data-tip="bagicon:" aria-label="Satchel, ' + bn + ' of ' + BAG_SLOTS + ' slots used">' + ITEM_ART.bag + '<span class="baglbl">Satchel <span class="bagn">' + bn + '/' + BAG_SLOTS + '</span></span></button>';
+    slots += '<button type="button" class="slot bagicon' + (S.bagOpen ? ' open' : '') + (fight ? ' dim' : '') + '" data-act="loc" data-id="satchel" data-loc="satchel" data-tip="bagicon:" aria-label="Satchel, ' + bn + ' stowed">' + ITEM_ART.bag + '<span class="baglbl">Satchel' + (bn ? ' <span class="bagn">' + bn + '</span>' : '') + '</span></button>';
     var cls = CLASSES[(S && S.cls) || 'fighter'] || CLASSES.fighter;
     return '<div class="hud"><div class="unit">' + hudPortrait() + '<div class="unitcol"><div class="stats">' +
       '<div class="stat" data-tip="note:Gold"><b class="gold"><span class="dropic">' + ITEM_ART.gold + '</span>' + p.gold + '</b></div>' + (S.bank ? '<div class="stat"><span class="lbl">Banked</span><b class="gold">' + S.bank + '</b></div>' : '') +
-      '<div class="stat" data-tip="note:Drop chance"><b><span class="dropic">' + HAND_ART + '</span>' + Math.round(dropChance({ kind: 'fight' }) * 100) + '%</b></div>' + (S.pact ? '<div class="stat"><span class="lbl">Pact</span><b>Goblin</b></div>' : '') + '<div class="stat" data-tip="note:Shop rarity"><b><span class="dropic">' + fxIcon('shop') + '</span>' + shopRarity() + '</b></div>' + '</div><div class="unitbar"><div class="unitname"><b>' + cls.name + '</b></div><div class="dice">' + dice + '</div><span class="unithp">' + hp(p) + ' / ' + p.dice.length + (nb ? ' <span style="color:var(--baby)">+' + nb + '</span>' : '') + '</span></div></div></div><div class="inv"><span class="lbl">Relics</span>' + slots + '</div>' +
-      '<div class="hudbtns">' + (['camp', 'shop', 'event'].indexOf(S.screen) > -1 && !S.finalShop ? '<button type="button" class="btn ghost small" data-act="goMap">Map</button>' : '') + (['map', 'camp', 'shop', 'event'].indexOf(S.screen) > -1 ? '<button type="button" class="btn ghost small' + (pts() > POP.sp ? ' skillnew' : pts() ? ' skillhas' : '') + '" data-act="tree" data-id="run">Skills' + (pts() ? ' (' + pts() + ')' : '') + '</button>' : '') +
-      '<button type="button" class="btn ghost small" data-act="toggleDice" aria-expanded="' + S.showDice + '">' + (S.showDice ? 'Hide dice' : 'Dice') + '</button>' + '<button type="button" class="btn ghost small' + (needPotion() ? ' potionglow' : '') + '" data-act="deckOpen" data-deckbtn="1">Deck (' + deckOf().length + ')</button>' +
+      '' + (S.pact ? '<div class="stat"><span class="lbl">Pact</span><b>Goblin</b></div>' : '') + '<div class="stat" data-tip="note:Rarity"><b><span class="dropic">' + fxIcon('shop') + '</span>' + shopRarity() + '%</b></div>' + '</div><div class="unitbar"><div class="unitname"><b>' + cls.name + '</b></div><div class="dice">' + dice + '</div><span class="unithp">' + hp(p) + ' / ' + p.dice.length + (nb ? ' <span style="color:var(--baby)">+' + nb + '</span>' : '') + '</span></div></div></div><div class="inv"><span class="lbl">Relics</span>' + slots + '</div>' +
+      '<div class="hudbtns">' + (['camp', 'shop', 'event'].indexOf(S.screen) > -1 && !S.finalShop ? '<button type="button" class="btn" data-act="goMap">Map</button>' : '') + (['map', 'camp', 'shop', 'event'].indexOf(S.screen) > -1 ? '<button type="button" class="btn' + (pts() > POP.sp ? ' skillnew' : pts() ? ' skillhas' : '') + '" data-act="tree" data-id="run">Skills' + (pts() ? ' (' + pts() + ')' : '') + '</button>' : '') +
+      '<button type="button" class="btn" data-act="toggleDice" aria-expanded="' + S.showDice + '">' + (S.showDice ? 'Hide dice' : 'Dice') + '</button>' + '<button type="button" class="btn' + (needPotion() ? ' potionglow' : '') + '" data-act="deckOpen" data-deckbtn="1">Deck (' + deckOf().length + ')</button>' +
       '</div></div>';
   }
   function shieldTag() {
@@ -6001,7 +6070,7 @@ var BOSS_PORTRAITS = {"dealer":{"normal":"data:image/webp;base64,UklGRlg9AABXRUJ
     return '<button type="button" class="slot empty' + (locked ? ' locked' : '') + '" data-act="loc" data-id="' + loc + '" data-loc="' + loc + '" aria-label="Empty slot"></button>';
   }
   function bagHTML() {
-    if (!S.bagOpen || !S.player || S.screen === 'title' || S.screen === 'char' || S.screen === 'end') return '';
+    return '';
     var p = S.player, fight = S.screen === 'combat', b = bagOf(p), g = '', e = '', k;
     for (k = 0; k < BAG_SLOTS; k++) g += slotHTML('bag:' + k, b[k], fight);
     for (k = 0; k < INV_SLOTS; k++) e += slotHTML('inv:' + k, p.inv[k], fight);
@@ -6039,7 +6108,7 @@ var BOSS_PORTRAITS = {"dealer":{"normal":"data:image/webp;base64,UklGRlg9AABXRUJ
   function titleHTML() {
     return '<section class="splash" aria-label="Liar’s Crawl"><div class="splashbtns">' +
       '<button type="button" class="btn wood" data-act="toChar">Enter the tavern</button>' +
-      '<button type="button" class="btn" data-act="web" aria-label="Web of Bones">Web</button><button type="button" class="btn" data-act="rules" aria-label="Help">Help</button><button type="button" class="btn" data-act="credits">Credits</button></div></section>';
+      '<button type="button" class="btn" data-act="web" aria-label="Web of Bones">Web</button><button type="button" class="btn" data-act="rules" aria-label="Help">Help</button></div></section>';
   }
   function secretRule(name, known, hint, card) {
     if (!known) return '<span class="btn secretq" role="img" title="' + hint + '" aria-label="A secret rule, not yet found">?</span>';
@@ -6051,8 +6120,7 @@ var BOSS_PORTRAITS = {"dealer":{"normal":"data:image/webp;base64,UklGRlg9AABXRUJ
       '<div class="card"><h3>How to bid</h3><p>Guess how many of one face lie on the whole table, yours and theirs. Set the quantity and the face, then press Bid. To raise, bid a higher quantity, or the same quantity on a higher face.</p></div>' +
       '<div class="card"><h3>Call liar</h3><p>If the bid is a lie, its maker bleeds a die. If it was true, the die is yours to lose.</p></div>' +
       '<div class="card"><h3>Call exact</h3><p>Sure the bid is exactly right? Strike for 2 damage. Miss, and the table takes a die from you.</p></div>' +
-      '<div class="card"><h3>Drop chance</h3><p>The chance a slain foe drops its seal. It also lifts the quality of the relics, cards and seals you are offered after a fight. The Tarnished Crown, the Grave Robber’s Hook and the Web of Bones raise it.</p></div>' +
-      '<div class="card"><h3>Shop rarity</h3><p>How likely shops are to offer rarer relics, cards and seals. Upgrade the Black Market to raise it, and Haggler dice add to it too. Wandering merchants, the Bone Peddler and the card dealer all sell better wares as it rises.</p></div>' +
+      '<div class="card"><h3>Rarity</h3><p>How likely shops are to offer rarer relics, cards and seals. It also lifts the odds of a slain foe dropping its seal. Upgrade the Black Market to raise it; Haggler dice, the Grave Robber, the Tarnished Crown and the Web of Bones add to it too. Wandering merchants, the Bone Peddler and the card dealer all sell better wares as it rises.</p></div>' +
       '<div class="card"><h3>Grow stronger</h3><p>Win fights for XP and gold. Sharpen your dice and keep descending, or die trying.</p></div></div>' +
       secretRule('Soul Rend', !!M.seenSoul, 'Some things cannot be explained to someone who has not felt them tear.', '<div class="card"><h3>Soul Rend</h3><p>If the dice in your hand add up to 50 or more (a wild counts as 6, and the extra sides of a bigger die count as their number), a spell appears. Drag its arrow onto an enemy die, or tap it then tap a die. That die is destroyed for good and you steal its seals, then place them on your dice as you choose. Once per round.</p></div>') +
       secretRule('Big Big', !!M.seenBig, 'A rumour the dice only whisper to those who have already heard it roar.', '<div class="card"><h3>Big Big</h3><p>If ten or more of your dice show the same number, wilds included, the table explodes. The enemy takes 10 damage at once.</p></div>');
@@ -6072,8 +6140,7 @@ var BOSS_PORTRAITS = {"dealer":{"normal":"data:image/webp;base64,UklGRlg9AABXRUJ
     ]);
     sec('Rewards and stats', [
       keyRow('<span class="xpic">XP</span>', 'XP', 'Experience a foe gives. Fill the bar to level up and earn a skill point.'),
-      keyRow(HAND_ART, 'Drop chance', 'The chance a slain foe drops its seal. Shown on map tooltips and in the top bar.'),
-      keyRow(fxIcon('shop'), 'Shop rarity', 'Raises the odds of rarer wares in shops. Upgrades and haggler dice add to it.'),
+      keyRow(fxIcon('shop'), 'Rarity', 'Raises the odds of rarer wares in shops and after fights, and of slain foes dropping their seal. Shop upgrades, haggler dice, the Grave Robber and more add to it.'),
       keyRow(fxIcon('peek'), 'Peek', 'Look under one of the enemy’s cups.'),
       keyRow(fxIcon('reroll'), 'Reroll', 'Throw chosen dice of yours again.')
     ]);
@@ -6091,7 +6158,10 @@ var BOSS_PORTRAITS = {"dealer":{"normal":"data:image/webp;base64,UklGRlg9AABXRUJ
     return out;
   }
   function rulesHTML() {
-    if (S.credits) return '<section class="panel credits"><h2>Credits</h2><p class="cr-line">Created by <b>Sonnet 5.5</b></p><p class="cr-line">with help from <b>Suno</b> and <b>Gemini</b></p><p class="cr-line">Music by <b>Suno</b></p><div class="row"><button type="button" class="btn ghost" data-act="toTitle">Back</button></div></section>';
+    if (S.credits) {
+      var jb = [['main', 'The Descent', 'Main theme'], ['boss', 'The House Always Wins', 'Boss theme']].map(function (j) { var on = AUD.juke === j[0]; return '<button type="button" class="jb-song' + (on ? ' on' : '') + '" data-juke="' + j[0] + '"><span class="jb-ic">' + (on ? '\u25A0' : '\u25B6') + '</span><span class="jb-t">' + j[1] + '<small>' + j[2] + '</small></span></button>'; }).join('');
+      return '<div class="tavlogo" aria-hidden="true"></div><section class="panel credits"><h2>Credits</h2><p class="cr-line">Created by <b>Sonnet 5.5</b></p><p class="cr-line">Music by <b>Suno</b></p><p class="cr-line">Portraits by <b>Gemini</b></p><div class="jukebox"><div class="jb-h">Jukebox</div>' + jb + '</div><div class="row"><button type="button" class="btn ghost" data-act="toTitle">Back</button></div></section>';
+    }
     return '<section class="panel"><h2>The House Rules</h2>' + rulesCards() + keyHTML() +
       '<div class="row"><button type="button" class="btn ghost" data-act="toTitle">Back</button></div></section>';
   }
@@ -6344,7 +6414,7 @@ var BOSS_PORTRAITS = {"dealer":{"normal":"data:image/webp;base64,UklGRlg9AABXRUJ
     var rollchips = pbl + chmd + '<span class="chip chip-total' + (pvTotal() >= REND_MIN ? ' hot' : '') + '" title="When your dice add up to 50 or more, the Soul Rend spell appears">Total ' + pvTotal() + '</span>' + (C.pv.some(function (x) { return x.spied; }) ? ' <span class="chip chip-blood">Watched</span>' : '') + '' + (C.berserk ? ' <span class="chip chip-blood">Berserk</span>' : '') + (pp.chips || '');
     var me = '';
     if (WIDEUI) { var pq = {}; for (var kq in pp) pq[kq] = pp[kq]; pq.dice = '<div class="mycups cups">' + mine + '</div>'; pq.chips = rollchips; pq.abil = (typeof abil === 'string') ? abil : ''; me = hudBarHTML(pq); rolled = ''; }
-    var topbtns = '<div class="topbtns"><button type="button" class="btn ghost small" data-act="toggleDice" aria-expanded="' + S.showDice + '">' + (S.showDice ? 'Hide dice' : 'Dice') + '</button><button type="button" class="btn ghost small" data-act="toggleLog" aria-expanded="' + !!S.showLog + '">' + (S.showLog ? 'Hide log' : 'Log') + '</button></div>';
+    var topbtns = '<div class="topbtns"><button type="button" class="btn" data-act="toggleDice" aria-expanded="' + S.showDice + '">' + (S.showDice ? 'Hide dice' : 'Dice') + '</button><button type="button" class="btn" data-act="toggleLog" aria-expanded="' + !!S.showLog + '">' + (S.showLog ? 'Hide log' : 'Log') + '</button></div>';
     var logpop = S.showLog ? '<div class="logpop"><label class="check" for="oddsBox"><input type="checkbox" id="oddsBox" data-act="odds"' + (S.odds ? ' checked' : '') + '> Read the bones</label><div class="lbl">Log</div>' + log + '</div>' : '';
     // the dice UI always stays in the middle; alerts pop up over it so the portraits never move
     var alertpop = '';
@@ -6372,7 +6442,7 @@ var BOSS_PORTRAITS = {"dealer":{"normal":"data:image/webp;base64,UklGRlg9AABXRUJ
       '<button type="button" class="paperx' + (fall ? ' fall' : '') + '" data-act="paperDismiss" aria-label="Dismiss the note">Skip tip \u2715</button>';
     if (!S.noteOpen) return note;
     return note + '<div class="setmodal papermodal"><div class="setbox paperbox" role="dialog" aria-label="Drop rates"><h2>A scrap of paper</h2><div class="tiprow droprow handnote"><span class="tipic">' + HAND_ART + '</span><b>' + pct + '%</b></div>' +
-      '<p>This droplet shows the chance that a monster drops its seal when it dies. Most monsters have only a <b>' + pct + '%</b> chance. The dummy always gives one up, so make the most of it.</p>' +
+      '<p>This droplet shows how likely a monster is to drop its seal when it dies. Most monsters start at <b>' + pct + '%</b>, and your rarity raises it. The dummy always gives one up, so make the most of it.</p>' +
       '<p class="muted">You will see the droplet on a seal tooltip when you hover the small seal beside a fight on the map. The full key lives under the cog, in Rules.</p>' +
       '<div class="row" style="justify-content:center"><button type="button" class="btn torch" data-act="paperClose">Got it</button></div></div></div>';
   }
@@ -6405,7 +6475,7 @@ var BOSS_PORTRAITS = {"dealer":{"normal":"data:image/webp;base64,UklGRlg9AABXRUJ
     return (v.healed ? '<p class="good">Your wounds knit themselves shut: ' + v.healed + ' HP recovered.</p>' : '') +
       (v.leveled ? '<p class="crit">You claw your way to level ' + S.player.level + '.</p>' : '') + (v.hpUp ? '<p class="good">+' + v.hpUp + ' max health.</p>' : '') + (v.debt ? '<p class="good">The pawnbroker keeps her word: +' + v.debt + ' dice in your cup.</p>' : '') + (v.gained ? '<p class="good">+' + v.gained + ' skill point' + (v.gained > 1 ? 's' : '') + ' for the skill tree.</p>' : '') +
       (v.loot && !v.lootDone ? [].concat(v.loot).filter(function (id) { return !(v.taken && v.taken[id]); }).map(function (id) { return isCard(id) ? '<button type="button" class="rptcardbtn" data-act="rptCard" data-id="' + id + '" aria-label="Take ' + ITEMS[id].name + '">' + tcardHTML(id, { cls: 'rptcard' }) + '</button>' : '<p class="good">' + v.name + ' also drops the ' + ITEMS[id].name + '. ' + ITEMS[id].desc + '</p>'; }).join('') : '') +
-      (v.drop && !v.dropDone ? '<button type="button" class="card r-' + rarOf(v.drop) + ' k-sigil dropseal" data-act="dropClaim" aria-label="Take ' + MODS[v.drop].name + '">' + itemArt(v.drop) + rarTag(v.drop) + kindTag(v.drop) + '<h3>' + MODS[v.drop].name + '</h3><p>' + MODS[v.drop].desc + '</p></button>' : '');
+      (v.slotIds || []).filter(looseHas).map(function (lid) { return '<span class="sealslot" data-loose="' + lid + '"></span>'; }).join('') + (v.dropId && looseHas(v.dropId) ? '<span class="sealslot" data-loose="' + v.dropId + '"></span>' : '') + (false ? '<button type="button" class="card r-' + rarOf(v.drop) + ' k-sigil dropseal' + (v.sealArm ? ' armed' : '') + '" data-act="dropClaim" aria-label="Take ' + MODS[v.drop].name + '">' + itemArt(v.drop) + rarTag(v.drop) + kindTag(v.drop) + '<h3>' + MODS[v.drop].name + '</h3><p>' + MODS[v.drop].desc + '</p>' + (v.sealArm ? '<p class="sealhint">Click a die below</p>' : '') + '</button>' : '');
   }
   function victoryHTML() {
     var v = S.victory, R = v.rep, cl = CLASSES[S.cls || 'fighter'] || CLASSES.fighter, idx = 0;
@@ -6422,7 +6492,7 @@ var BOSS_PORTRAITS = {"dealer":{"normal":"data:image/webp;base64,UklGRlg9AABXRUJ
     if (pl) { pl += L('rp-b rp-comb', 'Combined bonus', '+' + X.pctSum + '% of ' + X.dice, '+' + X.bonus, X.bonus); }
     var fl = ''; X.flat.forEach(function (x) { fl += L('rp-b rp-flat', x.name, x.note || '', '+' + x.v, x.v); });
     var gl = '<div class="rp-sec rp-gsec' + sh + '">Gold</div>'; G.lines.forEach(function (x) { gl += L('rp-g', x.name, '', '+' + x.v, x.v); });
-    var extra = repExtraHTML(v), hasDrop = v.drop && !v.dropDone;
+    var extra = repExtraHTML(v), hasDrop = false;
     var btn = hasDrop ? '<button type="button" class="btn ghost" data-act="dropLeave">Leave it</button>' : '<button type="button" class="btn torch" data-act="afterVictory">' + (S.pending > 0 ? 'Choose an ability' : v.big ? 'Take your spoils' : 'Continue') + '</button>';
     return paperHTML(v) + '<section class="panel report' + (done ? ' repdone' : '') + '"><div class="rp-head"><h2>Battle Report</h2>' + (done ? '' : '<button type="button" class="btn ghost small rp-skip" data-act="rptSkip">Skip</button>') + '</div>' +
       '<div class="rp-duel"><div class="rp-me"><div class="rp-port portrait" style="--c1:' + cl.c1 + ';--c2:' + cl.c2 + ';--eye:' + cl.eye + '">' + portraitArt(S.cls || 'fighter', cl, 'win') + '</div><b>You</b></div><div class="rp-vs">defeated</div><div class="rp-foes">' + foes + '</div></div>' +
@@ -6542,7 +6612,7 @@ var BOSS_PORTRAITS = {"dealer":{"normal":"data:image/webp;base64,UklGRlg9AABXRUJ
       else if (o.t === 'maxdie') { t = 'Fill my cup'; d = 'Permanently add 1 die to your cup.' + (S.player.dice.length >= maxDice() ? ' Your cup is full, so you get gold instead.' : ''); }
       else if (o.t === 'maxdie2') { t = 'Your cup runneth over'; d = 'Permanently add 2 dice to your cup.' + (S.player.dice.length >= maxDice() - 1 ? ' Your cup is nearly full, so any extra becomes gold.' : ''); }
       else if (o.t === 'gold') { t = o.gold + ' gold'; d = ({ gold: 'A few coins from the corpse.', goldU: 'A fat purse, still warm.', goldR: 'A heavy hoard of coin.', goldE: 'A dead king\'s treasure.' })[o.key] + ' Spend it before it spends you.'; }
-      else if (o.t === 'item') { t = ITEMS[o.item].name; d = ITEMS[o.item].desc + (isCard(o.item) ? ' Goes into your deck.' : ' Takes one of your three relic slots.'); }
+      else if (o.t === 'item') { t = ITEMS[o.item].name; d = ITEMS[o.item].desc + (isCard(o.item) ? ' Goes into your deck.' : ' A relic: it arrives as an icon. Right-click it to equip it in one of your three relic slots.'); }
       else if (o.t === 'mod') { t = MODS[o.mod].name; d = MODS[o.mod].desc; }
       else { t = 'Tattoo a die'; d = 'Tattoo one face of a die to be a higher number.'; }
       return '<button type="button" class="card r-' + rarOf(o.key) + kindCls(o.key) + '" data-act="reward" data-i="' + i + '">' + itemArt(o.t === 'item' ? o.item : o.t === 'mod' ? o.mod : o.t === 'maxdie' ? 'cup' : o.t === 'maxdie2' ? 'cup2' : o.t === 'face' ? 'load' : o.t) + rarTag(o.key) + kindTag(o.key) + '<h3>' + t + '</h3><p>' + d + '</p></button>';
@@ -6602,12 +6672,12 @@ var BOSS_PORTRAITS = {"dealer":{"normal":"data:image/webp;base64,UklGRlg9AABXRUJ
   function shopControls() {
     var lv = S.shopLevel || 0, p = S.player, rc = rerollCost(), maxed = lv >= LEVEL_COSTS.length, lc = maxed ? 0 : LEVEL_COSTS[lv];
     return '<div class="row shopctl"><button type="button" class="btn small" data-act="shopReroll"' + (p.gold < rc ? ' disabled' : '') + '>Reroll wares · ' + rc + ' gold</button>' +
-      '<button type="button" class="btn small" data-act="shopLevel"' + (maxed || p.gold < lc ? ' disabled' : '') + '>' + (maxed ? 'Shop rarity maxed' : 'Raise shop rarity (+10) · ' + lc + ' gold') + '</button></div>';
+      '<button type="button" class="btn small" data-act="shopLevel"' + (maxed || p.gold < lc ? ' disabled' : '') + '>' + (maxed ? 'Rarity maxed' : 'Raise rarity (+10%) · ' + lc + ' gold') + '</button></div>';
   }
   function shopHTML() {
     var p = S.player;
-    return '<section class="panel">' + sceneArt('shop') + '<h2 style="text-align:center">' + (S.finalShop ? 'Spoils of the Floor' : 'The Black Market') + (shopRarity() ? ' <span class="muted">· rarity ' + shopRarity() + '</span>' : '') + '</h2>' +
-      '<p class="muted" style="text-align:center">' + (S.shopMsg || 'Spend your gold on relics, cards and one seal. Three relics in hand, three in the satchel. Drag a relic onto the Sell stone to sell it.') + '</p><p style="text-align:center">Gold: <span class="gold">' + p.gold + '</span></p>' + rarLegend(S.shopLevel || 0, S.shopLuck || 0) + shopControls() + '<div class="row" style="justify-content:center">' + sellZoneHTML() + '</div><div class="cards">' +
+    return '<section class="panel">' + merchHTML('shop') + sceneArt('shop') + '<h2 style="text-align:center">' + (S.finalShop ? 'Spoils of the Floor' : 'The Black Market') + (shopRarity() ? ' <span class="muted">· rarity ' + shopRarity() + '%</span>' : '') + '</h2>' +
+      '<p class="muted" style="text-align:center">' + (S.shopMsg || 'Spend your gold on relics, cards and one seal. Drag a seal or relic onto the merchant to sell it.') + '</p><p style="text-align:center">Gold: <span class="gold">' + p.gold + '</span></p>' + rarLegend(S.shopLevel || 0, shopRarity()) + shopControls() + '<div class="cards">' +
       shopItems().map(function (it, i) { return { it: it, i: i }; }).filter(function (x) { return !S.shopSel || S.shopSel.indexOf(x.it.id) > -1; }).map(function (x) {
         var it = x.it, i = x.i, cant = !it.ok ? it.why : (p.gold < it.price ? 'Not enough gold.' : '');
         return '<button type="button" class="card r-' + rarOf(it.id) + kindCls(it.id) + (S.shopFresh ? ' fresh' : '') + '" data-act="buy" data-i="' + i + '"' + (cant ? ' disabled' : '') + '>' + itemArt(it.id) + rarTag(it.id) + kindTag(it.id) + '<h3>' + it.name + '</h3><span class="price">' + it.price + ' gold</span><p>' + (cant || it.desc) + '</p></button>';
@@ -6735,7 +6805,7 @@ var BOSS_PORTRAITS = {"dealer":{"normal":"data:image/webp;base64,UklGRlg9AABXRUJ
       else h = '<h2>' + info.title + '</h2><p>' + ev.text + '</p><div class="row"><button type="button" class="btn torch" data-act="evLeave">Continue</button></div>';
     }
     var evArt = { cardsharp: 'merchant', gambler: 'gambler', altar: 'altar', goblin: 'goblin', chest: 'chest', idol: 'idol', smith: 'merchant', fountain: 'fountain', pawn: 'goblin', peddler: 'merchant', tattooist: 'idol', anvil: 'altar', blackjack: 'gambler', hardy: 'altar', paint: 'idol', scale: 'altar', hush: 'chest', bank: 'merchant' };
-    return '<section class="panel">' + (evArt[ev.type] ? sceneArt(evArt[ev.type]) : '<div class="evbig">' + evIcon(ev.type) + '</div>') + h + '</section>';
+    return '<section class="panel">' + (MERCH[ev.type] ? merchHTML(ev.type) : '') + (evArt[ev.type] ? sceneArt(evArt[ev.type]) : '<div class="evbig">' + evIcon(ev.type) + '</div>') + h + '</section>';
   }
   function descendHTML() {
     var next = FLOORS[S.floorNum];
@@ -6747,8 +6817,8 @@ var BOSS_PORTRAITS = {"dealer":{"normal":"data:image/webp;base64,UklGRlg9AABXRUJ
   // ---------- the Web of Bones: meta progression, bought with Knucklebones ----------
   var BONE_ART = '<svg viewBox="0 0 12 12" aria-hidden="true"><path d="M2 2h2v1h4V2h2v2h-1v1h1v2h-1v1h1v2H8V9H4v1H2V8h1V7H2V5h1V4H2z" fill="#e8dcbc" stroke="#14110d" stroke-width=".8" shape-rendering="crispEdges"/></svg>';
   var WEB_TYPES = [
-    { k: 'luck', name: 'Pawnbroker’s Favour', desc: '+1 shop rarity', col: '#6fd0e0' },
-    { k: 'drop', name: 'Grave Robber’s Itch', desc: '+1% chance for enemies to drop their seal', col: '#b69be0' },
+    { k: 'luck', name: 'Pawnbroker’s Favour', desc: '+1% rarity', col: '#6fd0e0' },
+    { k: 'drop', name: 'Grave Robber’s Itch', desc: '+1% rarity', col: '#b69be0' },
     { k: 'block', name: 'Callused Hide', desc: '+1% chance to block an attack', col: '#8d9db6' },
     { k: 'double', name: 'Headsman’s Whisper', desc: '+1% chance to deal double damage', col: '#ef7f86' },
     { k: 'gold', name: 'Magpie’s Greed', desc: '+1% gold', col: '#e6bd45' },
@@ -6913,6 +6983,7 @@ var BOSS_PORTRAITS = {"dealer":{"normal":"data:image/webp;base64,UklGRlg9AABXRUJ
   function tipFor(key) {
     var kind = key.split(':')[0], arg = key.slice(kind.length + 1), h = '', n;
     if (kind === 'note') return '<p>' + arg + '</p>';
+    if (kind === 'loose' && MODS[arg]) return '<b><span class="rar-' + rarOf(arg) + '">' + MODS[arg].name.replace(' Die', '') + ' seal</span></b><p>' + MODS[arg].desc + '</p><p><b>Drag this to any die to apply.</b></p>';
     if (kind === 'foe' && C && C.en && C.en.parts[+arg]) return foeTipHTML(C.en.parts[+arg]);
     if (kind === 'dfaces') { var fd = S.player.dice[+arg]; if (!fd) return ''; var fx = ''; if (S.forge && S.forge.kind === 'mod' && S.forge.step === 'die') fx = !canApply(fd, S.forge.mod) ? '<p class="dim">Fully upgraded.</p>' : (modCount(fd, S.forge.mod) ? '<p class="good">Becomes ' + tierName(S.forge.mod, modCount(fd, S.forge.mod) + 1) + ' Die.</p>' : '');
       return '<b>' + dieTitle(fd, +arg) + '</b>' + modChips(fd) + strip(fd, { size: 34 }) + fx + (fd.up ? '' : '<p class="bad">Fallen. It does not roll until you recover it.</p>'); }
@@ -6928,19 +6999,20 @@ var BOSS_PORTRAITS = {"dealer":{"normal":"data:image/webp;base64,UklGRlg9AABXRUJ
       if (!ms.length && !eng.length) h += '<p class="dim">A plain die. No seals.</p>';
       return h + spyTxt;
     }
-    if (kind === 'inv') { var iv = ITEMS[arg]; return iv ? '<b>' + iv.name + '</b> ' + rarTag(arg) + kindTag(arg) + '<p>' + iv.desc + '</p>' + (S.screen === 'combat' ? '' : (S.screen === 'shop' ? '<p class="gold">Sells for ' + sellValue(arg) + ' gold.</p>' : '') + '<p class="dim">Drag it, or click it then click a slot. Drop it on empty ground to destroy it.</p>') : ''; }
+    if (kind === 'merchant') { var mm = MERCH[arg]; return mm ? '<b>' + mm.name + '</b><p>' + mm.line + '</p><p class="dim">Drag a seal or relic here to sell it.</p>' : ''; }
+    if (kind === 'looseitem') { var li = ITEMS[arg]; return li ? '<b>' + li.name + '</b> ' + rarTag(arg) + kindTag(arg) + '<p>' + li.desc + '</p>' + (S.screen === 'shop' ? '<p class="gold">Sells for ' + sellValue(arg) + ' gold. Drag it onto the Sell stone.</p>' : '') + '<p class="dim">Right-click to equip, sell or destroy. Drag it anywhere, or into your satchel.</p>' : ''; }
+    if (kind === 'inv') { var iv = ITEMS[arg]; return iv ? '<b>' + iv.name + '</b> ' + rarTag(arg) + kindTag(arg) + '<p>' + iv.desc + '</p>' + (S.screen === 'combat' ? '' : (S.screen === 'shop' ? '<p class="gold">Sells for ' + sellValue(arg) + ' gold.</p>' : '') + '<p class="dim">Right-click to unequip, sell or destroy.</p>') : ''; }
     if (kind === 'sealdrop') { var sd = ENEMIES[arg]; if (!sd || !sd.drop) return ''; return '<b><span class="rar-' + rarOf(sd.drop) + '">' + MODS[sd.drop].name.replace(' Die', '') + ' seal</span></b><p>' + MODS[sd.drop].desc + '</p><div class="tiprow droprow' + (anyApplicable(sd.drop) ? '' : ' full') + '"><span class="tipic">' + HAND_ART + '</span><b>' + Math.round(dropChance(sd) * 100) + '%</b></div>'; }
     if (kind === 'char') {
       var pc = S.player, cc = CLASSES[S.cls || 'fighter'] || CLASSES.fighter, lv = S.shopLevel || 0, fq = fightLuck({ kind: 'fight' }), cb = critDmg() - 2, hl = (pc.ab.wind || 0) + (own('mending') ? 1 : 0);
       var V = function (t) { return '<span style="color:#ffd37a">' + t + '</span>'; };
       return '<b>' + cc.name + ' · level ' + pc.level + '</b>' +
         '<p>HP ' + V(hp(pc) + ' / ' + pc.dice.length) + '</p>' + ((C && S.screen === 'combat' && C.shield > 0) ? '<p>Armour ' + V(C.shield) + '</p>' : '') + '<p>XP ' + V(pc.xp + (LEVELS[pc.level - 1] !== undefined ? ' / ' + LEVELS[pc.level - 1] : '')) + '</p>' +
-        '<p>Shop rarity ' + V(shopRarity()) + '</p>' +
-        '<p>Drop chance ' + V(Math.round(dropChance({ kind: 'fight' }) * 100) + '%') + '</p>' +
+        '<p>Rarity ' + V(shopRarity() + '%') + '</p>' +
         '<p>Crit damage ' + V(critDmg()) + (cb ? ' <span class="dim">(+' + cb + ' extra)</span>' : '') + '</p>' +
         '<p>Heal after fights ' + V(hl + ' HP') + '</p>';
     }
-    if (kind === 'bagicon') return '<b>Satchel</b><p>' + bagCount() + ' of ' + BAG_SLOTS + ' slots used. Click to open, or drop a relic on it to stow it. Relics in the satchel do nothing until you hold them.</p>';
+    if (kind === 'bagicon') return '<b>Satchel</b><p>' + (bagCount() ? bagCount() + ' thing' + (bagCount() > 1 ? 's' : '') + ' inside. ' : '') + 'Click to open it. Drop seals and relics in it to tidy your screen; they still work while they are stowed.</p>';
     if (kind === 'skill') {
       var tk = TREE[arg]; if (!tk) return '';
       var sk = skillState(arg);
@@ -6948,7 +7020,7 @@ var BOSS_PORTRAITS = {"dealer":{"normal":"data:image/webp;base64,UklGRlg9AABXRUJ
       if (tk.req) h += has(tk.req) ? '<p class="dim">Requires ' + TREE[tk.req].name + '</p>' : '<p class="bad">Requires ' + TREE[tk.req].name + '</p>';
       return h + '<p>' + tk.desc + '</p>';
     }
-    if (kind === 'shopluck') return '<b>Shop rarity ' + shopRarity() + '</b><p>How likely shops, merchants and seal sellers are to offer rarer wares. Each shop upgrade adds 10, and your haggler dice add more every time they roll a 1.</p>';
+    if (kind === 'shopluck') return '<b>Rarity ' + shopRarity() + '%</b><p>How likely shops, merchants and seal sellers are to offer rarer wares. Each shop upgrade adds 10%, and your haggler dice add more every time they roll a 1.</p>';
     if (kind === 'seal') { var sp = arg.split(':'), sm = sp[0], sn = +sp[1] || 1; return MODS[sm] ? '<b><span class="rar-' + rarOf(sm) + '">' + tierName(sm, sn) + '</span></b> ' + rarTag(sm) + '<p>' + modDesc(sm, sn) + '</p>' : ''; }
     if (kind === 'shieldup') return '<b>Shield up</b><p>Your shield swallows the next ' + (C.shield || 1) + ' point' + ((C.shield || 1) > 1 ? 's' : '') + ' of damage this fight, so one of your dice is spared each time. Each hit it takes breaks one layer.</p>' + (spikeDmg() ? '<p>Foes that strike it take ' + spikeDmg() + ' spike damage.</p>' : '');
     if (kind === 'slotbroke') return '<b class="bad">Not enough gold</b><p>A pull costs ' + SLOT_COST + ' gold. You have ' + S.player.gold + '.</p>';
@@ -7060,6 +7132,7 @@ var BOSS_PORTRAITS = {"dealer":{"normal":"data:image/webp;base64,UklGRlg9AABXRUJ
     if (bigTitle !== titleBig) { titleBig = bigTitle; var gt = $('gameTitle'); if (gt) gt.innerHTML = '<span class="sr">LIAR\'S CRAWL</span>' + wordmark(bigTitle); }
     document.body.setAttribute('data-floor', String(S.screen === 'title' ? 1 : S.floorNum));
     document.body.setAttribute('data-screen', S.screen);
+    if (S.screen === 'rules' && S.credits) document.body.setAttribute('data-credits', '1'); else document.body.removeAttribute('data-credits');
     $('hud').innerHTML = hudHTML();
     $('bagwrap').innerHTML = bagHTML() + destroyHTML();
     var h = '';
@@ -7377,7 +7450,6 @@ var BOSS_PORTRAITS = {"dealer":{"normal":"data:image/webp;base64,UklGRlg9AABXRUJ
   function trackFor() {
     var sc = S.screen;
     if (AUD.juke) return 'juke:' + AUD.juke;
-    if (sc === 'rules' && S.credits) return 'credits';
     if (!S.player || sc === 'title' || sc === 'char' || sc === 'rules') return 'title';
     if (sc === 'end') return 'dirge';
     if (sc === 'combat') return C && C.def && C.def.kind === 'boss' ? 'boss' : 'combat';
@@ -7392,24 +7464,22 @@ var BOSS_PORTRAITS = {"dealer":{"normal":"data:image/webp;base64,UklGRlg9AABXRUJ
       if (sc === 'victory') sfx('victory'); else if (sc === 'end') sfx(S.endKind === 'dead' ? 'defeat' : 'victory');
       else if (sc === 'upgrade') sfx('seal'); else if (sc === 'descend') sfx('stairs'); else if (sc === 'reward') sfx('item');
     }
+    if (AUD.juke && !(S.screen === 'rules' && S.credits)) AUD.juke = null;
     musicSet(trackFor());
   }
   // settings cog and panel
   (function () {
     try {
       var cog = document.createElement('button'), pan = document.createElement('div'), i, rows = [], cx = 5.5, cy = 5.5, x, y, d, a;
-      cog.type = 'button'; cog.id = 'cog'; cog.className = 'cog'; cog.setAttribute('aria-label', 'Settings');
-      for (y = 0; y < 12; y++) { var r = ''; for (x = 0; x < 12; x++) { d = Math.sqrt((x - cx) * (x - cx) + (y - cy) * (y - cy)); a = Math.atan2(y - cy, x - cx); var tooth = d <= 5.8 && d > 3.6 && Math.abs(Math.sin(a * 4)) > 0.82; r += (d >= 2.1 && d <= 4.1) || tooth ? ((x + y) % 5 === 0 ? 'G' : 'g') : '.'; } rows.push(r); }
+      cog.type = 'button'; cog.id = 'cog'; cog.className = 'cog btn'; cog.setAttribute('aria-label', 'Settings');
+      cx = cy = 7.5; for (y = 0; y < 16; y++) { var r = ''; for (x = 0; x < 16; x++) { d = Math.sqrt((x - cx) * (x - cx) + (y - cy) * (y - cy)); a = Math.atan2(y - cy, x - cx); var tooth = d <= 7.7 && Math.cos(a * 8) > -0.25, body = d <= 5.6, hole = d <= 3.0; r += (tooth || body) && !hole ? ((x + y) % 5 === 0 ? 'G' : 'g') : '.'; } rows.push(r); }
       cog.innerHTML = pixSVG(rows, { g: 'fill="#c9a43c"', G: 'fill="#f6d66a"', '#': 'fill="#14110d"' }, { outline: true, cls: 'cogsvg' });
       pan.id = 'settings'; pan.className = 'setmodal'; pan.hidden = true;
       pan.innerHTML = '<div class="setbox" role="dialog" aria-label="Settings"><h2>Settings</h2>' +
         '<label class="setrow"><span>Music</span><input id="volMusic" type="range" min="0" max="100" step="1"><output id="valMusic"></output></label>' +
         '<label class="setrow"><span>Sound effects</span><input id="volSfx" type="range" min="0" max="100" step="1"><output id="valSfx"></output></label>' +
-        '<div class="jukebox"><div class="jb-h">Jukebox</div>' +
-        '<button type="button" class="jb-song" data-juke="main"><span class="jb-ic">\u25B6</span><span class="jb-t">The Descent<small>Main theme</small></span></button>' +
-        '<button type="button" class="jb-song" data-juke="boss"><span class="jb-ic">\u25B6</span><span class="jb-t">The House Always Wins<small>Boss theme</small></span></button></div>' +
         '<div class="row" id="runBtns" style="justify-content:center" hidden><button type="button" class="btn ghost" data-act="endRun">Abandon run</button></div>' +
-        '<div class="row" style="justify-content:center"><button type="button" class="btn" id="rulesBtn">Rules</button><button type="button" class="btn" id="webBtn">Web of Bones</button><button type="button" class="btn" id="muteBtn"></button><button type="button" class="btn torch" id="setClose">Close</button></div></div>';
+        '<div class="row" style="justify-content:center"><button type="button" class="btn" id="rulesBtn">Rules</button><button type="button" class="btn" data-act="credits">Credits</button><button type="button" class="btn" id="webBtn">Web of Bones</button><button type="button" class="btn" id="muteBtn"></button><button type="button" class="btn torch" id="setClose">Close</button></div></div>';
       var rm = document.createElement('div'); rm.id = 'rulesModal'; rm.className = 'setmodal'; rm.hidden = true; document.body.appendChild(rm);
       function openR(o) { rm.hidden = !o; pan.hidden = o; if (o) { rm.innerHTML = '<div class="setbox rulebox" role="dialog" aria-label="Rules"><div class="rulescroll"><h2>The House Rules</h2>' + rulesCards() + keyHTML() + '</div><div class="row" style="justify-content:center"><button type="button" class="btn torch" id="rulesClose">Close</button></div></div>'; rm.querySelector('.rulescroll').scrollTop = 0; rm.querySelector('#rulesClose').addEventListener('click', function () { openR(false); sfx('click'); }); } else { openP(true); } }
       rm.addEventListener('click', function (e) { if (e.target === rm) openR(false); });
@@ -7418,11 +7488,10 @@ var BOSS_PORTRAITS = {"dealer":{"normal":"data:image/webp;base64,UklGRlg9AABXRUJ
       document.body.appendChild(cog); document.body.appendChild(pan);
       var vm = pan.querySelector('#volMusic'), vs = pan.querySelector('#volSfx'), om = pan.querySelector('#valMusic'), os = pan.querySelector('#valSfx'), mb = pan.querySelector('#muteBtn');
       function paint() { var rb = pan.querySelector('#runBtns'); if (rb) rb.hidden = !(S && S.player && S.screen !== 'end' && S.screen !== 'title'); vm.value = Math.round(AUD.vol.music * 100); vs.value = Math.round(AUD.vol.sfx * 100); om.textContent = vm.value + '%'; os.textContent = vs.value + '%'; mb.textContent = AUD.vol.mute ? 'Sound: OFF' : 'Sound: ON'; cog.classList.toggle('muted', AUD.vol.mute); }
-      function jukePaint() { [].forEach.call(pan.querySelectorAll('.jb-song'), function (el) { var on = AUD.juke === el.getAttribute('data-juke'); el.classList.toggle('on', on); el.querySelector('.jb-ic').textContent = on ? '\u25A0' : '\u25B6'; }); }
-      pan.addEventListener('click', function (e) { var bt = e.target.closest && e.target.closest('.jb-song'); if (!bt) return; audInit(); var k = bt.getAttribute('data-juke'); AUD.juke = AUD.juke === k ? null : k; if (AUD.juke) AUD.vol.mute = false; audApply(); musicSet(trackFor()); jukePaint(); paint(); sfx('click'); });
-      function openP(o) { pan.hidden = !o; if (o) { audInit(); paint(); jukePaint(); } }
+      function openP(o) { pan.hidden = !o; if (o) { audInit(); paint(); } }
       cog.addEventListener('click', function () { audInit(); openP(pan.hidden); sfx('click'); });
       pan.addEventListener('click', function (e) { if (e.target === pan) openP(false); });
+      pan.addEventListener('click', function (e) { var cb = e.target.closest && e.target.closest('button[data-act="credits"]'); if (cb) pan.hidden = true; });
       pan.addEventListener('click', function (e) { if (e.target.closest && e.target.closest('button[data-act]')) onClick(e); });
       pan.querySelector('#setClose').addEventListener('click', function () { openP(false); sfx('click'); });
       mb.addEventListener('click', function () { audInit(); AUD.vol.mute = !AUD.vol.mute; audApply(); audSave(); paint(); sfx('click'); });
@@ -7440,6 +7509,316 @@ var BOSS_PORTRAITS = {"dealer":{"normal":"data:image/webp;base64,UklGRlg9AABXRUJ
   document.addEventListener('animationend', function (e) {
     var t = e.target, n = e.animationName; if (!t || !t.classList) return;
     if (n === 'cardin') t.classList.remove('fresh'); else if (n === 'abilin') t.classList.add('settled'); else if (n === 'skpopin') t.classList.remove('skpop');
+  });
+  document.addEventListener('click', function (e) {
+    var bt = e.target && e.target.closest ? e.target.closest('.jb-song') : null; if (!bt) return;
+    audInit(); var k = bt.getAttribute('data-juke'); AUD.juke = AUD.juke === k ? null : k; if (AUD.juke) AUD.vol.mute = false;
+    audApply(); musicSet(trackFor()); sfx('click'); render();
+  });
+  // ---------- loose seals: every seal that drops is a draggable icon; drop it on a die to apply, or leave it anywhere ----------
+  var LOOSE_ID = 0, sealLayer = null, sealDrag = null, bagEl = null, bagDrag = null;
+  var SP_W = 400, SP_H = 320;
+  function giveSeal(mod, o) { S.loose = S.loose || []; var q = { id: ++LOOSE_ID, mod: mod, x: null, y: null }; if (!(o && o.slot)) { q.x = 0.5; q.y = 0.5; } S.loose.push(q); return q; }
+  function looseHas(id) { return !!(S && S.loose && S.loose.some(function (q) { return q.id === id; })); }
+  function looseGet(id) { return ((S && S.loose) || []).filter(function (z) { return z.id === id; })[0] || null; }
+  function relicSync() { }
+  function giveRelic(id, o) {
+    if (!addItem(id)) return null;
+    var q = (S.loose || []).filter(function (z) { return z.item === id; })[0];
+    if (q && o && o.slot) { q.x = null; q.y = null; }
+    return q || null;
+  }
+  // ---------- merchants: portraits you can sell to ----------
+  var MERCH = {
+    shop: { name: 'The Black Market', line: 'Fresh from the dark. Sell me something shiny.', pal: { h: '#3d6b4a', H: '#244633', f: '#d9b98a', F: '#a98a5c', e: '#14110d', a: '#e6bd45', A: '#a07c1e' }, over: 'coin' },
+    cardsharp: { name: 'Madam Pasteboard', line: 'Cards, relics, whatever you have. I buy it all.', pal: { h: '#2a2230', H: '#150f1a', f: '#e9d8c8', F: '#b89c88', e: '#d0403a', a: '#d0403a', A: '#7a1a16' }, over: 'veil' },
+    smith: { name: 'The Wandering Merchant', line: 'I deal in seals. I will take yours, for a price.', pal: { h: '#7a4a2a', H: '#4a2c18', f: '#c98d5a', F: '#8f5f3a', e: '#14110d', a: '#b3bac7', A: '#6d7685' }, over: 'hat' },
+    peddler: { name: 'The Bone Peddler', line: 'Charms, tools, trinkets. Nothing honest.', pal: { h: '#8a7a52', H: '#5a4e30', f: '#cfae7c', F: '#9a7e52', e: '#14110d', a: '#9a74d0', A: '#5d3f94' }, over: 'feather' },
+    tattooist: { name: 'The Tattooist', line: 'I do not take gold for ink. I will gladly give you some for your trinkets.', pal: { h: '#3a3a48', H: '#22222c', f: '#d8b090', F: '#a07c5e', e: '#14110d', a: '#5f9df2', A: '#2f5fa8' }, over: 'scarf' },
+    bank: { name: 'The Bone Bank Teller', line: 'Valuables? I count teeth. I can count those too.', pal: { h: '#8a8a94', H: '#55555e', f: '#2a2a32', F: '#14141a', e: '#f4f2ea', a: '#e6bd45', A: '#a07c1e' }, over: 'veil2' },
+    paint: { name: 'The Face Painter', line: 'Ochre and ash. I will take your odds and ends.', pal: { h: '#b88a4a', H: '#7a5a2a', f: '#efe4d0', F: '#bdb09a', e: '#14110d', a: '#d0403a', A: '#7a1a16' }, over: 'bun' },
+    pawn: { name: 'The Pawnbroker', line: 'I weigh everything. Even your trinkets.', pal: { h: '#6a4a78', H: '#3f2a4a', f: '#e0c4a8', F: '#aa8c74', e: '#14110d', a: '#f1a6c1', A: '#b06a86' }, over: 'bun' }
+  };
+  var MB = ['................', '.....kkkkkk.....', '...kkhhhhhhkk...', '..khhhhhhhhhhk..', '..khhhkkkkhhhk..', '.khhhkffffkhhhk.', '.khhkfeffefkhhk.', '.khhkffffffkhhk.', '.khhkfffFFfkhhk.', '.khhhkffffkhhhk.', '.khhhhkkkkhhhhk.', 'khhhhhhhhhhhhhhk', 'khhhaahhhhaahhhk', 'khhHhaAAAAahHhhk', 'kkhHHHHHHHHHHhkk', '.kkkkkkkkkkkkkk.'];
+  function merchArt(kind) {
+    var m = MERCH[kind], g = MB.map(function (r) { return r.split(''); }), c;
+    function put(x, y, ch) { g[y][x] = ch; }
+    if (m.over === 'veil') { for (var x = 4; x < 12; x++) put(x, 8, 'H'); put(3, 0, 'a'); put(12, 0, 'a'); put(3, 1, 'A'); put(12, 1, 'A'); }
+    if (m.over === 'hat') { for (x = 2; x < 14; x++) put(x, 2, 'A'); for (x = 4; x < 12; x++) put(x, 1, 'a'); for (x = 6; x < 10; x++) put(x, 0, 'a'); }
+    if (m.over === 'feather') { put(11, 0, 'a'); put(12, 0, 'a'); put(10, 1, 'a'); put(11, 1, 'A'); put(12, 1, 'a'); }
+    if (m.over === 'scarf') { for (x = 2; x < 14; x++) put(x, 3, 'a'); for (x = 3; x < 13; x++) put(x, 4, 'A'); }
+    if (m.over === 'veil2') { for (x = 5; x < 11; x++) put(x, 6, 'e'); for (x = 6; x < 10; x++) put(x, 8, 'A'); }
+    if (m.over === 'bun') { for (x = 6; x < 10; x++) put(x, 0, 'H'); put(5, 1, 'H'); put(10, 1, 'H'); }
+    var out = '<svg viewBox="0 0 16 16" shape-rendering="crispEdges" aria-hidden="true">';
+    g.forEach(function (row, y) { row.forEach(function (ch, x) { if (ch === '.') return; c = ch === 'k' ? '#14110d' : m.pal[ch]; if (c) out += '<rect x="' + x + '" y="' + y + '" width="1.02" height="1.02" fill="' + c + '"/>'; }); });
+    return out + '</svg>';
+  }
+  function merchHTML(kind) { var m = MERCH[kind]; return m ? '<div class="merchport" data-merchant="' + kind + '" data-tip="merchant:' + kind + '" aria-label="' + m.name + '">' + merchArt(kind) + '</div>' : ''; }
+  function merchHere() { return !!(S && (S.screen === 'shop' || S.screen === 'event') && document.querySelector('.merchport')); }
+  function sellValueOfQ(q) {
+    if (q.item) return sellValue(q.item);
+    return Math.max(5, Math.round(((MODS[q.mod] && MODS[q.mod].base) || 20) * floorCfg().priceMul * 0.5 / 5) * 5);
+  }
+  function qName(q) { return q.item ? ITEMS[q.item].name : MODS[q.mod].name; }
+  function sellLoose(q) {
+    var v = sellValueOfQ(q), fxEl = sealLayer && sealLayer.querySelector('.looseseal[data-id="' + q.id + '"]'), fr = fxEl ? fxEl.getBoundingClientRect() : null;
+    if (fr) sellFx(fr.left + fr.width / 2, fr.top + fr.height / 2, v);
+    S.loose = S.loose.filter(function (z) { return z.id !== q.id; }); S.player.gold += v; S.shopMsg = 'Sold ' + qName(q) + ' for ' + v + ' gold.'; sfx('coin'); carry = null; showSellPop(null); hideTip(); render();
+  }
+  function sellFx(x, y, v) {
+    var fx = document.createElement('div'); fx.className = 'rpfx'; fx.setAttribute('aria-hidden', 'true'); document.documentElement.appendChild(fx);
+    var plus = document.createElement('div'); plus.className = 'sellplus'; plus.innerHTML = '<span class="sp-c">' + (ITEM_ART.coin || '') + '</span>+' + v; plus.style.left = Math.round(x) + 'px'; plus.style.top = Math.round(y) + 'px'; fx.appendChild(plus);
+    var g = document.querySelector('.goldtl'), gr = g ? g.getBoundingClientRect() : null, hx = gr ? gr.left + gr.width / 2 : 80, hy = gr ? gr.top + gr.height / 2 : 30;
+    var n = Math.min(14, Math.max(5, Math.round(v / 4))), i;
+    for (i = 0; i < n; i++) (function (i2) {
+      setTimeout(function () {
+        var b = document.createElement('i'); b.className = 'rp-coin'; fx.appendChild(b);
+        var ox = x + (Math.random() - .5) * 40, oy = y + (Math.random() - .5) * 20, a = Math.random() * 6.283, d = 40 + Math.random() * 70, mx = ox + Math.cos(a) * d, my = oy + Math.sin(a) * d * .6 - 40;
+        var kf = [{ transform: 'translate(' + ox + 'px,' + oy + 'px) scale(.5)', opacity: 1 }, { transform: 'translate(' + mx + 'px,' + my + 'px) scale(1.1)', opacity: 1, offset: .32 }, { transform: 'translate(' + hx + 'px,' + hy + 'px) scale(.45)', opacity: .9 }];
+        var done = function () { if (b.parentNode) b.parentNode.removeChild(b); var hb = document.querySelector('.goldtl .stat b.gold'); if (hb) { hb.classList.remove('bump'); void hb.offsetWidth; hb.classList.add('bump'); } };
+        var an = b.animate ? b.animate(kf, { duration: 800, easing: 'cubic-bezier(.4,0,.8,.5)', fill: 'forwards' }) : null; if (an) an.onfinish = done; else setTimeout(done, 800);
+      }, 60 + i2 * 60);
+    })(i);
+    setTimeout(function () { if (fx.parentNode) fx.parentNode.removeChild(fx); }, 2200);
+  }
+  function destroyLoose(q) { S.loose = S.loose.filter(function (z) { return z.id !== q.id; }); sfx('grumble'); render(); }
+  var sellPop = null;
+  function showSellPop(q, e) {
+    if (!sellPop) { sellPop = document.createElement('div'); sellPop.id = 'sellpop'; document.documentElement.appendChild(sellPop); }
+    if (!q) { sellPop.style.display = 'none'; return; }
+    var mp = document.querySelector('.merchport'); if (!mp) { sellPop.style.display = 'none'; return; }
+    hideTip(); var r = mp.getBoundingClientRect(); sellPop.innerHTML = 'Sell for <b>' + sellValueOfQ(q) + '</b> gold'; sellPop.style.display = 'block';
+    sellPop.style.left = Math.round(r.left + r.width / 2 - sellPop.offsetWidth / 2) + 'px'; sellPop.style.top = Math.round(r.bottom + 8) + 'px';
+  }
+  // equip a relic icon: a free slot if there is one, otherwise the last slot, popping its old relic out across the screen
+  function equipRelic(q) {
+    var p = S.player, id = q.item; if (!id || S.screen === 'combat') return;
+    S.loose = S.loose.filter(function (z) { return z.id !== q.id; });
+    var popped = null;
+    if (p.inv.length < INV_SLOTS) p.inv.push(id); else { popped = p.inv[INV_SLOTS - 1]; p.inv[INV_SLOTS - 1] = id; }
+    sfx('item'); (S.newItems = S.newItems || {})[id] = 1; render();
+    if (popped) skidOut(popped, INV_SLOTS - 1);
+  }
+  function skidOut(id, slot) {
+    var W = window.innerWidth, H = window.innerHeight, sl = document.querySelector('[data-loc="inv:' + slot + '"]'), r = sl ? sl.getBoundingClientRect() : null;
+    var sx = r ? (r.left + r.width / 2) / W : 0.5, sy = r ? (r.top + r.height / 2) / H : 0.9;
+    var q = { id: ++LOOSE_ID, item: id, x: sx, y: sy }; S.loose.push(q); sealLayerSync();
+    var el = sealLayer.querySelector('.looseseal[data-id="' + q.id + '"]'); if (!el) return;
+    q.x = Math.min(.95, Math.max(.05, sx + (Math.random() < .5 ? -1 : 1) * (.08 + Math.random() * .1))); q.y = Math.max(.12, sy - (.22 + Math.random() * .16));
+    void el.offsetWidth; el.classList.add('skid'); sealLayerSync(); setTimeout(function () { el.classList.remove('skid'); }, 900);
+  }
+  function unequipRelic(i) {
+    var p = S.player, id = p.inv[i]; if (!id || S.screen === 'combat') return;
+    p.inv.splice(i, 1); render(); skidOut(id, Math.min(i, INV_SLOTS - 1));
+  }
+  function sealHeldMod() { var id = sealDrag ? sealDrag.id : S.sealArm, q = id && looseGet(id); return q && q.mod ? q.mod : null; }
+  // dice that can take the held seal glow yellow, orange or purple for the 1st, 2nd or 3rd level of it
+  function sealGlow() {
+    try {
+      var m = sealHeldMod(), els = document.querySelectorAll('.hpdice .die[data-tip^="hud:"]'), k;
+      if (m) document.body.setAttribute('data-sealdrag', '1'); else document.body.removeAttribute('data-sealdrag');
+      for (k = 0; k < els.length; k++) {
+        var i = parseInt(els[k].getAttribute('data-tip').slice(4), 10), d = S.player && S.player.dice[i];
+        els[k].classList.remove('sg1', 'sg2', 'sg3', 'sgx');
+        if (m && d) els[k].classList.add(canApply(d, m) ? 'sg' + Math.min(3, modCount(d, m) + 1) : 'sgx');
+      }
+    } catch (er) { }
+  }
+  var BAG_SVG = '<svg viewBox="0 0 400 320" shape-rendering="crispEdges" aria-hidden="true">' +
+    '<ellipse cx="204" cy="300" rx="176" ry="14" fill="rgba(0,0,0,.35)"/>' +
+    '<path d="M44 40 H356 L384 120 V262 L356 292 H44 L16 262 V120 Z" fill="#6b4423" stroke="#241208" stroke-width="8" stroke-linejoin="round"/>' +
+    '<path d="M44 40 H356 L384 120 H16 Z" fill="#8a5a30" stroke="#241208" stroke-width="6" stroke-linejoin="round"/>' +
+    '<path d="M32 54 H368" stroke="#d9b87a" stroke-width="3" stroke-dasharray="9 7" fill="none"/>' +
+    '<path d="M28 276 H372" stroke="#d9b87a" stroke-width="3" stroke-dasharray="9 7" fill="none"/>' +
+    '<rect x="42" y="78" width="316" height="188" rx="26" fill="#4b2e16" stroke="#241208" stroke-width="6"/>' +
+    '<rect x="54" y="90" width="292" height="164" rx="18" fill="#150b05"/>' +
+    '<rect x="54" y="90" width="292" height="26" rx="12" fill="#0a0502" opacity=".7"/>' +
+    '<rect x="60" y="236" width="280" height="12" rx="6" fill="#2b190c" opacity=".7"/>' +
+    '<path d="M60 100 V240 M340 100 V240" stroke="#2b190c" stroke-width="6" opacity=".55"/>' +
+    '<rect x="176" y="22" width="48" height="40" fill="#3a2410" stroke="#241208" stroke-width="5"/>' +
+    '<rect x="188" y="30" width="24" height="24" fill="#e6bd45" stroke="#7a5a12" stroke-width="4"/><rect x="195" y="37" width="10" height="10" fill="#241208"/>' +
+    '</svg>';
+  var X_SVG = '<svg viewBox="0 0 24 24" shape-rendering="crispEdges" aria-hidden="true"><circle cx="12" cy="12" r="11" fill="#f0e2bd" stroke="#241208" stroke-width="2"/><path d="M7 7 L17 17 M17 7 L7 17" stroke="#c2281f" stroke-width="4.2" stroke-linecap="square"/></svg>';
+  function bagRect() { if (!bagEl || bagEl.style.display === 'none') return null; var r = bagEl.getBoundingClientRect(); return r.width > 0 ? r : null; }
+  function bagPlace() {
+    var W = window.innerWidth, H = window.innerHeight;
+    if (!S.bagPos) S.bagPos = { x: Math.max(8, W - SP_W - 24), y: Math.max(8, Math.round(H * 0.18)) };
+    S.bagPos.x = Math.min(Math.max(0, S.bagPos.x), Math.max(0, W - SP_W)); S.bagPos.y = Math.min(Math.max(0, S.bagPos.y), Math.max(0, H - SP_H));
+    bagEl.style.left = Math.round(S.bagPos.x) + 'px'; bagEl.style.top = Math.round(S.bagPos.y) + 'px';
+  }
+  function sealLayerSync() {
+    try {
+      if (!sealLayer) {
+        sealLayer = document.createElement('div'); sealLayer.id = 'seallayer'; document.documentElement.appendChild(sealLayer);
+        bagEl = document.createElement('div'); bagEl.id = 'satchelpanel'; bagEl.style.display = 'none';
+        bagEl.innerHTML = BAG_SVG + '<button type="button" class="sp-x" aria-label="Close satchel">' + X_SVG + '</button>';
+        sealLayer.appendChild(bagEl);
+      }
+      var hide = !S || !S.player || ['combat', 'title', 'char', 'rules', 'tree', 'end'].indexOf(S.screen) > -1;
+      if (!hide) relicSync();
+      var list = hide ? [] : (S.loose || []), have = {}, W = window.innerWidth, H = window.innerHeight, open = !hide && !!S.bagOpen;
+      bagEl.style.display = open ? '' : 'none'; if (open) bagPlace();
+      var br = open ? bagRect() : null;
+      list.forEach(function (q) {
+        have[q.id] = 1;
+        var el = sealLayer.querySelector('.looseseal[data-id="' + q.id + '"]');
+        if (!el) {
+          el = document.createElement('div'); el.className = 'looseseal r-' + rarOf(q.item || q.mod); el.setAttribute('data-id', q.id);
+          el.setAttribute('data-tip', q.item ? 'looseitem:' + q.item : 'loose:' + q.mod); el.innerHTML = ITEM_ART[q.item || q.mod] || ''; sealLayer.appendChild(el);
+        }
+        if (sealDrag && sealDrag.id === q.id) return;
+        var cx, cy;
+        if (q.bag) { if (!br) { el.style.display = 'none'; return; } el.style.display = ''; el.style.left = Math.round(br.left + q.bx) + 'px'; el.style.top = Math.round(br.top + q.by) + 'px'; return; }
+        if (q.x == null) {
+          var sl = document.querySelector('.sealslot[data-loose="' + q.id + '"]'), r = sl && sl.getBoundingClientRect();
+          if (r && r.width > 0) { cx = r.left + r.width / 2; cy = r.top + r.height / 2; }
+          else if (S.screen === 'victory') { el.style.display = 'none'; return; }
+          else { q.x = q.item ? 0.93 : 0.5; q.y = q.item ? 0.4 : 0.5; cx = q.x * W; cy = q.y * H; }
+        } else { cx = q.x * W; cy = q.y * H; }
+        el.style.display = ''; el.style.left = Math.round(cx - 36) + 'px'; el.style.top = Math.round(cy - 36) + 'px';
+      });
+      Array.prototype.forEach.call(sealLayer.querySelectorAll('.looseseal'), function (el) { if (!have[el.getAttribute('data-id')]) el.parentNode.removeChild(el); });
+      sealGlow();
+    } catch (er) { }
+  }
+  setInterval(sealLayerSync, 250);
+  function applyLoose(id, i) {
+    var q = looseGet(id), d = S.player && S.player.dice[i]; if (!q || !q.mod || !d) return false;
+    if (!canApply(d, q.mod)) { sfx('grumble'); return false; }
+    sealSparks(i, q.mod); applyMod(d, q.mod); sfx('seal');
+    S.loose = S.loose.filter(function (z) { return z.id !== id; }); S.sealArm = null; render(); return true;
+  }
+  document.addEventListener('pointerdown', function (e) {
+    if (e.button) return;
+    var el = e.target && e.target.closest ? e.target.closest('.looseseal') : null;
+    if (!el) {
+      var pn = e.target && e.target.closest ? e.target.closest('#satchelpanel') : null;
+      if (pn && !e.target.closest('.sp-x')) { e.preventDefault(); bagDrag = { sx: e.clientX, sy: e.clientY, ox: S.bagPos.x, oy: S.bagPos.y }; pn.classList.add('moving'); }
+      return;
+    }
+    e.preventDefault(); var r = el.getBoundingClientRect(), q = looseGet(+el.getAttribute('data-id'));
+    sealDrag = { id: +el.getAttribute('data-id'), el: el, dx: e.clientX - r.left, dy: e.clientY - r.top, sx: e.clientX, sy: e.clientY, moved: false, item: !!(q && q.item) };
+    try { el.setPointerCapture(e.pointerId); } catch (er) { }
+    el.classList.add('held'); hideTip(); sealGlow();
+  });
+  document.addEventListener('pointermove', function (e) {
+    if (bagDrag) { S.bagPos.x = bagDrag.ox + e.clientX - bagDrag.sx; S.bagPos.y = bagDrag.oy + e.clientY - bagDrag.sy; bagPlace(); sealLayerSync(); return; }
+    if (!sealDrag) return;
+    if (Math.abs(e.clientX - sealDrag.sx) + Math.abs(e.clientY - sealDrag.sy) > 6) {
+      sealDrag.moved = true;
+    }
+    if (sealDrag.moved) { sealDrag.el.style.left = Math.round(e.clientX - sealDrag.dx) + 'px'; sealDrag.el.style.top = Math.round(e.clientY - sealDrag.dy) + 'px'; sealDrag.el.style.pointerEvents = 'none'; var ut = document.elementFromPoint(e.clientX, e.clientY); sealDrag.el.style.pointerEvents = ''; var oq = looseGet(sealDrag.id); showSellPop(oq && merchHere() && ut && ut.closest && ut.closest('.merchport') ? oq : null); }
+    if (carry) { carryMove(e); }
+  });
+  document.addEventListener('pointerup', function (e) {
+    if (bagDrag) { bagDrag = null; if (bagEl) bagEl.classList.remove('moving'); return; }
+    if (!sealDrag) return;
+    var d = sealDrag; sealDrag = null; d.el.classList.remove('held'); showSellPop(null);
+    d.el.style.pointerEvents = 'none'; var t = document.elementFromPoint(e.clientX, e.clientY); d.el.style.pointerEvents = '';
+    var q = looseGet(d.id), W = window.innerWidth, H = window.innerHeight;
+    if (!q) { sealLayerSync(); return; }
+    if (q.mod) {
+      var die = t && t.closest ? t.closest('.hpdice .die[data-tip^="hud:"]') : null;
+      if (die && (d.moved || S.sealArm === d.id)) { if (applyLoose(d.id, parseInt(die.getAttribute('data-tip').slice(4), 10))) return; }
+    }
+    if (d.moved && merchHere() && t && t.closest && t.closest('.merchport')) { sellLoose(q); return; }
+    if (!d.moved) { if (q.mod) S.sealArm = S.sealArm === d.id ? null : d.id; }
+    else {
+      var left = e.clientX - d.dx, top = e.clientY - d.dy, br = bagRect();
+      if (br && e.clientX > br.left && e.clientX < br.right && e.clientY > br.top && e.clientY < br.bottom) {
+        q.bag = true; q.bx = Math.round(Math.min(SP_W - 72 - 40, Math.max(40, left - br.left))); q.by = Math.round(Math.min(SP_H - 72 - 50, Math.max(70, top - br.top)));
+      } else { q.bag = false; q.x = Math.min(.97, Math.max(.03, (left + 36) / W)); q.y = Math.min(.97, Math.max(.03, (top + 36) / H)); }
+      S.sealArm = null;
+    }
+    sealLayerSync();
+  });
+  // an armed (clicked) seal goes onto the next die you click; clicking anywhere else puts it down
+  document.addEventListener('click', function (e) {
+    if (e.target.closest && e.target.closest('.sp-x')) { S.bagOpen = false; sfx('click'); render(); return; }
+    if (!S || !S.sealArm || (e.target.closest && e.target.closest('.looseseal'))) return;
+    var die = e.target.closest ? e.target.closest('.hpdice .die[data-tip^="hud:"]') : null;
+    if (die) applyLoose(S.sealArm, parseInt(die.getAttribute('data-tip').slice(4), 10)); else { S.sealArm = null; sealGlow(); }
+  });
+
+  // ---------- right-click menus and carrying an icon on the cursor ----------
+  var CTX_X = '<svg viewBox="0 0 24 24" shape-rendering="crispEdges" aria-hidden="true"><path d="M5 5 L19 19 M19 5 L5 19" stroke="#14110d" stroke-width="7" stroke-linecap="square"/><path d="M5 5 L19 19 M19 5 L5 19" stroke="#d8352b" stroke-width="4" stroke-linecap="square"/></svg>';
+  var carry = null, ctxEl = null, ctxDestroyArm = false;
+  function carryStart(q, mode) {
+    closeCtx(); carry = { id: q.id, mode: mode }; if (mode === 'apply') S.sealArm = q.id; else S.sealArm = null;
+    var el = sealLayer && sealLayer.querySelector('.looseseal[data-id="' + q.id + '"]'); if (el) el.classList.add('carried');
+    hideTip(); sealGlow();
+  }
+  function carryEnd() {
+    var el = carry && sealLayer && sealLayer.querySelector('.looseseal[data-id="' + carry.id + '"]'); if (el) el.classList.remove('carried');
+    carry = null; S.sealArm = null; showSellPop(null); sealGlow(); sealLayerSync();
+  }
+  function carryMove(e) {
+    var el = sealLayer && sealLayer.querySelector('.looseseal[data-id="' + carry.id + '"]'); if (!el) { carry = null; return; }
+    el.style.left = Math.round(e.clientX - 36) + 'px'; el.style.top = Math.round(e.clientY - 36) + 'px';
+    if (carry.mode === 'sell') {
+      var t = document.elementFromPoint(e.clientX, e.clientY), q = looseGet(carry.id);
+      showSellPop(q && t && t.closest && t.closest('.merchport') ? q : null);
+    }
+  }
+  document.addEventListener('mousemove', function (e) { if (carry) carryMove(e); }, true);
+  document.addEventListener('click', function (e) {
+    if (!carry) return;
+    if (e.target.closest && (e.target.closest('#ctxmenu') || e.target.closest('.sp-x'))) return;
+    e.preventDefault(); e.stopPropagation();
+    var q = looseGet(carry.id), t = e.target;
+    if (!q) { carryEnd(); return; }
+    if (carry.mode === 'apply') {
+      var die = t.closest ? t.closest('.hpdice .die[data-tip^="hud:"]') : null;
+      if (die) { var id0 = carry.id; carry = null; if (applyLoose(id0, parseInt(die.getAttribute('data-tip').slice(4), 10))) return; carryEnd(); return; }
+    } else if (merchHere() && t.closest && t.closest('.merchport')) { sellLoose(q); return; }
+    var br = bagRect(), left = e.clientX - 36, top = e.clientY - 36;
+    if (br && e.clientX > br.left && e.clientX < br.right && e.clientY > br.top && e.clientY < br.bottom) {
+      q.bag = true; q.bx = Math.round(Math.min(SP_W - 72 - 40, Math.max(40, left - br.left))); q.by = Math.round(Math.min(SP_H - 72 - 50, Math.max(70, top - br.top)));
+    } else { q.bag = false; q.x = Math.min(.97, Math.max(.03, (left + 36) / window.innerWidth)); q.y = Math.min(.97, Math.max(.03, (top + 36) / window.innerHeight)); }
+    carryEnd();
+  }, true);
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') { if (carry) carryEnd(); closeCtx(); } });
+  function closeCtx() { if (ctxEl) { ctxEl.remove(); ctxEl = null; } ctxDestroyArm = false; }
+  function openCtx(e, title, items) {
+    closeCtx(); hideTip();
+    ctxEl = document.createElement('div'); ctxEl.id = 'ctxmenu';
+    ctxEl.innerHTML = '<div class="ctxt">' + title + '</div>' + items.map(function (it, i) { return '<button type="button" class="ctxi' + (it.off ? ' off' : '') + (it.danger ? ' danger' : '') + '" data-ci="' + i + '"' + (it.off ? ' disabled' : '') + (it.why ? ' title="' + it.why + '"' : '') + '>' + (/^Sell/.test(it.label) ? '<span class="ctxic">' + (ITEM_ART.coin || '') + '</span>' : it.danger ? '<span class="ctxic">' + CTX_X + '</span>' : '<span class="ctxic"></span>') + '<span>' + it.label + '</span></button>'; }).join('');
+    document.documentElement.appendChild(ctxEl);
+    var W = window.innerWidth, H = window.innerHeight, w = ctxEl.offsetWidth, h = ctxEl.offsetHeight;
+    ctxEl.style.left = Math.min(e.clientX, W - w - 6) + 'px'; ctxEl.style.top = Math.min(e.clientY, H - h - 6) + 'px';
+    ctxEl.addEventListener('click', function (ev) {
+      var b = ev.target.closest('.ctxi'); if (!b || b.disabled) return; ev.stopPropagation();
+      var it = items[+b.getAttribute('data-ci')];
+      if (it.danger && !ctxDestroyArm) { ctxDestroyArm = true; b.lastChild.textContent = 'Really destroy?'; b.classList.add('armed'); return; }
+      closeCtx(); setTimeout(it.fn, 0);
+    });
+  }
+  document.addEventListener('mousedown', function (e) { if (ctxEl && !(e.target.closest && e.target.closest('#ctxmenu'))) closeCtx(); }, true);
+  document.addEventListener('contextmenu', function (e) {
+    try {
+      var t = e.target && e.target.closest ? e.target : null; if (!t || !S || !S.player) return;
+      var tk = t.closest('.looseseal');
+      if (tk) {
+        e.preventDefault(); var q = looseGet(+tk.getAttribute('data-id')); if (!q) return;
+        var sell = merchHere(), isSeal = !!q.mod, nm = isSeal ? 'seal' : 'relic';
+        openCtx(e, qName(q), [
+          isSeal ? { label: 'Apply seal', fn: function () { carryStart(q, 'apply'); } } : { label: 'Equip relic', fn: function () { equipRelic(q); } },
+          { label: 'Sell ' + nm, off: !sell, why: sell ? '' : 'Only at a merchant', fn: function () { carryStart(q, 'sell'); } },
+          { label: 'Destroy ' + nm, danger: true, fn: function () { destroyLoose(q); } }
+        ]);
+        return;
+      }
+      var sl = t.closest('[data-loc^="inv:"][data-has]');
+      if (sl && S.screen !== 'combat') {
+        e.preventDefault(); var si = +sl.getAttribute('data-loc').split(':')[1], rid = S.player.inv[si]; if (!rid) return;
+        var sellE = merchHere();
+        openCtx(e, ITEMS[rid].name, [
+          { label: 'Unequip relic', fn: function () { unequipRelic(si); } },
+          { label: 'Sell relic', off: !sellE, why: sellE ? '' : 'Only at a merchant', fn: function () { S.player.inv.splice(si, 1); var q2 = { id: ++LOOSE_ID, item: rid, x: .5, y: .5 }; S.loose.push(q2); render(); sealLayerSync(); carryStart(q2, 'sell'); } },
+          { label: 'Destroy relic', danger: true, fn: function () { S.player.inv.splice(si, 1); sfx('grumble'); render(); } }
+        ]);
+      }
+    } catch (er) { }
   });
   // right click: on your own dice it lowers the bid quantity by one; on a learned skill it unlearns it (if nothing else needs it)
   document.addEventListener('contextmenu', function (e) {
@@ -7539,7 +7918,7 @@ var BOSS_PORTRAITS = {"dealer":{"normal":"data:image/webp;base64,UklGRlg9AABXRUJ
       case 'fledDone': returnStolen(); completeNode(); break;
       case 'afterVictory': nextAfterVictory(); break;
       case 'rptSkip': reportSkip(); break;
-      case 'dropClaim': { var vd = S.victory, back = function () { S.screen = 'victory'; render(); }; openForge('mod', { mod: vd.drop, onDone: function () { vd.dropDone = true; back(); }, onCancel: back }); break; }
+      case 'dropClaim': { var vd = S.victory; if (vd) { vd.sealArm = !vd.sealArm; render(); } break; }
       case 'paperOpen': S.noteOpen = true; render(); break;
       case 'paperClose': S.noteOpen = false; S.noteGone = true; noteMark(); render(); break;
       case 'paperDismiss': S.noteGone = true; noteMark(); render(); break;
@@ -7592,7 +7971,7 @@ var BOSS_PORTRAITS = {"dealer":{"normal":"data:image/webp;base64,UklGRlg9AABXRUJ
       case 'bjStand': bjStand(); break;
       case 'bjDouble': bjDouble(); break;
       case 'scratchFight': scratchFight(); break;
-      case 'scratchSeal': { var sev = S.event; if (sev && sev.mod) openForge('mod', { mod: sev.mod, onDone: completeNode, onCancel: function () { S.screen = 'event'; render(); } }); break; }
+      case 'scratchSeal': { var sev = S.event; if (sev && sev.mod) { giveSeal(sev.mod); completeNode(); } break; }
       case 'slotClaim': slotClaim(); break;
       case 'slotLeave': slotLeave(); break;
       case 'swapPick': swapPick(i); break;
@@ -7705,6 +8084,9 @@ var BOSS_PORTRAITS = {"dealer":{"normal":"data:image/webp;base64,UklGRlg9AABXRUJ
   $('hud').addEventListener('mouseover', function (e) { var t = tipTarget(e); if (t) showTip(t.getAttribute('data-tip'), e); });
   $('hud').addEventListener('mousemove', function (e) { if (tipTarget(e)) moveTip(e); });
   $('hud').addEventListener('mouseout', function (e) { var t = tipTarget(e); if (t && !(e.relatedTarget && t.contains(e.relatedTarget))) hideTip(); });
+  document.addEventListener('mouseover', function (e) { var t = e.target.closest ? e.target.closest('.looseseal') : null; if (t && !sealDrag) showTip(t.getAttribute('data-tip'), e); });
+  document.addEventListener('mousemove', function (e) { if (e.target.closest && e.target.closest('.looseseal') && !sealDrag) moveTip(e); });
+  document.addEventListener('mouseout', function (e) { var t = e.target.closest ? e.target.closest('.looseseal') : null; if (t) hideTip(); });
   $('app').addEventListener('click', onClick);
   connectMeta();
   $('torchL').innerHTML = TORCH; $('torchR').innerHTML = TORCH;
