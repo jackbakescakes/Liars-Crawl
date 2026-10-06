@@ -2385,7 +2385,7 @@ KNOWN ISSUES (art still to come)
   .report .rp-duel { align-items: center; }
   .report .rp-ledger { border-radius: 22px; overflow: hidden; }
 
-  .clsbtn .portrait:has(img.photo) { width: 160px !important; height: 160px !important; }
+  .clsbtn .portrait:has(img.photo) { width: 104px !important; height: 104px !important; }
   .clsbtn.charcard { align-items: center; }
   .goldtl .hudcoin { width: 64px; height: 64px; top: 70px; left: 6px; }
   .goldtl .hudcoin svg { width: 64px !important; height: 64px !important; }
@@ -2498,6 +2498,15 @@ KNOWN ISSUES (art still to come)
 
   /* combat: the felt keeps its 436px footprint but grows when the content (bid panel, controls) is taller, so the player bar is pushed down instead of overlapped */
   body[data-screen="combat"]:not([data-screen="title"]):not([data-screen="char"]):not([data-screen="rules"]):not([data-screen="tree"]) .felt { height: auto !important; flex: 0 0 auto !important; min-height: 436px !important; }
+
+  /* seal rewards sit on parchment */
+  body[data-screen="reward"] .card.k-sigil::before { background-color: #e3d1a0 !important; background-image: linear-gradient(rgba(150,105,40,.10), rgba(150,105,40,.10)) !important; box-shadow: inset 0 0 22px 3px rgba(110,70,20,.45) !important; }
+  body[data-screen="reward"] .card.k-sigil h3 { color: #2b1d0e !important; text-shadow: none !important; }
+  body[data-screen="reward"] .card.k-sigil p { color: #4a3720 !important; }
+  body[data-screen="reward"] .card.k-sigil .rar-common { color: #5a5a66 !important; } body[data-screen="reward"] .card.k-sigil .rar-uncommon { color: #1f7a30 !important; }
+  body[data-screen="reward"] .card.k-sigil .rar-rare { color: #1f55b0 !important; } body[data-screen="reward"] .card.k-sigil .rar-epic { color: #6a35b8 !important; } body[data-screen="reward"] .card.k-sigil .rar-legendary { color: #a8650a !important; }
+  /* intro animations play once; hovering off must never replay them (cards used to vanish and pop back in) */
+  .card.abilpop.settled:not(.picked):not(.dimmed) { animation: abilglow 1.4s ease-in-out infinite alternate; opacity: 1; }
 </style>
 
 <main class="wrap">
@@ -5270,7 +5279,7 @@ KNOWN ISSUES (art still to come)
   }
   function spendHTML() {
     var n = pts();
-    return '<section class="panel"><h2>You have skill points to spend</h2><p>You have <span class="pts">' + n + '</span> skill point' + (n > 1 ? 's' : '') + ', enough to learn a new skill. Every skill is borrowed from the dungeon. It collects at the end of the crawl.</p>' +
+    return '<section class="panel"><h2>You have skill points to spend</h2><p>You have <span class="pts">' + n + '</span> skill point' + (n > 1 ? 's' : '') + ', enough to learn a new skill.</p>' +
       '<div class="row"><button type="button" class="btn torch" data-act="spendOpen">Choose a skill</button><button type="button" class="btn ghost" data-act="spendLater">Not now</button></div></section>';
   }
   function nextAfterVictory() { if (S.victory && S.victory.loot && !S.victory.lootDone) { S.victory.lootDone = true; var tk = S.victory.taken || {}; giveItems([].concat(S.victory.loot).filter(function (id) { return !tk[id]; }), nextAfterVictory); return; } if (S.pending > 0) openLevelUp(); else afterLevels(); }
@@ -6131,7 +6140,6 @@ var BOSS_PORTRAITS = {"dealer":{"normal":"data:image/webp;base64,UklGRlg9AABXRUJ
       info = '<div class="infotabs">' + Object.keys(CLASSES).map(function (k) { return '<button type="button" class="btn small infotab' + (k === cl ? ' on' : '') + '" data-act="infoCls" data-id="' + k + '" aria-pressed="' + (k === cl) + '">' + CLASSES[k].name + '</button>'; }).join('') + '</div><p class="infoblurb">' + CLASSES[cl].blurb + '</p>';
     }
     return '<section class="panel">' + info + (S.player ? '<p>Skill points: <span class="pts">' + pts() + '</span></p>' : '') +
-      (info ? '' : '<p class="muted skintro">Every skill is borrowed from the dungeon. It collects at the end of the crawl.</p>') +
       '<div class="tree sktree">' + body + '</div>' +
       '<div class="row"><button type="button" class="btn torch" data-act="treeBack">Back</button></div></section>';
   }
@@ -7429,6 +7437,26 @@ var BOSS_PORTRAITS = {"dealer":{"normal":"data:image/webp;base64,UklGRlg9AABXRUJ
   })();
 
   // ---------- input ----------
+  document.addEventListener('animationend', function (e) {
+    var t = e.target, n = e.animationName; if (!t || !t.classList) return;
+    if (n === 'cardin') t.classList.remove('fresh'); else if (n === 'abilin') t.classList.add('settled'); else if (n === 'skpopin') t.classList.remove('skpop');
+  });
+  // right click: on your own dice it lowers the bid quantity by one; on a learned skill it unlearns it (if nothing else needs it)
+  document.addEventListener('contextmenu', function (e) {
+    try {
+      var t = e.target && e.target.closest ? e.target : null; if (!t) return;
+      var d = t.closest('[data-act="dieBid"]');
+      if (d) { e.preventDefault(); if (C && S.screen === 'combat' && C.phase === 'bid' && C.turn === 'p' && !C.target && C.sel) { C.sel.qty = Math.max(1, C.sel.qty - 1); C.dieKey = null; sfx('tick'); render(); } return; }
+      var k = t.closest('.sknode.own');
+      if (k && S.screen === 'tree') {
+        e.preventDefault(); var id = k.getAttribute('data-id'), x, blocked = '';
+        if (!TREE[id] || !has(id)) return;
+        for (x in TREE) if (TREE[x].req === id && has(x)) blocked = TREE[x].name;
+        if (blocked) { sfx('grumble'); return; }
+        S.sk[id] = false; delete S.sk[id]; S.sp += TREE[id].cost; sfx('click'); render();
+      }
+    } catch (er) { }
+  });
   $('app').addEventListener('input', function (e) {
     if (e.target && e.target.id === 'bankRange' && S.event && S.event.type === 'bank') {
       S.event.amt = +e.target.value; var a = bankAmt(), x = $('bankA'), y = $('bankB'); if (x) x.textContent = a; if (y) y.textContent = a * 2;
