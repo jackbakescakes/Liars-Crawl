@@ -2579,6 +2579,13 @@ KNOWN ISSUES (art still to come)
   @keyframes sellrise { 0% { opacity: 0; margin-top: 0; } 15% { opacity: 1; } 100% { opacity: 0; margin-top: -90px; } }
   .cog.btn, .cog.btn:hover:not(:disabled), .cog.btn:active:not(:disabled) { left: auto !important; top: 27px !important; border-bottom-width: 0 !important; }
   .cog.btn:active:not(:disabled) { transform: translateY(2px) scale(.96) !important; }
+  body[data-screen="char"] .tavern .beginbtn { font-size: 64px !important; min-width: 460px !important; padding: 16px 64px 20px !important; letter-spacing: .2em !important; }
+  .crawlword { position: absolute; left: 0; right: 0; top: 50%; bottom: 0; padding: 0; border: 0; background-color: transparent; background-image: inherit; background-size: 100% 200%; background-position: 0 100%; background-repeat: no-repeat; opacity: 0; pointer-events: none; cursor: default; }
+  .crawlword.lit { opacity: 1; pointer-events: auto; cursor: pointer; filter: drop-shadow(0 0 6px #ffb347) drop-shadow(0 0 18px #ff6a00); animation: crawlglow 1.6s ease-in-out infinite alternate; }
+  .crawlword.lit:hover { filter: drop-shadow(0 0 10px #ffd27a) drop-shadow(0 0 30px #ff8a1a) brightness(1.2); animation: none; transform: scale(1.02); }
+  .crawlword.lit:active { transform: scale(.99); }
+  @keyframes crawlglow { from { filter: drop-shadow(0 0 4px #ffb347) drop-shadow(0 0 10px #ff6a00); } to { filter: drop-shadow(0 0 10px #ffd27a) drop-shadow(0 0 28px #ff7a10) brightness(1.15); } }
+  @media (prefers-reduced-motion: reduce) { .crawlword.lit { animation: none; } }
 </style>
 
 <main class="wrap">
@@ -3906,7 +3913,7 @@ KNOWN ISSUES (art still to come)
   };
 
   // ---------- state ----------
-  var S = { screen: 'title', player: null, floor: null, floorNum: 1, cur: null, odds: false, forge: null, upgrade: null, event: null, showDice: false,
+  var S = { screen: 'char', player: null, floor: null, floorNum: 1, cur: null, odds: false, forge: null, upgrade: null, event: null, showDice: false,
     rewardOpts: [], lvlOpts: [], pending: 0, lastNode: null, victory: null, endKind: null, shopMsg: '', finalShop: false };
   var C = null, timer = null;
 
@@ -6177,8 +6184,8 @@ var BOSS_PORTRAITS = {"dealer":{"normal":"data:image/webp;base64,UklGRlg9AABXRUJ
       var c = CLASSES[id];
       return '<div class="clswrap"><button type="button" class="infoq" data-act="infoOpen" data-id="' + id + '" aria-label="' + c.name + ' info">?</button>' + '<button type="button" class="charcard clsbtn clspop' + (id === cl ? ' sel' : '') + (S.clsOpen === id ? ' open' : '') + '" style="animation-delay:' + (CLSI++ * 0.1).toFixed(2) + 's" data-act="pickCls" data-id="' + id + '" aria-pressed="' + (id === cl) + '"><span class="portrait" style="--c1:' + c.c1 + ';--c2:' + c.c2 + ';--eye:' + c.eye + '">' + portraitArt(id, c, 'normal') + '</span><span class="grow"><h3>' + c.name + '</h3><span class="muted">' + c.blurb + '</span></span></button></div>';
     }).join('');
-    return '<div class="tavlogo" aria-hidden="true"></div><section class="panel tavern' + (still ? ' charstill' : '') + '"><i class="grain" aria-hidden="true"></i><div class="tavhead"><span class="tavmug">' + MUG_ART + '</span><div class="tavsign"><i class="chain c1"></i><i class="chain c2"></i><div class="board"><small>The</small><b>Rusty Flagon</b><span>Tavern</span></div></div><span class="tavmug flip">' + MUG_ART + '</span></div><div class="hearth" aria-hidden="true"><i></i><i></i><i></i></div>' + cards +
-      '<div class="beginrow"><button type="button" class="beginbtn" data-act="start"' + (S.clsPicked ? '' : ' disabled aria-disabled="true"') + '><span class="bt">Begin the crawl</span><i class="nail n1"></i><i class="nail n2"></i><i class="nail n3"></i><i class="nail n4"></i><i class="drip d1"></i><i class="drip d2"></i><i class="drip d3"></i></button></div><div class="row" style="justify-content:center"><button type="button" class="btn blood charbtn" style="animation-delay:.55s" data-act="toTitle">Back</button></div></section>';
+    return '<div class="tavlogo"><button type="button" class="crawlword' + (S.clsPicked ? ' lit' : '') + '" data-act="start"' + (S.clsPicked ? '' : ' disabled tabindex="-1"') + ' aria-label="Crawl"></button></div><section class="panel tavern' + (still ? ' charstill' : '') + '"><i class="grain" aria-hidden="true"></i><div class="tavhead"><span class="tavmug">' + MUG_ART + '</span><div class="tavsign"><i class="chain c1"></i><i class="chain c2"></i><div class="board"><small>The</small><b>Rusty Flagon</b><span>Tavern</span></div></div><span class="tavmug flip">' + MUG_ART + '</span></div><div class="hearth" aria-hidden="true"><i></i><i></i><i></i></div>' + cards +
+      '</section>';
   }
   var SK_ROWS = {'shield':['............','.kkkkkkkkkk.','.kssssssssk.','.ksSssssSsk.','.kssSggSssk.','.ksSsggsSsk.','.kssSggSssk.','.ksSssssSsk.','..ksSssSsk..','...ksSSsk...','....kssk....','.....kk.....'],'spike':['.....kk.....','....krrk....','.kkkkrrkkkk.','.kssssssssk.','.ksSssssSsk.','.kssSggSssk.','.ksSsggsSsk.','.kssSggSssk.','..ksSssSsk..','...ksSSsk...','....kssk....','.....kk.....'],'barbed':['kr...kk...rk','.rr.krrk.rr.','.kkkkrrkkkk.','.kssssssssk.','.ksSssssSsk.','.kssSggSssk.','.ksSsggsSsk.','.kssSggSssk.','..ksSssSsk..','...ksSSsk...','....kssk....','.....kk.....'],'bulwark':['.kkkkkkkkkk.','kSsssssssssk','kSsgsssssgsk','kSsssSSsssSk','kSssSggSssSk','kSsssggsssSk','kSsssggsssSk','kSssSggSssSk','kSsgsssssgSk','.kSsssssSsk.','..kSsssSsk..','...kkkkkk...'],'heavy':['............','..kkkk......','.kssssk.....','.ksswssk.kk.','.kssssSSkBbk','.kksssSkBbk.','..kkkkkkBk..','.....kBbk...','.....kBk....','....kBbk....','....kBk.....','....kkk.....'],'crushing':['..kkkkkkkk..','.kssssssSSk.','.kswwssSSSk.','.kssssssSSk.','..kkkkkkkk..','....kBbk....','....kBbk....','....kBbk....','....kBbk....','....kBbk....','....kBbk....','....kkkk....'],'berserk':['.....rr.....','....rrrr....','...rrRrrr...','..rrrRRrrr..','..rrgrrrgrr.','.rrgggrgggrr','.rrgwwgwwgrr','.rrrgggggrrr','..rrrrRrrrr.','..rrRRRRRrr.','...rrrrrrr..','....kkkk....'],'mending':['............','.kkk....kkk.','kpppk..kpppk','kpwppkkppppk','kppppppppPk.','.kppppppPk..','..kppppPk...','...kppPk....','....kPk.....','.....k......','............','............'],'bless':['.....kk.....','....kggk....','....kggk....','.kkkkgwgkkk.','kggggwwwgggk','kgggwwwwwggk','.kkkkgwgkkk.','....kggk....','....kggk....','.....kk.....','............','............'],'bless2':['..kk........','.kggk.......','.kgwgk..kk..','kgwwwgkkggk.','.kgwgk.kgwgk','..kggk.gwwwg','...kk..kgwgk','........kggk','.........kk.','............','............','............'],'aura':['............','...kkkkkk...','..kggwwggk..','.kgGkkkkGgk.','.kgk....kgk.','.kgk....kgk.','.kgGkkkkGgk.','..kggggggk..','...kkkkkk...','............','............','............'],'smite':['.......kkk..','......kggk..','.....kggk...','....kggk....','...kggggk...','..kggggggk..','.kkkkggkkk..','.....kggk...','....kggk....','....kgk.....','...kgk......','...kk.......'],'rebuke':['....k.k.k...','...kdkdkdk..','...kdkdkdkk.','..kdkdkdkdk.','..kddddddddk','..kddddddddk','..kddddddddk','...kddddddk.','....kddddk..','....kDDDDk..','....kkkkkk..','............'],'judgement':['.....gg.....','.gggggggggg.','.g...gg...g.','.g...gg...g.','ggg..gg..ggg','gGg..gg..gGg','.....gg.....','.....gg.....','....gggg....','...gGGGGg...','............','............'],'bleed1':['.....kk.....','....krrk....','....krrk....','...krrrrk...','...krwrrk...','..krwrrrrk..','..krrrrrRk..','..krrrrRRk..','...krrRRk...','....kkkk....','............','............'],'bleed2':['..kk........','.krrk...kk..','.krrk..krrk.','krrrrk.krrk.','krwrrkkrrrrk','krrrrRkrwrrk','.krrRk.krrRk','..kkk...kkk.','............','............','............','............'],'bleed3':['.r...rr...r.','..r.rrrr.r..','r.rrrrrrrr.r','.rrrRRRRrrr.','rrrRRrrRRrrr','.rrRrwwrRrr.','rrrRRrrRRrrr','.rrrRRRRrrr.','r.rrrrrrrr.r','..r.rrrr.r..','.r...rr...r.','............']};
   var SK_ART = {};
@@ -7312,6 +7319,7 @@ var BOSS_PORTRAITS = {"dealer":{"normal":"data:image/webp;base64,UklGRlg9AABXRUJ
     t_odd: function () { tone({ f: 660, d: 0.05, v: 0.07, t: 'triangle' }); tone({ f: 495, d: 0.08, v: 0.07, t: 'triangle', at: 0.06 }); },
     click: function () { tone({ f: 520, f2: 380, d: 0.05, v: 0.07 }); },
     tick: function () { tone({ f: 760, d: 0.025, v: 0.05, t: 'triangle' }); },
+    hover: function () { tone({ f: 520, d: 0.03, v: 0.035, t: 'triangle' }); tone({ f: 780, d: 0.04, v: 0.02, t: 'sine' }); },
     fk_ok: function () { tone({ f: 1318, d: 0.5, v: 0.14, t: 'sine' }); tone({ f: 2637, d: 0.35, v: 0.05, t: 'sine' }); tone({ f: 1760, d: 0.45, v: 0.09, t: 'sine', at: 0.09 }); },
     alarm: function () { [0, 0.22, 0.44].forEach(function (a) { tone({ f: 880, f2: 660, d: 0.18, v: 0.16, t: 'square', at: a }); }); },
     rpt_pop: function (k) { tone({ f: 380 + (k || 0) * 22, d: 0.07, v: 0.09, t: 'triangle' }); },
@@ -7822,6 +7830,15 @@ var BOSS_PORTRAITS = {"dealer":{"normal":"data:image/webp;base64,UklGRlg9AABXRUJ
       }
     } catch (er) { }
   });
+  // character select: a soft sound when the mouse moves onto each pane
+  document.addEventListener('mouseover', function (e) {
+    try {
+      if (document.body.getAttribute('data-screen') !== 'char') return;
+      var t = e.target.closest ? e.target.closest('.clsbtn, .charbtn, .crawlword.lit, #app button, #app .panel') : null;
+      if (!t || (e.relatedTarget && t.contains(e.relatedTarget))) return;
+      audInit(); sfx('hover');
+    } catch (er) { }
+  });
   // right click: on your own dice it lowers the bid quantity by one; on a learned skill it unlearns it (if nothing else needs it)
   document.addEventListener('contextmenu', function (e) {
     try {
@@ -7865,7 +7882,7 @@ var BOSS_PORTRAITS = {"dealer":{"normal":"data:image/webp;base64,UklGRlg9AABXRUJ
       case 'dummyFight': dummyFight(); break;
       case 'dummySkip': dummySkip(); break;
       case 'toChar': S.screen = 'char'; S.clsPicked = false; render(); break;
-      case 'toTitle': clearTimeout(timer); C = null; S.player = null; S.screen = 'title'; newTitleLine(); render(); break;
+      case 'toTitle': clearTimeout(timer); C = null; S.player = null; S.screen = 'char'; S.clsPicked = false; render(); break;
       case 'start': if (!S.clsPicked) break; beginCrawl(); break;
       case 'tree': S.treeFrom = id; if (id === 'run') S.treeRet = S.screen; S.screen = 'tree'; render(); break;
       case 'treeBack': if (S.spendCont) { var sc = S.spendCont; S.spendCont = null; sc(); break; } S.screen = S.treeFrom === 'run' ? (S.treeRet || 'map') : 'char'; render(); break;
@@ -7879,7 +7896,7 @@ var BOSS_PORTRAITS = {"dealer":{"normal":"data:image/webp;base64,UklGRlg9AABXRUJ
         if (!b.getAttribute('data-armed')) { b.setAttribute('data-armed', '1'); var lbl = b.textContent; b.textContent = 'Tap again to seal your fate'; setTimeout(function () { try { b.removeAttribute('data-armed'); b.textContent = lbl; } catch (e) { /* gone */ } }, 3000); break; }
         clearTimeout(timer); var spn = document.getElementById('settings'); if (spn) spn.hidden = true;
         if (a === 'endRun') { returnStolen(); S.pact = false; S.endKind = 'quit'; S.screen = 'end'; render(); }
-        else { C = null; S.player = null; S.floorNum = 1; S.showDice = false; S.screen = 'title'; newTitleLine(); render(); }
+        else { C = null; S.player = null; S.floorNum = 1; S.showDice = false; S.screen = 'char'; S.clsPicked = false; render(); }
         break;
       case 'node': enterNode(id); break;
       case 'rq': reelStep('q', v); break;
