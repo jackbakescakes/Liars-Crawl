@@ -3400,7 +3400,7 @@
     gambler: E('Bone Gambler', 4, 0.5, [10, 14], 'fight', 'skull', '#e6dfca', '#7a3a3a', '#e39a3b', 'Wears the dice it has won as a necklace of teeth.'),
     cultist: E('Cultist of Chance', 4, 0.6, [11, 16], 'fight', 'hood', '#4a3a66', '#9b72d8', '#e8c34a', 'Prays to luck, and luck has demanded blood.'),
     ogre: E('Ogre Bouncer', 5, 0.7, [20, 28], 'elite', 'ogre', '#7d8f5a', '#5f6b45', '#f0d24a', 'Throws losers out. Some of them still scream.'),
-    brute: E('Cup-Shot Ogre', 11, 0.04, [14, 20], 'fight', 'ogre', '#a6a35e', '#7a7745', '#d9d27a', 'Strong as a cart-horse and drunk as a lord. It sways, it sloshes, and it forgets which cup is its own.'),
+    brute: E('Cup-Shot Ogre', 10, 0.04, [20, 28], 'elite', 'ogre', '#a6a35e', '#7a7745', '#d9d27a', 'Strong as a cart-horse and drunk as a lord. It sways, it sloshes, and it forgets which cup is its own.'),
     mimic: E('Mimic', 5, 0.78, [22, 30], 'elite', 'chest', '#8a5a34', '#a8703f', '#f0d24a', 'Teeth behind the lid. Past victims in its belly.'),
     dealer: E('The Dealer', 6, 0.95, [40, 50], 'boss', 'dealer', '#e6dfca', '#a13a3a', '#e39a3b', 'Dealt the first hand ever played in this pit.'),
     skeleton: E('Skeleton Dicer', 4, 0.58, [14, 20], 'fight', 'skull', '#cfd8d6', '#3a6670', '#5ec2c9', 'A yellowed grin that plays on long after the flesh has rotted away.'),
@@ -3529,9 +3529,9 @@
   }
   var FLOORS = [
     { name: 'The Cellar', blurb: 'Damp stone, gnawed bones and a table stained dark in the corner.', goldMul: 1, priceMul: 1,
-      pools: [['cutpurse', 'eavesdrop', 'weathercock'], ['cutpurse', 'eavesdrop', 'weathercock', 'blackjack', 'fence', 'selcouth', 'sanguine', 'lootgob'], ['blackjack', 'fence', 'selcouth', 'sanguine', 'lootgob', 'cutpurse', 'eavesdrop', 'weathercock']], elites: ['ogre', 'mimic'], boss: 'dealer' },
+      pools: [['cutpurse', 'eavesdrop', 'weathercock'], ['cutpurse', 'eavesdrop', 'weathercock', 'blackjack', 'fence', 'selcouth', 'sanguine', 'lootgob'], ['blackjack', 'fence', 'selcouth', 'sanguine', 'lootgob', 'cutpurse', 'eavesdrop', 'weathercock']], elites: ['ogre', 'brute'], boss: 'dealer' },
     { name: 'The Catacombs', blurb: 'Cold air. The dead have been playing for centuries, and they are hungry.', goldMul: 1.5, priceMul: 1.25,
-      pools: [['skeleton', 'ghoul', 'mourner'], ['ghoul', 'wraith', 'watcher', 'seer', 'brute', 'bonedealer', 'ratswarm', duo('skeleton', 'ghoul')], ['wraith', 'warden', 'seer', 'bonedealer', 'mourner', 'ratswarm', duo('wraith', 'warden')]], elites: ['knight', 'acolyte'], boss: 'croupier' },
+      pools: [['skeleton', 'ghoul', 'mourner'], ['ghoul', 'wraith', 'watcher', 'seer', 'bonedealer', 'ratswarm', duo('skeleton', 'ghoul')], ['wraith', 'warden', 'seer', 'bonedealer', 'mourner', 'ratswarm', duo('wraith', 'warden')]], elites: ['knight', 'acolyte'], boss: 'croupier' },
     { name: 'The Mouldering Menagerie', blurb: 'Rusted cages, moss and a circus tent that never came down. Every beast here learned to gamble.', goldMul: 1.8, priceMul: 1.4,
       pools: [['toad', 'crow', 'sporecap'], ['crow', 'stag', 'ringer', 'toad', 'ratswarm', duo('toad', 'sporecap')], ['stag', 'ringer', 'sporecap', 'crow', 'ratswarm', duo('crow', 'stag')]], elites: ['bear', 'tamer'], boss: 'pitboss' },
     { name: 'The Gilded Pit', blurb: 'Gold on every wall, and every wager is paid in blood.', goldMul: 2.2, priceMul: 1.6,
