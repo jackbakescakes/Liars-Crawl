@@ -2473,6 +2473,31 @@ KNOWN ISSUES (art still to come)
   .sc-contract .ctbtns { gap: 14px; }
   .ctscroll.torn { opacity: .5; filter: grayscale(.6); transform: rotate(-2deg); }
   .ctscroll.torn::after { content: ''; position: absolute; left: -4%; right: -4%; top: 52%; height: 6px; background: #1a1008; transform: rotate(-4deg); }
+
+  /* ===== batch: note on portrait, bigger gold, parchment bubble, smaller liar stamp ===== */
+  body:not([data-screen="title"]):not([data-screen="char"]):not([data-screen="rules"]):not([data-screen="tree"]) .goldtl .stat b { font-size: 88px !important; line-height: 1 !important; }
+  body:not([data-screen="title"]):not([data-screen="char"]):not([data-screen="rules"]):not([data-screen="tree"]) .goldtl .stat { padding-left: 82px !important; }
+  .liarfx .lf-stamp { width: clamp(150px, 28vw, 300px) !important; }
+  .liarfx .lf-sub { font-size: clamp(14px, 2vw, 20px) !important; border-width: 3px !important; padding: 1px 10px !important; }
+  body[data-screen="combat"] .foe .bubble { font: 600 26px/1.15 var(--display) !important; font-style: normal !important; letter-spacing: .02em; border: 5px solid #8a7048 !important; clip-path: none !important; transform: none !important; box-shadow: 0 5px 0 rgba(0,0,0,.5), inset 0 0 18px rgba(120,80,20,.4) !important; padding: 10px 16px 12px !important; }
+  body:not([data-screen="title"]):not([data-screen="char"]):not([data-screen="rules"]):not([data-screen="tree"]) .mecenter { position: relative; }
+  body:not([data-screen="title"]):not([data-screen="char"]):not([data-screen="rules"]):not([data-screen="tree"]) .mecenter .paper { position: absolute !important; top: auto !important; left: 18px !important; bottom: 34px !important; margin: 0 !important; width: 110px !important; max-width: 110px !important; padding: 10px 8px 9px !important; font-size: 18px !important; z-index: 50; transform-origin: 50% 100%; }
+  body:not([data-screen="title"]):not([data-screen="char"]):not([data-screen="rules"]):not([data-screen="tree"]) .mecenter .paper b { font-size: 22px !important; } body:not([data-screen="title"]):not([data-screen="char"]):not([data-screen="rules"]):not([data-screen="tree"]) .mecenter .paper i { font-size: 14px !important; }
+  body:not([data-screen="title"]):not([data-screen="char"]):not([data-screen="rules"]):not([data-screen="tree"]) .mecenter .paperx { position: absolute !important; top: auto !important; left: 30px !important; bottom: auto !important; top: -30px !important; margin: 0 !important; width: auto !important; max-width: none !important; white-space: nowrap; font-size: 16px !important; z-index: 51; background: #14110d !important; color: #d9c9a0 !important; padding: 2px 10px !important; border: 2px solid #5a4a30 !important; text-decoration: none !important; }
+
+  .jukebox { display: flex; flex-direction: column; gap: 8px; margin: 14px 0 6px; padding: 10px 12px; background: rgba(0,0,0,.28); border: 3px solid #4a3d28; }
+  .jukebox .jb-h { font-size: 30px; letter-spacing: .12em; text-transform: uppercase; color: #e6d8a8; }
+  .jukebox .jb-song { display: flex; align-items: center; gap: 12px; text-align: left; font: inherit; font-size: 30px; color: #efe3bd; background: #1d1913; border: 3px solid #5a4a30; padding: 6px 12px; cursor: pointer; }
+  .jukebox .jb-song small { display: block; font-size: 20px; opacity: .65; letter-spacing: .06em; }
+  .jukebox .jb-song:hover { border-color: #c9a43c; }
+  .jukebox .jb-song.on { background: #3a2c12; border-color: #f6d66a; color: #ffe9a6; }
+  .jukebox .jb-ic { width: 26px; text-align: center; color: #f6d66a; }
+
+  /* combat: never let flex squash the felt or the player bar into each other; fitZoom shrinks the page instead */
+  body[data-screen="combat"]:not([data-screen="title"]):not([data-screen="char"]):not([data-screen="rules"]):not([data-screen="tree"]) .battle > .felt, body[data-screen="combat"]:not([data-screen="title"]):not([data-screen="char"]):not([data-screen="rules"]):not([data-screen="tree"]) .battle > .meb, body[data-screen="combat"]:not([data-screen="title"]):not([data-screen="char"]):not([data-screen="rules"]):not([data-screen="tree"]) .battle > .foe, body[data-screen="combat"]:not([data-screen="title"]):not([data-screen="char"]):not([data-screen="rules"]):not([data-screen="tree"]) .battle > .foes { flex-shrink: 0 !important; }
+
+  /* combat: the felt keeps its 436px footprint but grows when the content (bid panel, controls) is taller, so the player bar is pushed down instead of overlapped */
+  body[data-screen="combat"]:not([data-screen="title"]):not([data-screen="char"]):not([data-screen="rules"]):not([data-screen="tree"]) .felt { height: auto !important; flex: 0 0 auto !important; min-height: 436px !important; }
 </style>
 
 <main class="wrap">
@@ -3085,7 +3110,7 @@ KNOWN ISSUES (art still to come)
     pendant: ['.ks......sk.', '.ks......sk.', '..ks....sk..', '..ks....sk..', '...ks..sk...', '....kssk....', '.....kk.....', '....kvvk....', '...kvVVvk...', '...kvVvvk...', '....kvvk....', '.....kk.....'],
     edge: ['..........kk', '.........ksk', '........ksSk', '.......ksSk.', '......ksSk..', '.....ksSk...', '..kk.kSk....', '.kbbkkk.....', 'kbBbk.......', 'kBbBk.......', '.kkk........', '............'],
     whetstone: ['............', '.........g.g', '..........g.', '..kkkkkkkk..', '.kSSSSSSSSk.', 'kSsssssssSSk', 'kSsswwwsssSk', 'kSSssssssSSk', 'kSSSSSSSSSSk', '.kSSSSSSSSk.', '..kkkkkkkk..', '............'],
-    coin: ['....kkkk....', '..kkggggkk..', '.kggGGGGggk.', '.kgGggggGgk.', 'kggGgeegGggk', 'kggGeggeGggk', 'kggGeggeGggk', 'kggGgeegGggk', '.kgGggggGgk.', '.kggGGGGggk.', '..kkggggkk..', '....kkkk....'],
+    coin: ['....kkkk....', '..kkggggkk..', '.kggGGGGggk.', '.kgGggggGgk.', 'kggGgGGgGggk', 'kggGGggGGggk', 'kggGGggGGggk', 'kggGgGGgGggk', '.kgGggggGgk.', '.kggGGGGggk.', '..kkggggkk..', '....kkkk....'],
     salts: ['....kkkk....', '....kddk....', '....kddk....', '...kkkkkk...', '..kcwcccck..', '.kcwcccccck.', '.kcwcccccck.', '.kccccccccck', '.kcccccccck.', '..kccccccck.', '...kkkkkkk..', '............'],
     tin: ['....kkkk....', '...ksSSsk...', '...kS..Sk...', '....kkkk....', '...kkkkkk...', '..ksssssSk..', '.ksswwsssSSk', '.ksswsssssSk', '.kssssssSSSk', '..kSSSSSSSk.', '...kkkkkkk..', '............'],
     pouch: ['....k..k....', '...kbkkbk...', '....kbbk....', '...kkddkk...', '..kbbbbbbk..', '.kbBgggBbbk.', 'kbbBgGgBbbbk', 'kbbBBBBBbbbk', 'kbbbbbbbbbbk', '.kBbbbbbbBk.', '..kBBBBBBk..', '...kkkkkk...'],
@@ -4974,7 +4999,7 @@ KNOWN ISSUES (art still to come)
       else s += 'Wrong. ';
     }
     if (r.shield) s += (r.shield.left > 0 ? 'Shield blocks 1 (' + r.shield.left + ' left). ' : 'Shield blocks 1 and breaks. ') + (r.shield.spike ? 'Spikes hit ' + nm + ' for ' + r.shield.spike + '. ' : '');
-    if (!(r.kind === 'exact' && r.ok)) s += lost > 0 ? (r.loser === 'p' ? 'You lose ' : nm + ' loses ') + plural(lost, 'die') + '.' : 'No damage.';
+    if (!(r.kind === 'exact' && r.ok)) s += lost > 0 ? (r.loser === 'p' ? 'You lose ' : nm + ' loses ') + lossDice(lost, 30) + '.' : 'No damage.';
     if (r.judged) s += ' <span class="crit">Divine Judgement!</span>';
     if (r.rebuked) s += ' <span class="crit">Rebuke: +1 damage.</span>';
     if (r.stone) s += ' <span class="crit">Whetstone: +1.</span>';
@@ -5232,7 +5257,7 @@ KNOWN ISSUES (art still to come)
       var fl = fightLuck(def);
       if (fl > 0 && Math.random() < fl / 100) { var up = drawByRarity(MOD_ORDER.filter(anyApplicable), 1, function (m) { return m; }, 0, fl * 2)[0]; if (up) S.victory.drop = up; }
     }
-    if (def.id === 'dummy' && S.victory) S.victory.dummy = true;
+    if (def.id === 'dummy' && S.victory) S.victory.dummy = true; if (def.id === 'dummy' && !noteSeen() && !S.noteGone) S.noteShow = true;
     if (def.id === 'dummy' && !M.dummyDone) { M.dummyDone = true; saveMeta(); }
     if (S.runWins === 2 && !owns('knife')) S.victory.loot = 'knife';
     if (S.runWins === 3) { var ci = ({ thief: 'ring', fighter: 'gauntlet', cleric: 'crown' })[S.cls || 'fighter']; S.victory.loot = (ci && !owns(ci)) ? [ci, 'mead'] : ['mead']; }
@@ -5860,7 +5885,7 @@ KNOWN ISSUES (art still to come)
   var renderBase = render; render = function () { var r = renderBase.apply(this, arguments); fitZoom(); try { if (S && S.screen === 'victory') reportStart(); else if (RPT.gen) rptClean(); } catch (e) { } return r; };
   function hudBarHTML(q) {
     return '<div class="meb"><div class="goldtl"><span class="hudcoin" aria-hidden="true">' + ITEM_ART.coin + '</span>' + (q.gold || '') + '</div>' +
-      '<div class="mecenter">' + (q.port || '') + '<div class="mecol"><div class="merow">' + (q.hp || '') + (q.chips || '') + '</div><div class="hpdice">' + (q.dice || '') + '</div></div><div class="deckcorner">' + deckPileHTML() + '</div></div>' +
+      '<div class="mecenter">' + (q.port || '') + noteHTML() + '<div class="mecol"><div class="merow">' + (q.hp || '') + (q.chips || '') + '</div><div class="hpdice">' + (q.dice || '') + '</div></div><div class="deckcorner">' + deckPileHTML() + '</div></div>' +
       '<div class="relicbr">' + (q.abil ? '<div class="abilrow">' + q.abil + '</div>' : '') + (q.inv || '') + '</div></div>';
   }
   function hudHTML() {
@@ -6057,7 +6082,7 @@ var BOSS_PORTRAITS = {"dealer":{"normal":"data:image/webp;base64,UklGRlg9AABXRUJ
     return out;
   }
   function rulesHTML() {
-    if (S.credits) return '<section class="panel credits"><h2>Credits</h2><p class="cr-line">Created by <b>Sonnet 5.5</b></p><p class="cr-line">with help from <b>Suno</b> and <b>Gemini</b></p><div class="row"><button type="button" class="btn ghost" data-act="toTitle">Back</button></div></section>';
+    if (S.credits) return '<section class="panel credits"><h2>Credits</h2><p class="cr-line">Created by <b>Sonnet 5.5</b></p><p class="cr-line">with help from <b>Suno</b> and <b>Gemini</b></p><p class="cr-line">Music by <b>Suno</b></p><div class="row"><button type="button" class="btn ghost" data-act="toTitle">Back</button></div></section>';
     return '<section class="panel"><h2>The House Rules</h2>' + rulesCards() + keyHTML() +
       '<div class="row"><button type="button" class="btn ghost" data-act="toTitle">Back</button></div></section>';
   }
@@ -6328,9 +6353,14 @@ var BOSS_PORTRAITS = {"dealer":{"normal":"data:image/webp;base64,UklGRlg9AABXRUJ
   function noteMark() { try { localStorage.setItem('lc_dropnote', '1'); } catch (e) {} }
   // a scrap of paper that drifts down after the training dummy dies, explaining the drop-rate droplet
   function paperHTML(v) {
-    if (!v.dummy || S.noteGone || noteSeen()) return '';
+    if (v.dummy && !S.noteGone && !noteSeen()) S.noteShow = true;
+    return '';
+  }
+  // the note lands on the player's portrait in the HUD, so it follows you to every screen until you read or skip it
+  function noteHTML() {
+    if (!S || !S.noteShow || S.noteGone || noteSeen()) return '';
     var pct = Math.round(DROP_BASE * 100), fall = !S.noteFell; S.noteFell = true;
-    var note = '<button type="button" class="paper' + (fall ? ' fall' : '') + (noteSeen() ? ' seen' : '') + '" data-act="paperOpen" aria-label="A scrap of paper has landed. Read it."><span class="pp-fold"></span><b>Note</b><i>click to read</i></button>' +
+    var note = '<button type="button" class="paper' + (fall ? ' fall' : '') + '" data-act="paperOpen" aria-label="A scrap of paper has landed. Read it."><span class="pp-fold"></span><b>Note</b><i>click to read</i></button>' +
       '<button type="button" class="paperx' + (fall ? ' fall' : '') + '" data-act="paperDismiss" aria-label="Dismiss the note">Skip tip \u2715</button>';
     if (!S.noteOpen) return note;
     return note + '<div class="setmodal papermodal"><div class="setbox paperbox" role="dialog" aria-label="Drop rates"><h2>A scrap of paper</h2><div class="tiprow droprow handnote"><span class="tipic">' + HAND_ART + '</span><b>' + pct + '%</b></div>' +
@@ -6338,6 +6368,7 @@ var BOSS_PORTRAITS = {"dealer":{"normal":"data:image/webp;base64,UklGRlg9AABXRUJ
       '<p class="muted">You will see the droplet on a seal tooltip when you hover the small seal beside a fight on the map. The full key lives under the cog, in Rules.</p>' +
       '<div class="row" style="justify-content:center"><button type="button" class="btn torch" data-act="paperClose">Got it</button></div></div></div>';
   }
+
   // ---------- battle report ----------
   function repBreakdown(def) {
     var p = S.player, parts = (C && C.en && C.en.parts) || [], foes = [], nDice = 0, dummy = def.id === 'dummy', mul = def.xpMul || 1;
@@ -7308,8 +7339,13 @@ var BOSS_PORTRAITS = {"dealer":{"normal":"data:image/webp;base64,UklGRlg9AABXRUJ
   }
   function musicSet(name) {
     AUD.want = name; if (!AUD.ctx || !name) return;
-    var nm = name === 'boss' ? 'boss' : 'main';
-    if (MUSX.state === 'failed') { musicSetOld(name); return; }
+    // the recorded tracks play on the credits screen only; the game itself uses the built-in score
+    if (name !== 'credits' && name.indexOf('juke:') !== 0) {
+      if (MUSX.v) { var ov = MUSX.v; MUSX.v = null; try { ov.g.gain.cancelScheduledValues(0); ov.g.gain.setTargetAtTime(0, AUD.ctx.currentTime, 0.4); ov.s.stop(AUD.ctx.currentTime + 2.5); } catch (e) { } }
+      musicSetOld(name); return;
+    }
+    var nm = name === 'juke:boss' ? 'boss' : 'main';
+    if (MUSX.state === 'failed') { musicSetOld('title'); return; }
     if (AUD.seq) { try { AUD.seq.stop(); } catch (e) { } AUD.seq = null; AUD.track = null; }
     if (MUSX.state === 'idle') { musLoad(); return; }
     if (MUSX.state !== 'ready') return;
@@ -7332,6 +7368,8 @@ var BOSS_PORTRAITS = {"dealer":{"normal":"data:image/webp;base64,UklGRlg9AABXRUJ
   THEMES.explore4 = THEMES.explore3; THEMES.explore3 = Object.assign({}, THEMES.explore2, { root: 47, bpm: 98 });
   function trackFor() {
     var sc = S.screen;
+    if (AUD.juke) return 'juke:' + AUD.juke;
+    if (sc === 'rules' && S.credits) return 'credits';
     if (!S.player || sc === 'title' || sc === 'char' || sc === 'rules') return 'title';
     if (sc === 'end') return 'dirge';
     if (sc === 'combat') return C && C.def && C.def.kind === 'boss' ? 'boss' : 'combat';
@@ -7359,6 +7397,9 @@ var BOSS_PORTRAITS = {"dealer":{"normal":"data:image/webp;base64,UklGRlg9AABXRUJ
       pan.innerHTML = '<div class="setbox" role="dialog" aria-label="Settings"><h2>Settings</h2>' +
         '<label class="setrow"><span>Music</span><input id="volMusic" type="range" min="0" max="100" step="1"><output id="valMusic"></output></label>' +
         '<label class="setrow"><span>Sound effects</span><input id="volSfx" type="range" min="0" max="100" step="1"><output id="valSfx"></output></label>' +
+        '<div class="jukebox"><div class="jb-h">Jukebox</div>' +
+        '<button type="button" class="jb-song" data-juke="main"><span class="jb-ic">\u25B6</span><span class="jb-t">The Descent<small>Main theme</small></span></button>' +
+        '<button type="button" class="jb-song" data-juke="boss"><span class="jb-ic">\u25B6</span><span class="jb-t">The House Always Wins<small>Boss theme</small></span></button></div>' +
         '<div class="row" id="runBtns" style="justify-content:center" hidden><button type="button" class="btn ghost" data-act="endRun">Abandon run</button></div>' +
         '<div class="row" style="justify-content:center"><button type="button" class="btn" id="rulesBtn">Rules</button><button type="button" class="btn" id="webBtn">Web of Bones</button><button type="button" class="btn" id="muteBtn"></button><button type="button" class="btn torch" id="setClose">Close</button></div></div>';
       var rm = document.createElement('div'); rm.id = 'rulesModal'; rm.className = 'setmodal'; rm.hidden = true; document.body.appendChild(rm);
@@ -7369,7 +7410,9 @@ var BOSS_PORTRAITS = {"dealer":{"normal":"data:image/webp;base64,UklGRlg9AABXRUJ
       document.body.appendChild(cog); document.body.appendChild(pan);
       var vm = pan.querySelector('#volMusic'), vs = pan.querySelector('#volSfx'), om = pan.querySelector('#valMusic'), os = pan.querySelector('#valSfx'), mb = pan.querySelector('#muteBtn');
       function paint() { var rb = pan.querySelector('#runBtns'); if (rb) rb.hidden = !(S && S.player && S.screen !== 'end' && S.screen !== 'title'); vm.value = Math.round(AUD.vol.music * 100); vs.value = Math.round(AUD.vol.sfx * 100); om.textContent = vm.value + '%'; os.textContent = vs.value + '%'; mb.textContent = AUD.vol.mute ? 'Sound: OFF' : 'Sound: ON'; cog.classList.toggle('muted', AUD.vol.mute); }
-      function openP(o) { pan.hidden = !o; if (o) { audInit(); paint(); } }
+      function jukePaint() { [].forEach.call(pan.querySelectorAll('.jb-song'), function (el) { var on = AUD.juke === el.getAttribute('data-juke'); el.classList.toggle('on', on); el.querySelector('.jb-ic').textContent = on ? '\u25A0' : '\u25B6'; }); }
+      pan.addEventListener('click', function (e) { var bt = e.target.closest && e.target.closest('.jb-song'); if (!bt) return; audInit(); var k = bt.getAttribute('data-juke'); AUD.juke = AUD.juke === k ? null : k; if (AUD.juke) AUD.vol.mute = false; audApply(); musicSet(trackFor()); jukePaint(); paint(); sfx('click'); });
+      function openP(o) { pan.hidden = !o; if (o) { audInit(); paint(); jukePaint(); } }
       cog.addEventListener('click', function () { audInit(); openP(pan.hidden); sfx('click'); });
       pan.addEventListener('click', function (e) { if (e.target === pan) openP(false); });
       pan.addEventListener('click', function (e) { if (e.target.closest && e.target.closest('button[data-act]')) onClick(e); });
