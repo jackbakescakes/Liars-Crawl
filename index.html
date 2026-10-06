@@ -2166,6 +2166,73 @@
   body[data-screen="combat"] .foe .portrait:has(img.photo) { box-shadow: none !important; clip-path: none !important; background: none !important; border: 0 !important; outline: 0 !important; filter: drop-shadow(0 4px 6px rgba(0,0,0,.6)); }
   body[data-screen="combat"] .foe .portrait:has(img.photo)::before, body[data-screen="combat"] .foe .portrait:has(img.photo)::after { display: none !important; }
   .foe .portrait img.photo { transform: scale(1.0); }
+
+  .report { position: relative; max-width: 1180px; margin-inline: auto; }
+  .report .rp-head { display: flex; align-items: center; justify-content: center; position: relative; }
+  .report .rp-head h2 { margin: 0; letter-spacing: .12em; }
+  .report .rp-skip { position: absolute; right: 0; top: 0; }
+  .rp-duel { display: flex; align-items: flex-start; justify-content: center; gap: 36px; margin: 18px 0 10px; flex-wrap: wrap; }
+  .rp-me, .rp-foe { display: flex; flex-direction: column; align-items: center; gap: 8px; }
+  .rp-me b, .rp-foe > b { font-size: 30px; letter-spacing: .06em; text-transform: uppercase; color: #e8dcb6; text-shadow: 0 2px 0 #000; }
+  .rp-foes { display: flex; gap: 28px; align-items: flex-start; flex-wrap: wrap; justify-content: center; }
+  .rp-vs { align-self: center; font-size: 38px; letter-spacing: .14em; text-transform: uppercase; color: #ff8a7a; text-shadow: 0 3px 0 #000; padding-bottom: 40px; }
+  .rp-port { width: 170px !important; height: 170px !important; border-radius: 50%; overflow: hidden; box-shadow: none !important; clip-path: none !important; background: none; }
+  .rp-port svg, .rp-port img { width: 100%; height: 100%; display: block; border-radius: 50%; object-fit: cover; }
+  .rp-foe .rp-port.slain { filter: none; }
+  .rp-dice { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; max-width: 340px; min-height: 66px; }
+  .rp-d { position: relative; display: inline-block; line-height: 0; opacity: 0; transform: scale(.3); }
+  .rp-d.in { opacity: 1; transform: none; animation: rpdpop .32s cubic-bezier(.2,1.8,.4,1); }
+  .rp-d.puff > .dwrap { animation: rpdpuff .45s ease-in forwards; }
+  @keyframes rpdpop { 0% { opacity: 0; transform: scale(.2) translateY(-14px); } 100% { opacity: 1; transform: none; } }
+  @keyframes rpdpuff { 0% { transform: none; opacity: 1; filter: none; } 35% { transform: scale(1.3); filter: brightness(1.6); opacity: 1; } 100% { transform: scale(.1); opacity: 0; filter: blur(5px); } }
+  .rp-plus { position: absolute; left: 50%; top: 0; transform: translateX(-50%); font: 700 38px/1 var(--display, monospace); color: #8be07a; text-shadow: 0 3px 0 #0b2a0b, 0 0 14px #3ee03e; white-space: nowrap; pointer-events: none; animation: rpplus 1.1s ease-out forwards; z-index: 5; }
+  @keyframes rpplus { 0% { opacity: 0; transform: translate(-50%, 10px) scale(.6); } 15% { opacity: 1; transform: translate(-50%, -6px) scale(1.15); } 100% { opacity: 0; transform: translate(-50%, -70px) scale(1); } }
+  .rp-cloud { position: absolute; left: 50%; top: 50%; width: 0; height: 0; pointer-events: none; }
+  .rp-cloud i { position: absolute; left: -14px; top: -14px; width: 28px; height: 28px; border-radius: 50%; background: radial-gradient(circle, #d8e8d0 0, #8fae88 60%, transparent 72%); opacity: 0; animation: rpcloud .6s ease-out forwards; }
+  @keyframes rpcloud { 0% { opacity: .9; transform: rotate(var(--a)) translateX(0) scale(.5); } 100% { opacity: 0; transform: rotate(var(--a)) translateX(var(--r)) scale(1.6); } }
+  .rp-ledger { margin: 14px auto 0; max-width: 940px; padding: 12px 22px 8px; background: rgba(8,6,4,.42); border: 3px solid #3a342a; box-shadow: inset 0 0 0 2px #14110d; }
+  .rp-sec { font-size: 26px; letter-spacing: .22em; text-transform: uppercase; color: #bfae82; border-bottom: 2px solid #5a4e36; padding: 8px 0 4px; margin: 4px 0 6px; }
+  .rp-line, .rp-tot { display: flex; align-items: baseline; gap: 10px; font-size: 32px; line-height: 1.5; color: #efe5c4; }
+  .rl-d { flex: 1; border-bottom: 3px dotted #5a4e36; transform: translateY(-8px); min-width: 20px; }
+  .rp-line em { font-style: normal; font-size: 24px; color: #9c9078; order: 0; }
+  .rp-line .rn, .rp-tot b { min-width: 120px; text-align: right; font-variant-numeric: tabular-nums; font-weight: 700; color: #f6d66a; }
+  .rp-line.rp-pct .rn { color: #8be07a; } .rp-line.rp-comb { border-top: 2px solid #5a4e36; margin-top: 4px; }
+  .rp-line.rp-g .rn { color: #f6d66a; }
+  .rp-foot { margin: 14px auto 0; max-width: 940px; padding: 8px 22px; border-top: 4px double #bfae82; }
+  .rp-tot { font-size: 40px; text-transform: uppercase; letter-spacing: .08em; }
+  .rp-tot b { color: #8be07a; font-size: 46px; text-shadow: 0 0 12px rgba(80,220,80,.35); border-bottom: 6px double #8be07a; }
+  .rp-tot.rp-totg b { color: #f6d66a; border-bottom-color: #f6d66a; text-shadow: 0 0 12px rgba(246,214,106,.35); }
+  .rp-tot.boom b { animation: rpboom .7s ease-out; }
+  @keyframes rpboom { 0% { transform: scale(1); } 25% { transform: scale(1.5); filter: brightness(2); } 100% { transform: scale(1); } }
+  .rn.bump, #rpXp.bump, #rpGold.bump { animation: rpbump .22s ease-out; display: inline-block; }
+  .goldtl .bump { animation: rpbump .22s ease-out; display: inline-block; }
+  @keyframes rpbump { 0% { transform: scale(1); } 40% { transform: scale(1.25); } 100% { transform: scale(1); } }
+  .rhide { display: none !important; }
+  .rpin { animation: rpin .38s cubic-bezier(.2,1.4,.4,1); }
+  @keyframes rpin { 0% { opacity: 0; transform: translateY(14px); } 100% { opacity: 1; transform: none; } }
+  .rp-extra { max-width: 940px; margin: 12px auto 0; font-size: 28px; text-align: center; }
+  .rp-extra .dropseal { margin: 12px auto; }
+  .rp-act { margin-top: 18px; justify-content: center; }
+  .rpfx { position: fixed; inset: 0; z-index: 9995; pointer-events: none; overflow: hidden; }
+  .rpfx i { position: absolute; left: 0; top: 0; display: block; }
+  .rp-bub { border-radius: 50%; background: radial-gradient(circle at 35% 30%, #d9ffd0, #4fe04f 55%, #0f7a1f); box-shadow: 0 0 12px 3px rgba(80,255,80,.55); }
+  .rp-coin { width: 24px; height: 24px; margin: -12px 0 0 -12px; border-radius: 50%; background: radial-gradient(circle at 35% 30%, #fff3a0, #e8b630 55%, #8a6a1a); box-shadow: 0 0 0 2px #3a2a08, 0 0 12px 2px rgba(255,210,70,.6); }
+  .rp-boom { width: 40px; height: 40px; margin: -20px 0 0 -20px; border-radius: 50%; background: radial-gradient(circle, rgba(200,255,190,.95), rgba(60,220,60,.6) 50%, transparent 70%); animation: rpbm .7s ease-out forwards; }
+  .rp-boom.gold { background: radial-gradient(circle, rgba(255,245,170,.95), rgba(240,190,50,.6) 50%, transparent 70%); }
+  @keyframes rpbm { 0% { transform: scale(.3); opacity: 1; } 100% { transform: scale(7); opacity: 0; } }
+
+  body:not([data-screen="title"]):not([data-screen="char"]):not([data-screen="rules"]):not([data-screen="tree"]) #app > .panel.report { width: 1180px !important; max-width: 96% !important; min-width: 0 !important; }
+  .report .rp-port { width: 128px !important; height: 128px !important; }
+  .rp-duel { margin: 6px 0 4px; gap: 28px; } .rp-vs { padding-bottom: 30px; font-size: 32px; }
+  .rp-me b, .rp-foe > b { font-size: 24px; }
+  .rp-dice { min-height: 58px; } .report.repdone .rp-dice { min-height: 0; display: none; }
+  .rp-ledger { display: grid; grid-template-columns: 1.5fr 1fr; gap: 34px; max-width: none; padding: 8px 22px 6px; }
+  .rp-col { min-width: 0; } .rp-colg { border-left: 2px solid #3a342a; padding-left: 28px; }
+  .rp-line, .rp-tot { font-size: 27px; line-height: 1.35; } .rp-line em { font-size: 20px; } .rp-sec { font-size: 22px; padding: 4px 0 2px; margin: 2px 0 4px; }
+  .rp-foot { display: grid; grid-template-columns: 1.5fr 1fr; gap: 34px; max-width: none; margin-top: 10px; padding: 6px 22px; }
+  .rp-tot { font-size: 34px; } .rp-tot b { font-size: 40px; }
+  .rp-extra { font-size: 24px; margin-top: 6px; } .rp-extra p { margin: 2px 0; } .rp-act { margin-top: 10px; }
+  .rp-foot .rp-totg.rhide { display: flex !important; visibility: hidden; }
 </style>
 
 <main class="wrap">
@@ -3291,7 +3358,7 @@
       pools: [['imp', 'hound', 'tithe'], ['hound', 'broker', 'wight', 'gilder', 'ember', 'ratswarm', duo('imp', 'hound')], ['broker', 'wight', 'gilder', 'ember', 'tithe', 'ratswarm', duo('hound', 'wight')]], elites: ['golem', 'chancellor'], boss: 'house' }
   ];
   var LEVELS = [100, 250, 450, 700, 1000, 1350, 1750, 2200];
-  function xpFor(def) { if (def.id === 'dummy') return 1; var st = (S && S.player && S.player.ab && S.player.ab.study) || 0; return Math.round((def.dice * 40 + (def.kind === 'boss' ? 100 : 0)) * (def.xpMul || 1) * (1 + 0.15 * st) * (1 + 0.01 * webN('xp'))); }
+  function xpFor(def) { if (def.id === 'dummy') return 1; var st = (S && S.player && S.player.ab && S.player.ab.study) || 0, mul = def.xpMul || 1; return Math.round(def.dice * Math.round(40 * mul) * (1 + 0.15 * st + 0.01 * webN('xp'))) + (def.kind === 'boss' ? Math.round(100 * mul) : 0); }
   // items: buff items you carry in three slots. (Seals are the upgrades you put on your dice.)
   var INV_SLOTS = 3, BAG_SLOTS = 3;
   var ITEMS = {
@@ -4289,6 +4356,7 @@
     if (n > 0) knockDown(S.player, n);
     C.pv.forEach(function (x) { if (!x.baby && !S.player.dice[x.i].up) x.dead = true; });
     var lostN = before - healthNow();
+    if (lostN > 0) C.hurtCount = (C.hurtCount || 0) + 1;
     if (lostN > 0) C.en.parts.forEach(function (pt) { if (pt.def.id === 'collector' && pt.n > 0) { pt.gain = (pt.gain || 0) + lostN; C.log.push('The Collector corks ' + (lostN === 1 ? 'the die' : 'the dice') + ' you lost in a jar and grows stronger.'); } });
     return info;
   }
@@ -4687,9 +4755,8 @@
     var def = C.def, p = S.player;
     returnStolen();
     if (C.phase === 'lost') { S.endKind = 'dead'; S.screen = 'end'; render(); return; }
-    var xp = xpFor(def) + (itm('tin') ? 5 * C.en.parts.reduce(function (a, x) { return a + (x.n0 || 0); }, 0) : 0);
-    var gold = bonusGold(def.gold[0] + rnd(def.gold[1] - def.gold[0] + 1)) + (itm('pouch') ? 5 : 0);
-    p.xp += xp; p.gold += gold; M.total++; S.runWins = (S.runWins || 0) + 1; S.runKills = (S.runKills || 0) + ((C.en && C.en.parts && C.en.parts.length) || 1);
+    var rp = repBreakdown(def), xp = rp.xp.total, gold = rp.gold.total, oldGold = p.gold;
+    p.xp += xp; p.gold += gold; AUD.lastGold = p.gold; XP.hold = true; M.total++; S.runWins = (S.runWins || 0) + 1; S.runKills = (S.runKills || 0) + ((C.en && C.en.parts && C.en.parts.length) || 1);
     var debt = 0; if (S.owed) { debt = addDice(p, S.owed); S.owed = 0; }
     var healed = p.ab.wind ? heal(p, p.ab.wind) : 0;
     if (own('mending')) healed += heal(p, 1);
@@ -4697,7 +4764,7 @@
     var hpUp = 0;
     while (p.level <= LEVELS.length && p.xp >= LEVELS[p.level - 1]) { p.level++; S.pending++; addPts(S.cls || 'fighter', 1); S.runPts = (S.runPts || 0) + 1; if (p.level % 3 === 0 && addMaxDie(p)) hpUp++; }
     saveMeta();
-    S.victory = { name: def.name, xp: xp, gold: gold, healed: healed, leveled: p.level > before, hpUp: hpUp, gained: p.level - before, big: def.kind !== 'fight', debt: debt };
+    S.victory = { rep: rp, anim: 'idle', oldGold: oldGold, name: def.name, xp: xp, gold: gold, healed: healed, leveled: p.level > before, hpUp: hpUp, gained: p.level - before, big: def.kind !== 'fight', debt: debt };
     if (def.drop && anyApplicable(def.drop) && Math.random() < dropChance(def)) {
       S.victory.drop = def.drop;
       var fl = fightLuck(def);
@@ -5328,7 +5395,7 @@
     } catch (e) { }
   }
   fitZoom(); window.addEventListener('resize', fitZoom);
-  var renderBase = render; render = function () { var r = renderBase.apply(this, arguments); fitZoom(); return r; };
+  var renderBase = render; render = function () { var r = renderBase.apply(this, arguments); fitZoom(); try { if (S && S.screen === 'victory') reportStart(); else if (RPT.gen) rptClean(); } catch (e) { } return r; };
   function hudBarHTML(q) {
     return '<div class="meb"><div class="goldtl">' + (q.gold || '') + '</div>' +
       '<div class="mecenter">' + (q.port || '') + '<div class="mecol"><div class="merow">' + (q.hp || '') + (q.chips || '') + '</div><div class="hpdice">' + (q.dice || '') + '</div></div><div class="deckcorner">' + deckPileHTML() + '</div></div>' +
@@ -5766,13 +5833,154 @@ var BOSS_PORTRAITS = {"dealer": {"normal": "data:image/webp;base64,UklGRiw4AABXR
       '<p class="muted">You will see the droplet on a seal tooltip when you hover the small seal beside a fight on the map. The full key lives under the cog, in Rules.</p>' +
       '<div class="row" style="justify-content:center"><button type="button" class="btn torch" data-act="paperClose">Got it</button></div></div></div>';
   }
-  function victoryHTML() {
-    var v = S.victory;
-    return paperHTML(v) + '<section class="panel"><h2>' + v.name + ' is dead</h2><p>+' + v.xp + ' XP and +' + v.gold + ' gold' + (v.healed ? '. Your wounds knit themselves shut: ' + v.healed + ' HP recovered' : '') + '.</p>' +
+  // ---------- battle report ----------
+  function repBreakdown(def) {
+    var p = S.player, parts = (C && C.en && C.en.parts) || [], foes = [], nDice = 0, dummy = def.id === 'dummy', mul = def.xpMul || 1;
+    parts.forEach(function (pt) { var n = Math.max(0, pt.n0 || 0); if (dummy) n = 1; nDice += n; foes.push({ id: pt.def.id, name: pt.name, n: n }); });
+    var per = dummy ? 1 : Math.round(40 * mul), diceXp = nDice * per, pcts = [], pctSum = 0, flat = [];
+    var st = (p.ab && p.ab.study) || 0, wb = webN('xp');
+    if (st) pcts.push({ name: 'Quick Study', pct: 15 * st });
+    if (wb) pcts.push({ name: 'Web of Bones', pct: wb });
+    if (!dummy && !(C && C.hurtCount)) pcts.push({ name: 'Unscathed', pct: 10, note: 'Not a die of yours fell' });
+    pcts.forEach(function (x) { pctSum += x.pct; });
+    var bonusXp = dummy ? 0 : Math.round(diceXp * pctSum / 100);
+    if (def.kind === 'boss') flat.push({ name: 'Boss bounty', v: Math.round(100 * mul) });
+    if (itm('tin') && !dummy) flat.push({ name: 'Tin Charm', v: 5 * nDice, note: '5 per die' });
+    var total = diceXp + bonusXp; flat.forEach(function (f) { total += f.v; });
+    var spoils = bonusGold(def.gold[0] + rnd(def.gold[1] - def.gold[0] + 1)), glines = [{ name: def.id === 'lootgob' ? 'The Loot Goblin’s sack' : 'Spoils', v: spoils }], gt = spoils;
+    if (itm('pouch')) { glines.push({ name: 'Loaded Pouch', v: 5 }); gt += 5; }
+    return { foes: foes, xp: { n: nDice, per: per, dice: diceXp, pcts: pcts, pctSum: pctSum, bonus: bonusXp, flat: flat, total: total }, gold: { lines: glines, total: gt } };
+  }
+  function foeArtById(id, state) {
+    var d = ENEMIES[id], P = BOSS_PORTRAITS[id];
+    if (P) return '<img class="photo" alt="" draggable="false" src="' + P[state] + '">';
+    return ART[d.art];
+  }
+  var RPT = { gen: 0, timers: [] };
+  function repExtraHTML(v) {
+    return (v.healed ? '<p class="good">Your wounds knit themselves shut: ' + v.healed + ' HP recovered.</p>' : '') +
       (v.leveled ? '<p class="crit">You claw your way to level ' + S.player.level + '.</p>' : '') + (v.hpUp ? '<p class="good">+' + v.hpUp + ' max health.</p>' : '') + (v.debt ? '<p class="good">The pawnbroker keeps her word: +' + v.debt + ' dice in your cup.</p>' : '') + (v.gained ? '<p class="good">+' + v.gained + ' skill point' + (v.gained > 1 ? 's' : '') + ' for the skill tree.</p>' : '') +
       (v.loot && v.loot !== 'knife' && !v.lootDone ? '<p class="good">' + v.name + ' also drops the ' + ITEMS[v.loot].name + '. ' + ITEMS[v.loot].desc + '</p>' : '') +
-      (v.drop && !v.dropDone ? '<button type="button" class="card r-' + rarOf(v.drop) + ' k-sigil dropseal" data-act="dropClaim" aria-label="Take ' + MODS[v.drop].name + '">' + itemArt(v.drop) + rarTag(v.drop) + kindTag(v.drop) + '<h3>' + MODS[v.drop].name + '</h3><p>' + MODS[v.drop].desc + '</p>' + '</button><div class="row"><button type="button" class="btn ghost" data-act="dropLeave">Leave it</button></div>' :
-      '<div class="row"><button type="button" class="btn torch" data-act="afterVictory">' + (S.pending > 0 ? 'Choose an ability' : v.big ? 'Take your spoils' : 'Continue') + '</button></div>') + '</section>';
+      (v.drop && !v.dropDone ? '<button type="button" class="card r-' + rarOf(v.drop) + ' k-sigil dropseal" data-act="dropClaim" aria-label="Take ' + MODS[v.drop].name + '">' + itemArt(v.drop) + rarTag(v.drop) + kindTag(v.drop) + '<h3>' + MODS[v.drop].name + '</h3><p>' + MODS[v.drop].desc + '</p></button>' : '');
+  }
+  function victoryHTML() {
+    var v = S.victory, R = v.rep, cl = CLASSES[S.cls || 'fighter'] || CLASSES.fighter, idx = 0;
+    if (v.anim === 'play') { RPT.gen++; v.anim = 'done'; XP.hold = false; }
+    var done = v.anim === 'done', X = R.xp, G = R.gold, sh = done ? ' rshow' : ' rhide';
+    var foes = R.foes.map(function (f) {
+      var d = ENEMIES[f.id], dice = '';
+      if (!done) for (var k = 0; k < f.n; k++) dice += '<span class="rp-d" data-k="' + (idx++) + '">' + dieWrap(0, { s: 54, back: true }) + '</span>';
+      return '<div class="rp-foe"><div class="rp-port portrait ' + d.kind + '" style="--c1:' + d.c1 + ';--c2:' + d.c2 + ';--eye:' + d.eye + '">' + foeArtById(f.id, 'dead') + '</div><b>' + f.name + '</b><div class="rp-dice">' + dice + '</div></div>';
+    }).join('');
+    var L = function (cls, name, mid, val, add, id) { return '<div class="rp-line ' + cls + sh + '"' + (add != null ? ' data-add="' + add + '"' : '') + (id ? ' id="' + id + '"' : '') + '><span class="rl-n">' + name + '</span><i class="rl-d"></i><em>' + (mid || '') + '</em><b class="rn">' + val + '</b></div>'; };
+    var xl = '<div class="rp-sec">Experience</div>' + '<div class="rp-line rp-diceline rshow"><span class="rl-n">Dice slain</span><i class="rl-d"></i><em>' + X.n + ' × ' + X.per + '</em><b class="rn" id="rpDiceN">' + (done ? X.dice : 0) + '</b></div>';
+    var pl = ''; X.pcts.forEach(function (x) { pl += L('rp-b rp-pct', x.name, x.note || '', '+' + x.pct + '%'); });
+    if (pl) { pl += L('rp-b rp-comb', 'Combined bonus', '+' + X.pctSum + '% of ' + X.dice, '+' + X.bonus, X.bonus); }
+    var fl = ''; X.flat.forEach(function (x) { fl += L('rp-b rp-flat', x.name, x.note || '', '+' + x.v, x.v); });
+    var gl = '<div class="rp-sec rp-gsec' + sh + '">Gold</div>'; G.lines.forEach(function (x) { gl += L('rp-g', x.name, '', '+' + x.v, x.v); });
+    var extra = repExtraHTML(v), hasDrop = v.drop && !v.dropDone;
+    var btn = hasDrop ? '<button type="button" class="btn ghost" data-act="dropLeave">Leave it</button>' : '<button type="button" class="btn torch" data-act="afterVictory">' + (S.pending > 0 ? 'Choose an ability' : v.big ? 'Take your spoils' : 'Continue') + '</button>';
+    return paperHTML(v) + '<section class="panel report' + (done ? ' repdone' : '') + '"><div class="rp-head"><h2>Battle Report</h2>' + (done ? '' : '<button type="button" class="btn ghost small rp-skip" data-act="rptSkip">Skip</button>') + '</div>' +
+      '<div class="rp-duel"><div class="rp-me"><div class="rp-port portrait" style="--c1:' + cl.c1 + ';--c2:' + cl.c2 + ';--eye:' + cl.eye + '">' + portraitArt(S.cls || 'fighter', cl, 'win') + '</div><b>You</b></div><div class="rp-vs">defeated</div><div class="rp-foes">' + foes + '</div></div>' +
+      '<div class="rp-ledger"><div class="rp-col">' + xl + pl + fl + '</div><div class="rp-col rp-colg">' + gl + '</div></div>' +
+      '<div class="rp-extra' + (done ? ' rshow' : ' rhide') + '">' + extra + '</div>' +
+      '<div class="rp-foot"><div class="rp-tot rp-totx"><span>Total XP</span><i class="rl-d"></i><b id="rpXp">' + (done ? X.total : 0) + '</b></div>' +
+      '<div class="rp-tot rp-totg' + sh + '"><span>Total gold</span><i class="rl-d"></i><b id="rpGold">' + (done ? G.total : 0) + '</b></div></div>' +
+      '<div class="row rp-act' + (done ? ' rshow' : ' rhide') + '">' + btn + '</div></section>';
+  }
+  function setGoldHud(n) { var b = document.querySelector('.goldtl .stat b.gold'); if (!b) return; var tn = b.lastChild; if (tn && tn.nodeType === 3) tn.nodeValue = String(n); else b.appendChild(document.createTextNode(String(n))); }
+  function rptClean() { var l = document.querySelectorAll('.rpfx'); Array.prototype.forEach.call(l, function (n) { if (n.parentNode) n.parentNode.removeChild(n); }); }
+  function reportSkip() {
+    var v = S.victory; if (!v) return;
+    RPT.gen++; rptClean(); v.anim = 'done'; XP.hold = false; render();
+  }
+  function reportStart() {
+    var v = S.victory; if (!v || !v.rep || v.anim !== 'idle' || S.screen !== 'victory') return;
+    var root = document.querySelector('.report'); if (!root) return;
+    v.anim = 'play'; RPT.gen++; var gen = RPT.gen, R = v.rep, X = R.xp, G = R.gold, t = 500, xpCur = 0, goldHud = v.oldGold;
+    var qa = function (s) { return Array.prototype.slice.call(root.querySelectorAll(s)); }, q = function (s) { return root.querySelector(s); };
+    var at = function (ms, fn) { setTimeout(function () { if (gen === RPT.gen && S.victory === v) { try { fn(); } catch (e) { } } }, ms); };
+    var xpEl = q('#rpXp'), diceN = q('#rpDiceN'), goldEl = q('#rpGold');
+    var bump = function (el) { if (!el) return; el.classList.remove('bump'); void el.offsetWidth; el.classList.add('bump'); };
+    var setXp = function (n) { xpCur = n; xpEl.textContent = String(n); bump(xpEl); };
+    var reveal = function (el) { el.classList.remove('rhide'); el.classList.add('rshow', 'rpin'); };
+    var vis = function (el) { var r = el.getBoundingClientRect(); return { x: r.left + r.width / 2, y: r.top + r.height / 2, w: r.width, h: r.height }; };
+    var overlay = function () { var d = document.createElement('div'); d.className = 'rpfx'; d.setAttribute('aria-hidden', 'true'); document.documentElement.appendChild(d); return d; };
+    var tween = function (from, to, dur, fn, snd) { var steps = Math.max(2, Math.round(dur / 55)), k; for (k = 1; k <= steps; k++) (function (k2) { at(0, function () { }); setTimeout(function () { if (gen !== RPT.gen) return; var val = Math.round(from + (to - from) * k2 / steps); fn(val); if (snd) sfx(snd, k2); }, dur * k2 / steps); })(k); };
+    setGoldHud(v.oldGold);
+    var dice = qa('.rp-d'), N = dice.length, st = Math.min(190, 2200 / Math.max(1, N)), ps = Math.min(260, 3000 / Math.max(1, N));
+    dice.forEach(function (d, k) { at(t + k * st, function () { d.classList.add('in'); sfx('rpt_pop', k); }); });
+    t += N * st + 500;
+    dice.forEach(function (d, k) {
+      at(t + k * ps, function () {
+        d.classList.add('puff'); var c = vis(d), host = d, plus = document.createElement('b'); plus.className = 'rp-plus'; plus.textContent = '+' + X.per; host.appendChild(plus);
+        var cloud = document.createElement('u'); cloud.className = 'rp-cloud'; for (var j = 0; j < 7; j++) { var pb = document.createElement('i'); pb.style.setProperty('--a', (j * 51 + Math.random() * 30) + 'deg'); pb.style.setProperty('--r', (26 + Math.random() * 20) + 'px'); cloud.appendChild(pb); } host.appendChild(cloud);
+        var cur = xpCur + X.per; setXp(cur); if (diceN) { diceN.textContent = String((k + 1) * X.per); bump(diceN); }
+        sfx('rpt_puff', k); sfx('rpt_xp', k);
+      });
+    });
+    t += N * ps + 550;
+    // bonus lines
+    qa('.rp-line.rp-b').forEach(function (l) {
+      at(t, function () {
+        reveal(l); sfx('rpt_line', l.classList.contains('rp-comb') ? 2 : 0);
+        var add = +l.getAttribute('data-add') || 0, rn = l.querySelector('.rn');
+        if (add) { var base = xpCur; tween(0, add, 520, function (val) { setXp(base + val); }, 'rpt_xp'); bump(rn); }
+        else bump(l.querySelector('.rn'));
+      });
+      t += l.classList.contains('rp-pct') ? 520 : 760;
+    });
+    t += 350;
+    // total explodes into green bubbles that get sucked into the xp bar
+    at(t, function () {
+      var box = xpEl.parentNode; box.classList.add('boom'); sfx('rpt_boom');
+      var c = vis(xpEl), fx = overlay(), tr = document.querySelector('#xpwrap .xptrack'), tp = tr ? vis(tr) : { x: c.x, y: window.innerHeight - 40 }, i, n = 18;
+      var burst = document.createElement('i'); burst.className = 'rp-boom'; burst.style.left = c.x + 'px'; burst.style.top = c.y + 'px'; fx.appendChild(burst);
+      for (i = 0; i < n; i++) (function (i2) {
+        setTimeout(function () {
+          if (gen !== RPT.gen) return;
+          var b = document.createElement('i'); b.className = 'rp-bub'; var sz = 14 + Math.random() * 14; b.style.width = b.style.height = sz + 'px'; b.style.marginLeft = b.style.marginTop = (-sz / 2) + 'px'; fx.appendChild(b);
+          var ox = c.x + (Math.random() - .5) * 90, oy = c.y + (Math.random() - .5) * 30, a = Math.random() * 6.283, d = 70 + Math.random() * 90;
+          var mx = ox + Math.cos(a) * d, my = oy + Math.sin(a) * d * .7 - 30, ex = tp.x + (Math.random() - .5) * Math.min(300, (tp.w || 300) * .6), ey = tp.y;
+          var kf = [{ transform: 'translate(' + ox + 'px,' + oy + 'px) scale(.4)', opacity: 1 }, { transform: 'translate(' + mx + 'px,' + my + 'px) scale(1.1)', opacity: 1, offset: .3 }, { transform: 'translate(' + ex + 'px,' + ey + 'px) scale(.35)', opacity: .85 }];
+          var an = b.animate ? b.animate(kf, { duration: 950, easing: 'cubic-bezier(.45,0,.85,.55)', fill: 'forwards' }) : null;
+          var arrive = function () { if (b.parentNode) b.parentNode.removeChild(b); if (gen !== RPT.gen) return; sfx('rpt_suck', i2); xpSpark(1); if (i2 === 0) { XP.hold = false; try { xpSync(); } catch (e) { } } };
+          if (an) an.onfinish = arrive; else setTimeout(arrive, 950);
+        }, 140 + i2 * 55);
+      })(i);
+      setTimeout(function () { if (fx.parentNode) fx.parentNode.removeChild(fx); }, 2400);
+    });
+    t += 140 + 18 * 55 + 950 + 350;
+    if (v.leveled) t += 2400;
+    // gold
+    at(t, function () { var gs = q('.rp-gsec'); if (gs) reveal(gs); });
+    t += 400;
+    var gcur = 0;
+    qa('.rp-line.rp-g').forEach(function (l) {
+      at(t, function () { reveal(l); var add = +l.getAttribute('data-add') || 0, g0 = gcur; var gt = q('.rp-totg'); if (gt && gt.classList.contains('rhide')) reveal(gt); tween(0, add, 450, function (val) { gcur = g0 + val; goldEl.textContent = String(gcur); bump(goldEl); }, 'rpt_coin'); });
+      t += 650;
+    });
+    t += 250;
+    at(t, function () {
+      var c = vis(goldEl), hud = document.querySelector('.goldtl'), hp = hud ? vis(hud) : { x: 80, y: 30 }, fx = overlay(), n = Math.min(16, Math.max(6, Math.round(G.total / 3))), i, per = G.total / n, got = 0;
+      goldEl.parentNode.classList.add('boom'); sfx('rpt_boom');
+      var burst = document.createElement('i'); burst.className = 'rp-boom gold'; burst.style.left = c.x + 'px'; burst.style.top = c.y + 'px'; fx.appendChild(burst);
+      for (i = 0; i < n; i++) (function (i2) {
+        setTimeout(function () {
+          if (gen !== RPT.gen) return;
+          var b = document.createElement('i'); b.className = 'rp-coin'; fx.appendChild(b);
+          var ox = c.x + (Math.random() - .5) * 120, oy = c.y + (Math.random() - .5) * 20, a = Math.random() * 6.283, d = 60 + Math.random() * 90;
+          var mx = ox + Math.cos(a) * d, my = oy + Math.sin(a) * d * .6 - 50;
+          var kf = [{ transform: 'translate(' + ox + 'px,' + oy + 'px) scale(.5) rotate(0)', opacity: 1 }, { transform: 'translate(' + mx + 'px,' + my + 'px) scale(1.1) rotate(160deg)', opacity: 1, offset: .32 }, { transform: 'translate(' + (hp.x) + 'px,' + (hp.y) + 'px) scale(.45) rotate(540deg)', opacity: .9 }];
+          var arrive = function () { if (b.parentNode) b.parentNode.removeChild(b); if (gen !== RPT.gen) return; got++; var tot = Math.round(per * got); if (got === n) tot = G.total; goldHud = v.oldGold + tot; setGoldHud(goldHud); var hb = document.querySelector('.goldtl .stat b.gold'); if (hb) { hb.classList.remove('bump'); void hb.offsetWidth; hb.classList.add('bump'); } sfx('rpt_coin', i2); };
+          var an = b.animate ? b.animate(kf, { duration: 850, easing: 'cubic-bezier(.4,0,.8,.5)', fill: 'forwards' }) : null;
+          if (an) an.onfinish = arrive; else setTimeout(arrive, 850);
+        }, 100 + i2 * 70);
+      })(i);
+      setTimeout(function () { if (fx.parentNode) fx.parentNode.removeChild(fx); }, 2600);
+    });
+    t += 100 + 16 * 70 + 850 + 350;
+    at(t, function () { var ex = q('.rp-extra'), ac = q('.rp-act'); if (ex) reveal(ex); if (ac) reveal(ac); v.anim = 'done'; sfx('rpt_done'); root.classList.add('repdone'); var sk = q('.rp-skip'); if (sk && sk.parentNode) sk.parentNode.removeChild(sk); });
   }
   var LVI = 0;
   function levelHTML() {
@@ -6329,7 +6537,7 @@ var BOSS_PORTRAITS = {"dealer": {"normal": "data:image/webp;base64,UklGRiw4AABXR
   }
 
   // ---------- xp bar ----------
-  var XP = { shown: null, anim: null };
+  var XP = { shown: null, anim: null, hold: false };
   function xpPctOf(xp, lvl) { var lo = lvl > 1 ? LEVELS[lvl - 2] : 0, hi = LEVELS[lvl - 1]; return hi === undefined ? 100 : clamp((xp - lo) / (hi - lo), 0, 1) * 100; }
   function xpPaint() {
     var w = $('xpwrap'), p = S.player, sh = XP.shown; if (!w) return;
@@ -6345,7 +6553,8 @@ var BOSS_PORTRAITS = {"dealer": {"normal": "data:image/webp;base64,UklGRiw4AABXR
     var p = S.player;
     if (!p) { XP.shown = null; XP.anim = null; xpPaint(); return; }
     if (!XP.shown) XP.shown = { xp: p.xp, lvl: p.level, pct: xpPctOf(p.xp, p.level) };
-    if (!XP.anim && (XP.shown.xp !== p.xp || XP.shown.lvl !== p.level)) startXpAnim(p.xp, p.level);
+    if (XP.hold && S.screen !== 'victory') XP.hold = false;
+    if (!XP.anim && !XP.hold && (XP.shown.xp !== p.xp || XP.shown.lvl !== p.level)) startXpAnim(p.xp, p.level);
     xpPaint();
   }
   function startXpAnim(toXp, toLvl) {
@@ -6472,6 +6681,14 @@ var BOSS_PORTRAITS = {"dealer": {"normal": "data:image/webp;base64,UklGRiw4AABXR
     tick: function () { tone({ f: 760, d: 0.025, v: 0.05, t: 'triangle' }); },
     fk_ok: function () { tone({ f: 1318, d: 0.5, v: 0.14, t: 'sine' }); tone({ f: 2637, d: 0.35, v: 0.05, t: 'sine' }); tone({ f: 1760, d: 0.45, v: 0.09, t: 'sine', at: 0.09 }); },
     alarm: function () { [0, 0.22, 0.44].forEach(function (a) { tone({ f: 880, f2: 660, d: 0.18, v: 0.16, t: 'square', at: a }); }); },
+    rpt_pop: function (k) { tone({ f: 380 + (k || 0) * 22, d: 0.07, v: 0.09, t: 'triangle' }); },
+    rpt_puff: function () { hiss({ d: 0.16, v: 0.16, fq: 1800, q: 0.7 }); tone({ f: 260, f2: 110, d: 0.12, v: 0.08, t: 'sine' }); },
+    rpt_xp: function (n) { tone({ f: 620 + (n || 0) * 30, d: 0.09, v: 0.1, t: 'triangle' }); tone({ f: 1240 + (n || 0) * 60, d: 0.06, v: 0.04, t: 'sine', at: 0.02 }); },
+    rpt_line: function (n) { tone({ f: n ? 330 : 247, f2: n ? 660 : 494, d: 0.13, v: 0.13, t: 'square' }); hiss({ d: 0.06, v: 0.08, fq: 3000 }); },
+    rpt_boom: function () { tone({ f: 160, f2: 40, d: 0.5, v: 0.22, t: 'sawtooth' }); hiss({ d: 0.4, v: 0.2, fq: 900, q: 0.5 }); arp([72, 76, 79, 84], 0.06, { v: 0.1, d: 0.25, t: 'triangle' }); },
+    rpt_suck: function (n) { tone({ f: 500 + (n || 0) * 45, f2: 1200 + (n || 0) * 60, d: 0.1, v: 0.07, t: 'sine' }); },
+    rpt_coin: function (n) { var b = 1250 + (n || 0) * 40; tone({ f: b, d: 0.06, v: 0.1, t: 'square' }); tone({ f: b * 1.5, d: 0.2, v: 0.09, t: 'square', at: 0.06 }); tone({ f: b * 3, d: 0.12, v: 0.03, t: 'sine', at: 0.06 }); },
+    rpt_done: function () { arp([72, 79, 84, 88], 0.07, { v: 0.09, d: 0.3, t: 'triangle' }); },
     fk_no: function () { [0, 0.2].forEach(function (a) { tone({ f: 150, f2: 48, d: 0.17, v: 0.38, t: 'square', at: a }); hiss({ d: 0.1, v: 0.25, ft: 'lowpass', fq: 500, at: a }); }); },
     bid: function () { tone({ f: 330, d: 0.09, v: 0.1, t: 'triangle' }); tone({ f: 440, d: 0.1, v: 0.1, t: 'triangle', at: 0.06 }); },
     ebid: function () { tone({ f: 196, d: 0.1, v: 0.12, t: 'sawtooth' }); tone({ f: 165, d: 0.14, v: 0.1, t: 'sawtooth', at: 0.07 }); },
@@ -6684,6 +6901,7 @@ var BOSS_PORTRAITS = {"dealer": {"normal": "data:image/webp;base64,UklGRiw4AABXR
       case 'claim': afterCombat(); break;
       case 'fledDone': returnStolen(); completeNode(); break;
       case 'afterVictory': nextAfterVictory(); break;
+      case 'rptSkip': reportSkip(); break;
       case 'dropClaim': { var vd = S.victory, back = function () { S.screen = 'victory'; render(); }; openForge('mod', { mod: vd.drop, onDone: function () { vd.dropDone = true; back(); }, onCancel: back }); break; }
       case 'paperOpen': S.noteOpen = true; render(); break;
       case 'paperClose': S.noteOpen = false; S.noteGone = true; noteMark(); render(); break;
