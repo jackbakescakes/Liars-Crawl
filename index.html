@@ -5847,7 +5847,7 @@ var BOSS_PORTRAITS = {"dealer": {"normal": "data:image/webp;base64,UklGRiw4AABXR
     if (def.kind === 'boss') flat.push({ name: 'Boss bounty', v: Math.round(100 * mul) });
     if (itm('tin') && !dummy) flat.push({ name: 'Tin Charm', v: 5 * nDice, note: '5 per die' });
     var total = diceXp + bonusXp; flat.forEach(function (f) { total += f.v; });
-    var spoils = bonusGold(def.gold[0] + rnd(def.gold[1] - def.gold[0] + 1)), glines = [{ name: def.id === 'lootgob' ? 'The Loot Goblin’s sack' : 'Spoils', v: spoils }], gt = spoils;
+    var spoils = def.id === 'lootgob' ? 60 : bonusGold(def.gold[0] + rnd(def.gold[1] - def.gold[0] + 1)), glines = [{ name: def.id === 'lootgob' ? 'Loot sack' : 'Spoils', v: spoils }], gt = spoils;
     if (itm('pouch')) { glines.push({ name: 'Loaded Pouch', v: 5 }); gt += 5; }
     return { foes: foes, xp: { n: nDice, per: per, dice: diceXp, pcts: pcts, pctSum: pctSum, bonus: bonusXp, flat: flat, total: total }, gold: { lines: glines, total: gt } };
   }
