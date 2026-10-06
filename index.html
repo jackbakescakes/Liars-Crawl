@@ -3054,6 +3054,7 @@
     frenzy: ['.....kk.....', '....krrk....', '...krrRrk...', '..krrRRrrk..', '..krRrrRrk..', '.krrRrrRrrk.', '.krRrggrRrk.', '.krrrggrrrk.', '..krrrrrrk..', '...kkrrkk...', '....kkkk....', '............'],
     razor: ['............', '............', '..kkkkkkkkk.', '.kwwwwwwwsk.', '.kwsssssssk.', '.kkkkkkkkkk.', '.kbbbbbbbk..', '.kBBBBBBBk..', '..kkkkkkk...', '............', '............', '............'],
     serrated: ['.........kk.', '........kwk.', '.......kwsk.', '......kwsrk.', '.....kwsk...', '....kwrk....', '...kwsk.....', '..kkSk......', '.kgkk.......', 'kbgk........', 'kbk.........', '.k..........'],
+    bandage: ['............', '..kkkkkkkk..', '.kwwwwwwwwk.', '.kwwwrrwwsk.', '.kwwrrrrwsk.', '.kwwwrrwwsk.', '.kwwwwwwwsk.', '.kssssssSSk.', '.kwwwwwwwsk.', '..kSSSSSSk..', '...kkkkkk...', '............'],
     smoke: ['.......g.g..', '........g...', '.......kb...', '....kkkkkk..', '...kSSSSSSk.', '..kSsSSSSSSk', '..kSsSSSSSSk', '..kSSSSSSSSk', '..kSSSSSSSSk', '...kSSSSSSk.', '....kkkkkk..', '............'],
     eyeglass: ['............', '....kkkk....', '..kkSSSSkk..', '.kSccwcccSk.', '.kScwccccSk.', '.kScccccnSk.', '.kScccnnnSk.', '..kkSSSSkkb.', '....kkkk.kbk', '..........kk', '............', '............'],
     bleach: ['....kkkk....', '....kRRk....', '....kkkk....', '...kddddk...', '..kdwwwwdk..', '.kdwnnnnwdk.', '.kdwnwwnwdk.', '.kdwnnnnwdk.', '.kdcccccwdk.', '.kdcccccwdk.', '..kkkkkkkk..', '............'],
@@ -3669,18 +3670,20 @@
     frenzy: { name: 'Blood Frenzy', desc: 'Berserk a single time: lose 1 die, and every attack you land this fight hits harder. Used up when played.', base: 90, rar: 'epic' },
     razor: { name: 'Rusty Razor', desc: 'Inflict 1 bleed on an enemy: it loses a die every 3 rounds. Used up when played.', base: 40, rar: 'uncommon' },
     serrated: { name: 'Serrated Knife', desc: 'Inflict 2 bleed on an enemy: it loses 2 dice every 3 rounds. Used up when played.', base: 70, rar: 'rare' },
+    bandage: { name: 'Bandage', desc: 'Wrap your wounds in a fight. Stops all of your bleeding. One use.', base: 25, rar: 'common' },
     smoke: { name: 'Smoke Bomb', desc: 'Throw it in a fight. The next call is made through the smoke, and you take no damage from it. One use.', base: 25, rar: 'common' },
     sword: { name: 'Bloodsworn Blade', desc: 'Every time you land a critical strike, your max HP rises by 1 (you gain a die). The blade drinks what it cuts.', base: 130, rar: 'epic' },
     pendant: { name: 'Gambler’s Pendant', desc: 'Every reward and shop slot has a 10% chance to turn epic. Something whispers through it.', base: 120, rar: 'epic' }
   };
-  var ITEM_ORDER = ['whetstone', 'coin', 'salts', 'tin', 'pouch', 'satchel', 'edge', 'hook', 'doublet', 'pendant', 'knife', 'bleach', 'eyeglass', 'smoke', 'armour', 'razor', 'serrated', 'frenzy', 'mead', 'xp', 'sword'];
+  var ITEM_ORDER = ['whetstone', 'coin', 'salts', 'tin', 'pouch', 'satchel', 'edge', 'hook', 'doublet', 'pendant', 'knife', 'bleach', 'eyeglass', 'smoke', 'bandage', 'armour', 'razor', 'serrated', 'frenzy', 'mead', 'xp', 'sword'];
   // usable items are cards: they live in the deck, not in your hands
-  var CARD_IDS = ['potion', 'knife', 'bleach', 'eyeglass', 'smoke', 'armour', 'frenzy', 'mead', 'xp', 'razor', 'serrated', 'rend'], DECK_MAX = 8;
+  var CARD_IDS = ['potion', 'knife', 'bleach', 'eyeglass', 'smoke', 'bandage', 'armour', 'frenzy', 'mead', 'xp', 'razor', 'serrated', 'rend'], DECK_MAX = 8;
   var CARD_INFO = {
     potion: { txt: 'Restore 2 fallen dice.', fl: 'Bitter, and warm going down.', type: 'Target', key: 'potion' },
     knife: { txt: 'Smash one enemy die and deal 1 damage.', fl: 'Quick. Quiet. Gone.', type: 'Target', key: 'knife' },
     bleach: { txt: 'Blank an enemy die. It counts for nothing this round.', fl: 'It scrubs out more than stains.', type: 'Target', key: 'bleach' },
     eyeglass: { txt: 'Peek at one enemy die.', fl: 'One lens left. One lie fewer.', type: 'Target', key: 'eye' },
+    bandage: { txt: 'Stop your bleeding.', fl: 'Pressure first. Prayer second.', type: 'Self' },
     smoke: { txt: 'Take no damage from the next call.', fl: 'Cough. Vanish. Live.', type: 'Self' },
     armour: { txt: 'Gain 2 armour. Each point blocks 1 damage.', fl: 'Heavy. Ugly. Worth it.', type: 'Target', key: 'armour' },
     mead: { txt: 'The enemy’s next bid is for the wrong face.', fl: 'Sweet, strong, and not for sharing.', type: 'Self' },
@@ -4093,6 +4096,7 @@
       case 'armour': sh.armour = (sh.armour || 0) + 2; msg = 'straps it on. +2 armour'; mine = true; break;
       case 'smoke': sh.smoke = true; msg = 'vanishes into it. It will take no damage from the next call'; mine = true; break;
       case 'frenzy': sh.berserkOn = true; msg = 'goes berserk. Every blow it lands hits harder'; mine = true; break;
+      case 'bandage': msg = 'wraps its own scratches and sighs. Nothing happens'; break;
       case 'mead': msg = 'pours it on the felt and laughs. Wasted'; break;
       case 'xp': msg = 'tears it up. A waste of good XP'; break;
       case 'knife': takeHit(1, 'enemy'); msg = 'throws it at you. You lose a die'; break;
@@ -5148,6 +5152,12 @@
     if (!C || C.phase !== 'bid' || C.turn !== 'p' || C.target || !itm('xp')) return;
     removeCard('xp'); S.player.xp += 100; sfx('levelup');
     C.log.push('You drink the XP Drought. It is bitter, and it teaches. +100 XP.'); render();
+  }
+  function useBandage() {
+    if (!C || C.phase !== 'bid' || C.turn !== 'p' || C.target || !itm('bandage') || !C.pbleed) return;
+    removeCard('bandage'); C.pbleed = null; sfx('item');
+    C.log.push('You bind your wounds tight. The bleeding stops.');
+    render();
   }
   function useSmoke() {
     if (!C || C.phase !== 'bid' || C.turn !== 'p' || C.target || !itm('smoke') || C.smoke) return;
@@ -7731,6 +7741,7 @@ var BOSS_PORTRAITS = {"dealer":{"normal":"data:image/webp;base64,UklGRlg9AABXRUJ
     if (id === 'rend') return spellReady();
     if (id === 'potion') return hp(S.player) < S.player.dice.length;
     if (id === 'smoke') return !C.smoke;
+    if (id === 'bandage') return !!C.pbleed;
     if (id === 'mead') return !C.mead;
     if (id === 'armour') return true;
     if (id === 'frenzy') return !C.berserk && hp(S.player) > 1;
@@ -7792,7 +7803,7 @@ var BOSS_PORTRAITS = {"dealer":{"normal":"data:image/webp;base64,UklGRlg9AABXRUJ
   }
   function playSelfCard(id, c) {
     c.style.transform = ''; c.style.transition = ''; c.classList.add('played'); sfx('item');
-    setTimeout(function () { closeDeck(); if (id === 'potion') usePotion(); else if (id === 'smoke') useSmoke(); else if (id === 'armour') useArmour(); else if (id === 'frenzy') useFrenzy(); else if (id === 'mead') useMead(); else if (id === 'xp') useXpCard(); }, REDUCED ? 0 : 330);
+    setTimeout(function () { closeDeck(); if (id === 'potion') usePotion(); else if (id === 'smoke') useSmoke(); else if (id === 'bandage') useBandage(); else if (id === 'armour') useArmour(); else if (id === 'frenzy') useFrenzy(); else if (id === 'mead') useMead(); else if (id === 'xp') useXpCard(); }, REDUCED ? 0 : 330);
   }
   function dropOver(id, e) {
     if ((CARD_INFO[id] || {}).drop === 'portrait') { var el = document.elementFromPoint(e.clientX, e.clientY); return !!(el && el.closest && el.closest('[data-portrait]')); }
