@@ -56,3 +56,6 @@ No new Gemini art. enc_frame_<v>.png is cut by script into a tileable body (enc_
 
 ## 20261008 Tattoo scrolls (generated, wired)
 Event "The Tattooist": 5 parchment scrolls showing 2-6 die pips. Code-drawn placeholder is live (`.tatscroll`, `TATSCROLL` constant empty). Gemini prompt is in the chat; when art arrives save sheet to sheets/tattoo_scrolls_<date>_src.png and cut to ui/tattoo_scroll_2..6.webp, then fill `TATSCROLL[2..6]`.
+
+## 20261008 Scratch card symbols
+Prompt: pixel-art sheet, one row of three slot symbols (cherries, cracked liberty bell, skull with red eye glints), chunky outlined enamel look, 3-4 tones per colour, magenta #FF00FF background, 1536x512 with three square cells; optional second row with a cream/gold glow halo for the "winning match" state. Result: sheets/scratch_symbols_20261008_src.png (1024x338, two rows), cut into assets/ui/scratch_*.webp. Cut note: enclosed magenta regions over 180px (gap between cherry stems) are keyed out, small pink highlights are kept.

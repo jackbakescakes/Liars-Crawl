@@ -138,3 +138,13 @@ None currently listed; add any placeholder here.
 | file | what it is | size | used in game as | source sheet + prompt note |
 |---|---|---|---|---|
 | ui/tattoo_scroll_2..6.png / .webp | parchment scroll with a hexagon die showing 2/3/4/5/6 pips (magenta keyed, transparent) | 174x389 | `TATSCROLL[2..6]` -> `.tatscroll .tsart` in the Tattooist event (code-drawn parchment `.tssheet` stays as fallback) | sheets/tattoo_scrolls_20261008_src.png; prompt in prompts.md |
+
+## Scratch card symbols (20261008)
+| file | what it is | size WxH | used in game as | source sheet + prompt note |
+|---|---|---|---|---|
+| sheets/scratch_symbols_20261008_src.png | Gemini sheet: cherries, liberty bell, skull (top row plain, bottom row with cream glow rim), magenta key | 1024x338 | source for ui/scratch_* | prompts.md "Scratch card symbols" |
+| ui/scratch_cherry.webp | Pixel cherries, plain | 102x104 | `SCR_SYM.scratch_cherry` (.scratchwrap .sc-sym img) | sheets/scratch_symbols_20261008_src.png |
+| ui/scratch_bell.webp | Cracked liberty bell, plain | 84x104 | `SCR_SYM.scratch_bell` | same |
+| ui/scratch_skull.webp | Skull with red eye glints, plain | 87x104 | `SCR_SYM.scratch_skull` | same |
+| ui/scratch_cherry_glow.webp / scratch_bell_glow.webp / scratch_skull_glow.webp | Same with cream glow rim, shown on a winning row (cherries, bells) | ~102/90/91 x 104 | `SCR_SYM.scratch_*_glow` | same |
+Replaces the earlier code-drawn pixSVG placeholders (removed). Scratch card odds: 10% three skulls (lose 1 HP), 30% mixed (nothing), 40% three cherries (+50 gold), 20% three bells (+100 gold). Event window uses the open template (`encWinHTML` mode `'open'`, `.encopen`).
