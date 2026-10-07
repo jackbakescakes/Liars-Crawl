@@ -2888,7 +2888,7 @@ KNOWN ISSUES (art still to come)
   body:not([data-screen="title"]):not([data-screen="char"]):not([data-screen="rules"]):not([data-screen="tree"]) #app > .panel.report { width: 1770px !important; }
   .report > * { zoom: 1.5; }
   .rp-duel { display: grid !important; grid-template-columns: 1fr auto 1fr; align-items: start; gap: 28px; }
-  .rp-duel .rp-me { justify-self: end; } .rp-duel .rp-foes { justify-self: start; }
+  .rp-duel .rp-me, .rp-duel .rp-foes { justify-self: center; }
   .rp-duel .rp-vs { text-align: center; justify-self: center; }
   body .rolled { background:none!important; border:none!important; box-shadow:none!important; clip-path:none!important; }
   .maxtag { display:inline-flex; align-items:center; gap:2px; font-weight:bold; vertical-align:middle; }
@@ -3139,6 +3139,18 @@ KNOWN ISSUES (art still to come)
   body[data-hud="1"] .relicbr, body[data-screen="combat"] .relicbr { position: fixed !important; right: 159px !important; bottom: 60px !important; }
   body[data-screen="victory"] #app > .panel.report { zoom: .72; }
   body[data-screen="victory"] .report .rp-skip { right: auto; left: 0; }
+  body[data-screen="combat"] .felt .bidbox { box-sizing: border-box !important; width: 470px !important; height: 89px !important; justify-content: center; margin-bottom: 22px !important; }
+  /* deck cards: flip over on the spot when hovered (no growing); a click inspects one, which then grows */
+  @keyframes tcflip2 { 0% { transform: translateY(-4px) rotate(var(--r, 0deg)) perspective(900px) rotateY(0deg); } 46% { transform: translateY(-4px) rotate(var(--r, 0deg)) perspective(900px) rotateY(90deg); } 54% { transform: translateY(-4px) rotate(var(--r, 0deg)) perspective(900px) rotateY(-90deg); } 100% { transform: translateY(-4px) rotate(var(--r, 0deg)) perspective(900px) rotateY(0deg); } }
+  @keyframes tcflip3 { 0% { transform: perspective(900px) rotateY(0deg); } 46% { transform: perspective(900px) rotateY(90deg); } 54% { transform: perspective(900px) rotateY(-90deg); } 100% { transform: perspective(900px) rotateY(0deg); } }
+  html body .handtray .tcard:hover { transform: translateY(-4px) rotate(var(--r, 0deg)) !important; z-index: 20; animation: tcflip2 .5s ease-in-out !important; }
+  html body .handtray .tcard.inspect, html body .handtray .tcard.inspect:hover { transform: translateY(-130px) rotate(0deg) scale(1.55) !important; z-index: 30; animation: none !important; }
+  html body .deckmodal .deckrow .tcard:hover { transform: none; animation: tcflip3 .5s ease-in-out; }
+  html body .deckmodal .deckrow .tcard.inspect, html body .deckmodal .deckrow .tcard.inspect:hover { transform: scale(1.5); z-index: 30; animation: none; }
+  .deckmodal .deckrow .tcard { cursor: pointer; }
+  @media (prefers-reduced-motion: reduce) { html body .handtray .tcard:hover, html body .deckmodal .deckrow .tcard:hover { animation: none !important; } }
+  /* cards you can't play right now are only gently dulled, never dark */
+  html body .tcard.cantplay, html body .handtray .tcard.cantplay, html body .handtray .tcard.cantplay:hover { filter: saturate(.55) brightness(.97) !important; }
   body[data-screen="map"] .topbtns { z-index: 90 !important; }
   body[data-screen="map"] .mappanel .floorhd.banner { position: absolute; left: 50%; top: 34px; transform: translateX(-50%); z-index: 12; margin: 0; }
 
@@ -4779,10 +4791,11 @@ KNOWN ISSUES (art still to come)
       setTimeout(function () { d.classList.remove('on'); setTimeout(function () { if (d.parentNode) d.parentNode.removeChild(d); }, 1400); }, 500);
     }, 1300);
   }
-  function goTo(id) {
+  function goTo(id, instant) {
     if (S.walking || S.screen !== 'map' || reachable().indexOf(id) < 0) return;
     var path = routePath(id), H = S.house, stop = id, i;
     if (H && H.on) for (i = 1; i < path.length; i++) if (path[i] === H.at) { stop = path[i]; path = path.slice(0, i + 1); break; }
+    if (instant) { pawnStop(); enterNode(stop); return; }   // dragged there: he simply arrives, no walk
     S.walking = true;
     pawnWalk(path, function () { S.walking = false; enterNode(stop); });
   }
@@ -5769,7 +5782,7 @@ KNOWN ISSUES (art still to come)
     var slotsN = Math.min(14, Math.max(b.qty, total, 1)), ov = document.createElement('div'), sh = '';
     for (i = 0; i < slotsN; i++) sh += '<i class="cslot' + (i < b.qty ? ' need' : '') + '"></i>';
     ov.className = 'countfx'; ov.setAttribute('aria-hidden', 'true');
-    ov.innerHTML = '<div class="cf-dim"></div><div class="cf-box"><div class="cf-top" style="background-image:url(' + STAMPS.plaque + ')"><span class="cf-lbl">' + (caller === 'p' ? 'You call it' : 'They call it') + '</span><span class="cf-bid"><b>' + b.qty + '</b> ×</span>' + dieHTML(b.face, { s: 58 }) + '</div>' +
+    ov.innerHTML = '<div class="cf-dim"></div><div class="cf-box"><div class="cf-top" style="background-image:url(' + STAMPS.plaque + ')"><span class="cf-lbl">' + ((caller === 'p' ? (CLASSES[S.cls || 'fighter'] || CLASSES.fighter).name : ((C.en.parts[Math.max(0, C.speaker)] || C.en.parts[0] || {}).name || C.def.name)) + ' calls ' + (kind === 'liar' ? 'LIAR' : 'SPOT ON')) + '</span><span class="cf-bid"><b>' + b.qty + '</b> ×</span>' + dieHTML(b.face, { s: 58 }) + '</div>' +
       '<div class="cf-slots">' + sh + '</div><div class="countbox"><span class="cn">0</span><span class="cs">/ ' + b.qty + '</span></div></div>';
     document.documentElement.appendChild(ov);
     function killOv() { if (ov.parentNode) ov.parentNode.removeChild(ov); }
@@ -7253,7 +7266,7 @@ var BOSS_PORTRAITS = {"dummy":{"normal":"data:image/webp;base64,UklGRgwlAABXRUJQ
     try { sfx('click'); } catch (e) { }
     if (pw.animate) pw.animate([{ transform: 'translate(-50%,-62%) scale(1.12,.86)' }, { transform: 'translate(-50%,-62%) scale(.96,1.05)' }, { transform: 'translate(-50%,-62%)' }], { duration: 260, easing: 'ease-out' });
     if (nd && !S.walking && reachable().indexOf(nd.getAttribute('data-id')) > -1) {
-      goTo(nd.getAttribute('data-id'));
+      goTo(nd.getAttribute('data-id'), true);
     } else S.pawn = { x: parseFloat(pw.style.left), y: parseFloat(pw.style.top), f: S.floorNum };
   }
   function pawnFly(pw, m, x, y, vx, vy) {
@@ -8600,7 +8613,8 @@ var BOSS_PORTRAITS = {"dummy":{"normal":"data:image/webp;base64,UklGRgwlAABXRUJQ
       return MUSC.epick;
     }
     if (name === 'combat' && window.MUSC.fight2a) {
-      if (!MUSC.pick) { var L = ['fight2a', 'fight2d', 'fight2f', 'fight2g', 'fight2m'].filter(function (x) { return x !== MUSC.last; }); MUSC.pick = L[Math.floor(Math.random() * L.length)]; MUSC.last = MUSC.pick; }
+      var hadPick = !!MUSC.pick; if (!hadPick) { MUSC.pick = 'fight2f'; MUSC.last = MUSC.pick; }
+      if (hadPick && MUSC.v && /^fight2/.test(MUSC.v.k)) return MUSC.v.k; // mid-fight: keep whatever fight loop is playing
       return MUSC.pick;
     }
     return null;
@@ -8641,6 +8655,8 @@ var BOSS_PORTRAITS = {"dummy":{"normal":"data:image/webp;base64,UklGRgwlAABXRUJQ
         if (pos >= om.le) pos = om.ls + ((pos - om.ls) % pl);
         var wait = (((om.ls - pos) % U) + U) % U;
         while (wait < 0.08) wait += U;
+        // leaving the calm music for a fight: let the whole calm loop play out first
+        if (o.k === 'calm' || (/^fight2/.test(o.k) && /^fight2/.test(k))) { wait = om.le - pos; while (wait < 0.08) wait += pl; }
         tb = now + wait; off = m.ls; fin = 0.03; pre = 0;
       }
       if (!o && !keep && MUSC.heard[k] && !/^boss/.test(k)) off = m.ls; MUSC.heard[k] = true;
@@ -8650,6 +8666,18 @@ var BOSS_PORTRAITS = {"dummy":{"normal":"data:image/webp;base64,UklGRgwlAABXRUJQ
       MUSC.v = { k: k, s: s, g: g, t0: tb, off: off }; return true;
     } catch (e) { MUSC.st[k] = 'failed'; return false; }
   }
+  // normal fights open with fight2f, then each loop ends into a random one of the others until the fight is over
+  setInterval(function () {
+    try {
+      var v = MUSC.v, c = AUD.ctx; if (!v || !c || AUD.want !== 'combat' || !S || S.screen !== 'combat' || !/^fight2/.test(v.k) || v.queued) return;
+      var now = c.currentTime, m = window.MUSC[v.k]; if (now < v.t0) return;
+      var pos = v.off + (now - v.t0); if (pos >= m.le) pos = m.ls + ((pos - m.ls) % (m.le - m.ls));
+      if (m.le - pos > 1.3) return;
+      var pool = ['fight2a', 'fight2d', 'fight2g', 'fight2m'].filter(function (x) { return x !== v.k && MUSC.st[x] === 'ready'; });
+      if (!pool.length) return;
+      v.queued = true; stagePlay(pool[Math.floor(Math.random() * pool.length)]);
+    } catch (e) { }
+  }, 250);
   function musicSet(name) {
     AUD.want = name; if (!AUD.ctx || !name) return;
     if (name !== 'combat') MUSC.pick = null; if (name !== 'elite') MUSC.epick = null;
@@ -9541,15 +9569,15 @@ var BOSS_PORTRAITS = {"dummy":{"normal":"data:image/webp;base64,UklGRgwlAABXRUJQ
     var d = deckOf(), fight = trayMode(), n = d.length, h = '';
     if (fight) {
       d.forEach(function (id, i) {
-        var ci = CARD_INFO[id] || {}, can = cardCan(id), tg = ci.type === 'Target', at = 'data-card="' + id + '" data-i="' + i + '"';
+        var ci = CARD_INFO[id] || {}, can = cardCan(id), tg = ci.type === 'Target', at = 'data-card="' + id + '" data-i="' + i + '" data-insp="' + i + '"';
         if (tg && ci.key) at += ' data-' + ci.key + 'btn="1"';
         tg = tg || ci.type === 'Spell';
-        h += tcardHTML(id, { cls: (can || !inFight() ? 'canplay' : 'cantplay') + (id === 'potion' && needPotion() ? ' potionglow' : ''), attrs: at, style: '--r:' + ((i - (n - 1) / 2) * 5).toFixed(1) + 'deg;--k:' + i });
+        h += tcardHTML(id, { cls: (can || !inFight() ? 'canplay' : 'cantplay') + (id === 'potion' && needPotion() ? ' potionglow' : '') + (i === deckInsp ? ' inspect' : ''), attrs: at, style: '--r:' + ((i - (n - 1) / 2) * 5).toFixed(1) + 'deg;--k:' + i });
       });
-      var hint = !inFight() ? '' : cardsPlayable() ? 'Drag a card out by its top edge, or drag its picture to aim it.' : 'Not your turn.';
+      var hint = !inFight() ? '' : cardsPlayable() ? 'Click a card to look closer. Drag a card out by its top edge, or drag its picture to aim it.' : 'Not your turn.';
       return '<div class="trayhint">' + hint + '</div>' + h + '<button type="button" class="btn small trayx" data-closedeck="1">Close</button>';
     }
-    d.forEach(function (id, i) { h += tcardHTML(id, id === 'potion' ? { cls: (cardCan(id) ? 'canplay' : 'cantplay') + (needPotion() ? ' potionglow' : ''), attrs: 'data-card="potion" data-i="' + i + '"' } : null); });
+    d.forEach(function (id, i) { var ins = i === deckInsp ? ' inspect' : ''; h += tcardHTML(id, id === 'potion' ? { cls: (cardCan(id) ? 'canplay' : 'cantplay') + (needPotion() ? ' potionglow' : '') + ins, attrs: 'data-card="potion" data-i="' + i + '" data-insp="' + i + '"' } : { cls: ins.trim(), attrs: 'data-insp="' + i + '"' }); });
     return '<h2>Your deck (' + n + ' / ' + DECK_MAX + ')</h2>' + (true ? '<div class="deckrow">' + h + '</div>' : '<p class="deckhint">No cards yet. Potions, knives and other tricks you find end up here.</p>') + '<p class="deckhint">Play them from here during a fight. Healing potions can be drunk any time: drag the arrow onto your portrait or a fallen die.</p><button type="button" class="btn" data-closedeck="1">Close</button>';
   }
   function openDeck() {
@@ -9577,7 +9605,8 @@ var BOSS_PORTRAITS = {"dummy":{"normal":"data:image/webp;base64,UklGRgwlAABXRUJQ
       var h = deckEl.querySelector('.trayhint'); if (h) h.style.paddingLeft = Math.round(Math.max(10, left - 60)) + 'px';
     } catch (e) { }
   }
-  function closeDeck() { if (deckEl) { if (deckEl.parentNode) deckEl.parentNode.removeChild(deckEl); deckEl = null; } syncGlow(); }
+  var deckInsp = -1;
+  function closeDeck() { deckInsp = -1; if (deckEl) { if (deckEl.parentNode) deckEl.parentNode.removeChild(deckEl); deckEl = null; } syncGlow(); }
   function toggleDeck() { if (deckEl && deckEl._peek) { deckEl._peek = false; deckEl.classList.remove('peek'); return; } if (deckEl) closeDeck(); else openDeck(); }
   function refreshDeck() {
     if (!deckEl) return;
@@ -9588,6 +9617,10 @@ var BOSS_PORTRAITS = {"dummy":{"normal":"data:image/webp;base64,UklGRgwlAABXRUJQ
   function onDeckClick(e) {
     var t = e.target; if (!t.closest) return;
     if (t.closest('[data-closedeck]') || t === deckEl && deckEl.className === 'deckmodal') { closeDeck(); return; }
+    var ic = t.closest('.tcard[data-insp]');
+    if (ic && Date.now() >= noClickUntil) { var ii = +ic.getAttribute('data-insp'); deckInsp = deckInsp === ii ? -1 : ii; sfx('click'); refreshDeck(); return; }
+    if (!ic && deckInsp > -1) { deckInsp = -1; refreshDeck(); }
+    return;
     var c = t.closest('.tcard[data-card]'); if (!c || Date.now() < noClickUntil) return;
     var id = c.getAttribute('data-card'), ci = CARD_INFO[id] || {};
     if (ci.type === 'Target' || ci.type === 'Spell') { var h = deckEl.querySelector('.trayhint') || deckEl.querySelector('.deckhint'); if (h) h.textContent = id === 'potion' ? (cardCan(id) ? 'Drag the arrow onto your portrait or a fallen die.' : 'None of your dice have fallen.') : cardCan(id) ? (id === 'armour' ? 'Drag the arrow onto your portrait.' : 'Drag it onto an enemy die.') : id === 'rend' ? 'Your dice must add up to 50 or more, once per round.' : 'Nothing to use it on.'; return; }
