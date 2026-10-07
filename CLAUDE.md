@@ -27,9 +27,10 @@ Gemini pipeline: magenta key `(r>150)&(b>g+40)&(b>110)` → opening → keep big
 - Playable on a computer screen with no scrolling. Keep on-screen text minimal; icons first, explanations in the Rules menu.
 - Music is parked.
 
-## Title lettering alphabet (the game's logo font) — letters sheet RECEIVED, digits sheet pending
+## Title lettering alphabet (the game's logo font) — DONE and in the game
 The user is having Gemini draw a full alphabet in the style of the "LIAR'S CRAWL" title (chunky cream block letters, ember-orange lower edges, dark outline, blood drips), so any text can be set in the logo style (START CRAWLING, banners, stamps, headings).
-- Status: A-Z ! ? ' . sheet received (red, chipped, tall condensed serif style; saved as `assets/sheets/title_font_sheet_20261007_src.png`, 6x5 grid, not yet cut into files). The prompt that got the right look is in `assets/prompts.md`.
+- Status: both sheets received, cut into `assets/fonts/title_<CHAR>.webp` (A-Z, 0-9, ! ? ' . : , - + / % & x as `bang question apostrophe period colon comma minus plus slash percent amp x_mul`) with `title_metrics.json`. Originals: `assets/sheets/title_font_sheet_20261007_src.png`, `title_font_digits_20261007_src.png`. The C is a little too grey/white (user said leave it for now). All glyph files share a 198px cell height and baseline; cap top y=19, baseline y=182.
+- In the game: JS `TITLEFONT` + `titleText(text, capPx)` (defined just before `beginCrawl`) returns inline HTML in the logo font; CSS `.tfont`. Used for the START CRAWLING screen. Use it for any new logo-style text. The prompt that got the right look is in `assets/prompts.md`.
 - Where it goes: `assets/fonts/title_<CHAR>.webp` (transparent, magenta-keyed; punctuation by name: `title_bang.webp`, `title_question.webp`, `title_apostrophe.webp`, `title_period.webp`; digits `title_0..9.webp`). Original sheets: `assets/sheets/title_font_sheet_<yyyymmdd>_src.png`.
 - Layout of the sheet the user was asked for: 6 columns x 5 rows of equal cells, reading order A-Z, then ! ? ' . — second sheet: digits 0-9. Cut each cell, key out magenta, trim, keep a shared baseline and cap height (record per-letter width + baseline offset in `assets/fonts/title_metrics.json`).
 - Existing lettering to reuse until it arrives: the `LIAR_IMG` / `.tavlogo` title image, the generated block `wordmark()` function, and STAMPS (`liar`, `honest`, `caught`, `awakens`).
