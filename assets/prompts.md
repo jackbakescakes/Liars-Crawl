@@ -14,5 +14,5 @@ Reference: `ui/panel_wood_iron.png`. Wanted: thin landscape frame for the big ma
 ## Map border v4 (ACCEPTED) — assets/sheets/map_border_v4_good_20261007_src.png
 Wood-and-iron frame, thin wood, dim rivets, steel corner plates, fleur crest top/bottom. Cut into assets/ui/mapframe_{tl,tr,bl,br,crestT,crestB,barT,barB,barL,barR}.webp (scaled 0.6) and embedded as MAPFRAME in the game; `#mapframe` overlay synced to `.map.mapart` (map screen only).
 
-## Settings icon (requested 2026-10-07) — prompt given to user, art not yet received
+## Settings icon (requested 2026-10-07) — prompt given to user, art received, right-hand icon used
 Round wood-and-iron button with iron/brass cog, 3 states (normal / hover glow / pressed), magenta #FF00FF key, thick dark outline, match LOG/SKILLS/DICE buttons. Replaces the current gold gear in the top-right (the `#settings` cog button). Full prompt is in the chat for 2026-10-07; re-roll from this summary.
