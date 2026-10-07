@@ -31,3 +31,22 @@ Gemini prompt: matching button sheet, worn marble/stone blocks with a bevelled f
 
 ### Button set v2 result (liked)
 Received `sheets/buttons_marble_v2_20261007_src.png`: marble blocks with wood base trim, 5 shapes x 4 states. Issues: some text labels baked onto/under buttons (SMALL, PRESSED, Disabled etc. in rows 3), wide row uses "WIDE" label; round/square rows lack labels. Plan: recolour in code (tint) rather than re-roll; ask Gemini for a clean re-roll only if the baked labels cannot be cleaned.
+
+## 2026-10-07 — "who goes first" spinner (requested, prompt given to user, art pending)
+Needs: grimdark spinner board + arrow + spin button + player/enemy markers (+ optional sting banner). Magenta #FF00FF key. See the Gemini prompt given in chat; once art arrives save the sheet to assets/sheets/first_spinner_<date>_src.png and cut into assets/ui/.
+
+## 2026-10-07 — encounter window template + treasure chest (prompt given to user, art pending)
+Template window for ALL non-fight encounters and the post-fight "1 of 3" spoils pick: portrait slot (top-left), title plaque, flavour-text panel, big empty mechanics area, optional footer; 4 colour variants (iron/brown default, blood red, green, violet); plus a treasure chest (closed / opening / open+glow) for the battle report Spoils area. Magenta #FF00FF key. Prompt text is in the chat history for this date; once art arrives save the sheet to assets/sheets/encounter_window_<date>_src.png and cut into assets/ui/.
+
+### Encounter window v1 result (needs rework)
+Received `sheets/encounter_window_v1_20261007_src.png`: 4 colour windows + chest (closed/opening/open) + padlock + glow + sparkles. Problems: windows are square, mechanics zone is a tiny strip, labels/lorem text baked in. Chest, padlock, glow, sparkles are good. Re-roll v2: wider window, border-only frames + separate pieces (portrait ring, title plaque, parchment panel) so layout is composed in code.
+
+## 2026-10-07 — encounter portraits (prompt given to user, art pending)
+27 non-fight encounter portraits in 3 sheets of 3x3 (reading order), square, subject centred for a round crop, magenta keyed background not needed (full-bleed dark scenes). List and per-portrait descriptions are in the chat history for this date. Save sheets as assets/sheets/enc_portraits_<n>_<yyyymmdd>_src.png, cut to assets/portraits/enc_<name>.webp.
+
+## 2026-10-07 — encounter portraits v2 (prompt given to user, art pending)
+Sheet 3 redo (plain squares, no ring/caption/curved text, more breathing room) + Sheet 4 alternates for the weakest/tightest ones (Contract of Sale / Plenty / Mutual Ruin, Fortify, Blood Anvil, Dead Man's Throne, Roll for a Sigil, Goblin's Bargain, Pawnbroker) with different compositions so the user can choose between 2 options. Prompt text in chat history.
+
+## 2026-10-07 Cogent seal (Gemini)
+Prompt: reference image of three existing seals (Optimistic, Fickle, Golden) + request for four variants of a "Cogent" seal (wax seal on parchment ribbons, two chevrons / persuading hand motif), magenta background, 2x2 grid. Full text given to the user in chat; re-roll from the same brief.
+Result 1: Gemini drew TWO seals joined by a banner in each cell (took "one die talks to another" literally). Re-prompted asking for a single seal per cell with the symbol inside it.
