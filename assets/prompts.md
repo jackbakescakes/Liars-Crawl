@@ -16,3 +16,6 @@ Wood-and-iron frame, thin wood, dim rivets, steel corner plates, fleur crest top
 
 ## Settings icon (requested 2026-10-07) — prompt given to user, art received, right-hand icon used
 Round wood-and-iron button with iron/brass cog, 3 states (normal / hover glow / pressed), magenta #FF00FF key, thick dark outline, match LOG/SKILLS/DICE buttons. Replaces the current gold gear in the top-right (the `#settings` cog button). Full prompt is in the chat for 2026-10-07; re-roll from this summary.
+
+## 2026-10-07 — large floor title scroll (map header)
+Pixel-art banner scroll for the map header: wide parchment scroll with curled, dog-eared ribbon ends, studded dark-iron end plates, a big EMPTY centre panel (about 70% of the width) for the floor name, same chunky pixel style and palette as the map border (rusty iron, aged parchment, soft shadow). 3:1 aspect ratio (e.g. 1800x600), flat solid magenta (#FF00FF) background for keying, no text, nothing in the empty panel, no drop shadow outside the scroll. Status: requested, not yet received. Current stand-in is the existing banner scaled up (`.floorhd.banner`, 900x154).
