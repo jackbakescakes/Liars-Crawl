@@ -3234,12 +3234,37 @@ html body .btn:not(.rollbtn):not(.beginbtn):not(.mapkeybtn):not(.xbtn):not(.pxcl
   .lvlwin .lu-die small { font-size: 22px; opacity: .85; } .lvlwin .lu-plus { font-size: 40px; font-weight: 700; }
   .lvlwin .lu-sub { font-size: 30px; margin: 4px 0 12px; color: #f6d66a; } .lvlwin .lu-sub small { font-size: 22px; }
 
+  #devmenu[hidden], #devbtn[hidden], #devloop[hidden] { display: none !important; }
   #devbtn { position: fixed; touch-action: none; user-select: none; z-index: 450; font: 700 26px/1 var(--display, monospace); padding: 12px 20px; color: #f1e4ff; background: linear-gradient(#8a4fd0, #4f2390); border: 4px solid #2a1050; border-radius: 10px; box-shadow: 0 4px 0 #1a0a35, inset 0 2px 0 rgba(255,255,255,.3); cursor: pointer; }
   #devbtn:hover { filter: brightness(1.2); }
   #devmenu { position: fixed; z-index: 451; display: flex; flex-direction: column; gap: 8px; padding: 12px; background: #1d0f33; border: 4px solid #6b3fb0; border-radius: 10px; }
   #devmenu button { font: 700 24px/1 var(--display, monospace); padding: 10px 18px; color: #f1e4ff; background: #5a2ea0; border: 3px solid #2a1050; border-radius: 8px; cursor: pointer; text-align: left; }
   #devmenu button:hover { filter: brightness(1.25); } #devmenu button.on { background: #2f8f4a; }
   #devloop { position: fixed; left: 10px; top: 8px; z-index: 460; font: 700 22px/1 monospace; color: #d9b8ff; background: rgba(20,8,40,.85); padding: 6px 12px; border: 2px solid #6b3fb0; pointer-events: none; }
+
+  html .winx { background: none !important; border: 0 !important; padding: 0 !important; box-shadow: none !important; width: 56px !important; height: 56px !important; min-width: 0 !important; } #devmenu .winx { top: -24px; right: -24px; }
+  .winx { position: absolute; top: 8px; right: 8px; width: 56px; height: 56px; padding: 0; border: 0; background: none; cursor: pointer; z-index: 60; filter: drop-shadow(0 3px 0 rgba(0,0,0,.6)); }
+  .winx:hover { filter: brightness(1.25) drop-shadow(0 3px 0 rgba(0,0,0,.6)); transform: scale(1.08); } .winx:active { transform: scale(.94); }
+  .setbox, .keybox, .modalbox, #devmenu, .webbar, .deckmodal { position: relative; }
+  .deckmodal { position: fixed; } .keybox #keyClose { display: none; } #devmenu { position: fixed; }
+
+  body[data-screen="combat"] .felt .bigbid:not(:has(.fico:hover)):hover { text-shadow: 0 0 10px #fff3a0, 0 0 22px #ffb43c !important; filter: brightness(1.2); }
+  html .tip { z-index: 700 !important; }
+
+  .diebare { display: inline-block; line-height: 0; }
+  body[data-sealdrag] .diebare.sg1 { animation: sgy .7s ease-in-out infinite alternate; }
+  body[data-sealdrag] .diebare.sg2 { animation: sgo .7s ease-in-out infinite alternate; }
+  body[data-sealdrag] .diebare.sg3 { animation: sgp .7s ease-in-out infinite alternate; }
+  body[data-sealdrag] .diebare.sgx { opacity: .45; } body[data-sealarm] .diebare { cursor: pointer; animation: sealtgt .7s ease-in-out infinite alternate; }
+
+  html .handtray .tcard:hover, html .handtray .tcard.canplay:hover, html .handtray .tcard.cantplay:hover { animation: none !important; }
+  html .deckmodal .deckrow .tcard:hover { animation: none !important; }
+  html .handtray .tcard { transition: transform .12s ease-out !important; }
+
+  .tcard, .tcard *, .looseseal, .looseseal *, #satchelpanel, #satchelpanel *, .fi, .fi *, .spellarrow, .spellarrow * { -webkit-user-drag: none; user-select: none; -webkit-user-select: none; }
+  .tcard, .looseseal, .fi { touch-action: none; }
+
+  .dicepanel { position: relative; } .dicepanel .xclose { display: none !important; }
 </style>
 
 <main class="wrap">
@@ -4593,9 +4618,10 @@ html body .btn:not(.rollbtn):not(.beginbtn):not(.mapkeybtn):not(.xbtn):not(.pxcl
     return h + '<div class="confirmback" data-act="destroyNo"></div><div class="confirmbox" role="alertdialog" aria-label="Destroy ' + it.name + '?"><div class="cbart">' + ITEM_ART[S.destroy.id] + '</div><h3>Destroy ' + it.name + '?</h3><p>It will crumble to nothing. You cannot get it back, and you will not be paid for it.</p><div class="row" style="justify-content:center"><button type="button" class="btn torch" data-act="destroyYes">Destroy it</button><button type="button" class="btn ghost" data-act="destroyNo">Keep it</button></div></div>';
   }
   function locClick(str) {
-    if (S.screen === 'combat' || !S.player) return;
+    if (!S.player) return;
     var l = locParse(str);
     if (l.k === 'satchel' && !S.hold) { S.bagOpen = !S.bagOpen; render(); return; }
+    if (S.screen === 'combat') return;
     if (!S.hold) { if (locGet(l)) setHold(l); return; }
     if (S.hold.k === l.k && S.hold.i === l.i) { setHold(null); return; }
     var done = moveItem(S.hold, l);
@@ -5674,7 +5700,7 @@ html body .btn:not(.rollbtn):not(.beginbtn):not(.mapkeybtn):not(.xbtn):not(.pxcl
   // wheel over the bid button's number / face, the quantity stepper or the face row changes that value
   document.addEventListener('wheel', function (e) {
     if (!C || !S || S.screen !== 'combat' || !e.target.closest) return;
-    var t = e.target, ax = t.closest('.bigbid .bidq, .stepper') ? 'q' : t.closest('.bigbid .fico, .facegrid') ? 'f' : null;
+    var t = e.target, ax = t.closest('.bigbid .fico, .facegrid') ? 'f' : t.closest('.bigbid, .stepper') ? 'q' : null;
     if (!ax || C.phase !== 'bid' || C.turn !== 'p' || C.target) return;
     e.preventDefault(); reelStep(ax, e.deltaY < 0 ? 1 : -1);
   }, { passive: false });
@@ -6452,7 +6478,7 @@ html body .btn:not(.rollbtn):not(.beginbtn):not(.mapkeybtn):not(.xbtn):not(.pxcl
   }
   // a burst of sparks in the seal's wax colour where it lands on a die
   function sealSparks(i, mod) {
-    var el = document.querySelector('.dropdie[data-i="' + i + '"]') || document.querySelector('.hpdice [data-tip="hud:' + i + '"]'); if (!el) return;
+    var el = document.querySelector('.dropdie[data-i="' + i + '"]') || document.querySelector('.hpdice [data-tip="hud:' + i + '"]') || document.querySelector('.diebare[data-tip="dfaces:' + i + '"]'); if (!el) return;
     var r = el.getBoundingClientRect(), z = parseFloat(getComputedStyle(document.body).zoom) || 1, cx = r.left + r.width / 2, cy = r.top + r.height / 2;
     var tint = (typeof TINTS !== 'undefined' && TINTS[mod]) || '#e4c35c', cols = [tint, tint, '#fff6c2', '#ffd36a', shadeHex(tint, 1.5)];
     var box = document.createElement('div'); box.className = 'sealfx'; box.setAttribute('aria-hidden', 'true');
@@ -8829,6 +8855,28 @@ var BOSS_PORTRAITS = {"dummy":{"normal":"data:image/webp;base64,UklGRgwlAABXRUJQ
     if (AUD.juke && !(S.screen === 'rules' && S.credits)) AUD.juke = null;
     musicSet(trackFor());
   }
+  // real mice start a native image drag on press-and-move, which cancels our pointer drags (arrows, cards, seals): block it everywhere
+  document.addEventListener('dragstart', function (e) { e.preventDefault(); }, true);
+  document.addEventListener('selectstart', function (e) { try { if (e.target && e.target.closest && e.target.closest('.tcard, .looseseal, .handtray, .deckmodal, .diebare, .fi, #satchelpanel')) e.preventDefault(); } catch (er) { } }, true);
+  // drop a card from your hand or deck onto the satchel (the open bag or its icon) to keep it there; drag it back onto the deck to take it out
+  document.addEventListener('pointerdown', function (e) {
+    try {
+      var c = e.target && e.target.closest ? e.target.closest('.tcard[data-card]') : null; if (!c || (e.pointerType === 'mouse' && e.button !== 0)) return;
+      var id = c.getAttribute('data-card'), x0 = e.clientX, y0 = e.clientY;
+      var up = function (ev) {
+        document.removeEventListener('pointerup', up, true);
+        if (Math.abs(ev.clientX - x0) + Math.abs(ev.clientY - y0) < 14) return;
+        var t = document.elementFromPoint(ev.clientX, ev.clientY), over = t && t.closest ? t.closest('#satchelpanel, .fibag') : null; if (!over || !S || !S.player || deckOf().indexOf(id) < 0) return;
+        ev.stopPropagation(); ev.preventDefault();
+        try { if (typeof cdrag !== 'undefined' && cdrag) cardDragStop(); } catch (er) { }
+        try { if (typeof sarrow !== 'undefined' && sarrow) stopSpellArrow(); } catch (er) { }
+        removeCard(id); var sp = freeBagSpot(); S.loose = S.loose || [];
+        S.loose.push({ id: ++LOOSE_ID, item: id, bag: true, bx: sp.bx, by: sp.by, x: null, y: null });
+        noClickUntil = Date.now() + 300; sfx('item'); render(); refreshDeck(); sealLayerSync(); iconLayerSync();
+      };
+      document.addEventListener('pointerup', up, true);
+    } catch (er) { }
+  }, true);
   // dev tools (purple button left of the character icon)
   (function () {
     try {
@@ -8864,6 +8912,39 @@ var BOSS_PORTRAITS = {"dummy":{"normal":"data:image/webp;base64,UklGRgwlAABXRUJQ
         }
       });
     } catch (e) { }
+  })();
+  // RULE: every window/popup gets a red X (class .winx) that closes it. Add new windows to WIN_X below.
+  (function () {
+    var WIN_X = [
+      { sel: '#settings .setbox', find: '#setClose' },
+      { sel: '#rulesModal .setbox', find: '#rulesClose' },
+      { sel: '.papermodal .setbox', find: '[data-act*="lose"],[data-act*="paper"]', back: true },
+      { sel: '.keybox', find: '#keyClose' },
+      { sel: '.webmodal .webbar', find: '#webClose' },
+      { sel: '.deckmodal', find: '[data-closedeck]' },
+      { sel: '.modalbox', find: '[data-act="bidBack"]' },
+      { sel: '.dicepanel', find: '.xclose' },
+      { sel: '#devmenu', fn: function () { document.getElementById('devmenu').hidden = true; } }
+    ];
+    function scan() {
+      try {
+        WIN_X.forEach(function (w) {
+          var boxes = document.querySelectorAll(w.sel), i, b, x;
+          for (i = 0; i < boxes.length; i++) {
+            b = boxes[i]; if (b.querySelector(':scope > .winx')) continue;
+            x = document.createElement('button'); x.type = 'button'; x.className = 'winx'; x.setAttribute('aria-label', 'Close'); x.innerHTML = X_SVG;
+            x.addEventListener('click', (function (w, b) { return function (e) {
+              e.stopPropagation(); sfx('click'); if (w.fn) { w.fn(b); return; }
+              var c = w.find && (b.querySelector(w.find) || document.querySelector(w.find));
+              if (c && !c.classList.contains('winx')) { c.click(); return; }
+              if (b.parentNode) b.parentNode.dispatchEvent(new MouseEvent('click', { bubbles: true }));
+            }; })(w, b));
+            b.appendChild(x);
+          }
+        });
+      } catch (e) { }
+    }
+    setInterval(scan, 300);
   })();
   // settings cog and panel
   (function () {
@@ -9024,10 +9105,10 @@ var BOSS_PORTRAITS = {"dummy":{"normal":"data:image/webp;base64,UklGRgwlAABXRUJQ
   function sealGlow() {
     relicGlow();
     try {
-      var m = sealHeldMod(), els = document.querySelectorAll('.hpdice [data-tip^="hud:"]'), k;
+      var m = sealHeldMod(), els = document.querySelectorAll('.hpdice [data-tip^="hud:"], .diebare[data-tip^="dfaces:"]'), k;
       if (m) document.body.setAttribute('data-sealdrag', '1'); else document.body.removeAttribute('data-sealdrag');
       for (k = 0; k < els.length; k++) {
-        var i = parseInt(els[k].getAttribute('data-tip').slice(4), 10), d = S.player && S.player.dice[i];
+        var i = parseInt(els[k].getAttribute('data-tip').split(':')[1], 10), d = S.player && S.player.dice[i];
         els[k].classList.remove('sg1', 'sg2', 'sg3', 'sgx');
         if (m && d) els[k].classList.add(canApply(d, m) ? 'sg' + Math.min(3, modCount(d, m) + 1) : 'sgx');
       }
@@ -9050,7 +9131,7 @@ var BOSS_PORTRAITS = {"dummy":{"normal":"data:image/webp;base64,UklGRgwlAABXRUJQ
         bagEl.innerHTML = BAG_SVG + '<button type="button" class="sp-x" aria-label="Close satchel">' + X_SVG + '</button>';
         sealLayer.appendChild(bagEl);
       }
-      var hide = !S || !S.player || ['combat', 'title', 'char', 'rules', 'tree', 'end'].indexOf(S.screen) > -1;
+      var hide = !S || !S.player || ['title', 'char', 'rules', 'tree', 'end'].indexOf(S.screen) > -1;
       if (!hide) relicSync();
       var list = hide ? [] : (S.loose || []), have = {}, W = window.innerWidth, H = window.innerHeight, open = !hide && !!S.bagOpen;
       bagEl.style.display = open ? '' : 'none'; if (open) bagPlace();
@@ -9114,11 +9195,14 @@ var BOSS_PORTRAITS = {"dummy":{"normal":"data:image/webp;base64,UklGRgwlAABXRUJQ
     d.el.style.pointerEvents = 'none'; var t = document.elementFromPoint(e.clientX, e.clientY); d.el.style.pointerEvents = '';
     var q = looseGet(d.id), W = window.innerWidth, H = window.innerHeight;
     if (!q) { sealLayerSync(); return; }
-    if (q.mod) {
-      var die = t && t.closest ? t.closest('.hpdice [data-tip^="hud:"]') : null;
-      if (die && (d.moved || S.sealArm === d.id)) { if (applyLoose(d.id, parseInt(die.getAttribute('data-tip').slice(4), 10))) return; }
+    if (q.item && isCard(q.item) && d.moved && t && t.closest && t.closest('.deckcorner, .handtray, [data-act="deckOpen"]')) {
+      if (deckOf().length >= DECK_MAX) { sfx('grumble'); } else { S.loose = S.loose.filter(function (z) { return z.id !== q.id; }); deckOf().push(q.item); sfx('item'); render(); return; }
     }
-    if (d.moved && q.item && t && t.closest && S.screen !== 'combat') {
+    if (q.mod) {
+      var die = t && t.closest ? t.closest('.hpdice [data-tip^="hud:"], .diebare[data-tip^="dfaces:"]') : null;
+      if (die && (d.moved || S.sealArm === d.id)) { if (applyLoose(d.id, parseInt(die.getAttribute('data-tip').split(':')[1], 10))) return; }
+    }
+    if (d.moved && q.item && !isCard(q.item) && t && t.closest && S.screen !== 'combat') {
       var sl = t.closest('.slot[data-loc^="inv:"]');
       if (sl) { var si = parseInt(sl.getAttribute('data-loc').slice(4), 10); if (!isNaN(si)) { equipRelic(q, si); return; } }
     }
@@ -9161,8 +9245,8 @@ var BOSS_PORTRAITS = {"dummy":{"normal":"data:image/webp;base64,UklGRgwlAABXRUJQ
   document.addEventListener('click', function (e) {
     if (e.target.closest && e.target.closest('.sp-x')) { S.bagOpen = false; sfx('click'); render(); return; }
     if (!S || !S.sealArm || (e.target.closest && e.target.closest('.looseseal'))) return;
-    var die = e.target.closest ? e.target.closest('.hpdice [data-tip^="hud:"]') : null;
-    if (die) applyLoose(S.sealArm, parseInt(die.getAttribute('data-tip').slice(4), 10)); else { S.sealArm = null; sealGlow(); }
+    var die = e.target.closest ? e.target.closest('.hpdice [data-tip^="hud:"], .diebare[data-tip^="dfaces:"]') : null;
+    if (die) applyLoose(S.sealArm, parseInt(die.getAttribute('data-tip').split(':')[1], 10)); else { S.sealArm = null; sealGlow(); }
   });
 
   // ---------- right-click menus and carrying an icon on the cursor ----------
@@ -9193,8 +9277,8 @@ var BOSS_PORTRAITS = {"dummy":{"normal":"data:image/webp;base64,UklGRgwlAABXRUJQ
     var q = looseGet(carry.id), t = e.target;
     if (!q) { carryEnd(); return; }
     if (carry.mode === 'apply') {
-      var die = t.closest ? t.closest('.hpdice [data-tip^="hud:"]') : null;
-      if (die) { var id0 = carry.id; carry = null; if (applyLoose(id0, parseInt(die.getAttribute('data-tip').slice(4), 10))) return; carryEnd(); return; }
+      var die = t.closest ? t.closest('.hpdice [data-tip^="hud:"], .diebare[data-tip^="dfaces:"]') : null;
+      if (die) { var id0 = carry.id; carry = null; if (applyLoose(id0, parseInt(die.getAttribute('data-tip').split(':')[1], 10))) return; carryEnd(); return; }
     } else if (merchHere() && t.closest && t.closest('.merchport')) { sellLoose(q); return; }
     var br = bagRect(), left = e.clientX - 36, top = e.clientY - 36;
     if (br && e.clientX > br.left && e.clientX < br.right && e.clientY > br.top && e.clientY < br.bottom) {
@@ -9744,7 +9828,7 @@ var BOSS_PORTRAITS = {"dummy":{"normal":"data:image/webp;base64,UklGRgwlAABXRUJQ
     if (!deckEl) return;
     var fight = trayMode();
     if (fight !== deckEl.classList.contains('handtray')) { closeDeck(); return; }
-    deckEl.innerHTML = deckBody(); placeTray();
+    var hb = deckBody(); if (deckEl._h !== hb) { deckEl._h = hb; deckEl.innerHTML = hb; } placeTray();
   }
   function onDeckClick(e) {
     var t = e.target; if (!t.closest) return;
@@ -9899,7 +9983,7 @@ var POUCH_SVG = pixSVG(["................", "................", ".....kkkkkk....
       iconLayer.style.display = hide ? 'none' : '';
       if (hide) return;
       var b = iconLayer.querySelector('.fibag'), q = iconLayer.querySelector('.fipouch');
-      b.classList.toggle('dim', fight); b.classList.toggle('open', !!S.bagOpen); q.classList.toggle('open', !!S.pouchOpen);
+      b.classList.toggle('dim', false); b.classList.toggle('open', !!S.bagOpen); q.classList.toggle('open', !!S.pouchOpen);
       if (!(idr && idr.el === b)) iconPlace(b, ICONPOS.bag, 132);
       var forcedOut = S.screen === 'combat' || S.screen === 'victory' || (S.screen === 'event' && S.event && S.event.type === 'bank');
       var inBag = !!S.pouchBag && !forcedOut, brr = inBag ? bagRect() : null;
@@ -9977,7 +10061,7 @@ var POUCH_SVG = pixSVG(["................", "................", ".....kkkkkk....
     var d = idr; idr = null; if (!d) return;
     d.el.classList.remove('held');
     if (!d.moved) {
-      if (d.ic === 'bag') { if (S.screen !== 'combat') { locClick('satchel'); iconLayerSync(); } }
+      if (d.ic === 'bag') { locClick('satchel'); iconLayerSync(); }
       else { S.pouchOpen = !S.pouchOpen; S.pouchAuto = false; iconLayerSync(); }
       return;
     }
