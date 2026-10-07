@@ -148,3 +148,6 @@ None currently listed; add any placeholder here.
 | ui/scratch_skull.webp | Skull with red eye glints, plain | 87x104 | `SCR_SYM.scratch_skull` | same |
 | ui/scratch_cherry_glow.webp / scratch_bell_glow.webp / scratch_skull_glow.webp | Same with cream glow rim, shown on a winning row (cherries, bells) | ~102/90/91 x 104 | `SCR_SYM.scratch_*_glow` | same |
 Replaces the earlier code-drawn pixSVG placeholders (removed). Scratch card odds: 10% three skulls (lose 1 HP), 30% mixed (nothing), 40% three cherries (+50 gold), 20% three bells (+100 gold). Event window uses the open template (`encWinHTML` mode `'open'`, `.encopen`).
+| (code-drawn) skullcap relic icon | 12x12 pixel-art iron skullcap (placeholder) | 12x12 | `ITEM_ROWS.skullcap` / `ITEM_ART.skullcap` | code-drawn, replace with Gemini art if supplied |
+| (code-drawn) forge map icon | 12x12 pixel-art anvil for The Forge event (placeholder) | 12x12 | `EV_ROWS.forge` | code-drawn, replace with Gemini art if supplied |
+| (reused) smith portrait | The Forge event reuses the Smith encounter portrait | - | `ENCMAP.forge = 'smith'` | needs its own Gemini portrait if wanted |
