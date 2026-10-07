@@ -332,7 +332,10 @@ KNOWN ISSUES (art still to come)
   body[data-screen="combat"][data-floor="2"] { background: radial-gradient(ellipse 60% 55% at 50% 52%, rgba(0,0,0,.5), rgba(0,0,0,0) 100%), var(--fbg2) center / cover no-repeat fixed, #0a0806; }
   body[data-screen="combat"][data-floor="3"] { background: radial-gradient(ellipse 60% 55% at 50% 52%, rgba(0,0,0,.5), rgba(0,0,0,0) 100%), var(--fbg3) center / cover no-repeat fixed, #0a0806; }
   body[data-screen="combat"][data-floor="4"] { background: radial-gradient(ellipse 60% 55% at 50% 52%, rgba(0,0,0,.5), rgba(0,0,0,0) 100%), var(--fbg4) center / cover no-repeat fixed, #0a0806; }
-  body[data-floor="1"]:is([data-screen="event"], [data-screen="shop"], [data-screen="camp"], [data-screen="dummy"], [data-screen="forge"], [data-screen="swap"]) { background: radial-gradient(ellipse 60% 55% at 50% 52%, rgba(0,0,0,.5), rgba(0,0,0,0) 100%), var(--fbg1) center / cover no-repeat fixed, #0a0806; }
+  body[data-floor="2"]:is([data-screen="victory"], [data-screen="levelup"]) { background: radial-gradient(ellipse 60% 55% at 50% 52%, rgba(0,0,0,.5), rgba(0,0,0,0) 100%), var(--fbg2) center / cover no-repeat fixed, #0a0806; }
+  body[data-floor="3"]:is([data-screen="victory"], [data-screen="levelup"]) { background: radial-gradient(ellipse 60% 55% at 50% 52%, rgba(0,0,0,.5), rgba(0,0,0,0) 100%), var(--fbg3) center / cover no-repeat fixed, #0a0806; }
+  body[data-floor="4"]:is([data-screen="victory"], [data-screen="levelup"]) { background: radial-gradient(ellipse 60% 55% at 50% 52%, rgba(0,0,0,.5), rgba(0,0,0,0) 100%), var(--fbg4) center / cover no-repeat fixed, #0a0806; }
+  body[data-floor="1"]:is([data-screen="event"], [data-screen="shop"], [data-screen="camp"], [data-screen="dummy"], [data-screen="forge"], [data-screen="swap"], [data-screen="victory"], [data-screen="levelup"]) { background: radial-gradient(ellipse 60% 55% at 50% 52%, rgba(0,0,0,.5), rgba(0,0,0,0) 100%), var(--fbg1) center / cover no-repeat fixed, #0a0806; }
   body[data-screen="map"][data-floor="1"] { background: radial-gradient(ellipse 60% 55% at 50% 52%, rgba(0,0,0,.5), rgba(0,0,0,0) 100%), var(--fbg1) center / cover no-repeat fixed, #0a0806; }
   body[data-screen="map"][data-floor="2"] { background: radial-gradient(ellipse 60% 55% at 50% 52%, rgba(0,0,0,.5), rgba(0,0,0,0) 100%), var(--fbg2) center / cover no-repeat fixed, #0a0806; }
   body[data-screen="map"][data-floor="3"] { background: radial-gradient(ellipse 60% 55% at 50% 52%, rgba(0,0,0,.5), rgba(0,0,0,0) 100%), var(--fbg3) center / cover no-repeat fixed, #0a0806; }
@@ -2422,7 +2425,7 @@ KNOWN ISSUES (art still to come)
   html .handtray .tcard.cantplay:hover { filter: grayscale(.5) brightness(.9); }
   html .handtray.deal .tcard { animation: handdeal .42s cubic-bezier(.2,.9,.3,1) backwards; animation-delay: calc(var(--k, 0) * 30ms); }
   @keyframes handdeal { 0% { transform: translate(var(--dx, 0px), 8px) rotate(0deg) scale(.72) perspective(700px) rotateY(180deg); opacity: 0; } 30% { opacity: 1; } 100% { transform: translateY(-4px) rotate(var(--r, 0deg)) scale(1) perspective(700px) rotateY(0deg); opacity: 1; } }
-  html body .deckcorner.fanned .deckpile { opacity: 0; transition: opacity .12s; }
+  html body .deckcorner.fanned .deckpile { opacity: 1; }
   @keyframes cardplay { 0% { transform: translateY(-82px) scale(1.42); opacity: 1; } 60% { transform: translateY(-260px) scale(1.7); opacity: 1; } 100% { transform: translateY(-320px) scale(2); opacity: 0; } }
   @media (prefers-reduced-motion: reduce) { html .handtray.deal .tcard { animation: none; } }
   body .paper, body .paperx { width: 150px !important; max-width: 150px !important; margin-left: 650px !important; font-size: 20px !important; }
@@ -2646,7 +2649,7 @@ KNOWN ISSUES (art still to come)
 
   #iconlayer { position: fixed; inset: 0; z-index: 320; pointer-events: none; }
   #iconlayer .fi { position: absolute; pointer-events: auto; cursor: grab; touch-action: none; user-select: none; display: grid; place-items: center; filter: drop-shadow(0 6px 0 rgba(0,0,0,.45)) drop-shadow(0 0 8px rgba(230,189,69,.25)); transition: transform .12s; }
-  #iconlayer .fibag { width: 185px; height: 185px; } #iconlayer .fipouch { width: 102px; height: 102px; }
+  #iconlayer .fibag { width: 148px; height: 148px; } #iconlayer .fipouch { width: 82px; height: 82px; }
   #iconlayer .fi > svg { width: 100%; height: 100%; display: block; image-rendering: pixelated; pointer-events: none; }
   #iconlayer .fi:hover { transform: scale(1.06); filter: drop-shadow(0 6px 0 rgba(0,0,0,.45)) drop-shadow(0 0 14px rgba(246,214,106,.8)); }
   #iconlayer .fi.held { cursor: grabbing; transform: scale(1.14) rotate(-4deg); filter: drop-shadow(0 14px 8px rgba(0,0,0,.5)); }
@@ -3451,7 +3454,7 @@ html body .btn:not(.rollbtn):not(.beginbtn):not(.mapkeybtn):not(.xbtn):not(.pxcl
   @media (prefers-reduced-motion: reduce) { .tatscroll, .tatscroll:hover:not(:disabled) { animation: none; } }
   html:has(body:not([data-screen="title"]):not([data-screen="char"]):not([data-screen="rules"])), body:not([data-screen="title"]):not([data-screen="char"]):not([data-screen="rules"]) { overflow: hidden !important; height: 100%; }
   #app .encwin { z-index: 90; } html body #app:has(> .encwin) { overflow: visible !important; }
-  .encwin .encglow { position: absolute; inset: 20px 50px 20px 20px; border-radius: 30px; box-shadow: 0 0 90px var(--eg, rgba(200,150,60,.35)); pointer-events: none; }
+  .encwin .encglow { position: absolute; inset: 40px 70px 40px 40px; border-radius: 6px; box-shadow: 0 0 90px var(--eg, rgba(200,150,60,.35)); pointer-events: none; }
   .encwin.v-red { --eg: rgba(220,60,40,.4); } .encwin.v-green { --eg: rgba(70,200,110,.35); } .encwin.v-violet { --eg: rgba(150,90,255,.45); }
   .encwin .eabs { position: absolute; image-rendering: pixelated; }
   /* 9-slice frame: corners and wood are locked at half the old scale (2.33x of the source art); the wood edges just tile longer or shorter */
@@ -3481,6 +3484,19 @@ html body .btn:not(.rollbtn):not(.beginbtn):not(.mapkeybtn):not(.xbtn):not(.pxcl
   .encwin .encfoot .row { margin: 0; justify-content: center; flex-wrap: nowrap; }
   .encwin .encfoot .btn { margin: 0; white-space: nowrap; } .encwin .encfoot .row { gap: 10px; zoom: .78; } .encwin .enctray .wares { zoom: .88; }
   .encwin .winx { top: 40px; right: 56px; }
+  /* character select as an encounter window */
+  html body[data-screen="char"] .wrap:has(> #app > .charenc), html body[data-screen="char"] .wrap:has(.charenc) { margin-left: auto !important; margin-right: auto !important; max-width: none !important; width: 100% !important; }
+  html body[data-screen="char"] #app:has(> .charenc) { width: 100% !important; max-width: none !important; overflow: visible !important; }
+  .encwin .mugport { width: 100%; height: 100%; display: grid; place-items: center; background: radial-gradient(circle at 50% 40%, #6a4a24, #1a1410 80%); } .encwin .mugport svg { width: 74%; height: 74%; image-rendering: pixelated; }
+  .encwin.charenc .enctray { flex-direction: row; gap: 10px; align-items: stretch; overflow: visible; padding: 0; }
+  .encwin.charenc .clswrap { flex: 1 1 0; min-width: 0; position: relative; display: flex; }
+  .encwin.charenc .clsbtn.charcard { flex-direction: column; align-items: center; text-align: center; margin: 0; width: 100%; padding: 6px 8px; gap: 8px; }
+  .encwin.charenc .clsbtn .portrait { width: 120px; height: 120px; }
+  .encwin.charenc .clsbtn .grow { min-width: 0; align-items: center; gap: 4px; } .encwin.charenc .clsbtn h3 { font-size: 30px; } .encwin.charenc .clsbtn h3::after { margin-inline: auto; }
+  .encwin.charenc .clsbtn .muted { font-size: 17px; line-height: 1.12; }
+  .encwin.charenc .infoq { position: absolute; right: 6px; top: 6px; z-index: 3; }
+  .encwin.charenc .encflav b { font-size: 1.15em; letter-spacing: .08em; text-transform: uppercase; }
+  .encwin.charenc .crawlbtn { padding: 8px 26px; } .encwin.charenc .crawlbtn .tf-sp { display: inline-block; }
   .encwin .enctray .rolled { padding: 8px; gap: 12px; border-width: 4px 4px 6px; } .encwin .enctray .evresult p { margin: 0; line-height: 1.15; } .encwin .enctray .evresult { font-size: 24px; width: 100%; padding: 0 10px; text-align: left; }
   .encwin .enctray .sum { font-size: 34px; }
   /* taller template (level up, battle report): same art, more tray */
@@ -5151,7 +5167,7 @@ html body .btn:not(.rollbtn):not(.beginbtn):not(.mapkeybtn):not(.xbtn):not(.pxcl
       }
     } catch (e) { beginning = false; startRun(); }
   }
-  function startRun() { XP.shown = null; XP.anim = null; AUD.lastGold = null; S.newItems = {}; S.loose = []; S.cards = []; S.pouchBag = null; S.pcPos = {}; S.pcZ = 0; S.sealArm = null; S.bagOpen = false; S.bagPos = null; S.owed = 0; S.shopLuck = webN('luck'); S.bonus = { double: 0, block: 0, drop: 0 }; S.tokBanked = false; S.runKills = 0; S.swap = null; S.discardArm = null; S.hold = null; S.destroy = null; S.bagOpen = false; S.player = newPlayer(); S.player.deck.push('potion'); S.bank = 0; S.bankNote = 0; S.floorNum = 1; S.floor = makeFloor(1); initFloorState(); S.screen = 'map'; S.forge = null; S.upgrade = null; S.event = null; S.pending = 0; S.finalShop = false; S.showDice = false; S.pact = false; S.runPts = 0; S.runWins = 0; S.sk = {}; S.sp = 0; S.shopLevel = 0; render(); }
+  function startRun() { try { musicHardStop(); } catch (e) { } XP.shown = null; XP.anim = null; AUD.lastGold = null; S.newItems = {}; S.loose = []; S.cards = []; S.pouchBag = null; S.pcPos = {}; S.pcZ = 0; S.sealArm = null; S.bagOpen = false; S.bagPos = null; S.owed = 0; S.shopLuck = webN('luck'); S.bonus = { double: 0, block: 0, drop: 0 }; S.tokBanked = false; S.runKills = 0; S.swap = null; S.discardArm = null; S.hold = null; S.destroy = null; S.bagOpen = false; S.player = newPlayer(); S.player.deck.push('potion'); S.bank = 0; S.bankNote = 0; S.floorNum = 1; S.floor = makeFloor(1); initFloorState(); S.screen = 'map'; S.forge = null; S.upgrade = null; S.event = null; S.pending = 0; S.finalShop = false; S.showDice = false; S.pact = false; S.runPts = 0; S.runWins = 0; S.sk = {}; S.sp = 0; S.shopLevel = 0; render(); }
   var bossBusy = false;
   // floor boss: fade to black and fade the music out, then the boss track plays from its first note
   function bossCue(go) {
@@ -7512,6 +7528,8 @@ html body .btn:not(.rollbtn):not(.beginbtn):not(.mapkeybtn):not(.xbtn):not(.pxcl
       var setZ = function (v) { document.body.style.zoom = String(v); document.documentElement.style.setProperty('--zk', String(v)); };
       try { var mbx = document.querySelector('.meb'); if (mbx && hudScr) mbx.style.paddingTop = '44px'; } catch (e) { }
       setZ(z);
+      // the map keeps its picture shape: on a wide, short window make it narrower so its bottom edge is never cut off
+      try { var mpn = document.querySelector('.mappanel'); if (mpn) { mpn.style.removeProperty('width'); var mr = mpn.getBoundingClientRect(), availH = h - Math.max(0, mr.top) - 4; if (mr.height > availH && availH > 120) mpn.style.setProperty('width', Math.floor(availH * (mr.width / mr.height) / z) + 'px', 'important'); } } catch (e) { }
       if (['combat'].indexOf(document.body.getAttribute('data-screen')) > -1) {
         var app = document.getElementById('app'), n = 0;
         while (app && n++ < 24 && z > .18 && app.scrollHeight > app.clientHeight + 2) { z = Math.max(.18, z * .97); setZ(z); }
@@ -7747,6 +7765,13 @@ var BOSS_PORTRAITS = {"dummy":{"normal":"data:image/webp;base64,UklGRgwlAABXRUJQ
       var c = CLASSES[id];
       return '<div class="clswrap"><button type="button" class="infoq" data-act="infoOpen" data-id="' + id + '" aria-label="' + c.name + ' info">?</button>' + '<button type="button" class="charcard clsbtn clspop' + (id === cl ? ' sel' : '') + (S.clsOpen === id ? ' open' : '') + '" style="animation-delay:' + (CLSI++ * 0.1).toFixed(2) + 's" data-act="pickCls" data-id="' + id + '" aria-pressed="' + (id === cl) + '"><span class="portrait" style="--c1:' + c.c1 + ';--c2:' + c.c2 + ';--eye:' + c.eye + '">' + portraitArt(id, c, 'normal') + '</span><span class="grow"><h3>' + c.name + '</h3><span class="muted">' + c.blurb + '</span></span></button></div>';
     }).join('');
+    if (ENC_CHAR) {
+      var cp = S.clsPicked ? (CLASSES[cl] || null) : null;
+      return encWinHTML({ key: 'chest', variant: 'brown', cls: 'charenc' + (still ? ' charstill' : ''), title: 'The Rusty Flagon',
+        flav: cp ? '<b>' + cp.name + '</b><br>' + cp.blurb : 'Pick who walks down into the dark.',
+        portHTML: '<div class="mugport">' + MUG_ART + '</div>', tray: cards,
+        foot: '<div class="row"><button type="button" class="btn torch crawlbtn" data-act="start"' + (S.clsPicked ? '' : ' disabled') + '>' + titleText('START CRAWLING', 30) + '</button></div>' });
+    }
     return '<div class="tavlogo"><button type="button" class="crawlword' + (S.clsPicked ? ' lit' : '') + '" data-act="start"' + (S.clsPicked ? '' : ' disabled tabindex="-1"') + ' aria-label="Crawl"></button></div><section class="panel tavern' + (still ? ' charstill' : '') + '"><i class="grain" aria-hidden="true"></i><div class="tavhead"><span class="tavmug">' + MUG_ART + '</span><div class="tavsign"><i class="chain c1"></i><i class="chain c2"></i><div class="board"><small>The</small><b>Rusty Flagon</b><span>Tavern</span></div></div><span class="tavmug flip">' + MUG_ART + '</span></div><div class="hearth" aria-hidden="true"><i></i><i></i><i></i></div>' + cards +
       '</section>';
   }
@@ -8334,7 +8359,7 @@ var BOSS_PORTRAITS = {"dummy":{"normal":"data:image/webp;base64,UklGRgwlAABXRUJQ
   function maxIc() { return '<span class="maxic" role="img" aria-label="+max">' + (ITEM_ART.cup || '+max') + '</span>'; }
   function maxify(t) { return String(t).replace(/\+max/g, maxIc()); }
   // prototype switches: set to false to go back to the old plain panels
-  var ENC_LEVEL = true, ENC_REPORT = true;
+  var ENC_LEVEL = true, ENC_REPORT = true, ENC_CHAR = true;
   function levelHTML() {
     var h = levelHTMLOld();
     if (!ENC_LEVEL) return h;
@@ -9338,6 +9363,16 @@ var BOSS_PORTRAITS = {"dummy":{"normal":"data:image/webp;base64,UklGRgwlAABXRUJQ
       audGet('audio/' + k + '.mp3', function (b) { MUSC.buf[k] = b; MUSC.st[k] = 'ready'; musicSet(AUD.want); if (k === 'calm' && window.MUSC.fight2a) { stageLoad('fight2a'); stageLoad('fight2d'); stageLoad('fight2f'); stageLoad('fight2g'); stageLoad('fight2m'); stageLoad('fight3a'); stageLoad('fight3b'); stageLoad('fight3c'); stageLoad('boss1'); stageLoad('boss_pitboss'); stageLoad('boss_dealer'); } }, function () { MUSC.st[k] = 'failed'; try { musicSet(AUD.want); } catch (e) { } });
     } catch (e) { MUSC.st[k] = 'failed'; }
   }
+  function musicHardStop() {
+    // silence every recorded-music voice at once (current, scheduled and the fading previous one) so a new run never layers over the old track
+    try {
+      var v = MUSC.v; MUSC.v = null;
+      while (v) { var nx = v.prev; try { v.g.gain.cancelScheduledValues(0); v.g.gain.value = 0; } catch (e) { } try { v.s.stop(); } catch (e) { } try { v.g.disconnect(); } catch (e) { } v = nx; }
+      MUSC.pick = null; MUSC.epick = null;
+      if (MUSX.v) { var xv = MUSX.v; MUSX.v = null; try { xv.g.gain.value = 0; xv.s.stop(); xv.g.disconnect(); } catch (e) { } }
+      if (AUD.seq) { try { AUD.seq.stop(); } catch (e) { } AUD.seq = null; AUD.track = null; }
+    } catch (e) { }
+  }
   function stageStop(fade) {
     var v = MUSC.v; if (!v) return; MUSC.v = null;
     try { var c = AUD.ctx; v.g.gain.cancelScheduledValues(0); v.g.gain.setTargetAtTime(0, c.currentTime, fade / 4); v.s.stop(c.currentTime + fade * 1.6 + 0.2); } catch (e) { }
@@ -10058,7 +10093,7 @@ var BOSS_PORTRAITS = {"dummy":{"normal":"data:image/webp;base64,UklGRgwlAABXRUJQ
       case 'skill': if (TREE[id] && skillState(id).ok) { S.sp -= TREE[id].cost; S.sk[id] = true; if (id === 'aura') S.haloDrop = true; render(); skillShine(id); } break;
       case 'endRun': case 'menu':
         if (!b.getAttribute('data-armed')) { b.setAttribute('data-armed', '1'); var lbl = b.textContent; b.textContent = 'Tap again to seal your fate'; setTimeout(function () { try { b.removeAttribute('data-armed'); b.textContent = lbl; } catch (e) { /* gone */ } }, 3000); break; }
-        clearTimeout(timer); var spn = document.getElementById('settings'); if (spn) spn.hidden = true;
+        clearTimeout(timer); try { musicHardStop(); } catch (e) { } var spn = document.getElementById('settings'); if (spn) spn.hidden = true;
         if (a === 'endRun') { returnStolen(); S.pact = false; S.endKind = 'quit'; S.screen = 'end'; render(); }
         else { C = null; S.player = null; S.floorNum = 1; S.showDice = false; S.screen = 'char'; S.clsPicked = false; render(); }
         break;
@@ -10559,7 +10594,7 @@ var BOSS_PORTRAITS = {"dummy":{"normal":"data:image/webp;base64,UklGRgwlAABXRUJQ
       var i = list.indexOf(c), st = HS.st[key];
       if (!st) { st = HS.st[key] = { x: cx, y: base - ch * 0.5, r: 10, s: 0.5, vx: 0, vy: 0, vr: 0, vs: 0, ph: Math.random() * 6.28 }; }
       var sl = handSlot(i, n, left, base, ch), tx = sl.x, ty = sl.y + Math.sin(now / 900 + st.ph) * HP.float, tr = sl.r, ts = 1;
-      if (c.classList.contains('inspect')) { ty = base - ch * 0.5 - 150; tr = 0; ts = 1.55; }
+      if (c.classList.contains('inspect')) { tx = innerWidth / 2; ty = innerHeight / 2; tr = 0; ts = Math.min(2.1, innerHeight * 0.74 / ch); }
       else if (HS.hov === c) { ty -= HP.lift; tr = 0; ts = HP.hovScale; }
       if (cdrag && cdrag.moved && cdrag.c === c) return;
       st.vx += ((tx - st.x) * HP.k - st.vx * HP.d) * dt; st.x += st.vx * dt;
@@ -10678,14 +10713,14 @@ var POUCH_SVG = pixSVG(["................", "................", ".....kkkkkk....
       if (hide) return;
       var b = iconLayer.querySelector('.fibag'), q = iconLayer.querySelector('.fipouch');
       b.classList.toggle('dim', false); b.classList.toggle('open', !!S.bagOpen); q.classList.toggle('open', !!S.pouchOpen);
-      if (!(idr && idr.el === b)) iconPlace(b, ICONPOS.bag, 185);
+      if (!(idr && idr.el === b)) iconPlace(b, ICONPOS.bag, 148);
       var forcedOut = S.screen === 'combat' || S.screen === 'victory' || (S.screen === 'event' && S.event && S.event.type === 'bank');
       var inBag = !!S.pouchBag && !forcedOut, brr = inBag ? bagRect() : null;
       iconLayer.style.zIndex = (S.bagOpen || (inBag && brr)) ? '335' : '';
       if (inBag) {
         if (!brr) q.style.display = 'none';
         else { q.style.display = ''; if (!(idr && idr.el === q)) { q.style.left = Math.round(brr.left + S.pouchBag.bx) + 'px'; q.style.top = Math.round(brr.top + S.pouchBag.by) + 'px'; } }
-      } else { q.style.display = ''; if (!(idr && idr.el === q)) iconPlace(q, ICONPOS.pouch, 102); }
+      } else { q.style.display = ''; if (!(idr && idr.el === q)) iconPlace(q, ICONPOS.pouch, 82); }
       var bn = bagCount(); b.querySelector('.fcount').textContent = bn ? bn : ''; b.querySelector('.fcount').style.display = bn ? '' : 'none';
       if (!(S.screen === 'victory' && S.victory && S.victory.anim === 'play')) q.querySelector('.fcount').textContent = (S.screen === 'victory' && S.victory && S.victory.anim === 'idle' && S.victory.oldGold != null) ? S.victory.oldGold : S.player.gold; 
       if (S.pouchAuto && !(S.screen === 'event' && S.event && S.event.type === 'bank')) { S.pouchOpen = false; S.pouchAuto = false; }
@@ -10782,7 +10817,7 @@ var POUCH_SVG = pixSVG(["................", "................", ".....kkkkkk....
     }
   }
   function iconFling(ic, el, vx, vy) {
-    var sz = ic === 'bag' ? 185 : 102, pos = ic === 'bag' ? ICONPOS.bag : ICONPOS.pouch, last = performance.now(), tok = (iconFling.t = (iconFling.t || 0) + 1);
+    var sz = ic === 'bag' ? 148 : 82, pos = ic === 'bag' ? ICONPOS.bag : ICONPOS.pouch, last = performance.now(), tok = (iconFling.t = (iconFling.t || 0) + 1);
     function step(now) {
       if (iconFling.t !== tok || (idr && idr.el === el)) return;
       var W = window.innerWidth, H = window.innerHeight, dt = Math.min(34, now - last); last = now;
