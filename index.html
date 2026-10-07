@@ -3312,6 +3312,9 @@ html body .btn:not(.rollbtn):not(.beginbtn):not(.mapkeybtn):not(.xbtn):not(.pxcl
   body.spelling .spelltgt { outline: 4px solid #ffd37a; outline-offset: 5px; animation: snapring .45s ease-out infinite alternate !important; }
   @keyframes snapring { from { outline-offset: 9px; outline-color: rgba(255,211,122,.5); } to { outline-offset: 4px; outline-color: #fff0b0; } }
   .sapreview { position: fixed; z-index: 346; display: none; transform: translate(-50%, -100%); padding: 4px 12px; font: 700 26px/1 var(--display, monospace); color: #fff1c8; background: rgba(20,14,8,.9); border: 3px solid #ffd37a; border-radius: 6px; pointer-events: none; text-shadow: 0 2px 0 #000; white-space: nowrap; }
+  html body .hudport.rollturn .hudframe, html body .hudport.rollturn .portrait { visibility: visible !important; }
+  body .hudport .btn.rollbtn, html body .hudport .btn.rollbtn { position: fixed !important; inset: auto !important; left: 50% !important; top: 50% !important; width: 200px !important; height: 200px !important; transform: translate(-50%, -50%); z-index: 60; }
+  body .hudport .btn.rollbtn:hover { transform: translate(-50%, -50%) scale(1.05) !important; } body .hudport .btn.rollbtn:active:not(:disabled) { transform: translate(-50%, -50%) scale(.95) !important; }
   .dicepanel::before, .dicepanel::after { display: none !important; } .dicepanel > h2 { display: none; }
   .spellarrow img, .spellarrow .sa-b img, .spellarrow .sa-h img { max-width: none !important; max-height: none !important; }
   .spellarrow .sa-svg { position: absolute; left: 0; top: 0; width: 100vw; height: 100vh; overflow: visible; }
@@ -6630,7 +6633,7 @@ html body .btn:not(.rollbtn):not(.beginbtn):not(.mapkeybtn):not(.xbtn):not(.pxcl
   }
   // a burst of sparks in the seal's wax colour where it lands on a die
   function sealSparks(i, mod) {
-    var el = document.querySelector('.dropdie[data-i="' + i + '"]') || document.querySelector('.hpdice [data-tip="hud:' + i + '"]') || document.querySelector('.diebare[data-tip="dfaces:' + i + '"]'); if (!el) return;
+    var el = document.querySelector('.dropdie[data-i="' + i + '"]') || document.querySelector('.hpdice [data-tip="hud:' + i + '"]') || (function () { var k = -1; if (C && C.pv) C.pv.forEach(function (x, j) { if (!x.baby && x.i === i) k = j; }); return k > -1 ? document.querySelector('.hpdice .pvhov[data-tip="pv:' + k + '"]') : null; })() || document.querySelector('.diebare[data-tip="dfaces:' + i + '"]'); if (!el) return;
     var r = el.getBoundingClientRect(), z = parseFloat(getComputedStyle(document.body).zoom) || 1, cx = r.left + r.width / 2, cy = r.top + r.height / 2;
     var tint = (typeof TINTS !== 'undefined' && TINTS[mod]) || '#e4c35c', cols = [tint, tint, '#fff6c2', '#ffd36a', shadeHex(tint, 1.5)];
     var box = document.createElement('div'); box.className = 'sealfx'; box.setAttribute('aria-hidden', 'true');
@@ -9249,6 +9252,11 @@ var BOSS_PORTRAITS = {"dummy":{"normal":"data:image/webp;base64,UklGRgwlAABXRUJQ
     var p = S.player, id = p.inv[i]; if (!id || S.screen === 'combat') return;
     p.inv.splice(i, 1); render(); skidOut(id, Math.min(i, INV_SLOTS - 1));
   }
+  function dieIdx(el) {
+    var t = el.getAttribute('data-tip') || '', n = parseInt(t.split(':')[1], 10);
+    if (t.indexOf('pv:') === 0) { var x = (typeof C !== 'undefined' && C && C.pv) ? C.pv[n] : null; return x && !x.baby ? x.i : -1; }
+    return n;
+  }
   function sealHeldMod() { var id = sealDrag ? sealDrag.id : S.sealArm, q = id && looseGet(id); return q && q.mod ? q.mod : null; }
   // dice that can take the held seal glow yellow, orange or purple for the 1st, 2nd or 3rd level of it
   function relicGlow() {
@@ -9263,10 +9271,10 @@ var BOSS_PORTRAITS = {"dummy":{"normal":"data:image/webp;base64,UklGRgwlAABXRUJQ
   function sealGlow() {
     relicGlow();
     try {
-      var m = sealHeldMod(), els = document.querySelectorAll('.hpdice [data-tip^="hud:"], .diebare[data-tip^="dfaces:"]'), k;
+      var m = sealHeldMod(), els = document.querySelectorAll('.hpdice [data-tip^="hud:"], .diebare[data-tip^="dfaces:"], .hpdice .pvhov[data-tip^="pv:"]'), k;
       if (m) document.body.setAttribute('data-sealdrag', '1'); else document.body.removeAttribute('data-sealdrag');
       for (k = 0; k < els.length; k++) {
-        var i = parseInt(els[k].getAttribute('data-tip').split(':')[1], 10), d = S.player && S.player.dice[i];
+        var i = dieIdx(els[k]), d = S.player && S.player.dice[i];
         els[k].classList.remove('sg1', 'sg2', 'sg3', 'sgx');
         if (m && d) els[k].classList.add(canApply(d, m) ? 'sg' + Math.min(3, modCount(d, m) + 1) : 'sgx');
       }
@@ -9357,8 +9365,8 @@ var BOSS_PORTRAITS = {"dummy":{"normal":"data:image/webp;base64,UklGRgwlAABXRUJQ
       if (deckOf().length >= DECK_MAX) { sfx('grumble'); } else { S.loose = S.loose.filter(function (z) { return z.id !== q.id; }); deckOf().push(q.item); sfx('item'); render(); return; }
     }
     if (q.mod) {
-      var die = t && t.closest ? t.closest('.hpdice [data-tip^="hud:"], .diebare[data-tip^="dfaces:"]') : null;
-      if (die && (d.moved || S.sealArm === d.id)) { if (applyLoose(d.id, parseInt(die.getAttribute('data-tip').split(':')[1], 10))) return; }
+      var die = t && t.closest ? t.closest('.hpdice [data-tip^="hud:"], .diebare[data-tip^="dfaces:"], .hpdice .pvhov[data-tip^="pv:"]') : null;
+      if (die && (d.moved || S.sealArm === d.id)) { if (applyLoose(d.id, dieIdx(die))) return; }
     }
     if (d.moved && q.item && !isCard(q.item) && t && t.closest && S.screen !== 'combat') {
       var sl = t.closest('.slot[data-loc^="inv:"]');
@@ -9403,8 +9411,8 @@ var BOSS_PORTRAITS = {"dummy":{"normal":"data:image/webp;base64,UklGRgwlAABXRUJQ
   document.addEventListener('click', function (e) {
     if (e.target.closest && e.target.closest('.sp-x')) { S.bagOpen = false; sfx('click'); render(); return; }
     if (!S || !S.sealArm || (e.target.closest && e.target.closest('.looseseal'))) return;
-    var die = e.target.closest ? e.target.closest('.hpdice [data-tip^="hud:"], .diebare[data-tip^="dfaces:"]') : null;
-    if (die) applyLoose(S.sealArm, parseInt(die.getAttribute('data-tip').split(':')[1], 10)); else { S.sealArm = null; sealGlow(); }
+    var die = e.target.closest ? e.target.closest('.hpdice [data-tip^="hud:"], .diebare[data-tip^="dfaces:"], .hpdice .pvhov[data-tip^="pv:"]') : null;
+    if (die) applyLoose(S.sealArm, dieIdx(die)); else { S.sealArm = null; sealGlow(); }
   });
 
   // ---------- right-click menus and carrying an icon on the cursor ----------
@@ -9435,8 +9443,8 @@ var BOSS_PORTRAITS = {"dummy":{"normal":"data:image/webp;base64,UklGRgwlAABXRUJQ
     var q = looseGet(carry.id), t = e.target;
     if (!q) { carryEnd(); return; }
     if (carry.mode === 'apply') {
-      var die = t.closest ? t.closest('.hpdice [data-tip^="hud:"], .diebare[data-tip^="dfaces:"]') : null;
-      if (die) { var id0 = carry.id; carry = null; if (applyLoose(id0, parseInt(die.getAttribute('data-tip').split(':')[1], 10))) return; carryEnd(); return; }
+      var die = t.closest ? t.closest('.hpdice [data-tip^="hud:"], .diebare[data-tip^="dfaces:"], .hpdice .pvhov[data-tip^="pv:"]') : null;
+      if (die) { var id0 = carry.id; carry = null; if (applyLoose(id0, dieIdx(die))) return; carryEnd(); return; }
     } else if (merchHere() && t.closest && t.closest('.merchport')) { sellLoose(q); return; }
     var br = bagRect(), left = e.clientX - 36, top = e.clientY - 36;
     if (br && e.clientX > br.left && e.clientX < br.right && e.clientY > br.top && e.clientY < br.bottom) {
