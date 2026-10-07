@@ -3265,6 +3265,9 @@ html body .btn:not(.rollbtn):not(.beginbtn):not(.mapkeybtn):not(.xbtn):not(.pxcl
   .tcard, .looseseal, .fi { touch-action: none; }
 
   .dicepanel { position: relative; } .dicepanel .xclose { display: none !important; }
+
+  html .handtray .tcard::before { content: ""; position: absolute; left: 0; right: 0; top: 100%; height: 70px; }
+  .spellarrow { z-index: 345 !important; }
 </style>
 
 <main class="wrap">
@@ -5463,7 +5466,7 @@ html body .btn:not(.rollbtn):not(.beginbtn):not(.mapkeybtn):not(.xbtn):not(.pxcl
     if (sarrow.svg.parentNode) sarrow.svg.parentNode.removeChild(sarrow.svg);
     if (sarrow.hover) sarrow.hover.classList.remove('spelltgt');
     document.body.classList.remove('spelling');
-    document.removeEventListener('pointermove', moveSpellArrow); document.removeEventListener('pointerup', endSpellArrow); document.removeEventListener('pointercancel', stopSpellArrow);
+    document.removeEventListener('pointermove', moveSpellArrow); document.removeEventListener('pointerup', endSpellArrow); document.removeEventListener('pointercancel', sarrowCancel); document.removeEventListener('mousemove', moveSpellArrow); document.removeEventListener('mouseup', endSpellArrow);
     sarrow = null;
   }
   function moveSpellArrow(e) {
@@ -5512,8 +5515,10 @@ html body .btn:not(.rollbtn):not(.beginbtn):not(.mapkeybtn):not(.xbtn):not(.pxcl
     sarrow = { kind: kind || 'spell', svg: svg, sx: r.left + r.width / 2, sy: r.top + r.height / 2, x0: e.clientX, y0: e.clientY, moved: false, hover: null };
     document.body.classList.add('spelling');
     moveSpellArrow(e);
-    document.addEventListener('pointermove', moveSpellArrow); document.addEventListener('pointerup', endSpellArrow); document.addEventListener('pointercancel', stopSpellArrow);
+    document.addEventListener('pointermove', moveSpellArrow); document.addEventListener('pointerup', endSpellArrow); document.addEventListener('pointercancel', sarrowCancel);
+    document.addEventListener('mousemove', moveSpellArrow); document.addEventListener('mouseup', endSpellArrow);
   }
+  function sarrowCancel(e) { if (e && e.buttons) return; stopSpellArrow(); }
   function pickSmite(i) {
     if (!C || C.target !== 'smite' || C.en.smote[i] || i >= C.en.dice.length) return;
     C.en.smote[i] = true; delete C.en.peeked[i]; C.charges.smite--; C.target = null; C.smiteFx = { i: i, t0: Date.now() };
@@ -9895,12 +9900,12 @@ var BOSS_PORTRAITS = {"dummy":{"normal":"data:image/webp;base64,UklGRgwlAABXRUJQ
   var peekTimer = 0;
   document.addEventListener('mouseover', function (e) {
     if (!e.target || !e.target.closest) return;
-    var zone = e.target.closest('.deckcorner, .handtray');
+    var zone = e.target.closest('.deckcorner, .handtray .tcard, .deckmodal');
     if (zone) {
       clearTimeout(peekTimer);
       if (!deckEl && zone.classList.contains('deckcorner') && WIDEUI && !document.body.classList.contains('spelling')) { openDeck(); if (deckEl) { deckEl._peek = true; deckEl.classList.add('peek'); } }
     } else if (deckEl && deckEl._peek) {
-      clearTimeout(peekTimer); peekTimer = setTimeout(function () { if (deckEl && deckEl._peek && !cdrag && !document.body.classList.contains('spelling')) closeDeck(); }, 260);
+      clearTimeout(peekTimer); peekTimer = setTimeout(function () { if (deckEl && deckEl._peek && !cdrag && !document.body.classList.contains('spelling')) closeDeck(); }, 40);
     }
   });
   var _render0 = render; render = function () { _render0(); if (deckEl) refreshDeck(); syncGlow(); checkRend(); try { if (typeof iconLayerSync === 'function') iconLayerSync(); } catch (e) { } };
