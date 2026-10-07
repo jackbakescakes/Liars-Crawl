@@ -21,6 +21,8 @@ Gemini pipeline: magenta key `(r>150)&(b>g+40)&(b>110)` → opening → keep big
 
 ## Workflow rules
 
+- **RULE: every window/popup/menu gets a red X** (top-right) that closes it. In the game this is automatic for anything listed in the `WIN_X` array (just before the "settings cog and panel" code): add `{ sel: '<window box selector>', find: '<existing close button selector>' }` (or `fn` to close it) for every NEW window, so the scanner injects `.winx` (red `X_SVG`). Windows appended to `<html>` (not `<body>`) must be styled with `html .winx`, not `html body .winx`. Confirm the X shows in a screenshot before reporting done.
+- Dev tools (purple draggable button left of the character icon, `#devbtn`/`#devmenu`): Current loop, Advance floor, Gain gold, Gain XP. Keep it in the game.
 - The user sends batches of changes. Edit and test only the working file (`/home/claude/liars-crawl.html`).
 - Commit/publish ONLY when the user says "commit" or "publish". Publish = copy to `liars-crawl-compact.html` and `liars-crawl/index.html`, `git add -A && git commit`, `git push -q origin HEAD`, then publish the artifact (https://claude.ai/artifact/1WM6YVJEMgyTNLVpv5j61Q).
 - Commit messages end with the attribution lines the session specifies.
