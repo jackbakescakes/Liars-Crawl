@@ -17,7 +17,7 @@ Naming: `<constant>_<key>` — e.g. `ui/x_svg.webp` = `X_SVG`, `stamps/stamps_ca
 | Vault / entrance / cleared map tokens | `tokens/vtok_*.webp` · `VTOK` |
 | Coins, pouch, piggy bank | `ui/ga_*.webp` · `GA` |
 | Playing cards | `cards/cardart_*.webp` · `CARDART` |
-| Scratch card frame / foil | `ui/css_scratchwrap_after.webp`, `ui/scratch_foil.webp` |
+| Scratch card frame / foil | `ui/css_scratchwrap_after.webp`, `ui/scratch_flecks.webp` (foil is `SCRATCH_FOIL`, not yet extracted) |
 
 ## Not saved yet
 The original Gemini sheets (before cutting) were only ever in temporary folders and are mostly gone; going forward they go in `assets/sheets/` (see CLAUDE.md). The Gemini prompts used so far aren't recorded in `prompts.md` yet; add them as they are reused.
