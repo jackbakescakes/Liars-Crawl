@@ -50,3 +50,9 @@ Sheet 3 redo (plain squares, no ring/caption/curved text, more breathing room) +
 ## 2026-10-07 Cogent seal (Gemini)
 Prompt: reference image of three existing seals (Optimistic, Fickle, Golden) + request for four variants of a "Cogent" seal (wax seal on parchment ribbons, two chevrons / persuading hand motif), magenta background, 2x2 grid. Full text given to the user in chat; re-roll from the same brief.
 Result 1: Gemini drew TWO seals joined by a banner in each cell (took "one die talks to another" literally). Re-prompted asking for a single seal per cell with the symbol inside it.
+
+## 20261008 encounter frame 9-slice
+No new Gemini art. enc_frame_<v>.png is cut by script into a tileable body (enc_frame9_<v>.png) and a crest (enc_crest_<v>.png); corners and wood are locked at half the old scale and only the wood edges lengthen.
+
+## 20261008 Tattoo scrolls (generated, wired)
+Event "The Tattooist": 5 parchment scrolls showing 2-6 die pips. Code-drawn placeholder is live (`.tatscroll`, `TATSCROLL` constant empty). Gemini prompt is in the chat; when art arrives save sheet to sheets/tattoo_scrolls_<date>_src.png and cut to ui/tattoo_scroll_2..6.webp, then fill `TATSCROLL[2..6]`.

@@ -127,3 +127,14 @@ None currently listed; add any placeholder here.
 | ui/seal_cogent_2.webp | Cogent seal, pointing hand and a die; keyed, despilled, 224x224 canvas | 224x224 | unused (alternative) | sheets/cogent_seals_20261007_src.png |
 | ui/seal_cogent_3.webp | Cogent seal, speech bubble with a die; keyed, despilled, 224x224 canvas | 224x224 | unused (alternative) | sheets/cogent_seals_20261007_src.png |
 | ui/seal_cogent_4.webp | Cogent seal, die with circular arrows (CHOSEN); keyed, despilled, 224x224 canvas | 224x224 | SEAL_IMG.cogent (ITEM_ART.cogent) | sheets/cogent_seals_20261007_src.png |
+
+## Encounter frame, 9-slice (20261008)
+| file | what it is (plain words) | size WxH | used in game as | source sheet + prompt note |
+|---|---|---|---|---|
+| ui/enc_frame9_brown.png (also red, green, violet) | Wooden window frame cropped from enc_frame_<v>.png (rows 17+, crest removed) for border-image tiling | ~233x138 | `ENCART.frame9_<v>`, `.encwin .encfr` (border-image, slice 30, width 70px, repeat round). Replaces `ENCART.frame_<v>` img | code-cut from enc_frame_<v>.png, no new Gemini art |
+| ui/enc_crest_brown.png (also red, green, violet) | Shield crest that sits on top-centre of the frame | 80x28 | `ENCART.crest_<v>`, `.encwin .enccrest` | same as above |
+
+## Tattoo scrolls (20261008)
+| file | what it is | size | used in game as | source sheet + prompt note |
+|---|---|---|---|---|
+| ui/tattoo_scroll_2..6.png / .webp | parchment scroll with a hexagon die showing 2/3/4/5/6 pips (magenta keyed, transparent) | 174x389 | `TATSCROLL[2..6]` -> `.tatscroll .tsart` in the Tattooist event (code-drawn parchment `.tssheet` stays as fallback) | sheets/tattoo_scrolls_20261008_src.png; prompt in prompts.md |
