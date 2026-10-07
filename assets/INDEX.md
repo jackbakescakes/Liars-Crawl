@@ -31,3 +31,11 @@ None currently listed; add any placeholder here.
 ## Wooden panel frame (Gemini)
 - `ui/panel_wood_iron.png` (583x446, transparent): dark wood panel with carved scroll top/bottom, copper studs and riveted iron corner plates. Original sheet: `sheets/panels_sheet_src.jpg`. Style reference for new frames (e.g. the map border). Not embedded in the game yet.
 | ui/settings_icon.webp | Settings button: forged iron/wood round button with gold cog (the right-hand icon of the sheet) | 127x128 | `#cog` button, CSS `.cog .cogimg` (replaces the code-drawn gold cog) | sheets/settings_icon_20261007_src.png; prompt in prompts.md "Settings icon" |
+
+## Marble buttons (2026-10-07)
+| file | what it is (plain words) | size WxH | used in game as | source sheet + prompt note |
+|---|---|---|---|---|
+| ui/btn_marble_{idle,hover,pressed,disabled}.png | worn marble block button with wood base, 4 states (hover re-brightened in code) | 182x59 | CSS `--bm-idle/hover/pressed/disabled` -> 9-slice `border-image` on every `.btn` except topbtns/hudbtns/rollbtn/beginbtn/mapkeybtn/cog/xbtn | sheets/buttons_marble_v2_20261007_src.png, prompts.md "button set v2" |
+| ui/btn_marble_blood_*.png | same, tinted blood red (code-tinted) | 182x59 | `.btn.blood` (Liar, Spot On) via `--bm-blood_*` | tinted from marble |
+| ui/btn_marble_gold_*.png | same, tinted gold (code-tinted) | 182x59 | `.btn.liargold` via `--bm-gold_*` | tinted from marble |
+| ui/btn_marble_round_*.png, ui/btn_marble_square_*.png | round and square marble icon buttons | ~98x99 / 103x102 | unused (ready for icon buttons) | marble v2 sheet |
