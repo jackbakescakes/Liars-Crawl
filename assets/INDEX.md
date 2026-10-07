@@ -39,3 +39,6 @@ None currently listed; add any placeholder here.
 | ui/btn_marble_blood_*.png | same, tinted blood red (code-tinted) | 182x59 | `.btn.blood` (Liar, Spot On) via `--bm-blood_*` | tinted from marble |
 | ui/btn_marble_gold_*.png | same, tinted gold (code-tinted) | 182x59 | `.btn.liargold` via `--bm-gold_*` | tinted from marble |
 | ui/btn_marble_round_*.png, ui/btn_marble_square_*.png | round and square marble icon buttons | ~98x99 / 103x102 | unused (ready for icon buttons) | marble v2 sheet |
+| ui/btn_marble_amber_{idle,hover,pressed,disabled}.png | warm amber-yellow marble button (hue-shifted from gold, code-tinted) | 182x59 | CSS `--bm-amber_*` on `.btn[data-act="bid"]` (Bid) | tinted from btn_marble_gold, no Gemini prompt |
+| ui/btn_marble_warmred_{idle,hover,pressed,disabled}.png | warmer, brighter red marble button (hue-shifted from blood) | 182x59 | CSS `--bm-warmred_*` on `.btn[data-act="liar"]` (Liar); replaces blood tint there | tinted from btn_marble_blood |
+| ui/btn_marble_green_{idle,hover,pressed,disabled}.png | green marble button (hue-shifted from blood) | 182x59 | CSS `--bm-green_*` on `.btn[data-act="exact"]` (Spot On) | tinted from btn_marble_blood |
