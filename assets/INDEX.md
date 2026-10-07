@@ -151,3 +151,39 @@ Replaces the earlier code-drawn pixSVG placeholders (removed). Scratch card odds
 | (code-drawn) skullcap relic icon | 12x12 pixel-art iron skullcap (placeholder) | 12x12 | `ITEM_ROWS.skullcap` / `ITEM_ART.skullcap` | code-drawn, replace with Gemini art if supplied |
 | (code-drawn) forge map icon | 12x12 pixel-art anvil for The Forge event (placeholder) | 12x12 | `EV_ROWS.forge` | code-drawn, replace with Gemini art if supplied |
 | (reused) smith portrait | The Forge event reuses the Smith encounter portrait | - | `ENCMAP.forge = 'smith'` | needs its own Gemini portrait if wanted |
+| (code-drawn) AMBUSH banner | "AMBUSH!" in the title lettering plus a sub-line, shown when walking into a room the Loot Goblin hid in | - | `gobAmbush()` / `.hsfx.ambush` / `titleText('Ambush!')` | code-drawn, replace/extend with Gemini leap art when supplied |
+
+| sheets/parchment_floor{1..4}_*_20261008_src.png | Four blank dirty, blood-splattered parchment map sheets (Cellar tan/mildew, Catacombs grey/cobwebs, Gilded Pit scorched/heavy blood, House dark/burnt) | 1024x572 each | unused (planned: branching-map background per floor) | original Gemini sheets, prompt 1 in prompts.md 2026-10-08. Not yet cut |
+| sheets/mapicons_20261008_src.png | 12 map icons: fight, elite, boss, entrance, camp, shop, event, unknown, red X, ring, double ring, arrowhead (labels are baked under each, to crop off) | 1024x559 | unused (planned: branching-map node icons) | prompt 2, 2026-10-08. Not yet cut |
+| sheets/mapdecor_v1_notpixel_20261008_src.png | Margin decorations (compass, skulls, serpent, cage, gravestone, tree, cards, dice, HERE BE LIARS banner) | 1024x559 | unused | prompt 5, 2026-10-08; NOT pixel art, user wants a pixel-art re-roll |
+| sheets/mapsplatter_v1_notpixel_20261008_src.png | Blood splatters, ink blots, soot smudges | 1024x559 | unused | prompt 6, 2026-10-08; NOT pixel art, user wants a pixel-art re-roll |
+| sheets/mapdecor_v2_toopixel_20261008_src.png | Margin decorations, second attempt: chunky low-res pixel art (compass, two skull piles, tentacled horror, cage, gravestone, dead tree with crow, cards and dagger, dice, HERE BE LIARS banner) | 1024x559 | unused | pixel-art prompt 5, 2026-10-08; too chunky and low-res next to the ink icons, wants a middle ground. Layout ignored the 3x3 grid (4 items in row 1) |
+| sheets/mapdecor_v3_stillpixel_20261008_src.png | Margin decorations, third attempt: fine pixel art (compass, skull pile, tentacled horror, cage, gravestone, dead tree with crow, cards and dagger, dice, HERE BE LIARS scroll) | 1024x1024 | unused (fallback) | middle-ground pixel prompt 5, 2026-10-08; grid and details are right but the visible pixel grid still clashes with the ink/painted icon sheet |
+| sheets/mapsplatter_v2_watercolour_20261008_src.png | Blood splatters (6), ink blots (3), red X, soot smudges (3), watercolour look | 1024x768 | unused (planned: parchment overlays on the branching map) | second splatter roll, 2026-10-08, painterly not pixel; user is happy to try it in game. Original margin decor sheet v1 chosen for the map |
+| sheets/bossbadges_v1_cleanvector_20261008_src.png | Boss badges 2x2: Dealer (ogre with cards and coins), Croupier (vampire at a roulette wheel), Pit Boss (horned brute in a tuxedo), House (three faces, six arms) | 1024x808 | unused | prompt 3, 2026-10-08; user does not like them: clean flat vector black/white, clashes with the grimy inked icon sheet. Map uses the generic crowned-skull boss icon until a re-roll |
+
+### Branching ink-on-parchment map (2026-10-08) — built into the working file, NOT yet published
+| file | what it is | size | used in game as | source |
+|---|---|---|---|---|
+| maps/parchment_floor1..4.webp | dirty bloody parchment per floor, white torn edge cropped off | 1024x572 | `PARCH[1..4]` (`.map.ink` background) | parchment_floor*_20261008_src.png |
+| tokens/mapink_fight/elite/boss/camp/shop/event/unknown/cleared/entrance.webp | ink node icons (crossed swords, horned skull, crowned skull, tent+fire, stall, scroll, red ?, red X, arch) | ~110px | `MAPINK.fight` etc. (boss = generic crowned skull; replaces TOK/VTOK on the map) | mapicons_20261008_src.png |
+| tokens/mapink_ring.webp, mapink_arrow.webp | ink ring round a reachable node; arrowhead pointer above it | ~130px | `MAPINK.ring` (`.tokglow`), `MAPINK.arrow` (`.tokhand`, flipped down) | mapicons sheet |
+| maps/mapdec_*.webp (tree grave kraken cage skulls compass cards dice banner) | margin drawings | ~150-260px | `MAPDEC`, placed by `INKDEC`/`inkDecor()` (cards, dice, banner unused) | mapdecor_v1_notpixel_20261008_src.png |
+| maps/mapsplat_1..12.webp | blood splashes | ~180px | `MAPSPLAT` (first 8 used), `.msplat` | mapsplat_v1_notpixel_20261008_src.png |
+| (code-drawn) dotted trails | SVG dotted ink lines, black = locked, red = open, dark red = walked | - | `drawTrails()`, `svg.trails .tr-*` | code-drawn, replace with Gemini art if supplied |
+Replaced on the map (old assets kept in file, unused by the map): MAPBG, TOK, VTOK, trail UIART.
+
+### Relics button and tray (2026-10-08) — art received, NOT yet wired into the game
+| file | what it is | size | used in game as | source |
+|---|---|---|---|---|
+| sheets/relics_ui_20261008_src.png | Gemini sheet: closed button, open button, empty slot, tray | 1024x572 | original | prompt in prompts.md 2026-10-08 RELICS |
+| ui/relic_btn_closed.png | round iron-rimmed RELICS button, gem on plain wood face (ring emblem painted out) | ~247x250 | unused (planned: button on the portrait rim at 7:45) | cut from sheet; ring area repainted in code with wood grain |
+| ui/relic_btn_closed_smallringcovered.png | same, only the small inner ring covered; part of the big ring remains | ~247x250 | unused (alternative) | same |
+| ui/relic_btn_open.png | pressed/open button with ring emblem | ~238x240 | unused (planned: open state) | sheet, not retouched |
+| ui/relic_slot_empty.png | empty square relic socket | ~239x235 | unused | sheet |
+| ui/relic_tray.png | wooden drawer plank with iron end cap | ~453x137 | unused | sheet |
+| ui/aseprite/*.png, relics_ui.aseprite | the relic button/slot/tray sheet shrunk 4x to true pixel size (~61px buttons), 28-colour palette, transparent; .aseprite has one layer per piece, original closed button hidden | 256x143 canvas | unused (for the user to repaint the ring) | relics_ui_20261008_src.png |
+| sheets/relic_button_closed_userdrawn_20261008_src.png, ui/relic_btn_closed_v2.png | RELICS button, closed, repainted by the user in Aseprite: one big ring and ruby on wood, transparent | 61x62 | `RELICBTN.closed`, `.relicbtn` (relics button on the portrait rim at 7:45; `relicBtnHTML()`) | drawn by the user |
+| ui/aseprite/tray.png | wooden tray, 4x-shrunk | 115x36 | `RELICBTN.tray`, `.rdtray` (backs the sliding relic slots, `.relicdrawer`) | relics_ui_20261008_src.png |
+| (code-drawn) relic button open state, glows, sounds | pressed look = darker + sunk; yellow/orange/red glows via CSS; sfx `relicOpen/relicClose/relicDeny` | - | `.relicbtn.on`, `body.relichold/.relicfull`, `SFX.relic*` | code-drawn |
+| sheets/knight_ink_drawing_user_20261008_src.jpg | user's pen-and-ink drawing of a leaping knight (bucket helm, sword, pencil wings) | 1500x2000 | unused | drawn by the user |
