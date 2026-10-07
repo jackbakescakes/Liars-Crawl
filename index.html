@@ -3234,7 +3234,7 @@ html body .btn:not(.rollbtn):not(.beginbtn):not(.mapkeybtn):not(.xbtn):not(.pxcl
   .lvlwin .lu-die small { font-size: 22px; opacity: .85; } .lvlwin .lu-plus { font-size: 40px; font-weight: 700; }
   .lvlwin .lu-sub { font-size: 30px; margin: 4px 0 12px; color: #f6d66a; } .lvlwin .lu-sub small { font-size: 22px; }
 
-  #devbtn { position: fixed; z-index: 450; font: 700 26px/1 var(--display, monospace); padding: 12px 20px; color: #f1e4ff; background: linear-gradient(#8a4fd0, #4f2390); border: 4px solid #2a1050; border-radius: 10px; box-shadow: 0 4px 0 #1a0a35, inset 0 2px 0 rgba(255,255,255,.3); cursor: pointer; }
+  #devbtn { position: fixed; touch-action: none; user-select: none; z-index: 450; font: 700 26px/1 var(--display, monospace); padding: 12px 20px; color: #f1e4ff; background: linear-gradient(#8a4fd0, #4f2390); border: 4px solid #2a1050; border-radius: 10px; box-shadow: 0 4px 0 #1a0a35, inset 0 2px 0 rgba(255,255,255,.3); cursor: pointer; }
   #devbtn:hover { filter: brightness(1.2); }
   #devmenu { position: fixed; z-index: 451; display: flex; flex-direction: column; gap: 8px; padding: 12px; background: #1d0f33; border: 4px solid #6b3fb0; border-radius: 10px; }
   #devmenu button { font: 700 24px/1 var(--display, monospace); padding: 10px 18px; color: #f1e4ff; background: #5a2ea0; border: 3px solid #2a1050; border-radius: 8px; cursor: pointer; text-align: left; }
@@ -8832,7 +8832,8 @@ var BOSS_PORTRAITS = {"dummy":{"normal":"data:image/webp;base64,UklGRgwlAABXRUJQ
   // dev tools (purple button left of the character icon)
   (function () {
     try {
-      var btn = document.createElement('button'), menu = document.createElement('div'), tag = document.createElement('div'), showLoop = false;
+      var btn = document.createElement('button'), menu = document.createElement('div'), tag = document.createElement('div'), showLoop = false, pos = null, drag = null, moved = false;
+      try { pos = JSON.parse(localStorage.getItem('lcDevPos') || 'null'); } catch (e) { }
       btn.type = 'button'; btn.id = 'devbtn'; btn.textContent = 'Dev tools'; btn.hidden = true;
       menu.id = 'devmenu'; menu.hidden = true; tag.id = 'devloop'; tag.hidden = true;
       menu.innerHTML = '<button type="button" data-dev="loop">Current loop</button><button type="button" data-dev="floor">Advance floor</button><button type="button" data-dev="gold">Gain gold</button><button type="button" data-dev="xp">Gain XP</button>';
@@ -8841,11 +8842,14 @@ var BOSS_PORTRAITS = {"dummy":{"normal":"data:image/webp;base64,UklGRgwlAABXRUJQ
       function sync() {
         var hp = document.querySelector('.hudport'), ok = !!(hp && hp.offsetParent && S && S.player && S.screen !== 'title' && S.screen !== 'end');
         btn.hidden = !ok; if (!ok) menu.hidden = true;
-        if (ok) { var r = hp.getBoundingClientRect(), w = btn.offsetWidth || 150; btn.style.left = Math.max(6, r.left - w - 14) + 'px'; btn.style.top = (r.top + r.height / 2 - 24) + 'px'; menu.style.left = btn.style.left; menu.style.top = (r.top + r.height / 2 - 24 - menu.offsetHeight - 8) + 'px'; }
+        if (ok) { var r = hp.getBoundingClientRect(), w = btn.offsetWidth || 150, L = pos ? pos.x : Math.max(6, r.left - w - 14), T = pos ? pos.y : (r.top + r.height / 2 - 24); btn.style.left = L + 'px'; btn.style.top = T + 'px'; menu.style.left = L + 'px'; menu.style.top = Math.max(4, T - menu.offsetHeight - 8) + 'px'; }
         tag.hidden = !showLoop; if (showLoop) tag.textContent = loopName();
       }
       setInterval(sync, 250);
-      btn.addEventListener('click', function () { menu.hidden = !menu.hidden; sync(); });
+      btn.addEventListener('pointerdown', function (e) { drag = { dx: e.clientX - btn.offsetLeft, dy: e.clientY - btn.offsetTop, sx: e.clientX, sy: e.clientY }; moved = false; try { btn.setPointerCapture(e.pointerId); } catch (er) { } });
+      btn.addEventListener('pointermove', function (e) { if (!drag) return; if (!moved && Math.abs(e.clientX - drag.sx) + Math.abs(e.clientY - drag.sy) < 6) return; moved = true; pos = { x: Math.max(0, Math.min(innerWidth - btn.offsetWidth, e.clientX - drag.dx)), y: Math.max(0, Math.min(innerHeight - btn.offsetHeight, e.clientY - drag.dy)) }; sync(); });
+      btn.addEventListener('pointerup', function () { drag = null; if (moved) { try { localStorage.setItem('lcDevPos', JSON.stringify(pos)); } catch (e) { } } });
+      btn.addEventListener('click', function () { if (moved) { moved = false; return; } menu.hidden = !menu.hidden; sync(); });
       menu.addEventListener('click', function (e) {
         var b = e.target.closest && e.target.closest('button[data-dev]'); if (!b || !S || !S.player) return; var k = b.getAttribute('data-dev'), p = S.player;
         if (k === 'loop') { showLoop = !showLoop; b.classList.toggle('on', showLoop); sync(); return; }
