@@ -2,16 +2,25 @@
 
 Search this file first (grep a keyword). One row per asset. Rules are in `/CLAUDE.md`.
 
-| file | what it is | size | used in game as | source / notes |
-|---|---|---|---|---|
-| _(nothing filed yet — backfill from the game file and /tmp originals)_ | | | | |
+## Where things are
+Every image embedded in the game is extracted as a file (by `tools/extract_assets.py`) and listed one per row in **`assets/INDEX.generated.md`** (file, what it is, size, JS constant / CSS name it's used as). Grep that file first. Counts: cards 140, maps 15, portraits 167, stamps 9, tokens 21, ui 104.
 
-## Known assets currently only embedded in the HTML (to extract into files)
-- Backgrounds: `MAPBG[1-4]` (landscape floor maps), `FLOOR_BG` (room backgrounds)
-- Map tokens: `VTOK` (bronze, silver, gold, cleared, entrance, deadend), `HOVL` (ring, dayplq, distplq)
-- House pawn frames: `HPAWN` (idle, idle2, glideA, glideB, lunge, loom, greedy, satisfied)
-- Portraits: `BOSS_PORTRAITS` (incl. house frames)
-- Stamps: `STAMPS` (liar, honest, caught, awakens, spot, slot, slotlit, plaque)
-- Coins / pouch / pig: `GA`; cards: `CARDART`; merchant: `MERCH_IMG`
-- Scratch card: foil `SCRATCH_FOIL`, flecks `SCRATCH_FLECKS`, frame in the `.scratchwrap::after` CSS
-- Code-drawn: red X close button (`.redx`) — replace if Gemini art is supplied
+Naming: `<constant>_<key>` — e.g. `ui/x_svg.webp` = `X_SVG`, `stamps/stamps_caught.webp` = `STAMPS.caught`, `portraits/hpawn_idle.webp` = `HPAWN.idle`, `maps/mapbg_1.webp` = `MAPBG["1"]`, CSS-embedded art is `ui/css_<selector or variable>`.
+
+## Handy lookups
+| want | file / constant |
+|---|---|
+| **Red X close button (Gemini, 96x95)** | `ui/x_svg.webp` · JS `X_SVG` (satchel `.sp-x`) · CSS `.redx` (scratch card) |
+| House idol pawn frames | `portraits/hpawn_*.webp` · `HPAWN` |
+| Stamps (LIAR, HONEST, CAUGHT, THE HOUSE AWAKENS) | `stamps/stamps_*.webp` · `STAMPS` |
+| Floor map backgrounds (landscape) | `maps/mapbg_1..4.webp` · `MAPBG` |
+| Vault / entrance / cleared map tokens | `tokens/vtok_*.webp` · `VTOK` |
+| Coins, pouch, piggy bank | `ui/ga_*.webp` · `GA` |
+| Playing cards | `cards/cardart_*.webp` · `CARDART` |
+| Scratch card frame / foil | `ui/css_scratchwrap_after.webp`, `ui/scratch_foil.webp` |
+
+## Not saved yet
+The original Gemini sheets (before cutting) were only ever in temporary folders and are mostly gone; going forward they go in `assets/sheets/` (see CLAUDE.md). The Gemini prompts used so far aren't recorded in `prompts.md` yet; add them as they are reused.
+
+## Code-drawn (no Gemini art)
+None currently listed; add any placeholder here.
