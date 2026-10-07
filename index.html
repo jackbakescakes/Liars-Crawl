@@ -1096,14 +1096,14 @@ KNOWN ISSUES (art still to come)
   }
   .beginfx { position: fixed; inset: 0; z-index: 1000; pointer-events: all; overflow: hidden; }
   .beginfx.out { opacity: 0; transition: opacity .7s; pointer-events: none; }
-  .beginfx .bf-dark { position: absolute; inset: 0; background: radial-gradient(ellipse at center, rgba(40,0,0,.2), #000 85%); opacity: 0; animation: bfdark 2.1s both; }
+  .beginfx .bf-dark { position: absolute; inset: 0; background: radial-gradient(ellipse at center, rgba(14,0,0,.88), #000 80%); opacity: 0; animation: bfdark 2.1s both; }
   .beginfx .bf-flash { position: absolute; inset: 0; background: #ffd9a0; opacity: 0; animation: bfflash 2.1s both; }
   .beginfx .bf-door { position: absolute; left: 50%; top: 50%; width: 10px; height: 10px; transform: translate(-50%, -50%); background: #000; box-shadow: 0 0 0 0 #000; animation: bfdoor 2.1s cubic-bezier(.7, 0, .2, 1) both; }
   .beginfx u { position: absolute; top: -20px; width: 8px; height: 22px; background: var(--c); border-radius: 0 0 4px 4px; animation: bfdrop 1.4s ease-in var(--dly) both; }
   .beginfx .bf-txt { position: absolute; inset: 0; display: grid; place-content: center; text-align: center; gap: 8px; }
   .beginfx .bf-txt small { font-size: 22px; letter-spacing: .5em; text-transform: uppercase; color: #c44; opacity: 0; animation: bftxt .9s .55s both; }
   .beginfx .bf-txt b { font-size: 64px; letter-spacing: .14em; color: #f6e3b9; text-shadow: 0 4px 0 #000, 0 0 30px #c01; opacity: 0; animation: bftitle 1.3s .8s cubic-bezier(.2, 1.7, .4, 1) both; }
-  @keyframes bfdark { 0% { opacity: 0; } 25% { opacity: .9; } 100% { opacity: 1; } }
+  @keyframes bfdark { 0% { opacity: 0; } 14% { opacity: .96; } 100% { opacity: 1; } }
   @keyframes bfflash { 0%, 38% { opacity: 0; } 42% { opacity: .85; } 60% { opacity: 0; } 100% { opacity: 0; } }
   @keyframes bfdoor { 0% { width: 10px; height: 10px; } 40% { width: 300px; height: 460px; box-shadow: 0 0 120px 60px #000; } 100% { width: 300px; height: 460px; box-shadow: 0 0 400px 200px #000; } }
   @keyframes bfdrop { 0% { transform: translateY(0); } 100% { transform: translateY(110vh); } }
@@ -3132,12 +3132,12 @@ KNOWN ISSUES (art still to come)
   @keyframes skorange { from { filter: brightness(.95) drop-shadow(0 0 4px rgba(255,90,10,.6)); } to { filter: brightness(1.35) drop-shadow(0 0 20px rgba(255,110,10,1)); } }
 
   /* big map: the map fills most of the screen; the HUD tray drops to the bottom edge and the floor banner hangs over the map's top edge */
-  body[data-screen="map"] #app { overflow: visible !important; }
+  body[data-screen="map"] #app, body[data-screen="victory"] #app { overflow: visible !important; }
   body[data-screen="map"] .mappanel { position: relative; z-index: 60; top: -65px; }
   body[data-screen="map"] .mappanel { margin-top: -121px; }
   body[data-hud="1"] .topbtns, body[data-screen="combat"] .topbtns { position: fixed !important; right: 306px !important; top: 65px !important; }
   body[data-hud="1"] .relicbr, body[data-screen="combat"] .relicbr { position: fixed !important; right: 159px !important; bottom: 60px !important; }
-  body[data-screen="victory"] #app > .panel.report { zoom: .72; }
+  body[data-screen="victory"] #app > .panel.report { zoom: .72; position: relative; z-index: 400; }
   body[data-screen="victory"] .report .rp-skip { right: auto; left: 0; }
   body[data-screen="combat"] .felt .bidbox { box-sizing: border-box !important; width: 470px !important; height: 89px !important; justify-content: center; margin-bottom: 22px !important; }
   /* deck cards: flip over on the spot when hovered (no growing); a click inspects one, which then grows */
@@ -3151,6 +3151,25 @@ KNOWN ISSUES (art still to come)
   @media (prefers-reduced-motion: reduce) { html body .handtray .tcard:hover, html body .deckmodal .deckrow .tcard:hover { animation: none !important; } }
   /* cards you can't play right now are only gently dulled, never dark */
   html body .tcard.cantplay, html body .handtray .tcard.cantplay, html body .handtray .tcard.cantplay:hover { filter: saturate(.55) brightness(.97) !important; }
+  /* settings button: the new forged-iron cog art is the whole button */
+  html body .cog.btn, html body .cog.btn:hover:not(:disabled), html body .cog.btn:active:not(:disabled) { background: none !important; border: 0 !important; box-shadow: none !important; clip-path: none !important; padding: 0 !important; width: 52px !important; height: 52px !important; }
+  html body .cog.btn::before, html body .cog.btn::after { border-color: transparent; }
+  html body .cog.btn { z-index: 95 !important; }
+  html body .cog .cogimg { width: 100%; height: 100%; object-fit: contain; image-rendering: pixelated; animation: none !important; transition: transform .12s; }
+  html body .cog:hover .cogimg { animation: none !important; transform: scale(1.08); filter: brightness(1.18) drop-shadow(0 0 6px rgba(246,214,106,.7)); }
+  html body .cog:active .cogimg { transform: translateY(2px) scale(.96); filter: none; }
+  /* battle report text +50% */
+  .report .rp-head h2 { font-size: 69px !important; }
+  .report .rp-me b, .report .rp-foe > b { font-size: 48px !important; }
+  .report .rp-vs { font-size: 66px !important; }
+  .report .rp-sec { font-size: 40px !important; }
+  .report .rp-line, .report .rp-tot { font-size: 50px !important; }
+  .report .rp-line em { font-size: 35px !important; }
+  .report .rp-tot { font-size: 57px !important; } .report .rp-tot b { font-size: 72px !important; }
+  .report .rp-extra { font-size: 42px !important; }
+  .report .rp-skip { font-size: 39px !important; }
+  .report .rp-line { flex-wrap: wrap; } .report .rp-line em { order: 5; flex: 0 0 100%; line-height: 1.1; margin-top: -6px; }
+  body[data-screen="map"] .mappanel .daypl b { font-size: 38px !important; }
   body[data-screen="map"] .topbtns { z-index: 90 !important; }
   body[data-screen="map"] .mappanel .floorhd.banner { position: absolute; left: 50%; top: 34px; transform: translateX(-50%); z-index: 12; margin: 0; }
 
@@ -3874,10 +3893,10 @@ KNOWN ISSUES (art still to come)
   (function () {
     var css = '', i, R = ['common', 'uncommon', 'rare', 'epic', 'legendary'];
     var NC = { common: '#3b2713', uncommon: '#1c3a22', rare: '#f1e4bd', epic: '#f1e4bd', legendary: '#f1e4bd' }, TT = { common: '#6b5a3c', uncommon: '#2f7a3a', rare: '#2c5fb0', epic: '#6d3bb8', legendary: '#a8641a' };
-    R.forEach(function (r) { css += '.tcard.r-' + r + '{--frame:url(' + NEWART['card_' + r] + ');--nc:' + NC[r] + ';--tt:' + TT[r] + ';}'; });
-    css += '.tcard{background:var(--frame) center/100% 100% no-repeat;image-rendering:pixelated;border:0;padding:0;display:block;height:calc(var(--cw)*1.523);border-radius:calc(var(--cw)*.04);color:#2b1b10;box-shadow:0 .4em .9em rgba(0,0,0,.6);}' +
+    R.forEach(function (r) { css += '.tcard.r-' + r + '{background:url(' + NEWART['card_' + r] + ') center/100% 100% no-repeat !important;--nc:' + NC[r] + ';--tt:' + TT[r] + ';}'; });
+    css += '.tcard{image-rendering:pixelated;border:0;padding:0;display:block;height:calc(var(--cw)*1.523);border-radius:calc(var(--cw)*.04);color:#2b1b10;box-shadow:0 .4em .9em rgba(0,0,0,.6);}' +
       '.tcard .tcgem{display:none;}' +
-      '.tcard .tcname{position:absolute;left:19%;width:62%;top:5.6%;height:9.6%;display:flex;align-items:center;justify-content:center;background:none;border:0;padding:0;font-size:min(1.28em,calc(var(--cw)*.9/var(--n,10)));line-height:1;text-align:center;color:var(--nc);white-space:nowrap;overflow:hidden;text-shadow:none;}' +
+      '.tcard .tcname{position:absolute;left:19%;width:62%;top:5.6%;height:9.6%;display:flex;align-items:center;justify-content:center;background:none;border:0;padding:0;font-size:min(1.28em,calc(var(--cw)*.78/var(--n,10)));line-height:1;text-align:center;color:var(--nc);white-space:nowrap;overflow:hidden;text-shadow:none;}' +
       '.tcard .tcart{position:absolute;left:15%;width:70%;top:17.9%;height:37%;margin:0;background:none;border:0;display:grid;place-items:center;overflow:hidden;}' +
       '.tcard .tcart svg{height:90%;width:auto;max-width:94%;image-rendering:auto;filter:drop-shadow(0 .2em .15em rgba(0,0,0,.45));}' +
       '.tcard .tctype{position:absolute;left:15%;width:70%;top:60.4%;text-align:center;white-space:nowrap;font-size:.6em;letter-spacing:.02em;text-transform:uppercase;color:var(--tt);}' +
@@ -5998,8 +6017,18 @@ KNOWN ISSUES (art still to come)
   function usePotion() {
     var inFight = trayMode();
     if (!itm('potion') || (inFight && (C.phase !== 'bid' || C.turn !== 'p'))) return;
+    var wasUp = S.player.dice.map(function (d) { return d.up; });
     var h = heal(S.player, 2); if (!h) return;
     removeCard('potion');
+    if (inFight && C.pv) {
+      // the revived dice join this round straight away: roll them and add them to the hand
+      S.player.dice.forEach(function (d, di) {
+        if (!d.up || wasUp[di]) return;
+        var r = rollDie(d); C.pv.push({ i: di, val: r.val, sv: r.sv, baby: false, trig: r.trig, fk: r.fk, fkT: Date.now(), fresh: true });
+        if (r.gold) S.player.gold += r.gold;
+      });
+      try { sortPv(); } catch (e) { }
+    }
     if (!inFight) { sfx('item'); render(); return; }
     sfx('item'); C.log.push('You gulp the Healing Potion. ' + h + (h > 1 ? ' fallen dice rise' : ' fallen die rises') + ' from the dirt. The bottle shatters.');
     render();
@@ -8637,7 +8666,7 @@ var BOSS_PORTRAITS = {"dummy":{"normal":"data:image/webp;base64,UklGRgwlAABXRUJQ
       var c = AUD.ctx, now = c.currentTime, m = window.MUSC[k], o = MUSC.v, tb = now + 0.05, off = 0, fin = 2.5, pre = null, keep = false, N = 64, inC = new Float32Array(N), q;
       for (q = 0; q < N; q++) inC[q] = Math.sin(q / (N - 1) * Math.PI / 2);
       if (AUD.seq) { try { AUD.seq.stop(); } catch (e) { } AUD.seq = null; AUD.track = null; }
-      if (o && o.t0 > now + 0.02) { try { o.s.stop(); o.g.disconnect(); } catch (e) { } o = null; MUSC.v = null; tb = now + 0.05; fin = (k === 'calm') ? 2.5 : 1.2; off = 0; }
+      if (o && o.t0 > now + 0.02) { var pvv = o.prev || null; try { o.s.stop(); o.g.disconnect(); } catch (e) { } o = pvv; MUSC.v = pvv; if (pvv) { try { pvv.g.gain.cancelScheduledValues(now); pvv.g.gain.setValueAtTime(1, now); pvv.s.stop(now + 3600); } catch (e) { } } tb = now + 0.05; fin = (k === 'calm') ? 2.5 : 1.2; off = 0; }
       if (o && /^boss/.test(o.k) && !/^boss/.test(k)) {
         // the boss is dead: let the boss music finish its loop (or reach a phrase end), leave 8 s of silence, then the calm music starts from its beginning
         var bm = window.MUSC[o.k], bp = bm.le - bm.ls, bpos = o.off + (now - o.t0), rem, fo = 0;
@@ -8663,7 +8692,7 @@ var BOSS_PORTRAITS = {"dummy":{"normal":"data:image/webp;base64,UklGRgwlAABXRUJQ
       var s = c.createBufferSource(), g = c.createGain(); s.buffer = MUSC.buf[k]; s.loop = true; s.loopStart = m.ls; s.loopEnd = Math.min(m.le, MUSC.buf[k].duration);
       g.gain.value = 0; s.connect(g); g.connect(AUD.musicG); var ts = tb; if (o) { g.gain.setValueAtTime(1, ts); } else { g.gain.setValueAtTime(0, ts); g.gain.setValueCurveAtTime(inC, ts, fin); } s.start(ts, off);
       if (o) { var t1 = tb - 0.03; try { o.g.gain.cancelAndHoldAtTime(t1); } catch (e) { o.g.gain.cancelScheduledValues(t1); } o.g.gain.linearRampToValueAtTime(0, tb); try { o.s.stop(tb + 0.15); } catch (e) { } }
-      MUSC.v = { k: k, s: s, g: g, t0: tb, off: off }; return true;
+      if (o) o.prev = null; MUSC.v = { k: k, s: s, g: g, t0: tb, off: off, prev: o || null }; return true;
     } catch (e) { MUSC.st[k] = 'failed'; return false; }
   }
   // normal fights open with fight2f, then each loop ends into a random one of the others until the fight is over
@@ -8740,7 +8769,7 @@ var BOSS_PORTRAITS = {"dummy":{"normal":"data:image/webp;base64,UklGRgwlAABXRUJQ
       var cog = document.createElement('button'), pan = document.createElement('div'), i, rows = [], cx = 5.5, cy = 5.5, x, y, d, a;
       cog.type = 'button'; cog.id = 'cog'; cog.className = 'cog btn'; cog.setAttribute('aria-label', 'Settings');
       cx = cy = 7.5; for (y = 0; y < 16; y++) { var r = ''; for (x = 0; x < 16; x++) { d = Math.sqrt((x - cx) * (x - cx) + (y - cy) * (y - cy)); a = Math.atan2(y - cy, x - cx); var tooth = d <= 7.7 && Math.cos(a * 8) > -0.25, body = d <= 5.6, hole = d <= 3.0; r += (tooth || body) && !hole ? ((x + y) % 5 === 0 ? 'G' : 'g') : '.'; } rows.push(r); }
-      cog.innerHTML = pixSVG(rows, { g: 'fill="#c9a43c"', G: 'fill="#f6d66a"', '#': 'fill="#14110d"' }, { outline: true, cls: 'cogsvg' });
+      cog.innerHTML = '<img class="cogsvg cogimg" alt="" draggable="false" src="data:image/webp;base64,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">';
       pan.id = 'settings'; pan.className = 'setmodal'; pan.hidden = true;
       pan.innerHTML = '<div class="setbox" role="dialog" aria-label="Settings"><h2>Settings</h2>' +
         '<label class="setrow"><span>Music</span><input id="volMusic" type="range" min="0" max="100" step="1"><output id="valMusic"></output></label>' +
@@ -9673,7 +9702,6 @@ var BOSS_PORTRAITS = {"dummy":{"normal":"data:image/webp;base64,UklGRgwlAABXRUJQ
     if (!cardCan(id)) return;
     if (ci.type === 'Self') { cdrag = { c: c, id: id, x0: e.clientX, y0: e.clientY, moved: false }; document.addEventListener('pointermove', cardDragMove); document.addEventListener('pointerup', cardDragEnd); document.addEventListener('pointercancel', cardDragStop); return; }
     var rr = c.getBoundingClientRect();
-    if ((e.clientY - rr.top) / Math.max(1, rr.height) < 0.17) { cdrag = { c: c, id: id, x0: e.clientX, y0: e.clientY, moved: false, tgt: ci.key || 'spell' }; document.addEventListener('pointermove', cardDragMove); document.addEventListener('pointerup', cardDragEnd); document.addEventListener('pointercancel', cardDragStop); return; }
     startSpellArrow(e, c, ci.key === 'eye' ? 'eyeglass' : ci.key === 'spell' ? undefined : ci.key);
   }
   document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && deckEl) closeDeck(); });
@@ -9755,8 +9783,8 @@ var POUCH_SVG = pixSVG(["................", "................", ".....kkkkkk....
     try {
       if (!iconLayer) {
         iconLayer = document.createElement('div'); iconLayer.id = 'iconlayer'; document.documentElement.appendChild(iconLayer);
-        iconLayer.innerHTML = '<div class="fi fibag" data-ic="bag" data-loc="satchel" data-tip="bagicon:">' + ITEM_ART.bag + '<span class="finame">Satchel</span><span class="fcount"></span></div>' +
-          '<div class="fi fipouch" data-ic="pouch" data-tip="pouchicon:"><img class="pouchimg" alt="" src="' + GA.pclosed + '">' + '<span class="finame">Coins</span><span class="fcount"></span></div>';
+        iconLayer.innerHTML = '<div class="fi fibag" data-ic="bag" data-loc="satchel" data-tip="bagicon:">' + ITEM_ART.bag + '<span class="fcount"></span></div>' +
+          '<div class="fi fipouch" data-ic="pouch" data-tip="pouchicon:"><img class="pouchimg" alt="" src="' + GA.pclosed + '">' + '<span class="fcount"></span></div>';
         iconLayer.addEventListener('pointerdown', iconDown);
         iconLayer.addEventListener('mouseover', function (e) { var t = e.target.closest && e.target.closest('[data-tip]'); if (t && !idr) showTip(t.getAttribute('data-tip'), e); });
         iconLayer.addEventListener('mousemove', function (e) { if (e.target.closest && e.target.closest('[data-tip]') && !idr) moveTip(e); });
