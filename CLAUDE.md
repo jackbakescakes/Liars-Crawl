@@ -26,3 +26,10 @@ Gemini pipeline: magenta key `(r>150)&(b>g+40)&(b>110)` → opening → keep big
 - Commit messages end with the attribution lines the session specifies.
 - Playable on a computer screen with no scrolling. Keep on-screen text minimal; icons first, explanations in the Rules menu.
 - Music is parked.
+
+## Title lettering alphabet (the game's logo font) — PENDING from Gemini
+The user is having Gemini draw a full alphabet in the style of the "LIAR'S CRAWL" title (chunky cream block letters, ember-orange lower edges, dark outline, blood drips), so any text can be set in the logo style (START CRAWLING, banners, stamps, headings).
+- Where it goes: `assets/fonts/title_<CHAR>.webp` (transparent, magenta-keyed; punctuation by name: `title_bang.webp`, `title_question.webp`, `title_apostrophe.webp`, `title_period.webp`; digits `title_0..9.webp`). Original sheets: `assets/sheets/title_font_sheet_<yyyymmdd>_src.png`.
+- Layout of the sheet the user was asked for: 6 columns x 5 rows of equal cells, reading order A-Z, then ! ? ' . — second sheet: digits 0-9. Cut each cell, key out magenta, trim, keep a shared baseline and cap height (record per-letter width + baseline offset in `assets/fonts/title_metrics.json`).
+- Existing lettering to reuse until it arrives: the `LIAR_IMG` / `.tavlogo` title image, the generated block `wordmark()` function, and STAMPS (`liar`, `honest`, `caught`, `awakens`).
+- Once it exists: add a small JS helper `titleText("START CRAWLING", height)` that builds inline `<img>` letters from the embedded constants, and list it in `assets/INDEX.md`. Check `assets/fonts/` before drawing any new logo-style text.
