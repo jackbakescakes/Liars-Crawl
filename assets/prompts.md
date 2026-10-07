@@ -22,3 +22,9 @@ Pixel-art banner scroll for the map header: wide parchment scroll with curled, d
 
 ## 2026-10-07 — worn button set (fight screen + whole game)
 Gemini prompt: a single sheet of matching UI buttons, chunky pixel art, worn/cracked dark-iron and aged-wood plates with brass studs, no text on the buttons, 4 states (idle, hover, pressed, disabled) in 3 widths (wide 3:1, medium 2:1, small 1:1) plus a round icon button, flat magenta (#FF00FF) background for keying, identical palette and outline to the map frame art. Status: requested, not yet received. Full text is in the chat of 2026-10-07; wire in as `.btn` backgrounds when received.
+
+### Button set v1 result (rejected)
+Received `sheets/buttons_ironwood_v1_20261007_src.png`: flat iron-and-wood plates with studs. User rejected: wants marble blocks with a faux-3D feel, edges rounded by wear, some wood finish, little metal. Not used in game.
+
+## 2026-10-07 — button set v2 (marble blocks)
+Gemini prompt: matching button sheet, worn marble/stone blocks with a bevelled faux-3D look (lit top-left, visible thick front face and bottom edge), edges rounded and chipped by wear, hairline cracks and veining, a thin wooden inlay or trim only, no studs or iron plates; 4 states x 5 shapes; flat magenta background; no text and no labels. Full text in chat 2026-10-07. Status: requested.
