@@ -27,3 +27,6 @@ The original Gemini sheets (before cutting) were only ever in temporary folders 
 
 ## Code-drawn (no Gemini art)
 None currently listed; add any placeholder here.
+
+## Wooden panel frame (Gemini)
+- `ui/panel_wood_iron.png` (583x446, transparent): dark wood panel with carved scroll top/bottom, copper studs and riveted iron corner plates. Original sheet: `sheets/panels_sheet_src.jpg`. Style reference for new frames (e.g. the map border). Not embedded in the game yet.
