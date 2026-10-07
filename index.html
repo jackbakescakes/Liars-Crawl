@@ -3270,6 +3270,16 @@ html body .btn:not(.rollbtn):not(.beginbtn):not(.mapkeybtn):not(.xbtn):not(.pxcl
   .spellarrow { z-index: 345 !important; }
 
   #devev { position: fixed; left: 10px; top: 44px; z-index: 470; margin: 0; font: 15px/1.2 monospace; color: #b8ffb8; background: rgba(0,0,0,.8); padding: 6px 10px; pointer-events: none; max-width: 560px; } #devev[hidden] { display: none; }
+
+  .mapscroll.mapz { cursor: grab; } .mapscroll.panning, .mapscroll.panning * { cursor: grabbing !important; }
+
+  html, body, #app, #app *, .mapscroll, .mapscroll * { -webkit-user-select: none; user-select: none; -webkit-touch-callout: none; }
+  input, textarea { -webkit-user-select: text; user-select: text; }
+  ::selection { background: transparent; color: inherit; } img::selection, svg *::selection { background: transparent; }
+
+  .spellarrow .sa-svg { position: absolute; left: 0; top: 0; width: 100vw; height: 100vh; overflow: visible; }
+  .spellarrow.imgok .sa-svg { display: none; }
+  html .handtray.deal .tcard, html .handtray .tcard, html .deckmodal .tcard { animation: none !important; }
 </style>
 
 <main class="wrap">
@@ -5494,6 +5504,13 @@ html body .btn:not(.rollbtn):not(.beginbtn):not(.mapkeybtn):not(.xbtn):not(.pxcl
       bs[i].style.cssText = 'display:block;left:' + mx.toFixed(1) + 'px;top:' + my.toFixed(1) + 'px;transform:rotate(' + a2.toFixed(1) + 'deg);--w:' + w.toFixed(1) + 'px';
     }
     root.querySelector('.sa-h').style.cssText = 'left:' + ex.toFixed(1) + 'px;top:' + ey.toFixed(1) + 'px;transform:rotate(' + (ang * 180 / Math.PI).toFixed(1) + 'deg)';
+    try {
+      var himg = root.querySelector('.sa-h img'), ok = !!(himg && himg.complete && himg.naturalWidth > 0); root.classList.toggle('imgok', ok);
+      if (!ok) {
+        var hl2 = 30, d1 = 'M' + sx + ',' + sy + ' Q' + cx + ',' + cy + ' ' + (ex - Math.cos(ang) * hl2 * 0.7) + ',' + (ey - Math.sin(ang) * hl2 * 0.7), px = Math.cos(ang + Math.PI / 2) * 17, py = Math.sin(ang + Math.PI / 2) * 17, hx = ex - Math.cos(ang) * hl2, hy = ey - Math.sin(ang) * hl2;
+        var ps = root.querySelectorAll('.sa-svg path'); ps[0].setAttribute('d', d1); ps[1].setAttribute('d', d1); ps[2].setAttribute('d', 'M' + ex + ',' + ey + ' L' + (hx + px) + ',' + (hy + py) + ' L' + (hx - px) + ',' + (hy - py) + ' Z');
+      }
+    } catch (er) { }
     sarrow.svg.classList.toggle('lock', !!ed);
   }
   function endSpellArrow(e) {
@@ -5513,7 +5530,7 @@ html body .btn:not(.rollbtn):not(.beginbtn):not(.mapkeybtn):not(.xbtn):not(.pxcl
     var r = btn.getBoundingClientRect(), svg = document.createElement('div'), k0 = kind || 'spell', hb = '';
     svg.className = 'spellarrow' + ((k0 === 'potion' || k0 === 'bless' || k0 === 'armour') ? ' healarrow' : k0 !== 'spell' ? ' knifearrow' : ''); svg.setAttribute('aria-hidden', 'true');
     for (var bi = 0; bi < 10; bi++) hb += '<b class="sa-b"><img alt="" draggable="false"></b>';
-    svg.innerHTML = hb + '<b class="sa-h"><img alt="" draggable="false"></b>'; svg.baseCol = null;
+    svg.innerHTML = '<svg class="sa-svg" width="100%" height="100%" aria-hidden="true"><path class="sa-out"/><path class="sa-line"/><path class="sa-head"/></svg>' + hb + '<b class="sa-h"><img alt="" draggable="false"></b>'; svg.baseCol = null;
     document.documentElement.appendChild(svg);
     sarrow = { kind: kind || 'spell', svg: svg, sx: r.left + r.width / 2, sy: r.top + r.height / 2, x0: e.clientX, y0: e.clientY, moved: false, hover: null };
     document.body.classList.add('spelling');
@@ -10318,6 +10335,24 @@ var POUCH_SVG = pixSVG(["................", "................", ".....kkkkkk....
     MZ.tx = Math.min(0, Math.max(100 * (1 - s2), fx - ux * s2)); MZ.ty = Math.min(0, Math.max(100 * (1 - s2), fy - uy * s2)); MZ.s = s2;
     mapZoomApply();
   }, { passive: false });
+  // click and drag to pan the zoomed map (never past the edge of the picture)
+  var mpan = null, mpanEnd = 0;
+  document.addEventListener('pointerdown', function (e) {
+    if (!S || S.screen !== 'map' || MZ.s <= 1.001 || (e.pointerType === 'mouse' && e.button !== 0)) return;
+    var ms = e.target.closest && e.target.closest('.mapscroll'); if (!ms) return;
+    mpan = { x: e.clientX, y: e.clientY, tx: MZ.tx, ty: MZ.ty, moved: false, ms: ms };
+  }, true);
+  document.addEventListener('pointermove', function (e) {
+    if (!mpan) return;
+    var dx = e.clientX - mpan.x, dy = e.clientY - mpan.y;
+    if (!mpan.moved && Math.abs(dx) + Math.abs(dy) < 6) return;
+    mpan.moved = true; var r = mpan.ms.getBoundingClientRect(), lim = 100 * (1 - MZ.s);
+    MZ.tx = Math.min(0, Math.max(lim, mpan.tx + dx / r.width * 100)); MZ.ty = Math.min(0, Math.max(lim, mpan.ty + dy / r.height * 100));
+    mapZoomApply(); mpan.ms.classList.add('panning'); hideTip();
+  });
+  function mpanStop() { if (mpan && mpan.moved) { mpanEnd = Date.now(); mpan.ms.classList.remove('panning'); } mpan = null; }
+  document.addEventListener('pointerup', mpanStop); document.addEventListener('pointercancel', mpanStop);
+  document.addEventListener('click', function (e) { if (Date.now() - mpanEnd < 250) { e.stopPropagation(); e.preventDefault(); } }, true);
   function mapFrameSync() {
     var on = document.body.getAttribute('data-screen') === 'map';
     if (!on && S && S.mapHide) S.mapHide = false;
