@@ -5513,10 +5513,16 @@ html body .btn:not(.rollbtn):not(.beginbtn):not(.mapkeybtn):not(.xbtn):not(.pxcl
     } catch (er) { }
     sarrow.svg.classList.toggle('lock', !!ed);
   }
+  var sarrowBlock = 0;
+  document.addEventListener('click', function (e) { if (Date.now() < sarrowBlock) { e.stopPropagation(); e.preventDefault(); } }, true);
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && sarrow) stopSpellArrow(); });
+  document.addEventListener('contextmenu', function (e) { if (sarrow) { e.preventDefault(); stopSpellArrow(); } }, true);
   function endSpellArrow(e) {
     if (!sarrow) return;
-    var kind = sarrow.kind, mv = sarrow.moved, ed = sarrow.hover, tp = ed ? (ed.getAttribute('data-tip') || '') : '';
-    stopSpellArrow();
+    // a plain click on the card picks the arrow up: it stays attached to the cursor until the next click (Esc or right-click puts it away)
+    if (!sarrow.moved && !sarrow.sticky) { sarrow.sticky = true; sarrowBlock = Date.now() + 300; try { window.dlog && window.dlog('arrow armed (click mode)'); } catch (er) { } return; }
+    var kind = sarrow.kind, mv = true, ed = sarrow.hover, tp = ed ? (ed.getAttribute('data-tip') || '') : '';
+    stopSpellArrow(); sarrowBlock = Date.now() + 300;
     if (!mv) return;
     noClickUntil = Date.now() + 300;
     if (kind === 'potion') { if (ed) { closeDeck(); usePotion(); } return; }
@@ -5534,7 +5540,8 @@ html body .btn:not(.rollbtn):not(.beginbtn):not(.mapkeybtn):not(.xbtn):not(.pxcl
     document.documentElement.appendChild(svg);
     sarrow = { kind: kind || 'spell', svg: svg, sx: r.left + r.width / 2, sy: r.top + r.height / 2, x0: e.clientX, y0: e.clientY, moved: false, hover: null };
     document.body.classList.add('spelling');
-    moveSpellArrow(e);
+    try { moveSpellArrow(e); } catch (er) { window.dlog && window.dlog('ARROW ERR ' + er.message); }
+    try { var hh = svg.querySelector('.sa-h img'), rr2 = svg.getBoundingClientRect(), cs = getComputedStyle(svg); window.dlog && window.dlog('arrow dom: src ' + (hh && hh.src ? hh.src.slice(0, 20) : 'NONE') + ' nat ' + (hh && hh.naturalWidth) + ' root ' + Math.round(rr2.width) + 'x' + Math.round(rr2.height) + ' z' + cs.zIndex + ' vis ' + cs.visibility + ' disp ' + cs.display + ' op ' + cs.opacity + ' parent ' + (svg.parentNode && svg.parentNode.tagName)); } catch (er) { window.dlog && window.dlog('dom err ' + er.message); }
     document.addEventListener('pointermove', moveSpellArrow); document.addEventListener('pointerup', endSpellArrow); document.addEventListener('pointercancel', sarrowCancel);
     document.addEventListener('mousemove', moveSpellArrow); document.addEventListener('mouseup', endSpellArrow);
   }
@@ -8888,6 +8895,8 @@ var BOSS_PORTRAITS = {"dummy":{"normal":"data:image/webp;base64,UklGRgwlAABXRUJQ
     try {
       var c = e.target && e.target.closest ? e.target.closest('.tcard[data-card]') : null; if (!c || (e.pointerType === 'mouse' && e.button !== 0)) return;
       var id = c.getAttribute('data-card'), x0 = e.clientX, y0 = e.clientY;
+      // safety net: if the normal card handler did not start an arrow or a drag, start it here
+      setTimeout(function () { try { if (!sarrow && !cdrag && c.isConnected !== false && !(S && S.screen === 'combat' && false)) { window.dlog && window.dlog('fallback onDeckDown'); onDeckDown(e); } } catch (er) { window.dlog && window.dlog('fallback err ' + er.message); } }, 0);
       var up = function (ev) {
         document.removeEventListener('pointerup', up, true);
         if (Math.abs(ev.clientX - x0) + Math.abs(ev.clientY - y0) < 14) return;
