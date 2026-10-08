@@ -3809,10 +3809,25 @@ html body[data-screen="combat"]:not([data-screen="title"]):not([data-screen="cha
   /* floor 4's parchment is near-black: no tan showing through at its torn edges */
   html body[data-floor="4"] .mappanel .map.mapart.ink { background: #140c09 var(--mapbg) center / 100% 100% no-repeat !important; }
 
-  #introblack { position: fixed; inset: 0; z-index: 2147483000; background: #000; cursor: pointer; display: flex; align-items: flex-end; justify-content: center; padding-bottom: 6vh; transition: opacity 1.9s ease-out; }
+  #introblack { position: fixed; inset: 0; z-index: 2147483000; background: #000; cursor: pointer; display: flex; align-items: flex-end; justify-content: center; padding-bottom: 6vh; transition: opacity 3.9s ease-out; }
   #introblack span { font-family: var(--display); font-size: 26px; letter-spacing: .1em; text-transform: uppercase; color: #fff; opacity: .22; transition: opacity .4s; }
   #introblack.go span { opacity: 0; }
   #introblack.off { opacity: 0; pointer-events: none; }
+
+  /* tavern light flicker: warm glows laid over the title background (cover-fitted box so they stay on the lights) */
+  #flick { position: fixed; z-index: -1; left: 50%; top: 50%; width: max(100vw, calc(100vh * 1.7917)); height: max(100vh, calc(100vw / 1.7917)); transform: translate(-50%, -50%); pointer-events: none; display: none; overflow: hidden; }
+  body[data-screen="char"] ~ #flick, body[data-screen="title"] ~ #flick { display: block; }
+  #flick i { position: absolute; border-radius: 50%; transform: translate(-50%, -50%); aspect-ratio: 1; mix-blend-mode: screen; background: radial-gradient(circle, rgba(255,176,72,.62) 0%, rgba(255,120,36,.30) 32%, rgba(255,90,20,0) 68%); animation: flickA 2.1s linear infinite; }
+  #flick i.fire { width: 17%; background: radial-gradient(circle, rgba(255,190,80,.7) 0%, rgba(255,120,30,.38) 30%, rgba(255,80,16,0) 68%); animation-name: flickB; animation-duration: 1.3s; }
+  #flick i.amb { width: 46%; opacity: .5; background: radial-gradient(circle, rgba(255,120,40,.22) 0%, rgba(255,90,20,.10) 40%, rgba(255,80,16,0) 70%); animation-name: flickC; animation-duration: 3.1s; }
+  #flick i.cand { width: 5%; animation-duration: 1.7s; } #flick i.cand2 { width: 5%; animation-duration: 2.3s; animation-delay: -.8s; }
+  #flick i.tcand { width: 8%; animation-duration: 1.9s; animation-delay: -.4s; }
+  #flick i.lant { width: 9%; animation-name: flickC; animation-duration: 3.7s; animation-delay: -1.2s; }
+  #flick i.lant2 { width: 5%; animation-name: flickC; animation-duration: 2.9s; animation-delay: -.3s; }
+  @keyframes flickA { 0%, 100% { opacity: .85; } 6% { opacity: .5; } 12% { opacity: 1; } 21% { opacity: .62; } 30% { opacity: .95; } 41% { opacity: .55; } 50% { opacity: .9; } 61% { opacity: .6; } 72% { opacity: 1; } 84% { opacity: .7; } 92% { opacity: .92; } }
+  @keyframes flickB { 0%, 100% { opacity: .9; transform: translate(-50%, -50%) scale(1); } 8% { opacity: .55; transform: translate(-50%, -50%) scale(.92); } 17% { opacity: 1; transform: translate(-50%, -50%) scale(1.08); } 29% { opacity: .65; transform: translate(-50%, -50%) scale(.95); } 43% { opacity: 1; transform: translate(-50%, -50%) scale(1.1); } 58% { opacity: .6; transform: translate(-50%, -50%) scale(.93); } 71% { opacity: .95; transform: translate(-50%, -50%) scale(1.04); } 86% { opacity: .7; transform: translate(-50%, -50%) scale(.97); } }
+  @keyframes flickC { 0%, 100% { opacity: .8; } 14% { opacity: .55; } 33% { opacity: 1; } 49% { opacity: .65; } 66% { opacity: .95; } 83% { opacity: .6; } }
+  @media (prefers-reduced-motion: reduce) { #flick i { animation: none; } }
 </style>
 
 <main class="wrap">
@@ -11801,13 +11816,21 @@ var POUCH_SVG = pixSVG(["................", "................", ".....kkkkkk....
     sfx('heart', d); hbTimer = setInterval(function () { if (!S || S.screen !== 'map') { heartSync(); return; } sfx('heart', d); }, per);
   }
   var _render = render; render = function () { _render.apply(this, arguments); try { heartSync(); } catch (e) { } };
+  (function () {
+    var f = document.createElement('div'); f.id = 'flick'; f.setAttribute('aria-hidden', 'true');
+    // x%, y% in the 1376x768 background image; class gives size and rhythm
+    [['amb', 91.2, 60], ['fire', 91.2, 63.5], ['cand', 85.2, 40.8], ['cand2', 93.9, 41.8], ['tcand', 20.5, 74.5], ['lant', 3.2, 32.8], ['lant2', 61.4, 35]].forEach(function (g) {
+      var e = document.createElement('i'); e.className = g[0]; e.style.left = g[1] + '%'; e.style.top = g[2] + '%'; if (g[0] === 'amb' || g[0] === 'lant') e.style.width = ''; f.appendChild(e);
+    });
+    document.documentElement.appendChild(f);
+  })();
   /* opening: black screen -> click starts the title music -> character select fades in on the first big hit (10.3 s into calm.mp3) */
   (function () {
     var HIT = 10.3, el, started = false, t0 = 0;
     if (/[?&]nointro\b/.test(location.search)) return;
     el = document.createElement('div'); el.id = 'introblack'; el.setAttribute('role', 'button'); el.setAttribute('aria-label', 'Click to begin');
     el.innerHTML = '<span>click to begin</span>'; document.documentElement.appendChild(el);
-    function reveal() { if (!el) return; var e = el; el = null; e.classList.add('off'); setTimeout(function () { if (e.parentNode) e.parentNode.removeChild(e); }, 2200); }
+    function reveal() { if (!el) return; var e = el; el = null; e.classList.add('off'); setTimeout(function () { if (e.parentNode) e.parentNode.removeChild(e); }, 4200); }
     function begin(ev) {
       if (started) return; started = true; if (ev && ev.preventDefault) ev.preventDefault();
       el.classList.add('go'); t0 = Date.now();
@@ -11816,7 +11839,7 @@ var POUCH_SVG = pixSVG(["................", "................", ".....kkkkkk....
         if (!el) { clearInterval(iv); return; }
         var v = MUSC.v, c = AUD.ctx, waited = Date.now() - t0;
         if (!c || AUD.vol.mute || MUSC.st.calm === 'failed' || waited > 25000) { if (waited > 800) { clearInterval(iv); reveal(); } return; }
-        if (v && v.k === 'calm') { clearInterval(iv); if (v.off > 0.6) { reveal(); return; } var ms = (v.t0 + HIT - v.off - 1 - c.currentTime) * 1000; setTimeout(reveal, Math.max(0, ms)); }
+        if (v && v.k === 'calm') { clearInterval(iv); if (v.off > 0.6) { reveal(); return; } var ms = (v.t0 + HIT - v.off - 3 - c.currentTime) * 1000; setTimeout(reveal, Math.max(0, ms)); }
       }, 50);
     }
     el.addEventListener('pointerdown', begin); document.addEventListener('keydown', function (e) { if (!started && el) begin(e); }, true);

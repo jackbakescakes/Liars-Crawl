@@ -47,7 +47,8 @@ The user is having Gemini draw a full alphabet in the style of the "LIAR'S CRAWL
 - A copy of the game from before this map work is in `/home/claude/backups/` (not in the repo).
 
 ## Opening sequence
-- Game opens on a black overlay (`#introblack`, code before the final `render()`): click/key starts the title music (`calm.mp3`), and the overlay fades out over 1.9 s, starting 1 s before and ending on the first big hit, 10.3 s into the track (timed from `MUSC.v.t0`). Skips the wait if muted/audio fails; `?nointro` in the URL disables it (for tests).
+- Game opens on a black overlay (`#introblack`, code before the final `render()`): click/key starts the title music (`calm.mp3`), and the overlay fades out over 3.9 s, starting 3 s before and ending on the first big hit, 10.3 s into the track (timed from `MUSC.v.t0`). Skips the wait if muted/audio fails; `?nointro` in the URL disables it (for tests).
+- Title/char screen light flicker: `#flick` (appended to `<html>`, z-index -1, cover-fitted to the 1376x768 background) holds CSS-animated warm glows over the fireplace, candles and lanterns (`@keyframes flickA/B/C`). Positions are % of the background image; code-drawn, no art asset.
 
 ## TODO / known issues (read this when starting a new session)
 - **Dead-end rooms need their own icons** (slot machine and treasure chest). Right now they show the scroll "unknown event" icon plus a gold star (`.map.tall .node.tier1 .nicon::after`). Ask the user for Gemini art, save per the asset rules, add `MAPINK` entries and use them in `mapHTML()` for nodes with `n.spur`.
