@@ -53,5 +53,5 @@ The user is having Gemini draw a full alphabet in the style of the "LIAR'S CRAWL
 - Tall parchments are only 637 px wide (soft when stretched); ask Gemini for larger if wanted.
 - Game-over screen is the old end panel with the dice picture (`RUIN_ART`, `.ruinart`); a full-screen design may come later.
 - The dummy room on floors 2 and 3 is an ordinary fight.
-- Never published since version 308: the split-assets artifact build has not been run for real (see publish procedure above).
+- Split-assets publish has now been run for real (artifact version 310: index.html 3.6 MB + 371 img/ + 16 audio/ = 388 files, uploaded in two calls; audio already live so it was not re-sent).
 - Older parked items: House chaser days/keys (`HOUSE_ON=false`), boss badge re-roll, "this coin wont go in the pouch" wording, Loot Goblin ambush art, arrowhead art, seal balance pass, knight drawing placement (96px), relic open-state art, polyhedra dice only once d8/d12/d20 exist.
