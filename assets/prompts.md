@@ -178,3 +178,19 @@ PROMPT: 1 row x 4 columns, same button in four states, about 200 x 80 px each, w
 
 D. DEAD-END ROOM ICONS on the map (a slot machine room and a treasure chest room; they currently show the unknown-event scroll plus a star). Match `tokens/mapink_*.webp`: hand-inked, black ink outline, crosshatch shading, parchment-cream fill, small red accent, about 110-128 px.
 PROMPT: 1 row x 2 columns. 1: a rickety one-armed-bandit slot machine with a lever, three reels showing a skull, a cherry and a bell, tiny red accent on the lever knob. 2: a small iron-bound treasure chest, lid slightly ajar with a hint of gold, tiny red wax seal on the lock. Ink-drawn look on transparent (magenta) background, matches the other map icons. No star: the game draws that itself.
+
+## 2026-10-09 THE BUCK spinner (prompt given to user, art pending; I cannot reach Gemini from the workspace)
+The first-turn spinner is now "are you the buck?". Left half = THE BUCK (you win it, the enemy goes first). Right half = NO BUCK (you go first). Wired in with the old board/arrow/banner art plus code-drawn labels, confetti and a gold tint (see INDEX "code-drawn" rows). Prompt to paste into Gemini (one sheet, flat magenta #FF00FF background, pixel art, same grimdark style, dark outlines, as the existing first_spinner sheet):
+
+> Pixel-art game UI sheet on a flat magenta (#FF00FF) background, grimdark dungeon tavern style matching my earlier spinner sheet (cracked iron, brass studs, dried blood, warm torch light). Draw these separate pieces with space between them:
+> 1. A round spinner board, 340x330 px, split down the middle. LEFT half is "THE BUCK": gold and warm amber stone with a proud carved buck (stag) head with big antlers, a faint golden glow, a small brass crown or coin motif. RIGHT half is "NO BUCK": cold dull grey-blue cracked stone with a plain empty iron ring/pawn mark, no glow. Iron rim with brass studs, same size and rim as before.
+> 2. A gold "BUCK" win banner, 463x92 px: torn parchment ribbon with a strong golden glow, tiny coins and sparkles around the edges, EMPTY centre for text.
+> 3. A grey "NO BUCK" banner, 463x92 px: torn parchment ribbon, dull grey glow, empty centre.
+> 4. A round gold token with a stag head (120x120) and a round grey token with an empty pawn (120x120).
+> 5. A celebration burst, 200x170 px: golden starburst with flying gold coins, sparks and tiny confetti.
+> 6. A small brass buck-horn/stag-head pendant icon, 64x64, to mark "you hold the buck" on the HUD (optional).
+> No text anywhere. Crisp pixel edges, no anti-aliased blur, transparent-ready magenta background.
+
+## 2026-10-09 Sternidae counter (turn marker; prompt for better art, current art is a code-drawn pixel placeholder)
+> Pixel-art game icon on a flat magenta (#FF00FF) background, grimdark dungeon style (cracked iron, brass, warm torchlight, dark outlines, crisp pixels). A royal tern (Sternidae) head and neck in profile facing right, based on the attached photo: white head, black shaggy crest patch at the back of the crown, small black eye with a white glint, long slender pointed orange bill, grey-white neck feathers. Draw it THREE ways, each ~128x128: (1) idle, (2) head tilted down and beak open mid-squawk, (3) mirrored facing left. Then draw a round iron medallion ring with brass studs (160x160, empty centre) for it to sit in, with a blue-glow version and a red-glow version. No text.
+
