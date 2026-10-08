@@ -10034,7 +10034,7 @@ var BOSS_PORTRAITS = {"dummy":{"normal":"data:image/webp;base64,UklGRgwlAABXRUJQ
         if (o.k === 'calm' || (/^fight2/.test(o.k) && /^fight2/.test(k))) { wait = om.le - pos; while (wait < 0.08) wait += pl; }
         tb = now + wait; off = m.ls; fin = 0.03; pre = 0;
       }
-      if (!o && !keep && MUSC.heard[k] && !/^boss/.test(k)) off = m.ls; if (k === 'calm' && !o && !keep && off === 0) off = 0.17;   // first start of the title music skips the 0.18 s of silence before its first note
+      if (!o && !keep && MUSC.heard[k] && !/^boss/.test(k)) off = m.ls; if (k === 'calm' && !o && !keep && off === 0) { off = 0.17; fin = 0.02; }   // first start of the title music skips the 0.18 s of silence before its first note
       if (c.state === 'running') MUSC.heard[k] = true;   // only count it as heard if the browser was actually allowed to play it
       var s = c.createBufferSource(), g = c.createGain(); s.buffer = MUSC.buf[k]; s.loop = true; s.loopStart = m.ls; s.loopEnd = Math.min(m.le, MUSC.buf[k].duration);
       g.gain.value = 0; var tr = c.createGain(); tr.gain.value = STAGE_TRIM[k] || 1; s.connect(tr); tr.connect(g); g.connect(AUD.musicG); var ts = tb; if (o) { g.gain.setValueAtTime(1, ts); } else { g.gain.setValueAtTime(0, ts); g.gain.setValueCurveAtTime(inC, ts, fin); } s.start(ts, off);
