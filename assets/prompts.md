@@ -160,3 +160,6 @@ Tips: if Gemini merges cells, ask for "a 4x4 grid with clear magenta gutters bet
 ## 2026-10-08 Apple (satchel icon; prompt given to user, art pending)
 Used as: loose satchel item `apple` (found on first satchel open each run, drag onto portrait to eat, restores 1 fallen die). Art now: `ITEM_ART.apple` (pixSVG 12x12 placeholder). Eat animation is code-drawn (`appleFx`).
 PROMPT (2 rows x 4 columns, magenta #FF00FF background): Row 1: whole glossy red apple with stem and one green leaf; bruised variant; one bite taken; whole with warm yellow hover glow. Row 2 (eating sequence): whole; one big bite with juice droplets; half eaten; core with seeds. Chunky dungeon pixel style, thick dark outline, torch light from upper left, ember rim light, no text, clear gutters.
+
+## 2026-10-08 Wood buttons
+No Gemini prompt: `btn_wood_*` were made by recolouring the existing marble button art (hue/brightness shift) to match the wood-and-iron panel.

@@ -225,3 +225,7 @@ Round result window removed: after a call the round auto-advances 2.6 s later (`
 
 | maps/PARCH{,T}_N_plain.webp | plain parchment (interior flattened, torn edge kept) | 1024x572 / 637x1024 | `PARCH[n]`, `PARCHT[n]` (map background, all floors); originals in `_old/` | made in code from the Gemini parchments |
 | ui/panel_wood_iron.png | wood-and-iron panel | 583x446 | char-select window (`html body .panel.tavern` border-image, appended CSS) | panels sheet |
+| ui/btn_wood_idle.png | wood-and-iron button, resting (recoloured from the marble button art) | 181x59 | char-select class rows / `?` button (appended CSS `--bw-*` vars, embedded webp); Log button | code-recoloured from the marble button set, no new Gemini sheet |
+| ui/btn_wood_hover.png | same button, hover state | 181x59 | as above | as above |
+| ui/btn_wood_pressed.png | same button, pressed state | 182x59 | as above | as above |
+| (code-drawn) feels-bad buttons, Feedback button, pause screen | `#fbcl .fbb` (red/orange/blue), `#fbbtn` (pink), `#pausev` (gray wash + green play) | n/a | CSS in the appended block before `</style>` | code-drawn, replace with Gemini art if supplied |
