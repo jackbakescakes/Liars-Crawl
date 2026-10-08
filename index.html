@@ -4291,21 +4291,20 @@ body.spk-mead .foe:not(.slain) .portbtn:not(.spelltgt) { animation: tgtglow .55s
   #firstfx .fxconf.coin { width: 18px; height: 18px; border-radius: 50%; background: radial-gradient(circle at 35% 30%, #fff6c0, #ffc934 55%, #b07a10); box-shadow: 0 0 0 2px #6b4a08; }
   @keyframes fxconf { 0% { opacity: 0; transform: translate(0, 0) rotate(0); } 8% { opacity: 1; } 55% { opacity: 1; transform: translate(var(--dx), var(--dy)) rotate(var(--rot)); } 100% { opacity: 0; transform: translate(calc(var(--dx) * 1.15), calc(var(--dy) + var(--fall))) rotate(calc(var(--rot) * 2)); } }
   #firstfx.buck .fxsub { color: #4a1f06; text-shadow: 0 1px 0 rgba(255,235,170,.7); font-size: 15px; }
-  /* Sternidae counter (turn marker) */
-  #stern { position: fixed; z-index: 70; width: 92px; height: 92px; margin: -46px 0 0 -46px; opacity: 0; transform: scale(.2); pointer-events: auto; transition: top .6s cubic-bezier(.45,-.45,.3,1.35), left .3s ease, opacity .25s ease, transform .35s cubic-bezier(.3,1.6,.5,1); }
-  #stern.on { opacity: 1; transform: scale(1); }
-  #stern .sglow { position: absolute; inset: -14px; border-radius: 50%; opacity: .85; filter: blur(8px); animation: sglow 1.6s ease-in-out infinite alternate; }
-  #stern.p .sglow { background: radial-gradient(circle, rgba(110,185,255,.85), transparent 68%); } #stern.e .sglow { background: radial-gradient(circle, rgba(255,80,60,.85), transparent 68%); }
-  @keyframes sglow { from { transform: scale(.9); opacity: .55; } to { transform: scale(1.08); opacity: 1; } }
-  #stern .sring { position: absolute; inset: 0; border-radius: 50%; overflow: visible !important; background: radial-gradient(circle at 35% 28%, #5a5560, #2a2630 60%, #151219); box-shadow: 0 0 0 4px #0b0a09, 0 0 0 7px #b88a3c, 0 0 0 9px #0b0a09, 0 8px 0 9px rgba(0,0,0,.5), inset 0 0 12px rgba(0,0,0,.7); overflow: hidden; display: flex; align-items: center; justify-content: center; }
-  #stern.e .sring { box-shadow: 0 0 0 4px #0b0a09, 0 0 0 7px #b8423c, 0 0 0 9px #0b0a09, 0 8px 0 9px rgba(0,0,0,.5), inset 0 0 12px rgba(0,0,0,.7); }
-  #stern .simg { width: 84px; max-width: none; image-rendering: pixelated; transform-origin: 40% 70%; animation: sbob 2.2s ease-in-out infinite; filter: drop-shadow(0 3px 0 rgba(0,0,0,.5)); margin-left: 6px; flex: none; }
-  #stern.p .simg { transform: rotate(8deg); } #stern.e .simg { transform: scaleX(-1) rotate(8deg); }
-  @keyframes sbob { 0%, 100% { translate: 0 0; } 50% { translate: 0 -3px; } }
-  #stern.hop .sring { animation: shop .6s cubic-bezier(.3,1.6,.5,1); }
-  @keyframes shop { 0% { transform: scale(1); } 35% { transform: scale(1.28) rotate(-8deg); } 70% { transform: scale(.94) rotate(4deg); } 100% { transform: scale(1); } }
-  #stern:hover .sring { transform: scale(1.1); transition: transform .2s cubic-bezier(.3,1.6,.5,1); }
-  @media (prefers-reduced-motion: reduce) { #stern, #stern .simg, #stern .sglow { animation: none !important; transition: none !important; } }
+  /* Sternidae counter (turn marker): a small gold-rimmed tern that flies to the portrait of whoever's turn it is (12 o'clock on yours, 6 o'clock on the enemy's) */
+  #stern { position: fixed; z-index: 70; width: 34px; height: 34px; margin: -17px 0 0 -17px; opacity: 0; pointer-events: auto; transition: opacity .25s ease; }
+  #stern.on { opacity: 1; }
+  #stern .sfly { position: absolute; inset: 0; }
+  #stern .sglow { position: absolute; inset: -7px; border-radius: 50%; opacity: .8; filter: blur(5px); animation: sglow 1.6s ease-in-out infinite alternate; }
+  #stern.p .sglow { background: radial-gradient(circle, rgba(110,185,255,.9), transparent 70%); } #stern.e .sglow { background: radial-gradient(circle, rgba(255,80,60,.9), transparent 70%); }
+  @keyframes sglow { from { transform: scale(.9); opacity: .55; } to { transform: scale(1.1); opacity: 1; } }
+  #stern .sring { position: absolute; inset: 0; border-radius: 50%; background: radial-gradient(circle at 35% 28%, #5a5560, #2a2630 60%, #151219); box-shadow: 0 0 0 2px #ffd860, 0 0 0 3.5px #8a5a10, 0 0 0 5px #0b0a09, 0 3px 0 5px rgba(0,0,0,.5); overflow: hidden; display: flex; align-items: center; justify-content: center; }
+  #stern .simg { width: 38px; max-width: none; image-rendering: pixelated; margin-left: 2px; flex: none; }
+  #stern.e .simg { transform: scaleX(-1); margin-left: -2px; }
+  #stern:hover .sring { transform: scale(1.18); transition: transform .2s cubic-bezier(.3,1.6,.5,1); }
+  @media (prefers-reduced-motion: reduce) { #stern .sglow { animation: none !important; } }
+  html #ptk { cursor: grab; touch-action: none; } html #ptk.drag { cursor: grabbing; transform: scale(1.12) rotate(-6deg); transition: none; box-shadow: 0 10px 0 #1a0a35, 0 0 26px 6px rgba(190,140,255,.75); } html #ptk.drag::after { display: none; }
+  html.ptk-dragging, html.ptk-dragging * { cursor: grabbing !important; user-select: none; }
 </style>
 
 <main class="wrap">
@@ -6180,18 +6179,30 @@ body.spk-mead .foe:not(.slain) .portbtn:not(.spelltgt) { animation: tgtglow .55s
   var STERN = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACYAAAAgCAYAAAB+ZAqzAAAB5klEQVR4nO3XMUvDQBgG4Deli6WtpYNIuxQppVrIJNLZwVUoDo4O4iQIjg4OHdwFFzd/gPgDRJyLiEOgtZYiLi3iUGJbIjhYh3rX5JJLLuRSBftOySUND993vUuAPxrF7WIqHhuRY31ouN4rO1GnQQJKJNPm4dE0cREnVCKZpqjl4gqAMdJcwbBjqQBBuWXQ73GvyawofZAIypynxzvbWCabByAHqPhFOYHYZLL5wLiIbBQAdDvtwPPRNvl5EUWRBMVFf0rua36JpttpI5PN23AibRaa/Gy1FhaX6PHb67Mn8PN8zXKeq/Y8cbSV+tBQnJYCXgsHxocnyC2peGzk1mrHlV8kidic0H1stQDg5XjSmVwVjq22tPL2+goAsLm1C8D/hOfB5tVVev6u3Xv+JlftjStmRhVLqhQQyUNDBxo3vn9naWWxpMry0JRPW6gdFDzvq1x+0WN9aCgKW60w4wQkIPZfSisWForsn7zwlg0Ka9Y16bggeybdxEk7ATnVC7qR0wW21urTwWZdQ7Ou/RoKYLakk7MLAEC5kLTdKFpFGSgLjMWR+EHKQtlgBLe9dwgAUNUJgAWacTLfXLkwFscCzcj1jYp0kCuM4ADADAQmyKP9nVC/NT0fzHs1mfYH8Cyz/Jt8AxKgySt4QD18AAAAAElFTkSuQmCC';
   (function () {
     var el = document.createElement('div'), last = null; el.id = 'stern'; el.setAttribute('data-tip', 'note:The Sternidae counter. It perches on the side of whoever\'s turn it is.');
-    el.innerHTML = '<i class="sglow"></i><div class="sring"><img class="simg" alt="" draggable="false" src="' + STERN + '"></div>'; document.documentElement.appendChild(el);
+    el.innerHTML = '<div class="sfly"><i class="sglow"></i><div class="sring"><img class="simg" alt="" draggable="false" src="' + STERN + '"></div></div>'; document.documentElement.appendChild(el);
+    var fly = el.firstChild, px = null, py = null;
     function upd() {
       try {
-        var show = S && S.screen === 'combat' && C && C.phase === 'bid' && !C.meeting && !document.getElementById('firstfx') && !document.body.hasAttribute('data-meet'), bb = document.querySelector('.felt .bidbox');
-        if (!show || !bb) { el.classList.remove('on'); last = null; return; }
-        var r = bb.getBoundingClientRect(); if (!r.width) { el.classList.remove('on'); return; }
+        var show = S && S.screen === 'combat' && C && C.phase === 'bid' && !C.meeting && !document.getElementById('firstfx') && !document.body.hasAttribute('data-meet');
+        var me = document.querySelector('.hudport'), foe = document.querySelector('.foe .portbtn, .foe .portrait');
+        if (!show || !me || !foe) { el.classList.remove('on'); last = null; px = null; return; }
+        var a = me.getBoundingClientRect(), b = foe.getBoundingClientRect(); if (!a.width || !b.width) { el.classList.remove('on'); return; }
         var who = C.turn === 'e' ? 'e' : 'p';
-        el.style.left = Math.round(r.left + r.width / 2) + 'px'; el.style.top = Math.round(who === 'p' ? r.bottom - 8 : r.top + 8) + 'px';
+        // 12 o'clock on your portrait, 6 o'clock on the enemy's
+        var x = Math.round(who === 'p' ? a.left + a.width / 2 : b.left + b.width / 2), y = Math.round(who === 'p' ? a.top : b.bottom);
         el.classList.toggle('p', who === 'p'); el.classList.toggle('e', who === 'e');
+        el.style.left = x + 'px'; el.style.top = y + 'px';
         if (!el.classList.contains('on')) { el.classList.add('on'); }
-        else if (last && last !== who) { el.classList.remove('hop'); void el.offsetWidth; el.classList.add('hop'); try { sfx('tern'); } catch (e) { } }
-        last = who;
+        else if (last && last !== who && px !== null && fly.animate) {
+          var dx = px - x, dy = py - y;
+          fly.animate([
+            { transform: 'translate(' + dx + 'px,' + dy + 'px) scale(1) rotate(0deg)' },
+            { transform: 'translate(' + (dx * 0.5) + 'px,' + (dy * 0.5 - 110) + 'px) scale(1.7) rotate(-14deg)', offset: 0.5 },
+            { transform: 'translate(0,0) scale(1) rotate(0deg)' }
+          ], { duration: 780, easing: 'cubic-bezier(.45,.05,.35,1)' });
+          try { sfx('tern'); } catch (e) { }
+        }
+        last = who; px = x; py = y;
       } catch (e) { }
     }
     setInterval(upd, 90);
@@ -12973,6 +12984,36 @@ var POUCH_SVG = pixSVG(["................", "................", ".....kkkkkk....
         if (!seen()) { try { localStorage.setItem('lc_ptkseen', '1'); } catch (e) { } cog.classList.remove('pulse'); }
       });
       cog.addEventListener('pointerenter', function () { sfx('hover'); });
+      // ---- drag the toolkit anywhere (the panel follows; position is remembered) ----
+      var PKEY = 'lc_ptkpos', drag = null, dragEnd = 0, curX = 12, curY = 12;
+      function placeAt(x, y) {
+        var vw = window.innerWidth, vh = window.innerHeight; x = Math.max(4, Math.min(vw - 60, x)); y = Math.max(4, Math.min(vh - 60, y));
+        cog.style.left = x + 'px'; cog.style.top = y + 'px'; curX = x; curY = y;
+        var ph = panel.hidden ? 190 : panel.offsetHeight, pw = panel.hidden ? 190 : panel.offsetWidth;
+        var below = y + 68 + ph <= vh - 6;
+        panel.style.left = Math.max(4, Math.min(vw - pw - 4, x)) + 'px'; panel.style.top = (below ? y + 68 : Math.max(4, y - ph - 12)) + 'px';
+        panel.style.transformOrigin = below ? '28px -10px' : '28px ' + (ph + 10) + 'px';
+      }
+      try { var sp = JSON.parse(localStorage.getItem(PKEY) || 'null'); if (sp && isFinite(sp.x) && isFinite(sp.y)) placeAt(sp.x, sp.y); } catch (e) { }
+      window.addEventListener('resize', function () { placeAt(curX, curY); });
+      cog.addEventListener('pointerdown', function (e) {
+        if (e.button > 0) return;
+        drag = { id: e.pointerId, sx: e.clientX, sy: e.clientY, ox: e.clientX - curX, oy: e.clientY - curY, moved: false };
+        try { cog.setPointerCapture(e.pointerId); } catch (er) { }
+      });
+      cog.addEventListener('pointermove', function (e) {
+        if (!drag || e.pointerId !== drag.id) return;
+        if (!drag.moved && Math.abs(e.clientX - drag.sx) + Math.abs(e.clientY - drag.sy) < 6) return;
+        if (!drag.moved) { drag.moved = true; cog.classList.add('drag'); de.classList.add('ptk-dragging'); panel.style.transition = 'none'; }
+        placeAt(e.clientX - drag.ox, e.clientY - drag.oy);
+      });
+      function dragStop(e) {
+        if (!drag || (e && e.pointerId !== drag.id)) return; var d = drag; drag = null;
+        try { cog.releasePointerCapture(d.id); } catch (er) { }
+        if (d.moved) { dragEnd = Date.now(); cog.classList.remove('drag'); de.classList.remove('ptk-dragging'); try { localStorage.setItem(PKEY, JSON.stringify({ x: Math.round(curX), y: Math.round(curY) })); } catch (er) { } sfx('click'); }
+      }
+      cog.addEventListener('pointerup', dragStop); cog.addEventListener('pointercancel', dragStop);
+      cog.addEventListener('click', function (e) { if (Date.now() - dragEnd < 300) { e.stopImmediatePropagation(); e.preventDefault(); } }, true);
       panel.addEventListener('click', function (e) { if (e.target.closest && e.target.closest('button[data-act]')) { try { onClick(e); } catch (er) { } } });
       setInterval(function () {
         var ib = document.getElementById('introblack'); cog.hidden = (!!ib && !window.__welcomeActive) || !(S && S.screen);
