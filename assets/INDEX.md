@@ -187,3 +187,4 @@ Replaced on the map (old assets kept in file, unused by the map): MAPBG, TOK, VT
 | ui/aseprite/tray.png | wooden tray, 4x-shrunk | 115x36 | `RELICBTN.tray`, `.rdtray` (backs the sliding relic slots, `.relicdrawer`) | relics_ui_20261008_src.png |
 | (code-drawn) relic button open state, glows, sounds | pressed look = darker + sunk; yellow/orange/red glows via CSS; sfx `relicOpen/relicClose/relicDeny` | - | `.relicbtn.on`, `body.relichold/.relicfull`, `SFX.relic*` | code-drawn |
 | sheets/knight_ink_drawing_user_20261008_src.jpg | user's pen-and-ink drawing of a leaping knight (bucket helm, sword, pencil wings) | 1500x2000 | unused | drawn by the user |
+| tokens/knight_ink_pixel_64/96/192.png | the user's knight drawing pixelated at three heights (5-tone warm ink ramp, transparent, inner pen hatching kept, pencil wings dropped) | 53x64, 79x96, 158x192 | unused (preview only) | knight_ink_drawing_user_20261008_src.jpg |

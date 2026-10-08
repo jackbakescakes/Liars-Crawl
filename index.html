@@ -2833,6 +2833,13 @@ KNOWN ISSUES (art still to come)
   body[data-screen="combat"] .felt .bidbox.bfdrop { box-shadow: 0 0 0 5px #f6d66a, 0 0 30px 10px rgba(246,214,106,.75) !important; filter: brightness(1.12); }
   html .bfghost { position: fixed; z-index: 99999; pointer-events: none; transform: translate(-50%, -50%); display: flex; flex-direction: column; align-items: center; gap: 2px; filter: drop-shadow(0 8px 6px rgba(0,0,0,.6)); }
   html .bfghost b { font: 700 28px/1 var(--display, monospace); color: #f3e9cf; text-shadow: 0 3px 0 #000; }
+
+  .d3layer { position: fixed; inset: 0; z-index: 9000; pointer-events: none; overflow: visible; }
+  .d3w { position: fixed; perspective: 520px; perspective-origin: 50% 40%; pointer-events: none; will-change: transform; }
+  .d3c { position: absolute; inset: 0; transform-style: preserve-3d; will-change: transform; }
+  .d3f { position: absolute; inset: 0; backface-visibility: hidden; -webkit-backface-visibility: hidden; display: flex; }
+  .d3f > .die { margin: 0; box-shadow: none; }
+  .d3sh { position: absolute; left: 6%; right: 6%; bottom: -14%; height: 22%; border-radius: 50%; background: radial-gradient(ellipse, rgba(0,0,0,.65), rgba(0,0,0,0) 70%); }
   .die.throw { animation: diethrow .56s cubic-bezier(.3,.1,.5,1) var(--rd, 0ms) both; }
   @keyframes diethrow {
     0% { opacity: 0; transform: translate(var(--rx, 0px), -150px) rotate(0deg) scale(1.7); filter: blur(2px); }
@@ -3419,8 +3426,10 @@ html body .btn:not(.rollbtn):not(.beginbtn):not(.mapkeybtn):not(.xbtn):not(.pxcl
   .report .rp-line { flex-wrap: nowrap !important; } .report .rp-line .rl-d { flex: 1 1 0; min-width: 8px; }
   .report .rp-colg .rp-line .rl-n { font-size: 29px !important; }
   /* crawl: fade to black except the word CRAWL, then into the game */
-  .tavlogo .crawlveil { position: absolute; left: -4000px; top: -3000px; width: 9600px; height: 7200px; background: #000; opacity: 0; transition: opacity 1.3s ease-in; z-index: 1; pointer-events: auto; }
-  .tavlogo .crawlveil.on { opacity: 1; }
+  html > .crawlveil { position: fixed; inset: 0; background: #000; opacity: 0; transition: opacity 1.3s ease-in; z-index: 8990; pointer-events: auto; }
+  html > .crawlveil.on { opacity: 1; }
+  .tavlogo > .crawlveil { position: absolute; left: -4000px; top: -3000px; width: 9600px; height: 7200px; background: #000; opacity: 0; transition: opacity 1.3s ease-in; z-index: 1; pointer-events: none; }
+  .tavlogo > .crawlveil.on { opacity: 1; }
   .tavlogo.crawling .crawlword { z-index: 5; pointer-events: none; transition: opacity .5s ease-in; }
   .tavlogo.crawling .crawlword.fadeout { opacity: 0; }
   .crawlblack { position: fixed; inset: 0; z-index: 9500; background: #000; opacity: 1; transition: opacity 1.4s ease-in-out; }
@@ -3583,6 +3592,35 @@ html body .btn:not(.rollbtn):not(.beginbtn):not(.mapkeybtn):not(.xbtn):not(.pxcl
   .encwin.rptwin .rp-spoils { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; width: 100%; }
   .encwin.rptwin .rp-spoils .rptcard { zoom: .7; } .encwin.rptwin .chestbtn img { height: 120px; width: auto; }
   .encwin.rptwin .encfoot .rp-skip { font-size: inherit; position: static; }
+  /* ---- battle report v2: portrait hangs off the corner, small 'defeated' plate, big spoils, light parchment palette ---- */
+  .encwin.tall.rptwin { height: 1080px; }
+  .encwin.rptwin .encring { left: 2px; top: 14px; width: 280px; height: 274px; }
+  .encwin.rptwin .encpor { left: 42px; top: 52px; }
+  .encwin.rptwin .encplaque { top: 70px; } .encwin.rptwin .enctitle { top: 70px; }
+  .encwin.rptwin .encparch { top: 152px; height: 96px; } .encwin.rptwin .encflav { top: 158px; height: 84px; }
+  .encwin.rptwin .rp-flv small { font-size: 15px; } .encwin.rptwin .rp-fn { font-size: 26px; }
+  .encwin.rptwin .encdiv { top: 268px; }
+  .encwin.rptwin .enctrayb { top: 308px; height: 610px; opacity: 0; }
+  .encwin.rptwin .enctray { top: 318px; height: 592px; background: linear-gradient(180deg, #f1e2b8, #e3cd96); border: 4px solid #7a5a2c; box-shadow: inset 0 0 0 3px #f8edcc, inset 0 0 40px rgba(150,100,40,.25); }
+  .encwin.rptwin .encfootb { top: 936px; filter: sepia(1) saturate(1.4) contrast(.75) brightness(1.7); } .encwin.rptwin .encfoot { top: 938px; }
+  .encwin.rptwin .encfr { filter: sepia(1) saturate(1.8) contrast(.75) brightness(1.55) hue-rotate(-8deg); }
+  .encwin.rptwin .encglow { --eg: rgba(255,225,150,.35); }
+  .encwin.rptwin .encfr { border-image-slice: 30; }
+  .encwin.rptwin .encglow { background: linear-gradient(160deg, #e6cf96, #d6b97a 60%, #c9a868); }
+  .encwin.rptwin .rp-ledger { background: rgba(120,80,30,.10); border: 3px solid #8a6a38; }
+  .encwin.rptwin .rp-colg { border-left-color: #8a6a38; }
+  .encwin.rptwin .rp-sec { color: #6b4a22; border-bottom-color: #8a6a38; font-weight: 700; }
+  .encwin.rptwin .rp-line, .encwin.rptwin .rp-tot { color: #3a2410; font-weight: 700; }
+  .encwin.rptwin .rp-line em { color: #7a5c36; }
+  .encwin.rptwin .rl-d { border-bottom-color: #a98c58; }
+  .encwin.rptwin .rp-line .rn { color: #8a5200; } .encwin.rptwin .rp-line.rp-pct .rn { color: #2d6a1e; }
+  .encwin.rptwin .rp-tot b { color: #2d6a1e; border-bottom-color: #2d6a1e; text-shadow: none; }
+  .encwin.rptwin .rp-tot.rp-totg b { color: #8a5200; border-bottom-color: #8a5200; }
+  .encwin.rptwin .rp-info .crit { color: #8a5200; } .encwin.rptwin .rp-info .good { color: #2d6a1e; }
+  .encwin.rptwin .rp-extra { flex: 1; align-content: flex-start; color: #3a2410; }
+  .encwin.rptwin .rp-spoils { gap: 22px; padding-top: 6px; }
+  .encwin.rptwin .rp-spoils .rptcard { zoom: 1.15; } .encwin.rptwin .chestbtn img { height: 230px; }
+  .encwin.rptwin .rp-sptext { color: #3a2410; }
   #chestwin { position: fixed; inset: 0; z-index: 99000; display: flex; align-items: center; justify-content: center; background: rgba(0,0,0,.6); }
   #chestwin .cwscale { transform-origin: center center; flex: none; }
   html #chestwin .winx { top: 40px; right: 56px; }
@@ -3674,6 +3712,10 @@ html body .btn:not(.rollbtn):not(.beginbtn):not(.mapkeybtn):not(.xbtn):not(.pxcl
   .relicdrawer.open .inv .slot { transform: scale(1); }
   .relicdrawer.open .inv .slot:nth-child(3) { transition-delay: .06s; } .relicdrawer.open .inv .slot:nth-child(2) { transition-delay: .13s; } .relicdrawer.open .inv .slot:nth-child(1) { transition-delay: .2s; }
   body.relichold .relicdrawer .inv .slot:not(.locked):hover, body.relichold .relicdrawer .inv .slot.rsover:not(.locked) { border-color: #ff9a2e !important; border-style: solid !important; animation: none; box-shadow: 0 0 0 3px #ff9a2e, 0 0 20px 6px rgba(255,138,26,.8) !important; }
+
+  .suckcard { position: fixed; z-index: 99995; pointer-events: none; transform-origin: 50% 50%; filter: drop-shadow(0 14px 14px rgba(0,0,0,.55)); }
+  .deckpile.suckpulse { animation: suckpulse .42s ease-out; }
+  @keyframes suckpulse { 0% { transform: scale(1); filter: brightness(1); } 30% { transform: scale(1.16); filter: brightness(1.5) drop-shadow(0 0 12px #f6d66a); } 100% { transform: scale(1); filter: brightness(1); } }
 </style>
 
 <main class="wrap">
@@ -5256,12 +5298,14 @@ html body .btn:not(.rollbtn):not(.beginbtn):not(.mapkeybtn):not(.xbtn):not(.pxcl
       if (logo && word) {
         // everything fades to black except the word CRAWL, which keeps glowing
         var veil = document.createElement('div'); veil.className = 'crawlveil'; veil.setAttribute('aria-hidden', 'true');
-        logo.style.zIndex = '9000'; logo.classList.add('crawling'); logo.insertBefore(veil, logo.firstChild);
+        logo.style.zIndex = '9000'; logo.classList.add('crawling'); document.documentElement.appendChild(veil);
+        var veil2 = document.createElement('div'); veil2.className = 'crawlveil'; veil2.setAttribute('aria-hidden', 'true'); logo.insertBefore(veil2, logo.firstChild); void veil2.offsetWidth; veil2.classList.add('on');
         void veil.offsetWidth; veil.classList.add('on');
         setTimeout(function () { word.classList.add('fadeout'); }, 2200);
         setTimeout(function () {
           document.body.appendChild(blk);
           try { startRun(); } finally { beginning = false; }
+          if (veil.parentNode) veil.parentNode.removeChild(veil);
           void blk.offsetWidth;
           setTimeout(function () { blk.classList.add('out'); setTimeout(function () { if (blk.parentNode) blk.parentNode.removeChild(blk); }, 1500); }, 250);
         }, 2750);
@@ -7152,7 +7196,7 @@ html body .btn:not(.rollbtn):not(.beginbtn):not(.mapkeybtn):not(.xbtn):not(.pxcl
     for (i = 0; i < l.length; i++) {
       var kk = k, tl = l[i].classList.contains('tall');
       if (tl) { kk = Math.max(.4, Math.min(1.5, window.innerWidth * .96 / (1100 * bz), window.innerHeight * .93 / (1040 * bz))); }
-      if (tl) { var xb = document.getElementById('xpwrap'), t0 = l[i].getBoundingClientRect().top; if (xb && t0 >= 0) kk = Math.min(kk, Math.max(.4, (xb.getBoundingClientRect().top - 6 - Math.max(0, t0)) / (1040 * bz))); }
+      if (tl) { var xb = document.getElementById('xpwrap'), t0 = l[i].getBoundingClientRect().top; if (xb && t0 >= 0) kk = Math.min(kk, Math.max(.4, (xb.getBoundingClientRect().top - (l[i].classList.contains('rptwin') ? 16 : 6) - Math.max(0, t0)) / ((l[i].classList.contains('rptwin') ? 1080 : 1040) * bz))); }
       if (l[i].classList.contains('encopen')) { var xo = document.getElementById('xpwrap'), to = l[i].getBoundingClientRect().top; if (xo && to >= 0) kk = Math.min(kk, Math.max(.4, (xo.getBoundingClientRect().top - 6 - Math.max(0, to)) / (840 * bz))); } // keep the character HUD visible under it
       kk = Math.round(kk * 100) / 100;
       if (l[i].dataset.fz !== String(kk)) { l[i].dataset.fz = String(kk); l[i].style.zoom = kk; }
@@ -8984,18 +9028,77 @@ var BOSS_PORTRAITS = {"dummy":{"normal":"data:image/webp;base64,UklGRgwlAABXRUJQ
     });
     sfx('tick'); setTimeout(commit, total + 60);
   }
+
+  // ---------- 3D dice roll (roll only: a tumbling cube lands on the pre-decided face, then the flat die takes over) ----------
+  var DICE3D = true; try { if (localStorage.getItem('lcDice3d') === '0') DICE3D = false; } catch (e) { }
+  function setDice3D(on) { DICE3D = !!on; try { localStorage.setItem('lcDice3d', on ? '1' : '0'); } catch (e) { } }
+  var D3 = { layer: null, live: 0 };
+  // el: the flat die about to roll. Returns false when it cannot be drawn (then the caller falls back to the flat roll).
+  function roll3D(el, fin, dur, done) {
+    if (!DICE3D || REDUCED || typeof el.animate !== 'function' || !el.getBoundingClientRect) return false;
+    var r = el.getBoundingClientRect(); if (r.width < 8 || r.height < 8 || !el.isConnected) return false;
+    var sz = Math.round(r.width), h = sz / 2;
+    if (!D3.layer) { D3.layer = document.createElement('div'); D3.layer.className = 'd3layer'; D3.layer.setAttribute('aria-hidden', 'true'); document.documentElement.appendChild(D3.layer); }
+    var w = document.createElement('div'); w.className = 'd3w'; w.style.cssText = 'left:' + Math.round(r.left) + 'px;top:' + Math.round(r.top) + 'px;width:' + sz + 'px;height:' + sz + 'px';
+    var sh = document.createElement('i'); sh.className = 'd3sh'; w.appendChild(sh);
+    var cube = document.createElement('div'); cube.className = 'd3c'; w.appendChild(cube);
+    var vals = [fin], rest = [1, 2, 3, 4, 5, 6].filter(function (x) { return x !== fin; }), k, j, t;
+    for (k = rest.length - 1; k > 0; k--) { j = Math.floor(Math.random() * (k + 1)); t = rest[k]; rest[k] = rest[j]; rest[j] = t; }
+    vals = vals.concat(rest.slice(0, 5));
+    var tf = ['translateZ(' + h + 'px)', 'rotateY(180deg) translateZ(' + h + 'px)', 'rotateY(90deg) translateZ(' + h + 'px)', 'rotateY(-90deg) translateZ(' + h + 'px)', 'rotateX(90deg) translateZ(' + h + 'px)', 'rotateX(-90deg) translateZ(' + h + 'px)'];
+    var st = el.getAttribute('style') || '';
+    vals.forEach(function (v, i) {
+      var f = document.createElement('div'); f.className = 'd3f'; f.style.transform = tf[i];
+      var d = el.cloneNode(false); d.className = el.className.replace(/\b(throw|rolling|landed|matchglow|wildflash)\b/g, '').trim(); d.removeAttribute('data-roll');
+      d.setAttribute('style', st); d.style.setProperty('--s', sz + 'px'); d.style.animation = 'none'; d.style.transform = 'none'; d.style.visibility = 'visible'; d.style.margin = '0';
+      setFace(d, v); f.appendChild(d); cube.appendChild(f);
+    });
+    D3.layer.appendChild(w); D3.live++;
+    el.style.visibility = 'hidden';
+    var sx = (Math.random() * 40 - 20), a = function () { return (Math.random() < .5 ? -1 : 1) * (360 + Math.floor(Math.random() * 360)); };
+    var rot0 = 'rotateX(' + a() + 'deg) rotateY(' + a() + 'deg) rotateZ(' + (Math.random() * 120 - 60) + 'deg)';
+    var spin = cube.animate([{ transform: rot0 }, { transform: 'rotateX(' + (Math.random() < .5 ? 38 : -38) + 'deg) rotateY(' + (Math.random() < .5 ? 28 : -28) + 'deg)', offset: .62 }, { transform: 'rotateX(0deg) rotateY(0deg) rotateZ(0deg)' }], { duration: dur, easing: 'cubic-bezier(.22,.7,.3,1)', fill: 'both' });
+    var hop = w.animate([
+      { opacity: 0, transform: 'translate(' + sx + 'px,-150px) scale(1.6)', offset: 0 }, { opacity: 1, offset: .12 }, { opacity: 1, transform: 'translate(0,0) scale(1)', offset: .5 },
+      { transform: 'translate(0,-' + Math.round(sz * .7) + 'px) scale(1.08)', offset: .66 }, { transform: 'translate(0,0) scale(1)', offset: .8 }, { transform: 'translate(0,-' + Math.round(sz * .18) + 'px) scale(1.02)', offset: .9 }, { opacity: 1, transform: 'translate(0,0) scale(1)', offset: 1 }
+    ], { duration: dur, easing: 'cubic-bezier(.3,.1,.5,1)', fill: 'both' });
+    sh.animate([{ opacity: 0, transform: 'scale(.4)' }, { opacity: .5, transform: 'scale(.9)', offset: .5 }, { opacity: .2, transform: 'scale(.6)', offset: .66 }, { opacity: .5, transform: 'scale(.95)', offset: .8 }, { opacity: .45, transform: 'scale(1)' }], { duration: dur, fill: 'both' });
+    var fin1 = function () { try { if (w.parentNode) w.parentNode.removeChild(w); } catch (e) { } D3.live--; el.style.visibility = ''; if (done) done(); };
+    hop.onfinish = fin1; hop.oncancel = fin1;
+    return true;
+  }
   function runRollAnim() {
     if (typeof document.querySelectorAll !== 'function') return;
     var arr = Array.prototype.slice.call(document.querySelectorAll('#app .die[data-roll]')); if (!arr.length) return;
     var seq = ++ROLLSEQ, mineN = arr.filter(function (e) { return e.closest && e.closest('.mycups'); }).length;
     var full = !REDUCED && S.screen === 'combat' && C && mineN === arr.length && arr.length > 1 && ROLLALL;
-    var step = full ? Math.min(150, Math.floor(1100 / arr.length)) : 45, FALL = full ? 560 : 0, counts = {}, cups = full ? document.querySelector('#app .mycups') : null;
+    var step = full ? Math.min(150, Math.floor(1100 / arr.length)) : 45, FALL = full ? (DICE3D ? 820 : 560) : (DICE3D ? 700 : 0), counts = {}, cups = full ? document.querySelector('#app .mycups') : null;
     if (cups) { cups.classList.add('yourhalo'); if (C.round === 1) { var tg = document.createElement('span'); tg.className = 'yourtag'; tg.textContent = 'YOUR DICE'; cups.appendChild(tg); setTimeout(function () { if (tg.parentNode) tg.parentNode.removeChild(tg); }, 2600); } setTimeout(function () { cups.classList.remove('yourhalo'); }, arr.length * step + FALL + 700); }
     if (full) { var Cm = C; setTimeout(function () { sortAnim(seq, Cm); }, (arr.length - 1) * step + FALL + 520); }
     arr.forEach(function (el, i) {
       var fin = +el.getAttribute('data-v'); el.removeAttribute('data-roll');
       if (REDUCED) { setFace(el, fin); return; }
       var delay = i * step;
+      if (DICE3D && fin >= 0 && fin <= 6 && !REDUCED) {
+        setTimeout(function () {
+          var land = function () {
+            setFace(el, fin); el.classList.remove('throw', 'rolling');
+            if (!full) return;
+            el.classList.add('landed'); setTimeout(function () { el.classList.remove('landed'); }, 380);
+            var ring = document.createElement('i'); ring.className = 'landring' + (fin === 0 ? ' wildring' : ''); if (el.parentNode) el.parentNode.appendChild(ring); setTimeout(function () { if (ring.parentNode) ring.parentNode.removeChild(ring); }, 700);
+            counts[fin] = (counts[fin] || 0) + 1;
+            if (fin === 0) { sfx('wildroll'); el.classList.add('wildflash'); setTimeout(function () { el.classList.remove('wildflash'); }, 900); }
+            else if (counts[fin] >= 2) { sfx('matchping', counts[fin]); el.classList.add('matchglow'); setTimeout(function () { el.classList.remove('matchglow'); }, 700); }
+            else sfx('dieland', i);
+          };
+          if (!roll3D(el, fin, FALL, land)) {   // cannot draw the cube: do the flat roll for this die
+            if (full) { el.style.setProperty('--rd', '0ms'); el.style.setProperty('--rx', '0px'); el.style.setProperty('--rr', '300deg'); el.classList.add('throw'); } else el.classList.add('rolling');
+            var iv = setInterval(function () { setFace(el, 1 + Math.floor(Math.random() * 6)); }, 55);
+            setTimeout(function () { clearInterval(iv); land(); }, full ? 560 : 560);
+          }
+        }, delay);
+        return;
+      }
       if (full) { el.style.setProperty('--rd', delay + 'ms'); el.style.setProperty('--rx', (Math.random() * 40 - 20).toFixed(0) + 'px'); el.style.setProperty('--rr', (Math.random() < .5 ? -1 : 1) * (200 + Math.random() * 300) + 'deg'); el.classList.add('throw'); }
       else el.classList.add('rolling');
       var tickIv = null;
@@ -9459,6 +9562,7 @@ var BOSS_PORTRAITS = {"dummy":{"normal":"data:image/webp;base64,UklGRgwlAABXRUJQ
     t_poly: function () { arp([67, 74, 79, 86, 91], 0.045, { v: 0.09, d: 0.18, t: 'sawtooth' }); },
     t_odd: function () { tone({ f: 660, d: 0.05, v: 0.07, t: 'triangle' }); tone({ f: 495, d: 0.08, v: 0.07, t: 'triangle', at: 0.06 }); },
     click: function () { tone({ f: 520, f2: 380, d: 0.05, v: 0.07 }); },
+    suck: function () { tone({ f: 300, f2: 1100, d: 0.5, v: 0.05, t: 'sawtooth' }); tone({ f: 200, f2: 700, d: 0.45, v: 0.05, t: 'triangle', at: 0.05 }); },
     relicOpen: function () { tone({ f: 150, f2: 80, d: 0.14, v: 0.13, t: 'square' }); tone({ f: 260, f2: 900, d: 0.26, v: 0.035, t: 'sawtooth', at: 0.02 }); [0, 1, 2].forEach(function (k) { tone({ f: 520 + k * 170, d: 0.09, v: 0.07, t: 'triangle', at: 0.1 + k * 0.06 }); }); tone({ f: 1568, d: 0.32, v: 0.045, t: 'triangle', at: 0.3 }); },
     relicClose: function () { [2, 1, 0].forEach(function (k, i) { tone({ f: 520 + k * 170, d: 0.07, v: 0.06, t: 'triangle', at: i * 0.05 }); }); tone({ f: 900, f2: 240, d: 0.22, v: 0.035, t: 'sawtooth', at: 0.08 }); tone({ f: 120, f2: 70, d: 0.16, v: 0.13, t: 'square', at: 0.24 }); },
     relicDeny: function () { tone({ f: 170, f2: 120, d: 0.14, v: 0.1, t: 'square' }); tone({ f: 150, f2: 100, d: 0.18, v: 0.1, t: 'square', at: 0.12 }); },
@@ -9843,12 +9947,14 @@ var BOSS_PORTRAITS = {"dummy":{"normal":"data:image/webp;base64,UklGRgwlAABXRUJQ
       pan.innerHTML = '<div class="setbox" role="dialog" aria-label="Settings"><h2>Settings</h2>' +
         '<label class="setrow"><span>Music</span><input id="volMusic" type="range" min="0" max="100" step="1"><output id="valMusic"></output></label>' +
         '<label class="setrow"><span>Sound effects</span><input id="volSfx" type="range" min="0" max="100" step="1"><output id="valSfx"></output></label>' +
+        '<label class="setrow"><span>3D dice</span><button type="button" class="btn" id="d3Btn"></button></label>' +
         '<div class="row" id="runBtns" style="justify-content:center" hidden><button type="button" class="btn" id="pawnBtn" data-act="respawnPawn" hidden>Respawn pawn</button><button type="button" class="btn ghost" data-act="endRun">Abandon run</button></div>' +
         '<div class="row" style="justify-content:center"><button type="button" class="btn" id="rulesBtn">Rules</button><button type="button" class="btn" data-act="credits">Credits</button><button type="button" class="btn" id="webBtn">Web of Bones</button><button type="button" class="btn" id="muteBtn"></button><button type="button" class="btn torch" id="setClose">Close</button></div></div>';
       var rm = document.createElement('div'); rm.id = 'rulesModal'; rm.className = 'setmodal'; rm.hidden = true; document.body.appendChild(rm);
       function openR(o) { rm.hidden = !o; pan.hidden = o; if (o) { rm.innerHTML = '<div class="setbox rulebox" role="dialog" aria-label="Rules"><div class="rulescroll"><h2>The House Rules</h2>' + rulesCards() + keyHTML() + '</div><div class="row" style="justify-content:center"><button type="button" class="btn torch" id="rulesClose">Close</button></div></div>'; rm.querySelector('.rulescroll').scrollTop = 0; rm.querySelector('#rulesClose').addEventListener('click', function () { openR(false); sfx('click'); }); } else { openP(true); } }
       rm.addEventListener('click', function (e) { if (e.target === rm) openR(false); });
       pan.querySelector('#rulesBtn').addEventListener('click', function () { openR(true); sfx('click'); });
+      (function () { var bt = pan.querySelector('#d3Btn'); function lab() { bt.textContent = DICE3D ? 'On' : 'Off'; } lab(); bt.addEventListener('click', function () { setDice3D(!DICE3D); lab(); sfx('click'); }); })();
       pan.querySelector('#webBtn').addEventListener('click', function () { pan.hidden = true; openWeb(); sfx('click'); });
       document.body.appendChild(cog); document.body.appendChild(pan);
       var vm = pan.querySelector('#volMusic'), vs = pan.querySelector('#volSfx'), om = pan.querySelector('#valMusic'), os = pan.querySelector('#valSfx'), mb = pan.querySelector('#muteBtn');
@@ -10284,7 +10390,28 @@ var BOSS_PORTRAITS = {"dummy":{"normal":"data:image/webp;base64,UklGRgwlAABXRUJQ
   });
   var noClickUntil = 0;
   // reward cards: drag one onto your deck to take it, or click it to look at it first
-  function takeRptCard(cid) { var vv = S.victory; if (!vv || !cid) return; vv.taken = vv.taken || {}; if (vv.taken[cid]) return; vv.taken[cid] = 1; claimCard(cid, function () { if (S.screen === 'victory') render(); }); render(); }
+  // a reward card you take (Add to deck, or dropped on the deck) is pulled into the deck pile at once: it shrinks, spins and is sucked in
+  function suckCard(id, r) {
+    try {
+      var dk = document.querySelector('.deckcorner .deckpile'); if (!dk || !r || !r.width) return;
+      var dr = dk.getBoundingClientRect(), el = document.createElement('div'); el.className = 'suckcard';
+      el.style.cssText = 'left:' + r.left + 'px;top:' + r.top + 'px;width:' + r.width + 'px;height:' + r.height + 'px;';
+      el.innerHTML = tcardHTML(id, { style: '--cw:' + r.width + 'px' }); document.documentElement.appendChild(el);
+      var dx = dr.left + dr.width / 2 - (r.left + r.width / 2), dy = dr.top + dr.height / 2 - (r.top + r.height / 2), sc = Math.max(.08, Math.min(.3, dr.width / r.width * .8));
+      var a = el.animate([
+        { transform: 'translate(0,0) scale(1) rotate(0deg)', opacity: 1, offset: 0 },
+        { transform: 'translate(' + (-dx * .06) + 'px,' + (-dy * .06 - 14) + 'px) scale(1.08) rotate(-3deg)', opacity: 1, offset: .16 },
+        { transform: 'translate(' + dx + 'px,' + dy + 'px) scale(' + sc + ') rotate(' + (dx < 0 ? -50 : 50) + 'deg)', opacity: .9, offset: 1 }
+      ], { duration: 620, easing: 'cubic-bezier(.55,.05,.85,.45)', fill: 'forwards' });
+      try { sfx('suck'); } catch (e) { }
+      var done = function () {
+        if (el.parentNode) el.parentNode.removeChild(el);
+        var d2 = document.querySelector('.deckcorner .deckpile'); if (d2) { d2.classList.remove('suckpulse'); void d2.offsetWidth; d2.classList.add('suckpulse'); try { popBurst(d2, 10, ['#f6d66a', '#fff3c4', '#ff8a92']); sfx('item'); } catch (e) { } setTimeout(function () { d2.classList.remove('suckpulse'); }, 450); }
+      };
+      a.onfinish = done; setTimeout(function () { if (el.parentNode) done(); }, 900);
+    } catch (e) { }
+  }
+  function takeRptCard(cid, from) { var vv = S.victory; if (!vv || !cid) return; vv.taken = vv.taken || {}; if (vv.taken[cid]) return; vv.taken[cid] = 1; S.suckFrom = from || null; claimCard(cid, function () { if (S.screen === 'victory') render(); }); render(); }
   var rptPrev = null;
   function closeRptPreview() { if (rptPrev) { if (rptPrev.parentNode) rptPrev.parentNode.removeChild(rptPrev); rptPrev = null; } }
   function openRptPreview(id) {
@@ -10293,7 +10420,7 @@ var BOSS_PORTRAITS = {"dummy":{"normal":"data:image/webp;base64,UklGRgwlAABXRUJQ
     el.innerHTML = '<div class="rptprev-in">' + tcardHTML(id, { cls: 'rptbig' }) + '<div class="row"><button type="button" class="btn torch" data-act="rptCard" data-id="' + id + '">Add to deck</button><button type="button" class="btn ghost" data-act="rptPreviewX">Close</button></div><p class="muted">Or drag the card onto your deck.</p></div>';
     el.addEventListener('click', function (e) {
       var t = e.target.closest ? e.target.closest('[data-act]') : null;
-      if (t && t.getAttribute('data-act') === 'rptCard') { var cid = t.getAttribute('data-id'); closeRptPreview(); takeRptCard(cid); return; }
+      if (t && t.getAttribute('data-act') === 'rptCard') { var cid = t.getAttribute('data-id'), bc = el.querySelector('.tcard'), fr = bc ? bc.getBoundingClientRect() : null; closeRptPreview(); takeRptCard(cid, fr); return; }
       if (e.target === el || t) closeRptPreview();
     });
     document.documentElement.appendChild(el);
@@ -10319,9 +10446,10 @@ var BOSS_PORTRAITS = {"dummy":{"normal":"data:image/webp;base64,UklGRgwlAABXRUJQ
     if (!d.moved) return;
     noClickUntil = Date.now() + 350;
     var dk = document.querySelector('.deckcorner .deckpile'); if (dk) dk.classList.remove('rptover');
+    var gr = d.ghost ? d.ghost.getBoundingClientRect() : null;
     if (d.ghost && d.ghost.parentNode) d.ghost.parentNode.removeChild(d.ghost);
     d.b.style.opacity = '';
-    if (dk ? rdgOver(e, dk) : false) { sfx('item'); takeRptCard(d.id); }
+    if (dk ? rdgOver(e, dk) : false) { takeRptCard(d.id, gr); }
   });
   function onClick(e) {
     if (Date.now() < noClickUntil) return;
@@ -10409,7 +10537,7 @@ var BOSS_PORTRAITS = {"dummy":{"normal":"data:image/webp;base64,UklGRgwlAABXRUJQ
       case 'paperOpen': S.noteOpen = true; render(); break;
       case 'paperClose': S.noteOpen = false; S.noteGone = true; noteMark(); render(); break;
       case 'paperDismiss': S.noteGone = true; noteMark(); render(); break;
-      case 'rptCard': takeRptCard(b.getAttribute('data-id')); closeRptPreview(); break;
+      case 'rptCard': takeRptCard(b.getAttribute('data-id'), null); closeRptPreview(); break;
       case 'rptPreview': openRptPreview(b.getAttribute('data-id')); break;
       case 'rptPreviewX': closeRptPreview(); break;
       case 'autoWin': if (C && S.screen === 'combat' && C.phase !== 'won') { clearTimeout(timer); C.en.parts.forEach(function (x) { x.n = 0; }); C.en.n = 0; C.phase = 'won'; C.result = null; C.bleedWin = true; afterCombat(); } break;
@@ -10645,7 +10773,8 @@ var BOSS_PORTRAITS = {"dummy":{"normal":"data:image/webp;base64,UklGRgwlAABXRUJQ
     var at = S.cardAt; S.cardAt = null;
     // mid-fight cards (no room to drop them) go straight into the deck; rewards outside a fight wait on the table until you drag them onto the deck
     if (S.screen === 'combat') { if (deckOf().length < DECK_MAX) { addItem(id); spawnCard(id, false, at); } else { spawnCard(id, true, at); sfx('item'); } }
-    else { spawnCard(id, true, at); (S.cards[S.cards.length - 1]).full = deckOf().length >= DECK_MAX; sfx('item'); }
+    else if (S.suckFrom && deckOf().length < DECK_MAX) { var sf = S.suckFrom; S.suckFrom = null; deckOf().push(id); suckCard(id, sf); }
+    else { S.suckFrom = null; spawnCard(id, true, at); (S.cards[S.cards.length - 1]).full = deckOf().length >= DECK_MAX; sfx('item'); }
     if (next) next();
   }
   var swapEl = null;
