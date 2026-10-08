@@ -3809,7 +3809,7 @@ html body[data-screen="combat"]:not([data-screen="title"]):not([data-screen="cha
   /* floor 4's parchment is near-black: no tan showing through at its torn edges */
   html body[data-floor="4"] .mappanel .map.mapart.ink { background: #140c09 var(--mapbg) center / 100% 100% no-repeat !important; }
 
-  #introblack { position: fixed; inset: 0; z-index: 2147483000; background: #000; cursor: pointer; display: flex; align-items: flex-end; justify-content: center; padding-bottom: 6vh; transition: opacity .9s ease-out; }
+  #introblack { position: fixed; inset: 0; z-index: 2147483000; background: #000; cursor: pointer; display: flex; align-items: flex-end; justify-content: center; padding-bottom: 6vh; transition: opacity 1.9s ease-out; }
   #introblack span { font-family: var(--display); font-size: 26px; letter-spacing: .1em; text-transform: uppercase; color: #fff; opacity: .22; transition: opacity .4s; }
   #introblack.go span { opacity: 0; }
   #introblack.off { opacity: 0; pointer-events: none; }
@@ -11806,7 +11806,7 @@ var POUCH_SVG = pixSVG(["................", "................", ".....kkkkkk....
     if (/[?&]nointro\b/.test(location.search)) return;
     el = document.createElement('div'); el.id = 'introblack'; el.setAttribute('role', 'button'); el.setAttribute('aria-label', 'Click to begin');
     el.innerHTML = '<span>click to begin</span>'; document.documentElement.appendChild(el);
-    function reveal() { if (!el) return; var e = el; el = null; e.classList.add('off'); setTimeout(function () { if (e.parentNode) e.parentNode.removeChild(e); }, 1200); }
+    function reveal() { if (!el) return; var e = el; el = null; e.classList.add('off'); setTimeout(function () { if (e.parentNode) e.parentNode.removeChild(e); }, 2200); }
     function begin(ev) {
       if (started) return; started = true; if (ev && ev.preventDefault) ev.preventDefault();
       el.classList.add('go'); t0 = Date.now();
@@ -11815,7 +11815,7 @@ var POUCH_SVG = pixSVG(["................", "................", ".....kkkkkk....
         if (!el) { clearInterval(iv); return; }
         var v = MUSC.v, c = AUD.ctx, waited = Date.now() - t0;
         if (!c || AUD.vol.mute || MUSC.st.calm === 'failed' || waited > 25000) { if (waited > 800) { clearInterval(iv); reveal(); } return; }
-        if (v && v.k === 'calm') { clearInterval(iv); if (v.off > 0.5) { reveal(); return; } var ms = (v.t0 + HIT - c.currentTime) * 1000; setTimeout(reveal, Math.max(0, ms)); }
+        if (v && v.k === 'calm') { clearInterval(iv); if (v.off > 0.5) { reveal(); return; } var ms = (v.t0 + HIT - 1 - c.currentTime) * 1000; setTimeout(reveal, Math.max(0, ms)); }
       }, 50);
     }
     el.addEventListener('pointerdown', begin); document.addEventListener('keydown', function (e) { if (!started && el) begin(e); }, true);
