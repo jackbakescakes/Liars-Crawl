@@ -46,6 +46,9 @@ The user is having Gemini draw a full alphabet in the style of the "LIAR'S CRAWL
 - Parchments: `PARCHT[1..3]` (tall) and `PARCH[4]` (wide). Pitfall: `"4": "data:image..."` also exists in `TITLEFONT`; never regex-replace the first match.
 - A copy of the game from before this map work is in `/home/claude/backups/` (not in the repo).
 
+## Opening sequence
+- Game opens on a black overlay (`#introblack`, code before the final `render()`): click/key starts the title music (`calm.mp3`), and the overlay fades out on the first big hit, 10.3 s into the track (timed from `MUSC.v.t0`). Skips the wait if muted/audio fails; `?nointro` in the URL disables it (for tests).
+
 ## TODO / known issues (read this when starting a new session)
 - **Dead-end rooms need their own icons** (slot machine and treasure chest). Right now they show the scroll "unknown event" icon plus a gold star (`.map.tall .node.tier1 .nicon::after`). Ask the user for Gemini art, save per the asset rules, add `MAPINK` entries and use them in `mapHTML()` for nodes with `n.spur`.
 - Star badge is a CSS star only; elites could use a distinct icon.
