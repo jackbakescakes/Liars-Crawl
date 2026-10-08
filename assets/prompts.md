@@ -163,3 +163,18 @@ PROMPT (2 rows x 4 columns, magenta #FF00FF background): Row 1: whole glossy red
 
 ## 2026-10-08 Wood buttons
 No Gemini prompt: `btn_wood_*` were made by recolouring the existing marble button art (hue/brightness shift) to match the wood-and-iron panel.
+
+## 2026-10-08 four art requests (Looking Glass, max HP icon, Log button, dead-end icons: sent to Gemini, results received and wired in; originals in sheets/)
+Common to all: flat magenta #FF00FF background, no text, clear gutters between items, nothing touching the sheet edge, no magenta or purple inside the art or on its outline (the keyed edge ends up fringed).
+
+A. LOOKING GLASS card art (card `glass`, "Use on your turn: force the enemy to bid again"). Match `cards/card2_*.webp` (160x160 single object, chunky dungeon pixel art, thick dark outline, torch light from upper left, ember rim light).
+PROMPT: 2x2 grid, one item per cell, four variants of an ornate hand mirror ("looking glass") on a tarnished brass handle with a slightly cracked, dark glass that reflects a single watching eye. Variant 1: round mirror. 2: oval mirror with a small crack. 3: mirror with a skull on the handle. 4: mirror with a warm gold glint across the glass. Keep the object upright and centred, about 80% of the cell.
+
+B. +1 MAX HP icon (replaces code-drawn `MAXIC_SVG`, used inline in text, so it must read at 24px).
+PROMPT: 2x2 grid of simple bold icons, each one centred in a square cell. 1: a single cream six-sided die (five pips showing) with a bright green plus sign badge at the top right. 2: the same die with a green plus drawn over it in the middle. 3: a red heart made of a cream die face with a green plus on it. 4: two dice, a plain one and a smaller one with a green plus. Chunky pixel style, thick dark outline, high contrast, very simple shapes, readable when tiny.
+
+C. LOG BUTTON (replaces code-drawn plaque, `.topbtns .btn`; text is added by the game, so leave the button blank). Must match the settings cog: dark purple-grey iron ring, riveted, brown wood, gold trim.
+PROMPT: 1 row x 4 columns, same button in four states, about 200 x 80 px each, wide rounded rectangle, dark wooden plank face with an iron rim and four rivets, no text. State 1: idle. 2: hover (slightly lighter wood, faint ember glow along the rim). 3: pressed (darker, sunk in, no glow). 4: disabled (grey and dull). Same size, same position in each cell.
+
+D. DEAD-END ROOM ICONS on the map (a slot machine room and a treasure chest room; they currently show the unknown-event scroll plus a star). Match `tokens/mapink_*.webp`: hand-inked, black ink outline, crosshatch shading, parchment-cream fill, small red accent, about 110-128 px.
+PROMPT: 1 row x 2 columns. 1: a rickety one-armed-bandit slot machine with a lever, three reels showing a skull, a cherry and a bell, tiny red accent on the lever knob. 2: a small iron-bound treasure chest, lid slightly ajar with a hint of gold, tiny red wax seal on the lock. Ink-drawn look on transparent (magenta) background, matches the other map icons. No star: the game draws that itself.

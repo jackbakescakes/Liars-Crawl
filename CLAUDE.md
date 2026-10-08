@@ -56,10 +56,12 @@ The user is having Gemini draw a full alphabet in the style of the "LIAR'S CRAWL
 - **Pause** (`window.gamePause`, `#pausev`): a virtual clock shim at the top of the main script (`window.__pause`, wraps setTimeout/setInterval/Date.now/performance.now/rAF) freezes the game; audio ctx suspended. Use `window.__rawNow` / `__rawST` for real time in UI that must keep working while paused.
 - Other: collapsible/draggable portrait cluster, auto-fold map with chevrons, battle report v3, character select v2 (wood buttons), Reset UI (keeps large map), fullscreen button in Settings, right-click suppressed, targeting popup shows "-1 die icon" + seals, face die colour = "Old parchment" (placeholder, revisit), level-up window 1300x760 (title banner still clipped at top; purple edge on banners).
 
+- **Playtester feedback + to-do list lives in `FEEDBACK.md`** (raw reports and open items). Add new batches there and tick items off.
+
 ## TODO / known issues (read this when starting a new session)
 - **Map parchment is plain for now (2026-10-08).** The user found the stains/blood/blots and margin drawings hard to read behind the route. `PARCHT`/`PARCH` now hold plain versions (`assets/maps/PARCH*_plain.webp`, made by flattening the interior of the originals in `assets/_old/PARCH*_*.webp`) and `.mdecor` (splats + margin drawings from `inkDecor()`) is hidden by CSS. Revisit later with better parchment art (clean texture, subtle edge wear only), then restore or redo the decorations.
 - Character select restyled (wood-and-iron window from `ui/panel_wood_iron.png`, marble buttons for class rows and `?`); user to review.
-- **Dead-end rooms need their own icons** (slot machine and treasure chest). Right now they show the scroll "unknown event" icon plus a gold star (`.map.tall .node.tier1 .nicon::after`). Ask the user for Gemini art, save per the asset rules, add `MAPINK` entries and use them in `mapHTML()` for nodes with `n.spur`.
+- Dead-end rooms now have their own icons (`MAPINK.slots`, `MAPINK.chest`, 2026-10-08). The Looking Glass card, +1 max HP icon and Log button also use Gemini art now.
 - Star badge is a CSS star only; elites could use a distinct icon.
 - Dungeon-plan map art (rock/room/hall tiles, user may draw their own) is parked until the game is in a better state. Mockup boards E/F/G in the map-layout canvas artifact; prompts in `assets/prompts.md`. User prefers to draw/provide pieces later; do not use the web reference maps in the game.
 - Tall parchments are only 637 px wide (soft when stretched); ask Gemini for larger if wanted.
