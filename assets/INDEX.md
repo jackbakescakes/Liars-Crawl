@@ -206,3 +206,19 @@ Replaced on the map (old assets kept in file, unused by the map): MAPBG, TOK, VT
 | ui/gameover_dice_scatter.webp | bloody dice strewn across the floor (Gambler's Ruin game-over picture), magenta-keyed | see file | `RUIN_ART` shown on the 'ruin' end screen (`.ruinart`) | `sheets/gameover_dice_scatter_20261008_src.png`; prompt in prompts.md "game over art v2" |
 | maps/map_parch_tall_1.webp, _2, _3 | tall parchment for floors 1 (Cellar), 2 (Catacombs), 3 (Gilded Pit), burnt edges, nothing drawn on it | 637x1024 | `PARCHT[1..3]`, map `.map.tall` background via `--mapbg` | `sheets/map_parchment_tall_f1_cellar_20261008_src.png`, `_f2_catacombs_`, `_f3_gilded_`; replaces the repeated 1024x572 `PARCH` on the tall map (PARCH still used for floor 4) |
 | maps/map_parch_4.webp | floor 4 (The House) parchment: near-black, scorched, dark red tint, nothing drawn on it | 1024x572 | `PARCH[4]` (floor 4 map background) | `sheets/map_parchment_f4_house_20261008_src.png`; outer white corners filled dark; replaces the old one, kept as `_old/map_parch_4_old.webp` |
+| (code-drawn) apple icon + eat animation | Apple card art (12x12 pixel placeholder) and the three-bite eat animation | n/a | `ITEM_ART.apple`, `appleFx()`, `.applefx` | code-drawn, replace with Gemini art if supplied (prompt in prompts.md "Apple card") |
+| (code-drawn) straight / yahtzee fx | `rollBonusFx`: dice jump with a pale-blue glow, logo-font word with +10 gold behind it, 10 coins fly to the pouch | n/a | `.bonusfx`, `.die.bonusjump` | code-drawn |
+
+Note: the apple is no longer a deck card. It is a loose satchel item (`ITEM_ART.apple`, found the first time the satchel is opened each run, `S.appleFound`), dragged onto the portrait to eat (`useApple(lid)`, `appleFx`). Code-drawn, replace with Gemini art if supplied.
+
+## Added 2026-10-08 (apple + enemy dice, Gemini sheets `sheets/apple_set_20261008_src.png`, `sheets/edie_set_20261008_src.png`)
+| file | what it is | size | used in game as | source |
+|---|---|---|---|---|
+| ui/apple_icon.png/.webp | whole red apple | 101x112 | `ITEM_ART.apple` (satchel icon) | apple sheet r1c1 |
+| ui/apple_eat_1..4 | eating frames: whole, bitten, half, core | ~100x112 | `APPLE_EAT` (`appleFx`) | apple sheet r2 |
+| ui/apple_bruised, apple_bitten, apple_hover | variants | ~100x112 | unused | apple sheet r1 |
+| ui/edie_back, edie_back_hover, edie_target, edie_baby | hidden skull enemy die, hover, spell target ring, baby | ~96px | CSS `html body .edie .die.hiddie` (+ `:hover`, `.spelltgt`, `.ebaby`) | edie sheet r1 |
+| ui/edie_1..6, edie_wild, edie_bleached | revealed enemy dice | ~88x96 | CSS `html body .edie .die[data-face=N]`, `.wild`, `.bleached` (edie_1 pip shrunk 72%; original `edie_1_bigpip_old.png`) | edie sheet r2-3 |
+| ui/edie_break_1..3 | enemy die break frames | ~90px | unused (frame 4 was too faint, dropped) | edie sheet r4 |
+
+Round result window removed: after a call the round auto-advances 2.6 s later (`resolveCallNow`), the next round waits for the Roll button.
