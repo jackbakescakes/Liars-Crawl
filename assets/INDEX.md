@@ -222,3 +222,6 @@ Note: the apple is no longer a deck card. It is a loose satchel item (`ITEM_ART.
 | ui/edie_break_1..3 | enemy die break frames | ~90px | unused (frame 4 was too faint, dropped) | edie sheet r4 |
 
 Round result window removed: after a call the round auto-advances 2.6 s later (`resolveCallNow`), the next round waits for the Roll button.
+
+| maps/PARCH{,T}_N_plain.webp | plain parchment (interior flattened, torn edge kept) | 1024x572 / 637x1024 | `PARCH[n]`, `PARCHT[n]` (map background, all floors); originals in `_old/` | made in code from the Gemini parchments |
+| ui/panel_wood_iron.png | wood-and-iron panel | 583x446 | char-select window (`html body .panel.tavern` border-image, appended CSS) | panels sheet |
