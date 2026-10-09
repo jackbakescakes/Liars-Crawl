@@ -57,6 +57,23 @@ Raw reports come from the in-game "feels bad" buttons (artifact db collection `f
 - [x] **Toss the buck** (2026-10-09): the first-turn spinner is now a coin toss (`firstSpin`, CSS `#firstfx.toss`): big coin flips mid-screen, knight face = you win the buck (enemy opens), skull = enemy wins; lands, banner, then flies to the portrait of whoever bids first. OPEN QUESTION: the banner says "YOU'RE THE BUCK" but the marker then sits on the enemy (they open). Decide whether winning the toss should mean you open instead.
 - Calibrating the AI skill slider is a dev-tool concern, low priority (user).
 
+## 2026-10-09 evening, batch 2 (working file, not yet published)
+- [x] Fight tutorial on the first Dummy fight (`TUT_STEPS`, `#tut`; localStorage `lc_fighttut`; Reset tutorials clears it). Game clock frozen while a card is up.
+- [x] Dummy fight can no longer be skipped from the map; inside the fight a returning player gets "I've seen this before: skip" (`.dumskip`, `dummySkipFight`).
+- [x] Toss: no TOSS button, click the coin. Heading "WHO GETS THE BUCK?", banner "YOU HAVE THE BUCK" / "THE ENEMY HAS THE BUCK" (the under-the-gun naming was tried and dropped the same day; the token art is still the gun placeholder, round; Gemini prompt in assets/prompts.md).
+- [x] Map: reachable rooms glow while the pawn is held; icons glow on hover.
+- [x] Tinker text: "Choose one face of one die to tinker with. You increase its number by two. Numbers above six are wild."
+- [x] Forge (SEAL FOUND / tinker / tattoo) and SEAL BOUND / STRENGTHENED screens now use the encounter-window art (`encWinHTML`, `.forgewin`, `.upgwin`), with red X.
+- [x] Settings cog restyled: playtester cog shape in gold.
+- [x] Looking Glass card text box enlarged (first line was clipped).
+- [ ] Level-up screen: cards 15% smaller on parchment; cards vanish on mouse-out on first entry; assets jostle just before it opens AND while dice roll in a fight (same cause?).
+- [ ] Fortify / roll-two-dice events: 3D animated roll with sound, dice further apart, obvious two-dice pick, flavour text -> "Choose two dice".
+- [ ] Dice, XP bar and deck follow the portrait when it is dragged with the cluster open.
+- [ ] Relics equip-on-pickup (parked; idea: relic slots under the rewards).
+- [ ] "You hold N" badge on the bid die; fold the chest tiles into the report (single CONTINUE); duplicate level-up banner.
+- [ ] Buck token + toss coin art from Gemini (round token, revolver face, skull face).
+- [ ] **AI DIFFICULTY: CALIBRATE PROPERLY LATER.** Interim fix 2026-10-09: every floor-1 skill number lowered by about a third (cutpurse 0.4->0.27, fence/eavesdrop 0.45->0.3, blackjack/weathercock/sanguine/selcouth 0.5->0.33, lootgob 0.2->0.13, ogre 0.7->0.47, dealer 0.95->0.65; weathercock's moody swing 0.9/0.1 -> 0.6/0.07). Note `enemyAct` still adds +0.12 to every enemy's skill (`effSkill`). The real job: reshape `AI_TUNE` so low skill also means less lookahead, a weaker read of the player's bids and more careless bluffs, then set per-enemy numbers from the simulator (tools/ai) so a floor-1 goblin beats the honest-maths tester about 1 fight in 5. Floors 2-4 untouched.
+
 ## Raw reports
 ```
 {"kind":"ui","when":"2026-10-08T09:46:44.079Z","screen":"map","view":"1728x923","phase":null,"enemy":null,"round":null,"floor":1,"day":0,"hp":6,"level":1,"gold":0,"over":"#app","note":"i think maybe the word crawl should be below the options or just remove crawl to start - feels weird"}

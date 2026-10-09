@@ -197,3 +197,11 @@ The first-turn spinner is now "are you the buck?". Left half = THE BUCK (you win
 
 ## 2026-10-09 the buck token (turn marker; current art is first_tok_player.png recoloured gold in code)
 > Pixel-art game token on a flat magenta (#FF00FF) background, grimdark dungeon style (dark outlines, crisp pixels, warm torchlight). A round solid-gold coin about 120x120, thick bevelled rim with small dents, a knight's helmet and sword embossed on the face, worn gold with darker recesses and a bright highlight at upper left. Also draw: (1) the same coin edge-on mid-flip, (2) a small round gold PASS button (~70x70) with a chunky dark arrow pointing right embossed in it, same gold and rim style. No text.
+
+
+## 2026-10-09 — Under-the-gun token and toss coin (requested, not yet drawn)
+Sheet of 3 cells on a flat magenta (#FF00FF) background, each cell 512x512, pixel art in the game's style (chunky pixels, dark outlines, warm gold with ember-orange shading, grimdark):
+1. A ROUND gold poker-chip style token, 120 px worth of detail, with a pixel-art revolver (six-shooter, side view, barrel pointing right) stamped in dark bronze in the centre; rope-twist or riveted rim. This is the "under the gun" turn marker that sits on a character portrait.
+2. The same token as a large coin face: thick gold coin seen face-on, worn edges, the revolver in the centre. This is the heads side of the toss coin.
+3. The tails side: the same coin with a red demon skull (match the existing red enemy token: horned skull, red field) in the centre.
+No text. No shadows outside the shapes. Leave at least 40 px of magenta around each cell.
