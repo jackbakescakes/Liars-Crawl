@@ -4292,6 +4292,37 @@ body.spk-mead .foe:not(.slain) .portbtn:not(.spelltgt) { animation: tgtglow .55s
   #firstfx .fxconf.coin { width: 18px; height: 18px; border-radius: 50%; background: radial-gradient(circle at 35% 30%, #fff6c0, #ffc934 55%, #b07a10); box-shadow: 0 0 0 2px #6b4a08; }
   @keyframes fxconf { 0% { opacity: 0; transform: translate(0, 0) rotate(0); } 8% { opacity: 1; } 55% { opacity: 1; transform: translate(var(--dx), var(--dy)) rotate(var(--rot)); } 100% { opacity: 0; transform: translate(calc(var(--dx) * 1.15), calc(var(--dy) + var(--fall))) rotate(calc(var(--rot) * 2)); } }
   #firstfx.buck .fxsub { color: #4a1f06; text-shadow: 0 1px 0 rgba(255,235,170,.7); font-size: 15px; }
+  /* TOSS THE BUCK: the coin toss that replaced the spinner */
+  #firstfx.toss .fxbox { height: 720px; justify-content: center; margin-top: -40px; }
+  #firstfx.toss .fxhead { margin-bottom: 26px; filter: drop-shadow(0 4px 0 rgba(0,0,0,.7)); animation: fxpop .5s cubic-bezier(.3,1.5,.5,1); }
+  #firstfx .fxcoinw { position: relative; width: 240px; height: 240px; perspective: 1100px; cursor: pointer; will-change: transform; z-index: 3; }
+  #firstfx.air .fxcoinw, #firstfx.hit .fxcoinw { cursor: default; }
+  #firstfx .fxcoin { position: absolute; inset: 0; transform-style: preserve-3d; will-change: transform; }
+  #firstfx .fxcoinw::before { content: ""; position: absolute; inset: -30px; border-radius: 50%; background: radial-gradient(circle, rgba(255,190,70,.5), rgba(255,190,70,0) 70%); pointer-events: none; }
+  #firstfx .cface { position: absolute; inset: 0; border-radius: 50%; backface-visibility: hidden; -webkit-backface-visibility: hidden; display: flex; align-items: center; justify-content: center; }
+  #firstfx .cface img { width: 100%; height: 100%; display: block; image-rendering: pixelated; }
+  #firstfx .cfe { transform: rotateX(180deg); background: radial-gradient(circle at 50% 50%, #e8bc4d 0 66%, #b98a22 66% 74%, #74500f 74% 82%, #3a2606 82% 86%, transparent 86%); }
+  #firstfx .cfe img { width: 72%; height: 72%; filter: drop-shadow(0 2px 0 rgba(0,0,0,.5)); }
+  #firstfx .fxshadow { position: absolute; left: 50%; bottom: -34px; width: 190px; height: 34px; border-radius: 50%; background: radial-gradient(ellipse, rgba(0,0,0,.85), rgba(0,0,0,0) 70%); transform: translate(-50%, 0); pointer-events: none; }
+  #firstfx .fxcoinw .fxflash { width: 130%; height: 130%; }
+  #firstfx.toss .fxbox.winp .fxflash { background: radial-gradient(circle, rgba(255,215,90,.85), rgba(255,215,90,0) 70%); animation: fxfl .9s ease-out; }
+  #firstfx.toss .fxbox.wine .fxflash { background: radial-gradient(circle, rgba(255,70,50,.8), rgba(255,70,50,0) 70%); animation: fxfl .9s ease-out; }
+  #firstfx.toss .fxbox.hit .fxcoinw::before { background: radial-gradient(circle, rgba(255,205,90,.8), rgba(255,205,90,0) 70%); }
+  #firstfx.toss .fxbox.wine.hit .fxcoinw::before { background: radial-gradient(circle, rgba(255,80,50,.8), rgba(255,80,50,0) 70%); }
+  #firstfx.toss .fxban { top: 72%; }
+  #firstfx.fly .fxcoinw::before { opacity: 0; }
+  #firstfx .fxkey { display: flex; gap: 26px; margin-top: 44px; font: 700 14px/1 var(--display, monospace); letter-spacing: 1px; color: #e7d4a6; text-shadow: 0 2px 0 #000; }
+  #firstfx .fxkey span { display: inline-flex; align-items: center; gap: 7px; } #firstfx .fxkey img { width: 26px; height: 26px; image-rendering: pixelated; }
+  #firstfx.air .fxkey, #firstfx .fxbox.hit .fxkey { opacity: 0; transition: opacity .3s; }
+  #firstfx .fxtoss { margin-top: 20px; width: 150px; height: 150px; border-radius: 50%; }
+  #firstfx .fxtossb { display: flex; align-items: center; justify-content: center; width: 100%; height: 100%; border-radius: 50%; box-sizing: border-box;
+    background: radial-gradient(circle at 38% 30%, #ffeaa6, #e2aa2c 46%, #9a6a10 100%); box-shadow: 0 0 0 4px #6a4408, 0 0 0 7px #0b0a09, 0 6px 0 7px rgba(0,0,0,.55), 0 0 26px 6px rgba(255,205,80,.4); }
+  #firstfx .fxtossb .tfont { filter: drop-shadow(0 2px 0 rgba(0,0,0,.6)); }
+  #firstfx.toss .fxspin:hover { filter: brightness(1.15) drop-shadow(0 0 16px #ffd060); }
+  #firstfx.fly { background: transparent; transition: background .45s; }
+  #firstfx.fly .fxban, #firstfx.fly .fxconf, #firstfx.fly .fxauto, #firstfx.fly .fxhead, #firstfx.fly .fxshadow { opacity: 0 !important; transition: opacity .3s; }
+  #firstfx.out .fxcoinw { opacity: 0; }
+  @media (prefers-reduced-motion: reduce) { #firstfx .fxcoinw { transition: none; } }
   /* Sternidae counter (turn marker): a small gold-rimmed tern that flies to the portrait of whoever's turn it is (12 o'clock on yours, 6 o'clock on the enemy's) */
   #buckmark { position: fixed; z-index: 70; width: 44px; height: 44px; margin: -22px 0 0 -22px; opacity: 0; pointer-events: none; transition: opacity .25s ease; }
   #buckmark.on { opacity: 1; pointer-events: auto; }
@@ -6458,13 +6489,13 @@ body.spk-mead .foe:not(.slain) .portbtn:not(.spelltgt) { animation: tgtglow .55s
   (function () {
     var el = document.createElement('div'), last = null; el.id = 'buckmark'; el.setAttribute('data-tip', 'note:The buck. Whoever holds it bids next.');
     el.innerHTML = '<div class="bfly"><i class="bglow"></i><div class="bring"><img class="bimg" alt="" draggable="false" src="' + BUCK_IMG + '"></div>' +
-      '<button type="button" class="bpass" data-tip="note:Pass the buck: the enemy must bid again instead of you. Once per fight; a Looking Glass adds one more." aria-label="Pass the buck"><svg viewBox="0 0 12 12" shape-rendering="crispEdges" aria-hidden="true"><path d="M1 5h6v2H1zM7 3h1v1h1v1h1v2H9v1H8v1H7z"/></svg><b class="bcount"></b></button></div>';
+      '<button type="button" class="bpass" data-tip="note:Pass the buck: the enemy must bid again instead of you. Once per fight; a Looking Glass adds one more." aria-label="Pass the buck"><svg viewBox="0 0 12 12" shape-rendering="crispEdges" aria-hidden="true"><path d="M5 1h2v1H5zM4 2h4v1H4zM3 3h6v1H3zM2 4h8v1H2zM5 5h2v6H5z"/></svg><b class="bcount"></b></button></div>';
     document.documentElement.appendChild(el);
     var fly = el.firstChild, pass = el.querySelector('.bpass'), cnt = el.querySelector('.bcount'), px = null, py = null;
     pass.addEventListener('click', function (e) { e.stopPropagation(); if (pass.classList.contains('spent')) { try { sfx('grumble'); } catch (x) { } return; } passBuck(); });
     function upd() {
       try {
-        var show = S && S.screen === 'combat' && C && C.phase === 'bid' && !C.meeting && !document.getElementById('firstfx') && !document.body.hasAttribute('data-meet');
+        var show = S && S.screen === 'combat' && C && (C.phase === 'bid' || C.phase === 'roll') && !C.meeting && !document.getElementById('firstfx') && !document.body.hasAttribute('data-meet');
         var me = document.querySelector('.hudport'), foe = document.querySelector('.foe .portbtn, .foe .portrait');
         if (!show || !me || !foe) { el.classList.remove('on'); el.classList.remove('mine'); last = null; px = null; return; }
         var a = me.getBoundingClientRect(), b = foe.getBoundingClientRect(); if (!a.width || !b.width) { el.classList.remove('on'); return; }
@@ -6473,7 +6504,7 @@ body.spk-mead .foe:not(.slain) .portbtn:not(.spelltgt) { animation: tgtglow .55s
         var x = Math.round(who === 'p' ? a.left + a.width / 2 : b.left + b.width / 2), y = Math.round(who === 'p' ? a.top : b.bottom);
         el.classList.toggle('p', who === 'p'); el.classList.toggle('e', who === 'e');
         var n = C.charges.buck || 0;
-        el.classList.toggle('mine', who === 'p' && !C.target && !C.forced); pass.classList.toggle('spent', n < 1); cnt.textContent = n > 1 ? n : '';
+        el.classList.toggle('mine', who === 'p' && C.phase === 'bid' && !C.target && !C.forced); pass.classList.toggle('spent', n < 1); cnt.textContent = n > 1 ? n : '';
         el.style.left = x + 'px'; el.style.top = y + 'px';
         if (!el.classList.contains('on')) { el.classList.add('on'); }
         else if (last && last !== who && px !== null && fly.animate) {
@@ -6515,43 +6546,65 @@ body.spk-mead .foe:not(.slain) .portbtn:not(.spelltgt) { animation: tgtglow .55s
       }
     } catch (e) { }
   }
-  function firstSpin(done) {
-    var fin = false, el = document.createElement('div'), K = 1.5, BW = 337 * K, BH = 331 * K, spun = false, winner = Math.random() < 0.5 ? 'p' : 'e', raf = 0, skipT = 0;
+  function firstSpin(done) {   // (kept name) TOSS THE BUCK: a coin toss for the first turn
+    var fin = false, el = document.createElement('div'), CS = 240, spun = false, winner = Math.random() < 0.5 ? 'p' : 'e', raf = 0, skipT = 0, flown = false;
     function finish() { if (fin) return; fin = true; clearTimeout(skipT); cancelAnimationFrame(raf); firstFx = null; el.classList.add('out'); setTimeout(function () { if (el.parentNode) el.parentNode.removeChild(el); }, 380); done(winner); }
-    var AS = 0.64, AW = 378 * AS, AH = 110 * AS, hx = 350 * AS, hy = 50 * AS, cx = 167.6 * K, cy = 163 * K;
-    el.id = 'firstfx';
-    el.innerHTML = '<div class="fxbox"><div class="fxboard" style="width:' + BW + 'px;height:' + BH + 'px">' +
-      '<img class="fxb" alt="" draggable="false" src="' + FIRSTART.board + '">' +
-      '<div class="fxflash"></div>' +
-      '<div class="fxlab fxlabl">' + titleText('BUCK', 44) + '</div><div class="fxlab fxlabr">' + titleText('NO BUCK', 34) + '</div>' +
-      '<img class="fxarrow" alt="" draggable="false" src="' + FIRSTART.arrow + '" style="width:' + AW + 'px;height:' + AH + 'px;left:' + (cx - hx) + 'px;top:' + (cy - hy) + 'px;transform-origin:' + hx + 'px ' + hy + 'px">' +
-      '<img class="fxburst" alt="" draggable="false" src="' + FIRSTART.burst + '">' +
-      '</div><button type="button" class="fxspin" aria-label="Spin"><img alt="" draggable="false" src="' + FIRSTART.spin + '"></button>' +
+    el.id = 'firstfx'; el.className = 'toss';
+    el.innerHTML = '<div class="fxbox">' +
+      '<div class="fxhead">' + titleText('TOSS FOR THE BUCK', 34) + '</div>' +
+      '<div class="fxcoinw"><i class="fxshadow"></i><div class="fxcoin"><div class="cface cfp"><img alt="" draggable="false" src="' + BUCK_IMG + '"></div><div class="cface cfe"><img alt="" draggable="false" src="' + FIRSTART.tok_enemy + '"></div></div><div class="fxflash"></div></div>' +
+      '<div class="fxkey"><span><img alt="" src="' + BUCK_IMG + '">You hold the buck: the enemy opens</span><span><img alt="" src="' + FIRSTART.tok_enemy + '">The enemy holds it: you open</span></div>' +
+      '<button type="button" class="fxspin fxtoss" aria-label="Toss the buck"><span class="fxtossb">' + titleText('TOSS', 40) + '</span></button>' +
       '<label class="fxauto"><input type="checkbox" class="fxautocb"' + (AUTOROLL ? ' checked' : '') + '><span class="fxtick"></span><span>Auto roll</span></label>' +
       '<div class="fxban"><img class="fxbg" alt="" draggable="false" src="' + FIRSTART[winner === 'p' ? 'banner_blue' : 'banner_red'] + '"><img class="fxtok" alt="" draggable="false" src="' + (winner === 'p' ? BUCK_IMG : FIRSTART.tok_enemy) + '"><div class="fxtxt">' + titleText(winner === 'p' ? "YOU'RE THE BUCK!" : 'NOT THE BUCK', winner === 'p' ? 26 : 30) + '<div class="fxsub">' + (winner === 'p' ? 'The enemy goes first' : 'You go first') + '</div></div></div></div>';
-    document.documentElement.appendChild(el); firstFx = { skip: function () { if (!spun) { spun = true; land(winner === 'p' ? 0 : 180, true); } else finish(); } };
-    var arrow = el.querySelector('.fxarrow'), board = el.querySelector('.fxboard'), btn = el.querySelector('.fxspin'), ban = el.querySelector('.fxban');
-    function setA(d) { arrow.style.transform = 'rotate(' + d + 'deg)'; }
-    function land(deg, quick) {
-      setA(deg); sfx('spinThunk'); board.classList.add('hit', 'win' + winner); ban.classList.add('on'); sfx(winner === 'p' ? 'buckWin' : 'firstE');
-      if (winner === 'p') { el.classList.add('buck'); buckParty(el); }
-      var b = el.querySelector('.fxburst'); b.style.left = (winner === 'p' ? BW * 0.27 : BW * 0.73) - 100 + 'px'; b.style.top = (BH * 0.5) - 84 + 'px';
-      setTimeout(finish, quick ? 900 : (winner === 'p' ? 2600 : 1700));
+    document.documentElement.appendChild(el); firstFx = { skip: function () { if (!spun) { spun = true; land(true); } else if (!flown) flyHome(true); } };
+    var coinw = el.querySelector('.fxcoinw'), coin = el.querySelector('.fxcoin'), shadow = el.querySelector('.fxshadow'), btn = el.querySelector('.fxspin'), ban = el.querySelector('.fxban'), box = el.querySelector('.fxbox');
+    var H = 320, restRot = 0;
+    function setPose(rot, h) {
+      var s = 1 + 0.32 * (h / H);
+      coin.style.transform = 'rotateX(' + rot + 'deg)';
+      coinw.style.transform = 'translateY(' + (-h) + 'px) scale(' + s + ')';
+      shadow.style.transform = 'translate(-50%, 0) scale(' + (1 - 0.55 * h / H) + ')'; shadow.style.opacity = 0.7 - 0.45 * h / H;
     }
-    function spin() {
-      if (spun || fin) return; spun = true; clearTimeout(skipT); btn.classList.add('gone'); sfx('spinGo');
-      // arrow art points left (0deg = player half); land inside the winning half, never on the divider
-      var off = (Math.random() * 2 - 1) * 55, target = (winner === 'p' ? 0 : 180) + off + 360 * (3 + Math.floor(Math.random() * 2)), dur = 2300, t0 = performance.now(), lastN = 0;
+    setPose(0, 0);
+    // after the banner: the buck flies to the portrait of whoever holds it (the buck marker takes over there)
+    function flyHome(quick) {
+      if (fin || flown) return; flown = true; el.classList.add('fly');
+      try {
+        var toFoe = winner === 'p', tgt = toFoe ? document.querySelector('.foe .portbtn, .foe .portrait') : document.querySelector('.hudport'), r = coinw.getBoundingClientRect();   // the buck lands where the marker will sit: on whoever bids first
+        if (!tgt || !r.width) { finish(); return; }
+        var t = tgt.getBoundingClientRect(), tx = t.left + t.width / 2, ty = toFoe ? t.bottom : t.top, cx = r.left + r.width / 2, cy = r.top + r.height / 2;
+        var dx = tx - cx, dy = ty - cy, k = 44 / r.width, dur = quick ? 420 : 760;
+        coinw.style.transition = 'none'; shadow.style.opacity = 0;
+        var an = coinw.animate([
+          { transform: 'translate(0,0) scale(1)' },
+          { transform: 'translate(' + (dx * 0.5) + 'px,' + (dy * 0.5 - 140) + 'px) scale(' + ((1 + k) / 2) + ')', offset: 0.5 },
+          { transform: 'translate(' + dx + 'px,' + dy + 'px) scale(' + k + ')' }
+        ], { duration: dur, easing: 'cubic-bezier(.45,.05,.35,1)', fill: 'forwards' });
+        try { sfx('coin'); } catch (e) { }
+        an.onfinish = function () { try { sfx('coin'); } catch (e) { } finish(); };
+        setTimeout(function () { if (!fin) finish(); }, dur + 300);
+      } catch (e) { finish(); }
+    }
+    function land(quick) {
+      setPose(winner === 'p' ? 0 : 180, 0); coin.classList.add('down'); sfx('spinThunk'); box.classList.add('hit', 'win' + winner);
+      try { coinw.animate([{ transform: 'translateY(0) scale(1)' }, { transform: 'translateY(-34px) scale(1.04)', offset: 0.35 }, { transform: 'translateY(0) scale(1)', offset: 0.6 }, { transform: 'translateY(-9px) scale(1.01)', offset: 0.8 }, { transform: 'translateY(0) scale(1)' }], { duration: 520, easing: 'ease-out' }); } catch (e) { }
+      setTimeout(function () { if (fin) return; ban.classList.add('on'); sfx(winner === 'p' ? 'buckWin' : 'firstE'); if (winner === 'p') { el.classList.add('buck'); buckParty(el); } }, quick ? 0 : 380);
+      setTimeout(function () { flyHome(quick); }, quick ? 900 : (winner === 'p' ? 2700 : 1800));
+    }
+    function spin() {   // the toss
+      if (spun || fin) return; spun = true; clearTimeout(skipT); btn.classList.add('gone'); el.classList.add('air'); sfx('spinGo'); try { sfx('coin'); } catch (e) { }
+      var turns = 5 + Math.floor(Math.random() * 3), target = turns * 360 + (winner === 'p' ? 0 : 180), dur = 2100, t0 = performance.now(), lastN = 0;
       function frame(now) {
-        if (fin) return; var t = Math.min(1, (now - t0) / dur), e = 1 - Math.pow(1 - t, 4), d = target * e, n = Math.floor(d / 22);
+        if (fin) return; var t = Math.min(1, (now - t0) / dur), e = 1 - Math.pow(1 - t, 2.2), rot = target * e, h = Math.max(0, 4 * t * (1 - t)) * H, n = Math.floor(rot / 180);
         if (n !== lastN) { lastN = n; sfx('spinTick', t); }
-        setA(d);
-        if (t < 1) raf = requestAnimationFrame(frame); else { land(target, false); arrow.classList.add('recoil'); }
+        setPose(rot, h);
+        if (t < 1) raf = requestAnimationFrame(frame); else land(false);
       }
       raf = requestAnimationFrame(frame);
     }
     btn.addEventListener('click', function (e) { e.stopPropagation(); spin(); });
-    el.addEventListener('keydown', function () { });
+    coinw.addEventListener('click', function (e) { e.stopPropagation(); spin(); });
     firstFx.spin = spin; try { btn.focus(); } catch (e) { }
     var acb = el.querySelector('.fxautocb');
     acb.addEventListener('change', function () { AUTOROLL = acb.checked; try { localStorage.setItem('lcAutoRoll', AUTOROLL ? '1' : '0'); } catch (e) { } sfx('click'); if (AUTOROLL && !spun) setTimeout(spin, 350); });

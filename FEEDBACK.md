@@ -49,6 +49,13 @@ Raw reports come from the in-game "feels bad" buttons (artifact db collection `f
 - [ ] Verify in the published page: Copy my reports (clipboard), pause screen, db saves (testers must be invited as Contributors).
 - [ ] Unpublished work since v318: level-up window width fix and title, HUD pop-out punch + sounds, warning banners + "Evil has awoken", "Roll for a Seal", Gambler's Ruin camera/shake.
 
+## 2026-10-09 evening (user decisions on the review)
+- [ ] **"You hold N" badge on the bid die** (Spot On legibility): show how many of the bid face the player holds, so the counting is on screen. User: implement.
+- [ ] **Report -> level-up chain:** fold the chest's three reward tiles into the battle report, single CONTINUE; fix the elite chest scroll box (one of three rewards visible); remove the duplicate title banner on the level-up window. User: do it, will review how it looks.
+- [ ] **Relics as loose icons: parked, on the to-do list.** Idea: relic slots appear below the rewards when you have a relic to equip. Unclear where all relics enter the game; revisit.
+- [x] **Toss the buck** (2026-10-09): the first-turn spinner is now a coin toss (`firstSpin`, CSS `#firstfx.toss`): big coin flips mid-screen, knight face = you win the buck (enemy opens), skull = enemy wins; lands, banner, then flies to the portrait of whoever bids first. OPEN QUESTION: the banner says "YOU'RE THE BUCK" but the marker then sits on the enemy (they open). Decide whether winning the toss should mean you open instead.
+- Calibrating the AI skill slider is a dev-tool concern, low priority (user).
+
 ## Raw reports
 ```
 {"kind":"ui","when":"2026-10-08T09:46:44.079Z","screen":"map","view":"1728x923","phase":null,"enemy":null,"round":null,"floor":1,"day":0,"hp":6,"level":1,"gold":0,"over":"#app","note":"i think maybe the word crawl should be below the options or just remove crawl to start - feels weird"}
