@@ -138,3 +138,11 @@ Raw reports come from the in-game "feels bad" buttons (artifact db collection `f
 - [x] No screen scrolls now (except Rules and the skill web): the wheel is blocked, keyboard/drag page scrolling snaps back. Risks noted in the code block and CLAUDE.md.
 - [ ] OPEN BUG: player cluster pushed off the bottom just after an early toss (user screenshot, 1881x795 claude.ai frame); scrolling then hid it. Not reproduced. No auto-repair (user: it would hide the cause). A recorder saves a layout snapshot once per fight when it happens (`[lc] LAYOUT BUG`, included in Copy my reports).
 - [x] Buck art: revolver -> buckhorn folding knife carved into a worn gold coin (second Gemini roll; the first looked like a real knife lying on the coin). One coin used for the toss face (`GUN_COIN`, 240) and the turn marker (`BUCK_IMG`, 120); revolver art moved to `assets/_old/`.
+
+## 2026-10-09 22:30 reports (after v335)
+- [x] Log button sat under the settings cog at narrower windows (1280-1536 wide): `logClear()` (runs after every `fitZoom`) nudges `.topbtns` left by the overlap.
+- [x] Toss screen: the landed coin covered the result banner: banner moved down (`#firstfx .fxban` top calc(72% + 70px)), coin lifts 12 px on landing.
+- [x] Cards in the battle-report spoils had no hover description: `data-tip="spcard:<id>"` (name, rarity, text, "Click to take it").
+- [ ] Music got louder going from the map into a fight, same loop. Measured in the harness: no gain change in the game (calm keeps playing at the same level until its loop ends, then the fight music starts). Not reproduced; needs more detail.
+- [ ] Map screen "blinking" / strange UI on every map visit. Not reproduced at 1881x795 (frames every 80 ms after a fight). Needs a screen recording or exact steps.
+- [ ] Relic from a fight "appeared over to the right": the report shows it under Spoils once the count finishes (~10 s), then it stays a loose icon at the right edge until equipped (the parked relic redesign: equip on pickup, fly to the tray). Relics equip by dragging onto the ring button beside the portrait (works on the map in the harness; never in a fight, by design). User says equipping failed; where it was tried is unknown.

@@ -4423,6 +4423,9 @@ body.spk-mead .foe:not(.slain) .portbtn:not(.spelltgt) { animation: tgtglow .55s
   #firstfx .dumskip { margin-top: 18px; font: 700 18px var(--display, monospace); letter-spacing: 1px; padding: 12px 26px; color: #f3e3bd; text-shadow: 0 2px 0 #000; cursor: pointer; border: 4px solid #0d0a08; border-bottom-width: 10px; border-radius: 10px; background: linear-gradient(170deg, #7a5230 0%, #4a2e18 55%, #2a1a0c 100%); box-shadow: inset 2px 2px 0 rgba(255,220,160,.18), inset -2px -2px 0 rgba(0,0,0,.4), 0 5px 8px rgba(0,0,0,.5); animation: fxspinpop .6s ease-out .9s backwards; }
   #firstfx .dumskip:hover { filter: brightness(1.15) drop-shadow(0 0 8px rgba(255,200,100,.5)); } #firstfx .dumskip:active { transform: translateY(6px); border-bottom-width: 4px; }
   #firstfx.air .dumskip, #firstfx .fxbox.hit .dumskip { opacity: 0; pointer-events: none; transition: opacity .3s; }
+  /* the result banner sits under the landed coin, not across it (the coin also lifts a little) */
+  #firstfx.toss .fxban, #firstfx .fxban { top: calc(72% + 70px); }
+  #firstfx .fxbox.hit .fxcoinw { translate: 0 -12px; transition: translate .35s ease-out; }
   /* the pawn shimmers while it waits for your move */
   .mappanel .pawn:not(.held):not(.fly):not(.tipped) img { animation: pawnshimmer 2.2s ease-in-out infinite; }
   @keyframes pawnshimmer { 0%, 100% { filter: drop-shadow(0 0 0 rgba(255,214,110,0)); } 50% { filter: brightness(1.12) drop-shadow(0 0 7px rgba(255,214,110,.95)) drop-shadow(0 0 16px rgba(255,180,60,.55)); } }
@@ -9506,7 +9509,7 @@ body.spk-mead .foe:not(.slain) .portbtn:not(.spelltgt) { animation: tgtglow .55s
           ZFIT.key = zkey; ZFIT.z = z;
         }
       }
-      placeXp(); placeXpSoon();
+      placeXp(); placeXpSoon(); logClear();
     } catch (e) { }
   }
   // NO-SCROLL GUARD + LAYOUT-BUG RECORDER (2026-10-09; a tester saw the player cluster pushed off the bottom after an early toss, and scrolling hid it).
@@ -9560,6 +9563,15 @@ body.spk-mead .foe:not(.slain) .portbtn:not(.spelltgt) { animation: tgtglow .55s
       } catch (e) { }
     }, 400);
   })();
+  // the Log button (zoomed with the page) must never sit under the settings cog (fixed size, top right): nudge it left by the overlap
+  function logClear() {
+    try {
+      var tb = document.querySelector('.topbtns'), cog = document.getElementById('cog'); if (!tb || !cog) return;
+      tb.style.removeProperty('translate'); var a = tb.getBoundingClientRect(), c = cog.getBoundingClientRect(), z = parseFloat(document.body.style.zoom) || 1;
+      if (!a.width || !c.width || a.bottom < c.top || a.top > c.bottom || a.left > c.right) return;
+      var over = a.right - c.left + 12; if (over > 0) tb.style.setProperty('translate', (-over / z) + 'px 0');
+    } catch (e) { }
+  }
   fitZoom(); window.addEventListener("resize", fitZoom); window.addEventListener("resize", function () { setTimeout(relicPlace, 60); });
   var renderBase = render; render = function () { try { if (!(S && S.screen === 'combat') && document.body.hasAttribute('data-meet')) document.body.removeAttribute('data-meet'); } catch (e) { } var r = renderBase.apply(this, arguments); fitZoom(); try { relicPlace(); } catch (e) { } clearTimeout(window.__mapFitT); window.__mapFitT = setTimeout(function () { try { if (S && S.screen === 'map') fitZoom(); relicPlace(); } catch (e) { } }, 350); try { sealLayerSync(); } catch (e) { } try { if (S && S.screen === 'victory') reportStart(); else if (RPT.gen) rptClean(); } catch (e) { } try { hudAutoFold(); } catch (e) { } return r; };
   function hudBarHTML(q) {
@@ -10262,7 +10274,7 @@ var BOSS_PORTRAITS = {"dummy":{"normal":"data:image/webp;base64,UklGRgwlAABXRUJQ
     var n = 0, sp = function (inner, cls) { return '<span class="rp-spoil' + (cls || '') + '" style="--i:' + (n++) + '">' + SPK + inner + '</span>'; };
     var info = (v.healed ? '<p class="good">Your wounds knit themselves shut: ' + v.healed + ' HP recovered.</p>' : '') +
       ((v.leveled || v.gained) ? '<p class="crit">' + (v.leveled ? 'Level ' + S.player.level : '') + (v.leveled && v.gained ? ' ' : '') + (v.gained ? '+' + v.gained + ' Skill point' + (v.gained > 1 ? 's' : '') : '') + '</p>' : '') + (v.hpUp ? '<p class="good">+' + v.hpUp + ' max health.</p>' : '') + (v.debt ? '<p class="good">The pawnbroker keeps his word: +' + v.debt + ' dice in your cup.</p>' : '');
-    var loot = (v.loot && !v.lootDone ? [].concat(v.loot).filter(function (id) { return !(v.taken && v.taken[id]); }).map(function (id) { return isCard(id) ? sp('<button type="button" class="rptcardbtn" data-act="rptPreview" data-id="' + id + '" aria-label="Take ' + ITEMS[id].name + '">' + tcardHTML(id, { cls: 'rptcard' }) + '</button>', ' rp-spcard') : sp('<p class="good rp-sptext">' + v.name + ' also drops the ' + ITEMS[id].name + '. ' + ITEMS[id].desc + '</p>', ' rp-spwide'); }).join('') : '');
+    var loot = (v.loot && !v.lootDone ? [].concat(v.loot).filter(function (id) { return !(v.taken && v.taken[id]); }).map(function (id) { return isCard(id) ? sp('<button type="button" class="rptcardbtn" data-act="rptPreview" data-id="' + id + '" data-tip="spcard:' + id + '" aria-label="Take ' + ITEMS[id].name + '">' + tcardHTML(id, { cls: 'rptcard' }) + '</button>', ' rp-spcard') : sp('<p class="good rp-sptext">' + v.name + ' also drops the ' + ITEMS[id].name + '. ' + ITEMS[id].desc + '</p>', ' rp-spwide'); }).join('') : '');
     var slots = (v.slotIds || []).filter(looseHas).map(function (lid) { return sp('<span class="sealslot" data-loose="' + lid + '" style="--i:' + n + '"></span>', ' rp-spslot'); }).join('') + (v.drop && !v.dropDone ? sp('<span class="sealslot sealfixed" data-tip="loose:' + v.drop + '" style="--i:' + n + '">' + ITEM_ART[v.drop] + '</span>', ' rp-spslot') : '');
     var chest = (v.chest && !v.chest.taken) ? sp('<button type="button" class="chestbtn" data-act="openChest" aria-label="Open the treasure chest"><img alt="" src="' + ENCART.chest_closed + '"></button>', ' rp-spchest') : '';
     return info + (n ? '<div class="rp-sec rp-spsec">Spoils</div><div class="rp-spoils">' + chest + loot + slots + '</div>' : '');
@@ -11035,6 +11047,7 @@ var BOSS_PORTRAITS = {"dummy":{"normal":"data:image/webp;base64,UklGRgwlAABXRUJQ
     }
     if (kind === 'rollbtn') return '<b>Roll</b><p>Click to shake your dice for this round.</p>';
     if (kind === 'merchant') { var mm = MERCH[arg]; return mm ? '<b>' + mm.name + '</b><p>' + mm.line + '</p><p class="dim">Drag a seal or relic here to sell it.</p>' : ''; }
+    if (kind === 'spcard') { var sc = ITEMS[arg]; return sc ? '<b>' + sc.name + '</b> ' + rarTag(arg) + kindTag(arg) + '<p>' + sc.desc + '</p><p class="dim">Click to take it.</p>' : ''; }
     if (kind === 'looseitem') { var li = ITEMS[arg]; return li ? '<b>' + li.name + '</b> ' + rarTag(arg) + kindTag(arg) + '<p>' + li.desc + '</p>' + (S.screen === 'shop' ? '<p class="gold">Sells for ' + sellValue(arg) + ' gold. Drag it onto the Sell stone.</p>' : '') + '<p class="dim">Drag or right-click.</p>' : ''; }
     if (kind === 'inv') { var iv = ITEMS[arg]; return iv ? '<b>' + iv.name + '</b> ' + rarTag(arg) + kindTag(arg) + '<p>' + iv.desc + '</p>' + (S.screen === 'combat' ? '' : (S.screen === 'shop' ? '<p class="gold">Sells for ' + sellValue(arg) + ' gold.</p>' : '') + '<p class="dim">Drag or right-click.</p>') : ''; }
     if (kind === 'sealdrop') { var sd = ENEMIES[arg]; if (!sd || !sd.drop) return ''; return '<b><span class="rar-' + rarOf(sd.drop) + '">' + MODS[sd.drop].name.replace(' Die', '') + ' seal</span></b><p>' + MODS[sd.drop].desc + '</p><div class="tiprow droprow' + (anyApplicable(sd.drop) ? '' : ' full') + '"><span class="tipic">' + HAND_ART + '</span><b>' + Math.round(dropChance(sd) * 100) + '%</b></div>'; }
@@ -12226,7 +12239,7 @@ var BOSS_PORTRAITS = {"dummy":{"normal":"data:image/webp;base64,UklGRgwlAABXRUJQ
   document.addEventListener('pointerup', function () { setTimeout(function () { relicOver(-1, -1); }, 0); });
   // a relic dropped on the button: it equips if there is room, otherwise the button shakes red and the relic stays where it was
   function relicBtnDrop(q) {
-    if (!q || !q.item || isCard(q.item) || S.screen === 'combat') return false;
+    if (!q || !q.item || isCard(q.item)) return false;   // relics equip on any screen, fights included
     var b = document.querySelector('.relicbtn');
     if (!relicRoom()) { if (b) { b.classList.remove('rbno'); void b.offsetWidth; b.classList.add('rbno'); } sfx('relicDeny'); return true; }
     equipRelic(q); b = document.querySelector('.relicbtn');
@@ -12235,7 +12248,7 @@ var BOSS_PORTRAITS = {"dummy":{"normal":"data:image/webp;base64,UklGRgwlAABXRUJQ
   }
   // equip a relic icon: a free slot if there is one, otherwise the last slot, popping its old relic out across the screen
   function equipRelic(q, slot) {
-    var p = S.player, id = q.item; if (!id || S.screen === 'combat') return;
+    var p = S.player, id = q.item; if (!id) return;
     S.loose = S.loose.filter(function (z) { return z.id !== q.id; });
     var popped = null, at = INV_SLOTS - 1;
     if (typeof slot === 'number' && slot >= 0 && slot < INV_SLOTS) {
@@ -12384,12 +12397,12 @@ var BOSS_PORTRAITS = {"dummy":{"normal":"data:image/webp;base64,UklGRgwlAABXRUJQ
       if (die && (d.moved || S.sealArm === d.id)) { if (applyLoose(d.id, dieIdx(die))) return; }
     }
     if (d.moved && q.item && !isCard(q.item) && t && t.closest && t.closest('.relicbtn') && relicBtnDrop(q)) { sealLayerSync(); relicGlow(); return; }
-    if (d.moved && q.item && !isCard(q.item) && t && t.closest && S.screen !== 'combat') {
+    if (d.moved && q.item && !isCard(q.item) && t && t.closest) {
       var sl = t.closest('.slot[data-loc^="inv:"]');
       if (sl) { var si = parseInt(sl.getAttribute('data-loc').slice(4), 10); if (!isNaN(si)) { equipRelic(q, si); return; } }
     }
     if (d.moved && merchHere() && t && t.closest && t.closest('.merchport')) { sellLoose(q); return; }
-    if (!d.moved) { if (q.mod) S.sealArm = S.sealArm === d.id ? null : d.id; }
+    if (!d.moved) { if (q.mod) S.sealArm = S.sealArm === d.id ? null : d.id; else if (q.item && !isCard(q.item)) { carryStart(q, 'move'); carry.fresh = true; return; } }
     else {
       var left = e.clientX - d.dx, top = e.clientY - d.dy, br = bagRect();
       if (br && e.clientX > br.left && e.clientX < br.right && e.clientY > br.top && e.clientY < br.bottom) {
@@ -12454,6 +12467,7 @@ var BOSS_PORTRAITS = {"dummy":{"normal":"data:image/webp;base64,UklGRgwlAABXRUJQ
   document.addEventListener('mousemove', function (e) { if (carry) carryMove(e); }, true);
   document.addEventListener('click', function (e) {
     if (!carry) return;
+    if (carry.fresh) { carry.fresh = false; e.preventDefault(); e.stopPropagation(); return; }   // the click that picked it up
     if (e.target.closest && (e.target.closest('#ctxmenu') || e.target.closest('.sp-x'))) return;
     e.preventDefault(); e.stopPropagation();
     var q = looseGet(carry.id), t = e.target;
@@ -12463,6 +12477,7 @@ var BOSS_PORTRAITS = {"dummy":{"normal":"data:image/webp;base64,UklGRgwlAABXRUJQ
       if (die) { var id0 = carry.id; carry = null; if (applyLoose(id0, dieIdx(die))) return; carryEnd(); return; }
     } else if (merchHere() && t.closest && t.closest('.merchport')) { sellLoose(q); return; }
     if (t.closest && t.closest('.relicbtn') && q.item && relicBtnDrop(q)) { carryEnd(); return; }
+    if (q.item && !isCard(q.item) && t.closest) { var csl = t.closest('.slot[data-loc^="inv:"]'); if (csl) { var csi = parseInt(csl.getAttribute('data-loc').slice(4), 10); if (!isNaN(csi)) { var cid = carry.id; carry = null; equipRelic(q, csi); var cel = sealLayer && sealLayer.querySelector('.looseseal[data-id="' + cid + '"]'); if (cel) cel.classList.remove('carried'); return; } } }
     var br = bagRect(), left = e.clientX - 36, top = e.clientY - 36;
     if (br && e.clientX > br.left && e.clientX < br.right && e.clientY > br.top && e.clientY < br.bottom) {
       q.bag = true; q.bx = Math.round(Math.min(BAG_R - 72 - 4, Math.max(BAG_L + 4, left - br.left))); q.by = Math.round(Math.min(BAG_B - 72 - 4, Math.max(BAG_T + 4, top - br.top)));
