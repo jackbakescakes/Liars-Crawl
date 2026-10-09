@@ -13,6 +13,7 @@ Raw reports come from the in-game "feels bad" buttons (artifact db collection `f
 - [x] **Ability text confusing**: "when choosing an ability it's confusing: roll 2 die and on 8+ gain 1 (symbol I don't understand)". Find which level-up card, rewrite in plain words / explain the icon.
 
 ## Enemy AI rebuild (2026-10-09, published)
+- FIXED (working file): playing the Looking Glass on your turn looked like it did nothing (it only added a pass charge). It now passes the buck at once on your turn, and banks a pass when played on the enemy's turn. The turn marker is now the buck (gold token) with the PASS button beside it; the ability-row button is gone.
 - New engine: Bayesian read of the player's hand from this round's bids, win-chance lookahead (depth 2) with a measured win table, learns the player's nerve and honesty within a run. Knobs and training room updated (new sliders: Your trust, Adapt; Skill runs to 1.00).
 - Sim results (tools/ai): at full skill vs the old AI at its max, 97% wins at 6v6; an honest-maths player beat the old 3-die goblin at max skill 87% of the time, now 17%.
 - OPEN: calibrate the skill curve. At 0.52 (floor-1 goblin) the honest-maths player wins ~52% (was 83%). Tune `AI_TUNE` so 0.5 feels like the old goblin while 1.0 keeps the full strength, then look at per-enemy skill numbers. Third win-table pass (with `dieWorth` in the self-play objective) to embed when done.
