@@ -89,3 +89,9 @@ The user is having Gemini draw a full alphabet in the style of the "LIAR'S CRAWL
 - `tools/lc_test/` is the headless harness (serve the game over http, drive it with Playwright, eval inside the game closure, screenshot). Start with `tools/lc_test/README.md`; ready-made scenarios in `tools/lc_test/scenarios/` (one per art item).
 - `tools/lc_art/` has the Gemini sheet cutter (`cut_sheet.py`) and the base64 embedder (`embed_art.py`). Start with `tools/lc_art/README.md`.
 - The Gemini art pass of 2026-10-09 (ART_TODO items 1-9) is logged in `assets/INDEX.md` under "Gemini art pass 2026-10-09" and `assets/prompts.md`.
+
+## No-scroll guard and layout-bug recorder (2026-10-09 evening)
+- No screen scrolls except Rules and the skill web. Code block "NO-SCROLL GUARD + LAYOUT-BUG RECORDER" just before `fitZoom(); window.addEventListener("resize", fitZoom)`. Its comment lists the known risks; read it first if something odd turns up with scrolling.
+- Wheel is blocked except over a panel that really scrolls (CSS overflow-y auto/scroll and taller than itself). A new panel that scrolls another way needs an exemption there.
+- Page scrolling snaps back to 0, so anything that overflows a screen is cut off, not reachable: re-run the no-scroll scan after layout changes.
+- **No auto-repair on purpose** (user's call: safeguards that fix things hide the bug). The open bug: player cluster pushed off the bottom just after an early coin toss (1881x795 claude.ai frame), never reproduced. The recorder saves one snapshot per fight when the portrait is off screen for 0.8 s or the page was found scrolled: `{kind:"layoutbug", ...}` in localStorage `lcFeelsBadAll` (comes out with "Copy my reports") and `[lc] LAYOUT BUG` in the console. Ask testers who hit it to press Copy my reports.

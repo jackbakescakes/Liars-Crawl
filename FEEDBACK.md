@@ -129,3 +129,12 @@ Raw reports come from the in-game "feels bad" buttons (artifact db collection `f
 {"kind":"game","when":"2026-10-08T09:54:55.780Z","screen":"combat","view":"1728x923","phase":"bid","round":1,"floor":1,"day":3,"hp":3,"level":2,"gold":14,"bid":null,"turn":"p","note":"autospin the who goes first in battles"}
 {"kind":"game","when":"2026-10-08T09:55:57.484Z","screen":"combat","view":"1728x923","phase":"bid","round":2,"floor":1,"day":3,"hp":3,"level":2,"gold":14,"bid":"1x2","turn":"p","note":"maybe give option to autoroll also"}
 ```
+
+## 2026-10-09 21:10 batch (working file, not yet published)
+- [x] Portrait fold/unfold: dice, XP bar, deck and relics now move together (no stagger), no overshoot or wind-up; the portrait gives one small thump. Open 230 ms ease-out, close 200 ms ease-in.
+- [x] XP bar now runs from just before the first die to just after the sixth (was portrait to deck), so it no longer covers the deck.
+- [x] Map: the pawn on the start room stands clear of the XP bar (about 20 px above it at 1920 and 1366). `MAPBOTY` 80 -> 185 (more parchment below the start room on new floors) and the current room sits at 70% of the view instead of 78%.
+- [x] Toss screen: heading "THE BUCK"; removed the "I've seen this before: skip the Dummy" button and the gun/skull key.
+- [x] No screen scrolls now (except Rules and the skill web): the wheel is blocked, keyboard/drag page scrolling snaps back. Risks noted in the code block and CLAUDE.md.
+- [ ] OPEN BUG: player cluster pushed off the bottom just after an early toss (user screenshot, 1881x795 claude.ai frame); scrolling then hid it. Not reproduced. No auto-repair (user: it would hide the cause). A recorder saves a layout snapshot once per fight when it happens (`[lc] LAYOUT BUG`, included in Copy my reports).
+- [x] Buck art: revolver -> buckhorn folding knife carved into a worn gold coin (second Gemini roll; the first looked like a real knife lying on the coin). One coin used for the toss face (`GUN_COIN`, 240) and the turn marker (`BUCK_IMG`, 120); revolver art moved to `assets/_old/`.
