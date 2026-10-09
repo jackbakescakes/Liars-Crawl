@@ -27,14 +27,14 @@ Raw reports come from the in-game "feels bad" buttons (artifact db collection `f
 - [x] `<meta charset>`; potion card `undefined` flavour line.
 - [ ] Dropped Note "click to read" and "Skip tip" cannot be clicked (under the HP row / portrait); the note stays all run.
 - [ ] Elite chest shows one of three rewards in a 254 px scroll box.
-- [ ] Pit Boss blackjack hand draws all player dice as dead Xs.
+- [x] Pit Boss blackjack hand draws all player dice as dead Xs. (fixed 2026-10-10)
 - [ ] Floor 4 map: the House room is scrolled above the frame.
 - [ ] HUD portrait cluster covers bottom-left map rooms (column 0, row 6).
 - [ ] 1366×768: buck spinner and Auto roll checkbox sit over the dice row.
 - [ ] Relic bought in the shop lands on the shop floor; relic button covered by the panel footer.
-- [ ] Report sits on top of the floor shop after the Pit Boss; first TAKE YOUR SPOILS press does nothing visible.
+- [x] Report sits on top of the floor shop after the Pit Boss; first TAKE YOUR SPOILS press does nothing visible. (not reproducible 2026-10-10)
 - [ ] Level-up repeats "(have 1)" picks; pool of 8 repeats by level 4.
-- [ ] Soul Rend text: item says 50+, card says 30.
+- [x] Soul Rend text: item says 50+, card says 30. (fixed 2026-10-10)
 - [ ] Roll-coin tooltip covers the bid row when the mouse rests on the coin.
 - [ ] Balance (sim): floor-1 fights cost an honest player ~1.7 dice; last-die Spot On gamble (now the `lastDie` knob, default 0.4) — tune in the Training room.
 
@@ -146,3 +146,39 @@ Raw reports come from the in-game "feels bad" buttons (artifact db collection `f
 - [ ] Music got louder going from the map into a fight, same loop. Measured in the harness: no gain change in the game (calm keeps playing at the same level until its loop ends, then the fight music starts). Not reproduced; needs more detail.
 - [ ] Map screen "blinking" / strange UI on every map visit. Not reproduced at 1881x795 (frames every 80 ms after a fight). Needs a screen recording or exact steps.
 - [ ] Relic from a fight "appeared over to the right": the report shows it under Spoils once the count finishes (~10 s), then it stays a loose icon at the right edge until equipped (the parked relic redesign: equip on pickup, fly to the tray). Relics equip by dragging onto the ring button beside the portrait (works on the map in the harness; never in a fight, by design). User says equipping failed; where it was tried is unknown.
+
+## 2026-10-10 balance pass (working file, not yet published; details in the "Liar's Crawl: Balance Pass" doc)
+- [x] Enemy skill set per floor and kind (`FLOOR_SKILL`, `foeSkill`): normal/elite/boss 0.30/0.45/0.55, 0.50/0.65/0.75, 0.70/0.85/0.90, floor 4 0.85/0.85/0.90; the hidden +0.12 and floor-4 +0.1 are gone. `OWN_SKILL` (dummy, Loot Goblin, Cup-Shot Ogre, Flesh Golem) keep their own numbers; Weathercock keeps its 0.6/0.07 swing; per-enemy `skill` values are now unused except for those.
+- [x] Croupier 3 + Collector 3 (each +1 later = 8 dice in all, was 10); House 12 dice (was 10).
+- [x] `LEVELS` runs to level 30 (each step 50 XP dearer than the last; level 30 at 23,200). A full run earns ~5,000-6,000 XP, so about level 13-14.
+- [x] Fill My Cup 80, Runneth Over 150; `MAX_DICE` 16 (Bottomless Cup +2 = 18); class blurbs say 16.
+- [x] Camp rest and the new-floor heal: 2/3/4/4 HP by floor (`REST_HEAL`, `restHeal()`).
+- [x] Floor-1 fight purses +50%; Loot Goblin sack `lootSack()` = 60 x floor gold multiplier (tooltip uses it); Bone Bank pays x1.5 (`BANK_RATE`, texts updated).
+- [x] Pickpocket 5 x gold multiplier per wound (was 10); Plunder 1 gold per die per rank (was 2).
+- [x] Floor-1 mid-floor shop on row 6.
+- [x] Elite/boss chests: always one seal, one relic, one card (gold fills a slot only if there is nothing to offer).
+- [x] Prices: Iron Plate 30, Smoke Bomb 35, Rusty Razor 25, XP Drought 25, Odd Die base 20 (shop 30), Hook 60, Skullcap 110, D20 220. Smith x1.3 (was 1.7), Cardsharp x1.2 (was 1.4).
+- [x] Slots: first pull free (`ev.spins = 1`), lose 10%, gold 25%.
+- [x] Looking Glass fight drop 20% floor 1, 15% later.
+- [x] Floor 3+: a foe whose own seal is common/uncommon drops a rare/epic seal (`LATE_SEALS`, `lateDrop`).
+- [ ] REJECTED: one roll threshold for all floors (user: upgraded dice are meant to beat the harder rolls).
+- [x] Scratch card: cherries 25, bells 60, both x the floor gold multiplier (`scratchPay`; was 50 / 100 flat).
+
+## 2026-10-10 balance pass, batch 2 (working file, not yet published)
+- [x] Floor 3 elites skill 0.75 (was 0.85), floor 3 boss (Pit Boss) 0.80 (was 0.90).
+- [x] Hulking Demon 7 dice (was 9); Cup-Shot Ogre 7 dice (was 9).
+- [x] Every foe with a seal drops it (`DROP_BASE = 1`, was 0.25). Watch: the seal screens after every fight (pacing), repeats of the same seal, and the Hook relic / Grave Robber ability / drop luck now do nothing. Fallback if it feels too much: 1 for elites and bosses, 0.5 for normal fights.
+- [x] Elite XP x1.5 (`ELITE_XP`).
+- [x] XP Drought: 100 XP per floor reached.
+- [x] Loaded Pouch: 5 x floor gold multiplier.
+- [x] Grave Robber purse [26, 36] (was [34, 46]).
+- [x] Floor-1 shop shelves always carry a Healing Draught.
+- [x] Penitent's Scales and Hushed Vault never appear on floor 1.
+- [x] Pawnbroker pays the 2 dice after your next elite or boss win (texts updated).
+- [x] A boss win heals you fully before the floor shop.
+- [x] Soul Rend card flavour: "Born from a roll of 50 or more." (REND_MIN is 50).
+- [x] BUG FIXED: during a scene (Pit Boss blackjack, Dealer's deal, House rake, Contract) your dice row drew every die as a dead X; it now shows the dice you hold (`unrolled` in the combat render).
+- [x] Checked: after the Pit Boss, the report no longer sits over the floor shop and the first TAKE YOUR SPOILS opens the chest (fixed by the 2026-10-09 chest-window work). Closing the old item below.
+- [x] Balance sims in `tools/ai/balance/` (fight tables + run economy, README).
+- [ ] TO DO (later): grow the level-up ability pool for 30 levels (8 abilities / 19 ranks run out around level 20; raise max ranks or add abilities), and fix the "(have 1)" repeats.
+- Skipped by the user: Unscathed +25% XP, Mercenary change, Gambler's Ruin timing (it is only there to stop full clears).

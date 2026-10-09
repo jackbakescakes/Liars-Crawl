@@ -1,0 +1,319 @@
+{
+ "dummy": {
+  "dice": 2,
+  "skill": 0.0,
+  "gold": [
+   1,
+   1
+  ],
+  "kind": "fight",
+  "floor": 1
+ },
+ "cutpurse": {
+  "dice": 3,
+  "skill": 0.3,
+  "gold": [
+   14,
+   20
+  ],
+  "kind": "fight",
+  "floor": 1
+ },
+ "eavesdrop": {
+  "dice": 3,
+  "skill": 0.3,
+  "gold": [
+   15,
+   21
+  ],
+  "kind": "fight",
+  "floor": 1
+ },
+ "weathercock": {
+  "dice": 3,
+  "skill": 0.335,
+  "gold": [
+   14,
+   20
+  ],
+  "kind": "fight",
+  "floor": 1,
+  "note": "moody: 0.6 or 0.07 a round, modelled as the average"
+ },
+ "blackjack": {
+  "dice": 4,
+  "skill": 0.3,
+  "gold": [
+   15,
+   23
+  ],
+  "kind": "fight",
+  "floor": 1
+ },
+ "fence": {
+  "dice": 3,
+  "skill": 0.3,
+  "gold": [
+   15,
+   21
+  ],
+  "kind": "fight",
+  "floor": 1
+ },
+ "sanguine": {
+  "dice": 3,
+  "skill": 0.3,
+  "gold": [
+   15,
+   21
+  ],
+  "kind": "fight",
+  "floor": 1
+ },
+ "lootgob": {
+  "dice": 3,
+  "skill": 0.13,
+  "gold": [
+   60,
+   60
+  ],
+  "kind": "fight",
+  "floor": 1,
+  "xpMul": 0.5
+ },
+ "ogre": {
+  "dice": 4,
+  "skill": 0.45,
+  "gold": [
+   20,
+   28
+  ],
+  "kind": "elite",
+  "floor": 1
+ },
+ "brute": {
+  "dice": 7,
+  "skill": 0.04,
+  "gold": [
+   20,
+   28
+  ],
+  "kind": "elite",
+  "floor": 1,
+  "xpMul": 0.35
+ },
+ "dealer": {
+  "dice": 5,
+  "skill": 0.55,
+  "gold": [
+   40,
+   50
+  ],
+  "kind": "boss",
+  "floor": 1
+ },
+ "remnants": {
+  "diceMin": 4,
+  "diceMax": 6,
+  "dice": 5,
+  "skill": 0.5,
+  "gold": [
+   16,
+   22
+  ],
+  "kind": "fight",
+  "floor": 2
+ },
+ "robber": {
+  "dice": 4,
+  "skill": 0.5,
+  "gold": [
+   26,
+   36
+  ],
+  "kind": "fight",
+  "floor": 2
+ },
+ "zealot": {
+  "dice": 4,
+  "skill": 0.5,
+  "gold": [
+   18,
+   26
+  ],
+  "kind": "fight",
+  "floor": 2
+ },
+ "bonedealer": {
+  "dice": 5,
+  "skill": 0.5,
+  "gold": [
+   15,
+   21
+  ],
+  "kind": "fight",
+  "floor": 2
+ },
+ "vampire": {
+  "dice": 5,
+  "skill": 0.5,
+  "gold": [
+   24,
+   32
+  ],
+  "kind": "fight",
+  "floor": 2
+ },
+ "wraith": {
+  "dice": 5,
+  "skill": 0.5,
+  "gold": [
+   18,
+   24
+  ],
+  "kind": "fight",
+  "floor": 2
+ },
+ "graveknight": {
+  "dice": 5,
+  "skill": 0.65,
+  "gold": [
+   34,
+   44
+  ],
+  "kind": "elite",
+  "floor": 2
+ },
+ "fleshgolem": {
+  "dice": 10,
+  "skill": 0.06,
+  "gold": [
+   34,
+   44
+  ],
+  "kind": "elite",
+  "floor": 2
+ },
+ "croupier": {
+  "dice": 8,
+  "skill": 0.75,
+  "gold": [
+   60,
+   75
+  ],
+  "kind": "boss",
+  "floor": 2
+ },
+ "hellion": {
+  "diceMin": 4,
+  "diceMax": 6,
+  "dice": 5,
+  "skill": 0.7,
+  "gold": [
+   26,
+   36
+  ],
+  "kind": "fight",
+  "floor": 3
+ },
+ "pitdicer": {
+  "dice": 5,
+  "skill": 0.7,
+  "gold": [
+   28,
+   38
+  ],
+  "kind": "fight",
+  "floor": 3
+ },
+ "hellhound": {
+  "dice": 5,
+  "skill": 0.7,
+  "gold": [
+   26,
+   36
+  ],
+  "kind": "fight",
+  "floor": 3
+ },
+ "hulk": {
+  "dice": 7,
+  "skill": 0.7,
+  "gold": [
+   46,
+   60
+  ],
+  "kind": "fight",
+  "floor": 3
+ },
+ "cardsharp": {
+  "dice": 5,
+  "skill": 0.7,
+  "gold": [
+   30,
+   42
+  ],
+  "kind": "fight",
+  "floor": 3
+ },
+ "succubus": {
+  "dice": 5,
+  "skill": 0.7,
+  "gold": [
+   30,
+   40
+  ],
+  "kind": "fight",
+  "floor": 3
+ },
+ "bloodletter": {
+  "dice": 7,
+  "skill": 0.75,
+  "gold": [
+   48,
+   62
+  ],
+  "kind": "elite",
+  "floor": 3
+ },
+ "contractdemon": {
+  "dice": 7,
+  "skill": 0.75,
+  "gold": [
+   50,
+   64
+  ],
+  "kind": "elite",
+  "floor": 3
+ },
+ "pitboss": {
+  "dice": 9,
+  "skill": 0.8,
+  "gold": [
+   80,
+   95
+  ],
+  "kind": "boss",
+  "floor": 3
+ },
+ "imp": {
+  "dice": 5,
+  "skill": 0.85,
+  "gold": [
+   22,
+   30
+  ],
+  "kind": "fight",
+  "floor": 4
+ },
+ "house": {
+  "dice": 12,
+  "skill": 0.9,
+  "gold": [
+   90,
+   110
+  ],
+  "kind": "boss",
+  "floor": 4
+ }
+}

@@ -73,6 +73,9 @@ The user is having Gemini draw a full alphabet in the style of the "LIAR'S CRAWL
 - `<meta charset="utf-8">` added before `<title>` (curly quotes showed as `Letâ€™s go` when opened from disk). No doctype yet: adding one would leave quirks mode and could shift layout, so it is deliberately not done.
 - Healing Potion card no longer prints `undefined` as its flavour line (`CARD_INFO.potion.fl`).
 
+## Balance pass (2026-10-10)
+- Enemy skill comes from `FLOOR_SKILL` via `foeSkill(def)` (floor x kind), not from each enemy's `skill`, except `OWN_SKILL` foes and the training room. Change difficulty there. Other knobs added: `REST_HEAL`, `BANK_RATE`, `lootSack()`, `LATE_SEALS`/`lateDrop`. Full list in `FEEDBACK.md` (2026-10-10). The sims used for the pass live in `tools/ai/balance/` (README there): `ftable.js` fight tables and `runsim.js` run economy. Re-run them after any balance change; keep `roster.json` in step with `FLOOR_SKILL`.
+
 ## TODO / known issues (read this when starting a new session)
 - **Map parchment is plain for now (2026-10-08).** The user found the stains/blood/blots and margin drawings hard to read behind the route. `PARCHT`/`PARCH` now hold plain versions (`assets/maps/PARCH*_plain.webp`, made by flattening the interior of the originals in `assets/_old/PARCH*_*.webp`) and `.mdecor` (splats + margin drawings from `inkDecor()`) is hidden by CSS. Revisit later with better parchment art (clean texture, subtle edge wear only), then restore or redo the decorations.
 - Character select restyled (wood-and-iron window from `ui/panel_wood_iron.png`, marble buttons for class rows and `?`); user to review.

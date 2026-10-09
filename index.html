@@ -4951,7 +4951,7 @@ body.spk-mead .foe:not(.slain) .portbtn:not(.spelltgt) { animation: tgtglow .55s
   var MODS = {
     golden: { name: 'Golden Die', get desc() { return 'Gain ' + bonusGold(GOLD_PER_SIX) + ' gold on a roll of 6.'; }, base: 45, weight: 3 },
     weighted: { name: 'Weighted Die', desc: 'Adds a 1 in 6 chance to roll a 6 (2 in 6 in all).', base: 70, weight: 1 },
-    odd: { name: 'Odd Die', desc: 'Its faces become 1, 1, 3, 3, 5 and 5.', base: 30, weight: 3 },
+    odd: { name: 'Odd Die', desc: 'Its faces become 1, 1, 3, 3, 5 and 5.', base: 20, weight: 3 },
     haggler: { name: 'Haggler Die', desc: 'Each time this die rolls a 1, you gain +1% ' + RARIC + ' for the rest of the run.', base: 35, weight: 3 },
     pregnant: { name: 'Fecund Die', desc: 'Whenever this die shows a 6, it spawns an extra die that lasts one round and inherits all of its seals. It counts as health while it lasts.', base: 50, weight: 2 },
     healer: { name: 'Vigorous Die', desc: 'Whenever this die shows a 6, you recover 1 HP.', base: 60, weight: 2 },
@@ -5824,7 +5824,7 @@ body.spk-mead .foe:not(.slain) .portbtn:not(.spelltgt) { animation: tgtglow .55s
     gambler: E('Bone Gambler', 3, 0.5, [10, 14], 'fight', 'skull', '#e6dfca', '#7a3a3a', '#e39a3b', 'Wears the dice it has won as a necklace of teeth.'),
     cultist: E('Cultist of Chance', 3, 0.6, [11, 16], 'fight', 'hood', '#4a3a66', '#9b72d8', '#e8c34a', 'Prays to luck, and luck has demanded blood.'),
     ogre: E('Ogre Bouncer', 4, 0.47, [20, 28], 'elite', 'ogre', '#7d8f5a', '#5f6b45', '#f0d24a', 'Throws losers out. Some of them still scream.'),
-    brute: E('Cup-Shot Ogre', 9, 0.04, [20, 28], 'elite', 'ogre', '#a6a35e', '#7a7745', '#d9d27a', 'Strong as a cart-horse and drunk as a lord. It sways, it sloshes, and it forgets which cup is its own.'),
+    brute: E('Cup-Shot Ogre', 7, 0.04, [20, 28], 'elite', 'ogre', '#a6a35e', '#7a7745', '#d9d27a', 'Strong as a cart-horse and drunk as a lord. It sways, it sloshes, and it forgets which cup is its own.'),
     mimic: E('Mimic', 4, 0.78, [22, 30], 'elite', 'chest', '#8a5a34', '#a8703f', '#f0d24a', 'Teeth behind the lid. Past victims in its belly.'),
     dealer: E('The Dealer', 5, 0.65, [40, 50], 'boss', 'dealer', '#e6dfca', '#a13a3a', '#e39a3b', 'Dealt the first hand ever played in this pit.'),
     skeleton: E('Skeleton Dicer', 3, 0.58, [14, 20], 'fight', 'skull', '#cfd8d6', '#3a6670', '#5ec2c9', 'A yellowed grin that plays on long after the flesh has rotted away.'),
@@ -5833,8 +5833,8 @@ body.spk-mead .foe:not(.slain) .portbtn:not(.spelltgt) { animation: tgtglow .55s
     warden: E('Crypt Warden', 4, 0.72, [20, 26], 'fight', 'hood', '#2f4a52', '#5ec2c9', '#5ec2c9', 'Chains the dead to their chairs with bone and a hatred older than the crypt.'),
     knight: E('Bone Knight', 5, 0.8, [32, 42], 'elite', 'skull', '#dfe6e4', '#6a7f88', '#5ec2c9', 'Fights on, though nothing holds its bones together.'),
     acolyte: E('Lich Acolyte', 5, 0.85, [34, 44], 'elite', 'hood', '#243a44', '#7fd3d9', '#7fd3d9', 'Drinks the fear from every die you lose.'),
-    croupier: E('The Croupier', 4, 0.97, [60, 75], 'boss', 'dealer', '#cfd8d6', '#2f7f8c', '#5ec2c9', 'The wheel is wet. It does not say with what.'),
-    collector: E('The Collector', 4, 0.9, [0, 0], 'boss', 'hood', '#243a44', '#7fd3d9', '#5ec2c9', 'Keeps what the wheel takes, in jars.'),
+    croupier: E('The Croupier', 3, 0.97, [60, 75], 'boss', 'dealer', '#cfd8d6', '#2f7f8c', '#5ec2c9', 'The wheel is wet. It does not say with what.'),
+    collector: E('The Collector', 3, 0.9, [0, 0], 'boss', 'hood', '#243a44', '#7fd3d9', '#5ec2c9', 'Keeps what the wheel takes, in jars.'),
     imp: E('Imp Bookie', 4, 0.7, [22, 30], 'fight', 'imp', '#c4473d', '#e8d9a8', '#f2d34a', 'Takes bets on how you will die. Odds are good.'),
     hound: E('Hellhound', 5, 0.74, [24, 32], 'fight', 'beast', '#7a2e2a', '#b2492c', '#ff8a3a', 'Hunger, fire and nothing else behind its eyes.'),
     broker: E('Pit Broker', 5, 0.8, [26, 34], 'fight', 'imp', '#a23a63', '#e4c35c', '#ffd35c', 'Collects debts from the living and the dead.'),
@@ -5842,7 +5842,7 @@ body.spk-mead .foe:not(.slain) .portbtn:not(.spelltgt) { animation: tgtglow .55s
     chancellor: E('Chancellor of Odds', 6, 0.9, [48, 60], 'elite', 'hood', '#5a1f2e', '#e4c35c', '#ffd35c', 'Signs every contract in the blood of the loser.'),
     wight: E('Rust Wight', 5, 0.78, [26, 34], 'fight', 'ghost', '#9a6a45', '#4a2f22', '#ff7a3a', 'Its touch flakes the blessing off your bones.'),
     watcher: E('Keyhole Watcher', 3, 0.55, [12, 17], 'fight', 'watcher', '#c46a6a', '#6a2a3a', '#f0d24a', 'Never blinks. Peers at one of your dice every round.'),
-    house: E('The House', 9, 1.0, [90, 110], 'boss', 'dealer', '#e4c35c', '#8c1f2a', '#ff6a3a', 'The house always wins. Everything here is its meat.'),
+    house: E('The House', 11, 1.0, [90, 110], 'boss', 'dealer', '#e4c35c', '#8c1f2a', '#ff6a3a', 'The house always wins. Everything here is its meat.'),
     cheat: E('Marrow Sharper', 3, 0.5, [10, 14], 'fight', 'goblin', '#5a7fb0', '#2f3f66', '#9fd0ff', 'Carves his dice from the marrow of men who lost to him. They land the way he likes.'),
     optimist: E('Pale Optimist', 3, 0.5, [10, 14], 'fight', 'skull', '#d9d2e8', '#6a5a8a', '#c9a8ff', 'Believes the next roll will be the one. It never is.'),
     leech: E('Blood Leech', 2, 0.4, [8, 12], 'fight', 'rat', '#8a3a4a', '#3a1a22', '#ff6a7a', 'Swells with every die it drinks.'),
@@ -5872,14 +5872,14 @@ body.spk-mead .foe:not(.slain) .portbtn:not(.spelltgt) { animation: tgtglow .55s
   ['imp', 'hound', 'broker', 'wight', 'golem', 'chancellor', 'house', 'gilder', 'ember', 'tithe'].forEach(function (k) { ENEMIES[k].dice += 1; });
   // some foes are known for one seal on their dice, and some peer at your dice
   ENEMIES.cheat.sig = 'odd'; ENEMIES.optimist.sig = 'odd'; ENEMIES.leech.sig = 'odd'; ENEMIES.bonedealer.sig = 'weighted'; ENEMIES.mourner.sig = 'optimist'; ENEMIES.gilder.sig = 'weighted'; ENEMIES.tithe.sig = 'optimist'; ENEMIES.wight.sig = 'healer';
-  ENEMIES.cutpurse = E('Goblin Cutpurse', 3, 0.27, [9, 13], 'fight', 'goblin', '#6f9a4e', '#8a3f3a', '#f0d24a', 'Quick fingers. Every hit lightens your purse by 5 gold.');
-  ENEMIES.blackjack = E('Goblin Blackjack', 4, 0.33, [10, 15], 'fight', 'goblin', '#5f8a45', '#4a3a2a', '#e39a3b', 'Swings a leather cosh. Whatever it hits goes stiff, and the enemy sees it.');
-  ENEMIES.fence = E('Goblin Fence', 3, 0.3, [10, 14], 'fight', 'goblin', '#7aa65a', '#7a5a8a', '#5ec2c9', 'Buys anything, asks nothing. Sometimes a card slides into its sleeve.');
+  ENEMIES.cutpurse = E('Goblin Cutpurse', 3, 0.27, [14, 20], 'fight', 'goblin', '#6f9a4e', '#8a3f3a', '#f0d24a', 'Quick fingers. Every hit lightens your purse by 5 gold.');
+  ENEMIES.blackjack = E('Goblin Blackjack', 4, 0.33, [15, 23], 'fight', 'goblin', '#5f8a45', '#4a3a2a', '#e39a3b', 'Swings a leather cosh. Whatever it hits goes stiff, and the enemy sees it.');
+  ENEMIES.fence = E('Goblin Fence', 3, 0.3, [15, 21], 'fight', 'goblin', '#7aa65a', '#7a5a8a', '#5ec2c9', 'Buys anything, asks nothing. Sometimes a card slides into its sleeve.');
   ENEMIES.lootgob = E('Loot Goblin', 3, 0.13, [60, 60], 'fight', 'goblin', '#d9b640', '#8a6a1a', '#fff3a0', 'Staggers under a sack of gold. It will bolt at the first chance.');
-  ENEMIES.weathercock = E('Goblin Weathercock', 3, 0.33, [9, 13], 'fight', 'goblin', '#8fae5a', '#6a5a3a', '#f0d24a', 'Turns with the wind. Some rounds it plays like a genius, and some rounds like a fool.');
-  ENEMIES.sanguine = E('Sanguine Goblin', 3, 0.33, [10, 14], 'fight', 'goblin', '#7fb05a', '#c2574a', '#ff6a5a', 'Always smiling. One blow in twenty lands twice as hard.');
+  ENEMIES.weathercock = E('Goblin Weathercock', 3, 0.33, [14, 20], 'fight', 'goblin', '#8fae5a', '#6a5a3a', '#f0d24a', 'Turns with the wind. Some rounds it plays like a genius, and some rounds like a fool.');
+  ENEMIES.sanguine = E('Sanguine Goblin', 3, 0.33, [15, 21], 'fight', 'goblin', '#7fb05a', '#c2574a', '#ff6a5a', 'Always smiling. One blow in twenty lands twice as hard.');
   ENEMIES.selcouth = E('Goblin Selcouth', 3, 0.33, [10, 14], 'fight', 'goblin', '#7aa65a', '#5a4a8a', '#5ec2ff', 'A strange, rare thing. Every die it owns lands on an odd number.');
-  ENEMIES.eavesdrop = E('Goblin Eavesdrop', 3, 0.3, [10, 14], 'fight', 'goblin', '#6a8a4a', '#4a3a2a', '#e39a3b', 'Listens at every keyhole. Peeks at one of your dice every round.');
+  ENEMIES.eavesdrop = E('Goblin Eavesdrop', 3, 0.3, [15, 21], 'fight', 'goblin', '#6a8a4a', '#4a3a2a', '#e39a3b', 'Listens at every keyhole. Peeks at one of your dice every round.');
   ENEMIES.weathercock.sig = 'fickle'; ENEMIES.sanguine.sig = 'optimist'; ENEMIES.selcouth.sig = 'odd'; ENEMIES.eavesdrop.sig = 'peeper';
   ENEMIES.weathercock.drop = 'fickle'; ENEMIES.sanguine.drop = 'optimist'; ENEMIES.selcouth.drop = 'odd'; ENEMIES.eavesdrop.drop = 'peeper';
   ENEMIES.weathercock.moody = true; ENEMIES.sanguine.dbl = 0.05; ENEMIES.selcouth.oddOnly = true; ENEMIES.eavesdrop.peek = true;
@@ -5900,7 +5900,7 @@ body.spk-mead .foe:not(.slain) .portbtn:not(.spelltgt) { animation: tgtglow .55s
   // ---- Floor 2, the Catacombs: the undead ----
   ENEMIES.remnants = E('Shattered Remnants', 4, 0.4, [16, 22], 'fight', 'skull', '#cfd8d6', '#3a6670', '#5ec2c9', 'Skeletons missing most of their limbs. Two or three of them share one cup.');
   ENEMIES.remnants.sig = 'pregnant'; ENEMIES.remnants.drop = 'pregnant'; ENEMIES.remnants.group = { min: 2, max: 3, dice: 2 };
-  ENEMIES.robber = E('Grave Robber', 4, 0.55, [34, 46], 'fight', 'hood', '#8a8a62', '#4a4a30', '#e8c34a', 'Digs up the dead and pays the table with what he finds.');
+  ENEMIES.robber = E('Grave Robber', 4, 0.55, [26, 36], 'fight', 'hood', '#8a8a62', '#4a4a30', '#e8c34a', 'Digs up the dead and pays the table with what he finds.');
   ENEMIES.robber.sig = 'haggler'; ENEMIES.robber.drop = 'haggler';
   ENEMIES.zealot = E('Ardent Zealot', 4, 0.62, [18, 26], 'fight', 'hood', '#4a3a2a', '#c9a43c', '#f0d24a', 'So sure of his dark god that pain is only another prayer.');
   ENEMIES.zealot.sig = 'optimist'; ENEMIES.zealot.drop = 'optimist'; ENEMIES.zealot.ecstasy = 0.1;
@@ -5919,7 +5919,7 @@ body.spk-mead .foe:not(.slain) .portbtn:not(.spelltgt) { animation: tgtglow .55s
   ENEMIES.hellion.sig = 'pregnant'; ENEMIES.hellion.sigFrac = 0.5; ENEMIES.hellion.drop = 'pregnant'; ENEMIES.hellion.group = { min: 2, max: 3, dice: 2 };
   ENEMIES.pitdicer = E('Pit Dicer', 5, 0.7, [28, 38], 'fight', 'goblin', '#8a3a2a', '#e0b04a', '#ffd35c', 'Carves eight-sided dice from demon horn. They land on wild more often than they should.');
   ENEMIES.pitdicer.sig = 'poly'; ENEMIES.pitdicer.sigFrac = 1; ENEMIES.pitdicer.drop = 'poly';
-  ENEMIES.hulk = E('Hulking Demon', 9, 0.72, [46, 60], 'fight', 'ogre', '#8a2a2a', '#3a1210', '#ff6a3a', 'A wall of horn and muscle, and unlike the brutes upstairs it knows exactly how to play.');
+  ENEMIES.hulk = E('Hulking Demon', 7, 0.72, [46, 60], 'fight', 'ogre', '#8a2a2a', '#3a1210', '#ff6a3a', 'A wall of horn and muscle, and unlike the brutes upstairs it knows exactly how to play.');
   ENEMIES.hulk.sig = 'weighted'; ENEMIES.hulk.sigFrac = 0.4; ENEMIES.hulk.drop = 'weighted';
   ENEMIES.cardsharp = E('Demonic Cardsharp', 5, 0.78, [30, 42], 'fight', 'dealer', '#b8323c', '#1a1218', '#ffd35c', 'Quick hands, quicker horns. Your deck is never quite where you left it.');
   ENEMIES.cardsharp.dropRandom = true; ENEMIES.cardsharp.steal = 0.1;
@@ -6012,8 +6012,10 @@ body.spk-mead .foe:not(.slain) .portbtn:not(.spelltgt) { animation: tgtglow .55s
     { name: 'The House', blurb: 'The last table. The house always wins.', goldMul: 2.2, priceMul: 1.6,
       pools: [['imp', 'lootgob']], elites: [], boss: 'house' }
   ];
-  var LEVELS = [100, 250, 450, 700, 1000, 1350, 1750, 2200];
-  function xpFor(def) { if (def.id === 'dummy') return 1; var st = (S && S.player && S.player.ab && S.player.ab.study) || 0, mul = def.xpMul || 1; return Math.round(def.dice * Math.round(40 * mul) * (1 + 0.15 * st + 0.01 * webN('xp'))) + (def.kind === 'boss' ? Math.round(100 * mul) : 0); }
+  // XP needed for levels 2..30 (balance pass 2026-10-10: was 8 steps capped at level 9). Each step costs 50 more than the last.
+  var LEVELS = [100, 250, 450, 700, 1000, 1350, 1750, 2200, 2700, 3250, 3850, 4500, 5200, 5950, 6750, 7600, 8500, 9450, 10450, 11500, 12600, 13750, 14950, 16200, 17500, 18850, 20250, 21700, 23200];
+  var ELITE_XP = 1.5;   // elites are worth half as much XP again per die (balance pass 2026-10-10)
+  function xpFor(def) { if (def.id === 'dummy') return 1; var st = (S && S.player && S.player.ab && S.player.ab.study) || 0, mul = (def.xpMul || 1) * (def.kind === 'elite' ? ELITE_XP : 1); return Math.round(def.dice * Math.round(40 * mul) * (1 + 0.15 * st + 0.01 * webN('xp'))) + (def.kind === 'boss' ? Math.round(100 * mul) : 0); }
   // items: buff items you carry in three slots. (Seals are the upgrades you put on your dice.)
   var INV_SLOTS = 3, BAG_SLOTS = 3;
   // ======================= RETIRED: THE SATCHEL (2026-10-09) =======================
@@ -6028,12 +6030,12 @@ body.spk-mead .foe:not(.slain) .portbtn:not(.spelltgt) { animation: tgtglow .55s
     coin: { name: 'Lucky Coin', desc: 'Once per fight, flip one die back into the dark and reroll it for free.', base: 35, rar: 'common' },
     salts: { name: 'Smelling Salts', desc: 'One use. When you are down to 1 HP, the stench drags you back: recover 1 HP.', base: 30, rar: 'common' },
     tin: { name: 'Tin Charm', desc: 'Every kill teaches you something. Gain 5 extra XP for every enemy die you defeat.', base: 30, rar: 'common' },
-    pouch: { name: 'Loaded Pouch', desc: 'Scraped from the dead. Gain 5 extra gold after every fight.', base: 30, rar: 'common' },
+    pouch: { name: 'Loaded Pouch', desc: 'Scraped from the dead. Gain 5 extra gold after every fight (more on deeper floors).', base: 30, rar: 'common' },
     peek: { name: 'Spyglass', desc: '+1 peek per fight. See what the table hides.', base: 35, rar: 'common' },
     reroll: { name: 'Lucky Charm', desc: '+1 reroll per fight. Tempt fate once more.', base: 60, rar: 'uncommon' },
     satchel: { name: 'Bottomless Cup', desc: 'Your cup can hold 2 more dice. Do not ask what it was made from.', base: 70, rar: 'rare' },
     edge: { name: 'Headsman’s Edge', desc: 'Whenever you wound an enemy, there is a 10% chance the blade falls twice (double damage).', base: 100, rar: 'rare' },
-    hook: { name: 'Grave Robber’s Hook', desc: 'Enemies are twice as likely to drop their seal.', base: 90, rar: 'rare' },
+    hook: { name: 'Grave Robber’s Hook', desc: 'Enemies are twice as likely to drop their seal.', base: 60, rar: 'rare' },
     potion: { name: 'Healing Potion', desc: 'Drink it in a fight to bring back 2 fallen dice. One use.', base: 25, rar: 'common', start: true },
     ring: { name: 'Cutthroat’s Ring', desc: 'A thief’s keepsake. Whenever you wound an enemy, there is a 5% chance the blow lands twice (double damage).', base: 25, rar: 'common', start: true },
     gauntlet: { name: 'Battered Gauntlet', desc: 'A fighter’s keepsake. Each time an enemy would wound you, there is a 5% chance you turn it aside and take no damage.', base: 25, rar: 'common', start: true },
@@ -6044,17 +6046,17 @@ body.spk-mead .foe:not(.slain) .portbtn:not(.spelltgt) { animation: tgtglow .55s
     eyeglass: { name: 'Broken Eyeglass', desc: 'Drag it onto an enemy die in a fight to peer through the crack and see what it shows. One use.', base: 20, rar: 'common' },
     rend: { name: 'Soul Rend', desc: 'Created whenever your roll adds up to 50 or more. Tear one enemy die out of play for good and steal its seals.', base: 0, rar: 'epic' },
     apple: { name: 'Apple', desc: 'Found in your satchel. Drag it onto your portrait to eat it and restore 1 fallen die.', base: 10, rar: 'common' },
-    armour: { name: 'Iron Plate', desc: 'Throw it on in a fight to gain 2 armour. Each point of armour blocks 1 damage. Used up when played.', base: 40, rar: 'uncommon' },
+    armour: { name: 'Iron Plate', desc: 'Throw it on in a fight to gain 2 armour. Each point of armour blocks 1 damage. Used up when played.', base: 30, rar: 'uncommon' },
     glass: { name: 'Looking Glass', desc: 'Pass the buck: the enemy must bid again instead of you. Played on the enemy\u2019s turn it banks one more pass for later. One use.', base: 20, rar: 'common' },
     mead: { name: 'Mead', desc: 'Drink it in a fight: the enemy’s next bid will be for the wrong face. One use.', base: 45, rar: 'uncommon' },
-    xp: { name: 'XP Drought', desc: 'Drink it in a fight to gain 100 XP instantly. One use.', base: 55, rar: 'uncommon' },
+    xp: { name: 'XP Drought', desc: 'Drink it in a fight to gain 100 XP for every floor you have reached. One use.', base: 25, rar: 'uncommon' },
     frenzy: { name: 'Blood Frenzy', desc: 'Berserk a single time: lose 1 die, and every attack you land this fight hits harder. Used up when played.', base: 90, rar: 'epic' },
-    razor: { name: 'Rusty Razor', desc: 'Inflict 1 bleed on an enemy: it loses a die every 3 rounds. Used up when played.', base: 40, rar: 'uncommon' },
+    razor: { name: 'Rusty Razor', desc: 'Inflict 1 bleed on an enemy: it loses a die every 3 rounds. Used up when played.', base: 25, rar: 'uncommon' },
     serrated: { name: 'Serrated Knife', desc: 'Inflict 2 bleed on an enemy: it loses 2 dice every 3 rounds. Used up when played.', base: 70, rar: 'rare' },
     bandage: { name: 'Bandage', desc: 'Wrap your wounds in a fight. Stops all of your bleeding. One use.', base: 25, rar: 'common' },
-    smoke: { name: 'Smoke Bomb', desc: 'Throw it in a fight. The next call is made through the smoke, and you take no damage from it. One use.', base: 25, rar: 'common' },
+    smoke: { name: 'Smoke Bomb', desc: 'Throw it in a fight. The next call is made through the smoke, and you take no damage from it. One use.', base: 35, rar: 'common' },
     sword: { name: 'Bloodsworn Blade', desc: 'Every time you land a critical strike, your max HP rises by 1 (you gain a die). The blade drinks what it cuts.', base: 130, rar: 'epic' },
-    skullcap: { name: 'Skullcap', desc: 'A dented iron cap. Every critical hit against you deals only 1 damage.', base: 90, rar: 'rare' },
+    skullcap: { name: 'Skullcap', desc: 'A dented iron cap. Every critical hit against you deals only 1 damage.', base: 110, rar: 'rare' },
     pendant: { name: 'Gambler’s Pendant', desc: 'Every reward and shop slot has a 10% chance to turn epic. Something whispers through it.', base: 120, rar: 'epic' }
   };
   var ITEM_ORDER = ['whetstone', 'coin', 'salts', 'tin', 'pouch', 'satchel', 'edge', 'hook', 'doublet', 'pendant', 'skullcap', 'knife', 'bleach', 'eyeglass', 'smoke', 'bandage', 'armour', 'razor', 'serrated', 'frenzy', 'glass', 'mead', 'xp', 'sword'];
@@ -6070,11 +6072,11 @@ body.spk-mead .foe:not(.slain) .portbtn:not(.spelltgt) { animation: tgtglow .55s
     armour: { txt: 'Gain 2 armour. Each point blocks 1 damage.', fl: 'Heavy. Ugly. Worth it.', type: 'Target', key: 'armour' },
     mead: { txt: 'The enemy’s next bid is for the wrong face.', fl: 'Sweet, strong, and not for sharing.', type: 'Target', key: 'mead' },
     glass: { txt: 'Pass the buck now, or bank a pass.', fl: 'Your move? Look again.', type: 'Self' },
-    xp: { txt: 'Gain 100 XP instantly.', fl: 'A dry, bitter lesson.', type: 'Self' },
+    xp: { txt: 'Gain 100 XP per floor.', fl: 'A dry, bitter lesson.', type: 'Self' },
     frenzy: { txt: 'Berserk once: lose a die, hit harder this fight.', fl: 'Pain is only a price.', type: 'Self' },
     razor: { txt: '1 bleed: the foe loses a die every 3 rounds.', fl: 'Tetanus is a kind of patience.', type: 'Target', key: 'razor' },
     serrated: { txt: '2 bleed: the foe loses 2 dice every 3 rounds.', fl: 'It does not cut. It tears.', type: 'Target', key: 'serrated' },
-    rend: { txt: 'Destroy an enemy die and steal its seals.', fl: 'Born from a roll over 30.', type: 'Spell', key: 'spell' }
+    rend: { txt: 'Destroy an enemy die and steal its seals.', fl: 'Born from a roll of 50 or more.', type: 'Spell', key: 'spell' }
   };
   function isCard(id) { return CARD_IDS.indexOf(id) > -1; }
   function deckOf(p) { p = p || S.player; if (!p.deck) p.deck = []; return p.deck; }
@@ -6159,14 +6161,14 @@ body.spk-mead .foe:not(.slain) .portbtn:not(.spelltgt) { animation: tgtglow .55s
   }
   function kindTag(key) { var k = kindOf(key); return k ? '<span class="kind kind-' + k + '">' + (k === 'item' ? (isCard(key) ? 'Card' : 'Relic') : 'Seal') + '</span>' : ''; }
   function kindCls(key) { var k = kindOf(key); return k ? ' k-' + k : ''; }
-  var MAX_DICE = 18;
+  var MAX_DICE = 16;   // three rows of six with the Bottomless Cup (+2)
   function maxDice() { return MAX_DICE + (itm('satchel') ? 2 : 0); }
   var ABIL = {
     peek: { name: 'Carrion Eye', desc: '+1 peek per fight. Look at one of the enemy’s dice.', max: 3 },
     reroll: { name: 'Bone Shake', desc: '+1 reroll per fight.', max: 3 },
     crit: { name: 'Deadly Aim', desc: 'Your critical strikes deal one additional damage', max: 1 },
     wind: { name: 'Stubborn Pulse', desc: 'Recover 1 HP after each fight.', max: 2 },
-    plunder: { name: 'Plunder', desc: 'Earn 2 extra gold for every enemy die you knock out.', max: 2 },
+    plunder: { name: 'Plunder', desc: 'Earn 1 extra gold for every enemy die you knock out.', max: 2 },
     hardy: { name: 'Fortify', desc: 'Roll 2 dice. On 8+, gain 1 +max.', max: 2 },
     grave: { name: 'Grave Robber', desc: 'The dead give up their spoils more easily. +10% ' + RARIC + '.', max: 3 },
     study: { name: 'Quick Study', desc: 'Every lesson the dungeon teaches sticks. Gain 15% more XP from fights.', max: 3 }
@@ -6180,9 +6182,9 @@ body.spk-mead .foe:not(.slain) .portbtn:not(.spelltgt) { animation: tgtglow .55s
   // ---------- meta progression (kept between runs) ----------
   var M = { points: 0, cpoints: 0, total: 0, owned: {}, saved: 0 };
   var CLASSES = {
-    fighter: { name: 'Fighter', art: 'fighter', c1: '#8d96a3', c2: '#5a4a3a', eye: '#e8c34a', blurb: 'A scarred sellsword who trusts steel over luck. Earns a skill point with every level, to spend on shield or blade. Holds up to 18 dice.' },
-    cleric: { name: 'Cleric', art: 'cleric', c1: '#e6c7a0', c2: '#f0ead6', eye: '#6fb6e8', blurb: 'A fallen priest who still hears the gods. Mends a little after every battle, then walks the path of blessing or the path of wrath. Holds up to 18 dice.' },
-    thief: { name: 'Thief', art: 'thief', c1: '#d9b48a', c2: '#4a6a4a', eye: '#e8c34a', blurb: 'A cutpurse who learns to take 50% more gold from everything (first skill, 1 point). Steals from the foe, or lets it bleed. Holds up to 18 dice.' }
+    fighter: { name: 'Fighter', art: 'fighter', c1: '#8d96a3', c2: '#5a4a3a', eye: '#e8c34a', blurb: 'A scarred sellsword who trusts steel over luck. Earns a skill point with every level, to spend on shield or blade. Holds up to 16 dice.' },
+    cleric: { name: 'Cleric', art: 'cleric', c1: '#e6c7a0', c2: '#f0ead6', eye: '#6fb6e8', blurb: 'A fallen priest who still hears the gods. Mends a little after every battle, then walks the path of blessing or the path of wrath. Holds up to 16 dice.' },
+    thief: { name: 'Thief', art: 'thief', c1: '#d9b48a', c2: '#4a6a4a', eye: '#e8c34a', blurb: 'A cutpurse who learns to take 50% more gold from everything (first skill, 1 point). Steals from the foe, or lets it bleed. Holds up to 16 dice.' }
   };
   function pts() { return (S && S.sp) || 0; }
   function addPts(c, n) { S.sp = (S.sp || 0) + n; }
@@ -6203,7 +6205,7 @@ body.spk-mead .foe:not(.slain) .portbtn:not(.spelltgt) { animation: tgtglow .55s
     rebuke: { cls: 'cleric', name: 'Rebuke', desc: 'When an enemy wrongly calls you a liar, it takes 1 extra damage.', cost: 2, req: 'smite' },
     judgement: { cls: 'cleric', name: 'Divine Judgement', desc: 'When you correctly call an enemy a liar, it takes 4 damage. Your Call liar button blazes gold.', cost: 3, req: 'rebuke' },
     mercenary: { cls: 'thief', name: 'Mercenary', desc: 'You get 50% more coins from everything the dungeon gives you.', cost: 1, req: null },
-    pickpocket: { cls: 'thief', name: 'Pickpocket', desc: 'Each time you wound an enemy, you gain 10 gold.', cost: 2, req: 'mercenary' },
+    pickpocket: { cls: 'thief', name: 'Pickpocket', desc: 'Each time you wound an enemy, you gain 5 gold (more on deeper floors).', cost: 2, req: 'mercenary' },
     lightfingers: { cls: 'thief', name: 'Light Fingers', desc: 'Each time you wound an enemy, you steal one seal from its dice and add it to one of yours.', cost: 2, req: 'pickpocket' },
     heist: { cls: 'thief', name: 'Heist', desc: 'Each time you land a critical strike, you steal a die from the enemy and add it to your cup.', cost: 4, req: 'lightfingers' },
     bleed1: { cls: 'thief', name: 'Bleed', desc: 'When you wound an enemy, it starts bleeding and loses 1 die every 3 rounds. Bleeding does not stack.', cost: 2, req: 'mercenary' },
@@ -6283,6 +6285,8 @@ body.spk-mead .foe:not(.slain) .portbtn:not(.spelltgt) { animation: tgtglow .55s
   var EVENT_TYPES = ['gambler', 'altar', 'goblin', 'chest', 'idol', 'smith', 'fountain', 'pawn', 'peddler', 'tattooist', 'anvil', 'slots', 'scratch', 'blackjack', 'scale', 'hush', 'bank', 'paint', 'forge', 'cardsharp'];
   var EVENT_GOLD = { cardsharp: 1, gambler: 1, chest: 1, smith: 1, slots: 1, blackjack: 1, scale: 1, bank: 1 };
   var SLOT_COST = 30;
+  function scratchPay(n) { return Math.round(n * floorCfg().goldMul); }   // scratch card prizes: 25 (cherries) and 60 (bells) on floor 1
+  var BANK_RATE = 1.5;   // the Bone Bank pays back this much on the next floor (was 2)
   // ---------- the dungeon: free-roam rooms joined by roads (coordinates are pixels of the 1024x572 floor art) ----------
   // n: id -> [x, y, vaultTier (1 bronze, 2 silver, 3 gold), fixedType]; e: [a, b, optional road waypoints]
   var FMAPS = {
@@ -6379,11 +6383,13 @@ body.spk-mead .foe:not(.slain) .portbtn:not(.spelltgt) { animation: tgtglow .55s
   function makeFloor(num) {
     if (num >= FLOORS.length) { var f0 = makeFloorLine(num); f0.mh = 572; return f0; }
     var cfg = FLOORS[num - 1], deck = shuffle(EVENT_TYPES), RW = 8, mh = MAPTOPY + (RW + 2) * MAPSTEP + MAPBOTY;
+    // the roll-low events (Penitent's Scales, Hushed Vault) are a bad bet with plain dice, so they never appear on floor 1
+    var noLow = function (t) { return num === 1 && (t === 'scale' || t === 'hush'); };
     function takeEv(noGold, noHeal) {
       if (!deck.length) deck = shuffle(EVENT_TYPES);
       var k = -1, j;
-      for (j = 0; j < deck.length; j++) { if (deck[j] !== 'slots' && deck[j] !== 'chest' && (!noGold || !EVENT_GOLD[deck[j]]) && !(noHeal && deck[j] === 'fountain')) { k = j; break; } }
-      if (k < 0) return pick(EVENT_TYPES.filter(function (t) { return t !== 'slots' && t !== 'chest' && !EVENT_GOLD[t] && !(noHeal && t === 'fountain'); }));
+      for (j = 0; j < deck.length; j++) { if (deck[j] !== 'slots' && deck[j] !== 'chest' && !noLow(deck[j]) && (!noGold || !EVENT_GOLD[deck[j]]) && !(noHeal && deck[j] === 'fountain')) { k = j; break; } }
+      if (k < 0) return pick(EVENT_TYPES.filter(function (t) { return t !== 'slots' && t !== 'chest' && !noLow(t) && !EVENT_GOLD[t] && !(noHeal && t === 'fountain'); }));
       return deck.splice(k, 1)[0];
     }
     var nodes = [], byId = {}, edges = [], rows = [], cols = [], r, i;
@@ -6464,7 +6470,9 @@ body.spk-mead .foe:not(.slain) .portbtn:not(.spelltgt) { animation: tgtglow .55s
     });
     var cp = pick(freeRooms(5, 8)); if (cp) { cp.type = 'camp'; cp.fix = 'camp'; }
     if (Math.random() < 0.6) { cp = pick(freeRooms(2, 5)); if (cp) { cp.type = 'camp'; cp.fix = 'camp'; } }
-    shuffle(freeRooms(2, 6)).slice(0, num >= 3 ? 2 : 1).forEach(function (n) { n.type = 'shop'; n.fix = 'shop'; });
+    // floor 1's shop sits on row 6, so you arrive with something to spend (balance pass 2026-10-10)
+    var shopRooms = num === 1 ? freeRooms(6, 6) : freeRooms(2, 6); if (!shopRooms.length) shopRooms = freeRooms(4, 6);
+    shuffle(shopRooms).slice(0, num >= 3 ? 2 : 1).forEach(function (n) { n.type = 'shop'; n.fix = 'shop'; });
     lane.forEach(function (n) {
       if (n.fix) return;
       if (n.row >= 2 && Math.random() < 0.3) { n.type = 'event'; n.ev = takeEv(num === 1 && n.row < 5, num === 1 && n.row <= 3); n.hid = Math.random() < 0.4; }
@@ -6623,7 +6631,7 @@ body.spk-mead .foe:not(.slain) .portbtn:not(.spelltgt) { animation: tgtglow .55s
     if (n.ambushed) { n.ambushed = false; S.event = newEvent(n.ev === 'goblin' && S.pact ? 'fountain' : n.ev); S.screen = 'event'; render(); return; }   // the goblin ambush is over: the room's own encounter is still waiting
     var wasDone = n.done; n.done = true; S.cur = n.id; S.event = null; S.bankNote = 0; S.backAsk = null;
     if (n.id === 'D' && !S.dayOn) { S.dayOn = true; S.day = 0; }   // the days start counting once the dummy is behind you
-    if (n.type === 'boss') { S.screen = 'shop'; S.finalShop = true; S.shopMsg = 'The floor is clear. Spend what you earned.'; S.shopRerolls = 0; S.shopSel = pickSpoils(3); render(); return; }
+    if (n.type === 'boss') { heal(S.player, S.player.dice.length); /* a boss win heals you fully */ S.screen = 'shop'; S.finalShop = true; S.shopMsg = 'The floor is clear. Spend what you earned.'; S.shopRerolls = 0; S.shopSel = pickSpoils(3); render(); return; }
     S.screen = 'map';
     if (!(n.id === 'D' && !wasDone)) dayEnd();   // every stop uses up the day, camps too
     render();
@@ -6638,7 +6646,7 @@ body.spk-mead .foe:not(.slain) .portbtn:not(.spelltgt) { animation: tgtglow .55s
     closeDeck(); S.shopSel = S.shopSel; S.event = null; completeNode();
   }
   function descend() {
-    S.floorNum++; if (S.bank) { S.bankNote = S.bank * 2; S.player.gold += S.bank * 2; S.bank = 0; sfx('coin'); } else S.bankNote = 0; var oldSl = S.shopLevel || 0; S.shopLevel = Math.min(LEVEL_COSTS.length, oldSl + 1); S.shopLuck = (S.shopLuck || 0) + 5 * (S.shopLevel - oldSl); heal(S.player, 2); S.floor = makeFloor(S.floorNum); initFloorState(); S.finalShop = false; S.screen = 'map'; render();
+    S.floorNum++; if (S.bank) { S.bankNote = Math.round(S.bank * BANK_RATE); S.player.gold += S.bankNote; S.bank = 0; sfx('coin'); } else S.bankNote = 0; var oldSl = S.shopLevel || 0; S.shopLevel = Math.min(LEVEL_COSTS.length, oldSl + 1); S.shopLuck = (S.shopLuck || 0) + 5 * (S.shopLevel - oldSl); heal(S.player, restHeal()); S.floor = makeFloor(S.floorNum); initFloorState(); S.finalShop = false; S.screen = 'map'; render();
   }
 
   // ---------- combat ----------
@@ -7179,7 +7187,7 @@ body.spk-mead .foe:not(.slain) .portbtn:not(.spelltgt) { animation: tgtglow .55s
   }
   function thiefWound(part, crit) {
     var pt = C.en.parts[part], notes = [], t;
-    if (own('pickpocket')) { S.player.gold += 10; notes.push('<span class="gold">Pickpocket: +10 gold.</span>'); }
+    if (own('pickpocket')) { var ppg = Math.round(5 * floorCfg().goldMul); S.player.gold += ppg; notes.push('<span class="gold">Pickpocket: +' + ppg + ' gold.</span>'); }
     if (own('lightfingers')) { t = stealMod(part); if (t) notes.push('<span class="crit">' + t + '</span>'); }
     if (own('bleed1') && !pt.bleed && pt.n > 0) { pt.bleed = { start: C.round }; notes.push('<span class="crit">' + pt.name + ' is bleeding.</span>'); }
     if (crit && own('heist')) notes.push(addMaxDie(S.player) ? '<span class="crit">Heist: you steal a die.</span>' : 'Cup full: stolen die lost.');
@@ -7850,6 +7858,11 @@ body.spk-mead .foe:not(.slain) .portbtn:not(.spelltgt) { animation: tgtglow .55s
     if (C && C.phase === 'bid' && C.turn === 'e') { timer = setTimeout(enemyAct, 1300 + rnd(700)); setTimeout(function () { if (C && C.phase === 'bid' && C.turn === 'e') ebidThink(); }, 260); }
   }
   var EASY_FOES = ['dummy'];
+  // enemy sharpness is set per floor and per kind (balance pass 2026-10-10), not per enemy. Personalities carry the flavour.
+  // OWN_SKILL foes keep their own number: the dummy, the Loot Goblin and the big drunk elites are meant to play badly.
+  var FLOOR_SKILL = { 1: { fight: 0.30, elite: 0.45, boss: 0.55 }, 2: { fight: 0.50, elite: 0.65, boss: 0.75 }, 3: { fight: 0.70, elite: 0.75, boss: 0.80 }, 4: { fight: 0.85, elite: 0.85, boss: 0.90 } };
+  var OWN_SKILL = ['dummy', 'lootgob', 'brute', 'fleshgolem'];
+  function foeSkill(def) { if (!def) return 0.3; if (def.train || OWN_SKILL.indexOf(def.id) > -1) return def.skill; var t = FLOOR_SKILL[S.floorNum] || FLOOR_SKILL[4]; return Math.min(0.95, t[def.kind] || t.fight); }
   // AI overrides stack, weakest first: the foe's own def.ai, then the training room's global switch (AIG, Dev tools > Training room > "every enemy"), then a training fight's own knobs (C.aiOver)
   var AIG = { on: false, knobs: {}, trace: false };
   try { var aig0 = JSON.parse(localStorage.getItem('lc_aiknobs') || 'null'); if (aig0 && typeof aig0 === 'object') { AIG.knobs = aig0.knobs || {}; AIG.on = !!aig0.on; } } catch (e) { }
@@ -7870,7 +7883,7 @@ body.spk-mead .foe:not(.slain) .portbtn:not(.spelltgt) { animation: tgtglow .55s
     C.speaker = sp;
     var seen = [], hidden = [];
     C.pv.forEach(function (x) { if (x.spied) seen.push(x.val); else hidden.push(x); });
-    var sdef = ps[sp].def, effSkill = sdef.moody ? (C.wcSharp ? 0.6 : 0.07) : Math.min(1, sdef.skill + 0.12 + (S.floorNum === 4 ? 0.1 : 0) - (EASY_FOES.indexOf(sdef.id) > -1 ? 0.025 : 0));
+    var sdef = ps[sp].def, effSkill = sdef.moody ? (C.wcSharp ? 0.6 : 0.07) : foeSkill(sdef);
     var P = aiParams(effSkill, aiOverrides(sdef));
     var alive = function (v, i) { return !C.en.smote[i] && !(C.en.bleached && C.en.bleached[i]); }, peeked = [];
     C.en.dice.forEach(function (v, i) { if (alive(v, i) && C.en.peeked[i]) peeked.push(v); });
@@ -8159,7 +8172,7 @@ body.spk-mead .foe:not(.slain) .portbtn:not(.spelltgt) { animation: tgtglow .55s
     }
     if (hit && hit.spike) hurtEnemy(hit.spike, part);
     var removed = Math.max(0, enBefore - C.en.n);
-    if (loser === 'e' && removed > 0 && S.player.ab.plunder) { var pg = removed * 2 * S.player.ab.plunder; S.player.gold += pg; notes.push('<span class="gold">Plunder: +' + pg + ' gold.</span>'); C.log.push('Plunder: +' + pg + ' gold.'); }
+    if (loser === 'e' && removed > 0 && S.player.ab.plunder) { var pg = removed * S.player.ab.plunder; S.player.gold += pg; notes.push('<span class="gold">Plunder: +' + pg + ' gold.</span>'); C.log.push('Plunder: +' + pg + ' gold.'); }
     if (loser === 'e') notes = notes.concat(thiefWound(part, kind === 'exact' && ok && caller === 'p'));
     if (loser === 'e' && kind === 'exact' && ok && caller === 'p' && itm('sword')) { if (addMaxDie(S.player)) { notes.push('<span class="crit">Bloodsworn Blade: max HP +1.</span>'); C.log.push('The Bloodsworn Blade drinks deep: max HP +1.'); } }
     if (gob && gob.kind === 'stun') C.pv.forEach(function (x) { if (!x.baby && x.i === gob.di) { x.spied = true; x.marked = true; x.stunned = true; } });
@@ -8492,8 +8505,8 @@ body.spk-mead .foe:not(.slain) .portbtn:not(.spelltgt) { animation: tgtglow .55s
   }
   function useXpCard() {
     if (!C || C.phase !== 'bid' || C.target || !itm('xp')) return;
-    removeCard('xp'); S.player.xp += 100; sfx('levelup');
-    C.log.push('You drink the XP Drought. It is bitter, and it teaches. +100 XP.'); render();
+    var dxp = 100 * (S.floorNum || 1); removeCard('xp'); S.player.xp += dxp; sfx('levelup');
+    C.log.push('You drink the XP Drought. It is bitter, and it teaches. +' + dxp + ' XP.'); render();
   }
   function useBandage() {
     if (!C || C.phase !== 'bid' || C.target || !itm('bandage') || !C.pbleed) return;
@@ -8545,7 +8558,10 @@ body.spk-mead .foe:not(.slain) .portbtn:not(.spelltgt) { animation: tgtglow .55s
     C.log.push('You rattle ' + plural(moved.length, 'die') + ' in the cup and throw them again.'); render();
   }
 
-  var DROP_BASE = 0.25; // base seal-drop chance; future boosts add onto this
+  // from floor 3 down, a foe whose own seal is common or uncommon drops one of the rare/epic seals instead (balance pass 2026-10-10)
+  var LATE_SEALS = ['weighted', 'optimist', 'poly', 'healer', 'pregnant', 'cogent'];
+  function lateDrop(m) { if (!m || S.floorNum < 3 || LATE_SEALS.indexOf(m) > -1) return m; var c = LATE_SEALS.filter(anyApplicable); return c.length ? pick(c) : m; }
+  var DROP_BASE = 1; // seal-drop chance (balance pass 2026-10-10: every foe with a seal drops it; was 0.25). The Hook and drop luck do nothing while this is 1.
   function dropChance(def) { if (def && def.id === 'dummy') return 1; return Math.min(1, (DROP_BASE + shopRarity() / 100) * (itm('hook') ? 2 : 1)); }
   function afterCombat() {
     if (C && C.train) { trainEnd(C.phase === 'won'); return; }   // a training-room fight: nothing is won, lost or kept
@@ -8554,7 +8570,7 @@ body.spk-mead .foe:not(.slain) .portbtn:not(.spelltgt) { animation: tgtglow .55s
     if (C.phase === 'lost') { S.endKind = 'dead'; S.screen = 'end'; render(); return; }
     var rp = repBreakdown(def), xp = rp.xp.total, gold = rp.gold.total, oldGold = p.gold;
     p.xp += xp; p.gold += gold; AUD.lastGold = p.gold; XP.hold = true; M.total++; S.runWins = (S.runWins || 0) + 1; S.runKills = (S.runKills || 0) + ((C.en && C.en.parts && C.en.parts.length) || 1);
-    var debt = 0; if (S.owed) { debt = addDice(p, S.owed); S.owed = 0; }
+    var debt = 0; if (S.owed && def.kind !== 'fight') { debt = addDice(p, S.owed); S.owed = 0; }   // the pawnbroker pays after your next elite or boss win
     var healed = p.ab.wind ? heal(p, p.ab.wind) : 0;
     if (own('mending')) healed += heal(p, 1);
     var before = p.level; S.pending = 0;
@@ -8563,8 +8579,9 @@ body.spk-mead .foe:not(.slain) .portbtn:not(.spelltgt) { animation: tgtglow .55s
     saveMeta();
     S.lvlShown = false; S.victory = { rep: rp, anim: 'idle', oldGold: oldGold, name: def.name, xp: xp, gold: gold, healed: healed, leveled: p.level > before, hpUp: hpUp, gained: p.level - before, big: def.kind !== 'fight' || vaultTier() > 0, debt: debt };
     if (S.victory.big) { S.victory.chest = { opts: makeRewardOpts(def), taken: false }; S.rewardOpts = S.victory.chest.opts; }
-    if (def.drop && anyApplicable(def.drop) && Math.random() < dropChance(def)) {
-      S.victory.drop = def.drop;
+    var dropId = lateDrop(def.drop);
+    if (dropId && anyApplicable(dropId) && Math.random() < dropChance(def)) {
+      S.victory.drop = dropId;
       var fl = fightLuck(def);
       if (fl > 0 && Math.random() < fl / 100) { var up = drawByRarity(MOD_ORDER.filter(anyApplicable), 1, function (m) { return m; }, 0, fl * 2)[0]; if (up) S.victory.drop = up; }
     }
@@ -8573,7 +8590,7 @@ body.spk-mead .foe:not(.slain) .portbtn:not(.spelltgt) { animation: tgtglow .55s
     if (S.runWins === 2 && !owns('knife')) S.victory.loot = 'knife';
     if (S.runWins === 3) { var ci = ({ thief: 'ring', fighter: 'gauntlet', cleric: 'crown' })[S.cls || 'fighter']; S.victory.loot = (ci && !owns(ci)) ? [ci, 'mead'] : ['mead']; }
     // Looking Glass is meant to be easy to find: ~1 in 3 fights on floor 1 (about 2 per floor with the starting one), 1 in 4 later
-    if (def.id !== 'dummy' && def.kind === 'fight') { var gN = deckOf(p).filter(function (k) { return k === 'glass'; }).length, gCap = (S.floorNum === 1) ? 3 : 4; if (gN < gCap && deckOf(p).length < DECK_MAX && Math.random() < ((S.floorNum === 1) ? 0.3 : 0.25)) S.victory.loot = [].concat(S.victory.loot || [], ['glass']); }
+    if (def.id !== 'dummy' && def.kind === 'fight') { var gN = deckOf(p).filter(function (k) { return k === 'glass'; }).length, gCap = (S.floorNum === 1) ? 3 : 4; if (gN < gCap && deckOf(p).length < DECK_MAX && Math.random() < ((S.floorNum === 1) ? 0.2 : 0.15)) S.victory.loot = [].concat(S.victory.loot || [], ['glass']); }
     if (S.victory.loot) { var lt = [].concat(S.victory.loot), keepL = []; S.victory.slotIds = []; lt.forEach(function (lid) { if (isCard(lid)) keepL.push(lid); else if (!owns(lid)) { var tk = giveRelic(lid, { slot: true }); if (tk) S.victory.slotIds.push(tk.id); } }); S.victory.loot = keepL.length ? keepL : null; }
     S.screen = 'victory'; render();
   }
@@ -8671,18 +8688,19 @@ body.spk-mead .foe:not(.slain) .portbtn:not(.spelltgt) { animation: tgtglow .55s
     if (!def || def.id === 'dummy') return 0;
     return Math.max(0, Math.round(shopRarity()));
   }
+  // an elite or boss chest always offers three different kinds: a seal, a relic and a card (balance pass 2026-10-10; it used to be three random picks
+  // from one big pool of gold, heals, dice, relics, cards and seals). If there is no seal your dice can take, or no relic left to find, gold fills the slot.
   function makeRewardOpts(def) {
-    var big = def.kind !== 'fight' || vaultTier() > 0, p = S.player, opts = [];
+    var big = def.kind !== 'fight' || vaultTier() > 0, opts = [], luck = fightLuck(def) + 10 * vaultTier();
     var healAmt = big ? 3 : 2, goldAmt = bonusGold((big ? 35 : 15) * floorCfg().goldMul * [1, 1.3, 1.8, 2.6][vaultTier()]);
-    var cands = [{ t: 'face', key: 'face' }, { t: 'gold', key: 'gold' }, { t: 'gold', key: 'goldU' }, { t: 'gold', key: 'goldR' }, { t: 'gold', key: 'goldE' }];
-    if (!canTattoo()) cands.shift();
-    if (hp(p) < p.dice.length) cands.push({ t: 'heal', key: 'heal' });
-    cands.push({ t: 'maxdie', key: 'maxdie' });
-    ITEM_ORDER.forEach(function (k) { if (isCard(k) || !itm(k)) cands.push({ t: 'item', key: k, item: k }); });
-    cands.push({ t: 'item', key: 'potion', item: 'potion' });
-    if (big) cands.push({ t: 'maxdie2', key: 'maxdie2' });
-    MOD_ORDER.forEach(function (m) { if (anyApplicable(m)) cands.push({ t: 'mod', key: m, mod: m }); });
-    drawByRarity(cands, 3, function (c) { return c.key; }, 0, fightLuck(def) + 10 * vaultTier()).forEach(function (c) { opts.push({ t: c.t, key: c.key, heal: healAmt, gold: Math.round(goldAmt * (GOLD_TIER[c.key] || 1)), mod: c.mod || null, item: c.item || null }); });
+    var one = function (list) { return list.length ? drawByRarity(list, 1, function (c) { return c.key; }, 0, luck)[0] : null; };
+    var seal = one(MOD_ORDER.filter(anyApplicable).map(function (m) { return { t: 'mod', key: m, mod: m }; }));
+    var relic = one(ITEM_ORDER.filter(function (k) { return !isCard(k) && !owns(k); }).map(function (k) { return { t: 'item', key: k, item: k }; }));
+    var cards = MERCH_IDS.map(function (k) { return { t: 'item', key: k, item: k }; }), card = one(cards);
+    if (!relic) { var c2 = one(cards.filter(function (c) { return !card || c.key !== card.key; })); relic = c2; }
+    [seal || { t: 'gold', key: 'goldU' }, relic || { t: 'gold', key: 'gold' }, card || { t: 'gold', key: 'gold' }].forEach(function (c) {
+      opts.push({ t: c.t, key: c.key, heal: healAmt, gold: Math.round(goldAmt * (GOLD_TIER[c.key] || 1)), mod: c.mod || null, item: c.item || null });
+    });
     return opts;
   }
   function capGold(n) { return bonusGold(40 * n * floorCfg().goldMul); }
@@ -8805,10 +8823,10 @@ body.spk-mead .foe:not(.slain) .portbtn:not(.spelltgt) { animation: tgtglow .55s
   function shopItems() {
     var p = S.player, items = [
       { id: 'heal', name: 'Healing Draught', desc: 'Recover 2 HP.', price: priceOf(20), ok: hp(p) < p.dice.length, why: 'Already at full strength.' },
-      { id: 'cup', name: 'Fill My Cup', desc: 'Permanently add 1 die to your cup.', price: priceOf(55), ok: p.dice.length < maxDice(), why: 'You cannot hold more than ' + maxDice() + ' dice.' },
-      { id: 'cup2', name: 'Your Cup Runneth Over', desc: 'Permanently add 2 dice to your cup.', price: priceOf(100), ok: p.dice.length < maxDice(), why: 'You cannot hold more than ' + maxDice() + ' dice.' }
+      { id: 'cup', name: 'Fill My Cup', desc: 'Permanently add 1 die to your cup.', price: priceOf(80), ok: p.dice.length < maxDice(), why: 'You cannot hold more than ' + maxDice() + ' dice.' },
+      { id: 'cup2', name: 'Your Cup Runneth Over', desc: 'Permanently add 2 dice to your cup.', price: priceOf(150), ok: p.dice.length < maxDice(), why: 'You cannot hold more than ' + maxDice() + ' dice.' }
     ];
-    items.push({ id: 'd20', name: 'The D20', desc: 'Permanently add a d20 to your cup. Every side above 6 is wild and scores its number. One per run.', price: priceOf(400), ok: !p.gotD20 && p.dice.length < maxDice(), why: p.gotD20 ? 'You already own the D20.' : 'You cannot hold more than ' + maxDice() + ' dice.' });
+    items.push({ id: 'd20', name: 'The D20', desc: 'Permanently add a d20 to your cup. Every side above 6 is wild and scores its number. One per run.', price: priceOf(220), ok: !p.gotD20 && p.dice.length < maxDice(), why: p.gotD20 ? 'You already own the D20.' : 'You cannot hold more than ' + maxDice() + ' dice.' });
     MOD_ORDER.forEach(function (m) { items.push({ id: m, name: MODS[m].name, desc: MODS[m].desc, price: priceOf(MODS[m].base * 1.5), ok: anyApplicable(m), why: 'None of your dice can take this.', mod: m }); });
     ITEM_ORDER.forEach(function (id) {
       var it = ITEMS[id], card = isCard(id), owned = !card && owns(id);
@@ -8822,6 +8840,7 @@ body.spk-mead .foe:not(.slain) .portbtn:not(.spelltgt) { animation: tgtglow .55s
     var picks = drawByRarity(src, n, function (x) { return x.id; }, S.shopLevel || 0, shopRarity()).map(function (x) { return x.id; });
     // one seal is always on the shelf, at a steep price
     if (picks.indexOf('glass') < 0 && shopItems().some(function (x) { return x.id === 'glass' && x.ok; })) picks[picks.length - 1] = 'glass'; // always one Looking Glass on the shelf
+    if (S.floorNum === 1 && picks.indexOf('heal') < 0) picks[0] = 'heal';   // floor 1 shelves always carry a Healing Draught
     var sig = shopItems().filter(function (x) { return x.mod && x.ok; });
     if (sig.length) picks.push(drawByRarity(sig, 1, function (x) { return x.id; }, S.shopLevel || 0, shopRarity())[0].id);
     return picks;
@@ -8876,8 +8895,8 @@ body.spk-mead .foe:not(.slain) .portbtn:not(.spelltgt) { animation: tgtglow .55s
         nodeTip: 'Give the goblin a die. When you would die, he returns and revives you to 4 dice, once. 10% of the time, he lies.' };
       case 'pawn': return { kind: 'goblin', title: 'The Pawnbroker', accept: 'Pawn a die',
         flavor: 'A skeleton behind a cluttered counter weighs a die in his bony fingers like a gem. His shop smells of tallow and teeth. He always collects, he says, and he always pays.',
-        offer: '<p>He takes <strong>one of your dice</strong> now. After the <strong>next fight you win</strong>, he adds <strong>2 dice</strong> to your cup. If you fall first, he keeps the die.</p>',
-        nodeTip: 'Pawn one die. After your next fight, you get 2 dice back.' };
+        offer: '<p>He takes <strong>one of your dice</strong> now. After the <strong>next elite or boss you beat</strong>, he adds <strong>2 dice</strong> to your cup. If you fall first, he keeps the die.</p>',
+        nodeTip: 'Pawn one die. After your next elite or boss win, you get 2 dice back.' };
       case 'peddler': return { kind: 'goblin', title: 'The Bone Peddler', accept: 'Make the trade',
         flavor: 'A stooped peddler leans on a cart of charms, tools and trinkets that all rattle faintly. Nothing on it was ever bought honestly. Everything on it is for sale.',
         offer: '<p>He will trade <strong>one of your dice</strong> for <strong>2 cards</strong>.</p>',
@@ -8887,7 +8906,7 @@ body.spk-mead .foe:not(.slain) .portbtn:not(.spelltgt) { animation: tgtglow .55s
         nodeTip: 'Tattoo a face of a die for free, or take a wild face and pay 1 HP.' };
       case 'scratch': return { kind: 'scratch', title: 'The Scratch Card',
         flavor: 'A grubby scratch card lies face-up on a stone altar, its foil already curling. Somebody scratched at it once and left in a hurry. Press down, hold, and rub the foil away.',
-        nodeTip: 'Scratch the card: match three for 50 or 100 gold. Three skulls cost you 1 HP.' };
+        nodeTip: 'Scratch the card: match three for ' + scratchPay(25) + ' or ' + scratchPay(60) + ' gold. Three skulls cost you 1 HP.' };
       case 'scale': return { kind: 'roll', low: true, title: 'The Penitent\u2019s Scales', hi: t.hi, lo: t.lo, SL: Math.round(25 * cfg.goldMul),
         flavor: 'A pair of bone scales hangs in the dark, one pan already heavy with somebody else\u2019s sins. Roll low and you weigh less than a feather, and the scales reward the light. Roll high and they weigh you in coin.',
         win: 'a free seal', lose: 'lose ' + Math.round(25 * cfg.goldMul) + ' gold, or a die if you are broke',
@@ -8897,8 +8916,8 @@ body.spk-mead .foe:not(.slain) .portbtn:not(.spelltgt) { animation: tgtglow .55s
         win: 'a free seal', lose: 'lose 1 die',
         nodeTip: 'Roll two dice. Roll LOW to sneak a free seal. Roll high and lose a die.' };
       case 'bank': return { kind: 'bank', title: 'The Bone Bank',
-        flavor: 'A skeleton teller stands before a rune-sealed vault door, counting teeth into little stacks. Leave any gold with him, and when you reach the next floor he hands back double. He has never once lost a depositor. Some say that is because none come back to complain.',
-        nodeTip: 'Deposit any amount of gold. When you reach the next floor, you get double back.' };
+        flavor: 'A skeleton teller stands before a rune-sealed vault door, counting teeth into little stacks. Leave any gold with him, and when you reach the next floor he hands back half as much again. He has never once lost a depositor. Some say that is because none come back to complain.',
+        nodeTip: 'Deposit any amount of gold. When you reach the next floor, you get it back with half as much again.' };
       case 'forge': return { kind: 'forge', title: 'The Forge',
         flavor: 'A dwarf-sized furnace roars in a side chamber, a hammer still ringing on the anvil beside it. Whoever was here has gone, but the iron is hot and the plates are ready. Pick a face and have it clad in steel.',
         nodeTip: 'Armour one die face for free. Whenever it is rolled, you gain 1 armour for that fight.' };
@@ -8910,7 +8929,7 @@ body.spk-mead .foe:not(.slain) .portbtn:not(.spelltgt) { animation: tgtglow .55s
         nodeTip: 'One hand of blackjack. Choose your wager. Blackjack pays 3 to 2.' };
       case 'slots': return { kind: 'slots', title: 'The Slot Machine',
         flavor: 'A slot machine squats in the dark, its bulbs flickering like dying stars. The lever is slick with something. Every pull costs ' + SLOT_COST + ' gold, and the house still loves you.',
-        nodeTip: 'Pull the lever for ' + SLOT_COST + ' gold. Win gold, an item, a seal or free spins. Or lose a die.' };
+        nodeTip: 'The first pull is free, then ' + SLOT_COST + ' gold a pull. Win gold, an item, a seal or free spins. Or lose a die.' };
       case 'anvil': return { kind: 'smith', hp: 1, title: 'The Blood Anvil',
         flavor: '',
         nodeTip: 'Three seals glow on the anvil. Hammer one onto a die, and the iron drinks 1 HP from you in payment.' };
@@ -8928,7 +8947,7 @@ body.spk-mead .foe:not(.slain) .portbtn:not(.spelltgt) { animation: tgtglow .55s
   function newEvent(type) {
     var info = eventInfo(type), ev = { type: type, info: info, step: info.kind === 'roll' ? 'pick' : 'main', sel: [], result: null, text: '', spins: 0, spinning: false };
     if (type === 'scratch') {
-      // three symbols under the foil: 10% three skulls (lose 1 HP), 30% a mixed row (nothing), 40% three cherries (50 gold), 20% three liberty bells (100 gold)
+      // three symbols under the foil: 10% three skulls (lose 1 HP), 30% a mixed row (nothing), 40% three cherries (25 gold), 20% three liberty bells (60 gold), both x the floor's gold multiplier (balance pass 2026-10-10; was 50 / 100)
       var rr = Math.random(), SY = ['cherry', 'bell', 'skull'];
       if (rr < 0.10) { ev.prize = 'skull'; ev.syms = ['skull', 'skull', 'skull']; }
       else if (rr < 0.40) { ev.prize = 'miss'; do { ev.syms = [pick(SY), pick(SY), pick(SY)]; } while (ev.syms[0] === ev.syms[1] && ev.syms[1] === ev.syms[2]); }
@@ -8936,10 +8955,11 @@ body.spk-mead .foe:not(.slain) .portbtn:not(.spelltgt) { animation: tgtglow .55s
       else { ev.prize = 'bell'; ev.syms = ['bell', 'bell', 'bell']; }
       ev.done = false;
     }
+    if (type === 'slots') ev.spins = 1;   // the first pull is on the house
     if (type === 'bank') { ev.dep = 0; S.pouchOpen = true; S.pouchAuto = true; }
-    if (type === 'cardsharp') { ev.offers = drawByRarity(MERCH_IDS.slice(), 3, function (k) { return k; }, S.shopLevel || 0, shopRarity()).map(function (id) { return { id: id, price: priceOf(ITEMS[id].base * 1.4), sold: false }; }); ev.msg = ''; }
+    if (type === 'cardsharp') { ev.offers = drawByRarity(MERCH_IDS.slice(), 3, function (k) { return k; }, S.shopLevel || 0, shopRarity()).map(function (id) { return { id: id, price: priceOf(ITEMS[id].base * 1.2), sold: false }; }); ev.msg = ''; }
     if (type === 'smith' || type === 'anvil') {
-      ev.offers = drawByRarity(MOD_ORDER.filter(anyApplicable), 3, function (m) { return m; }, S.shopLevel || 0, shopRarity()).map(function (m) { return { mod: m, price: type === 'anvil' ? 0 : Math.max(5, Math.round(priceOf(MODS[m].base) * 1.7 / 5) * 5) }; });
+      ev.offers = drawByRarity(MOD_ORDER.filter(anyApplicable), 3, function (m) { return m; }, S.shopLevel || 0, shopRarity()).map(function (m) { return { mod: m, price: type === 'anvil' ? 0 : Math.max(5, Math.round(priceOf(MODS[m].base) * 1.3 / 5) * 5) }; });
     }
     return ev;
   }
@@ -9081,8 +9101,8 @@ body.spk-mead .foe:not(.slain) .portbtn:not(.spelltgt) { animation: tgtglow .55s
   }
   function scratchDone(ev) {
     var p = S.player;
-    if (ev.prize === 'bell') { p.gold += 100; ev.text = '<span class="gold">Three liberty bells! +100 gold.</span>'; sfx('coin'); }
-    else if (ev.prize === 'cherry') { p.gold += 50; ev.text = '<span class="gold">Three cherries! +50 gold.</span>'; sfx('coin'); }
+    if (ev.prize === 'bell') { var sb = scratchPay(60); p.gold += sb; ev.text = '<span class="gold">Three liberty bells! +' + sb + ' gold.</span>'; sfx('coin'); }
+    else if (ev.prize === 'cherry') { var sc = scratchPay(25); p.gold += sc; ev.text = '<span class="gold">Three cherries! +' + sc + ' gold.</span>'; sfx('coin'); }
     else if (ev.prize === 'skull') { var kl = loseDice(1); ev.text = kl ? '<span class="bad">Three skulls. Something takes a bite out of you: you lose 1 HP.</span>' : '<span class="bad">Three skulls, but there is nothing left to take.</span>'; sfx('grumble'); }
     else if (ev.prize === 'miss') ev.text = 'The symbols do not match. Nothing happens.';
     else if (ev.prize === 'gold50') { p.gold += 50; ev.text = '<span class="gold">A winner! +50 gold.</span>'; }
@@ -9161,7 +9181,7 @@ body.spk-mead .foe:not(.slain) .portbtn:not(.spelltgt) { animation: tgtglow .55s
     p.gold -= b.bet; b.bet *= 2; b.doubled = true; b.you.push(b.deck.pop()); sfx('coin');
     if (bjTotal(b.you) > 21) bjEnd('lose'); else bjStand();
   }
-  var SLOT_ODDS = [['nothing', 0.40], ['lose', 0.15], ['gold', 0.20], ['item', 0.10], ['sigil', 0.10], ['spins', 0.05]];
+  var SLOT_ODDS = [['nothing', 0.40], ['lose', 0.10], ['gold', 0.25], ['item', 0.10], ['sigil', 0.10], ['spins', 0.05]];
   function slotRoll() { var r = Math.random(), acc = 0, k; for (k = 0; k < SLOT_ODDS.length; k++) { acc += SLOT_ODDS[k][1]; if (r < acc) return SLOT_ODDS[k][0]; } return 'nothing'; }
   function slotPull() {
     var ev = S.event, p = S.player;
@@ -9237,7 +9257,7 @@ body.spk-mead .foe:not(.slain) .portbtn:not(.spelltgt) { animation: tgtglow .55s
     p.dice.splice(i, 1);
     if (ev.type === 'pawn') {
       S.owed = (S.owed || 0) + 2;
-      ev.text = 'She pockets the die with a smile. <span class="good">After your next fight, 2 dice will be added to your cup.</span>'; ev.step = 'done'; render();
+      ev.text = 'She pockets the die with a smile. <span class="good">After the next elite or boss you beat, 2 dice will be added to your cup.</span>'; ev.step = 'done'; render();
     } else if (ev.type === 'peddler') {
       var ids = drawByRarity(MERCH_IDS.slice(), 2, function (k) { return k; }, S.shopLevel || 0, shopRarity());
       ev.text = 'He deals you your trade: <span class="good">' + ids.map(function (k) { return ITEMS[k].name; }).join(' and ') + '</span>.';
@@ -10209,8 +10229,10 @@ var BOSS_PORTRAITS = {"dummy":{"normal":"data:image/webp;base64,UklGRgwlAABXRUJQ
     var pbl = C.pbleed ? ' <span class="chip chip-blood">Bleeding: ' + plural(C.pbleed.amt || 1, 'die') + ' in ' + plural(3 - ((C.round - C.pbleed.start) % 3), 'round') + '</span>' : '', chmd = C.forced ? ' <span class="chip chip-charm">Charmed</span>' : '';
     var rollchips = pbl + chmd + '<span class="chip chip-total' + (pvTotal() >= REND_MIN ? ' hot' : '') + '" title="When your dice add up to 50 or more, the Soul Rend spell appears">Total ' + pvTotal() + '</span>' + '' + '' + (C.berserk ? ' <span class="chip chip-blood">Berserk</span>' : '') + (pp.chips || '');
     var me = '';
-    if (C.phase === 'roll') mine = S.player.dice.filter(function (d) { return d.up; }).map(function (d) { return '<span class="rollwait">' + sampleDie(d, 65) + '</span>'; }).join('');
-    if (WIDEUI) { var pq = {}; for (var kq in pp) pq[kq] = pp[kq]; pq.dice = '<div class="mycups cups' + (C.phase === 'roll' ? ' hudtok' : '') + '">' + mine + '</div>'; pq.chips = rollchips; pq.abil = (typeof abil === 'string') ? abil : ''; me = hudBarHTML(pq); rolled = ''; }
+    // before the roll (and during a scene such as the Pit Boss's blackjack hand, when nothing is rolled yet) show the dice you hold, not dead Xs
+    var unrolled = C.phase === 'roll' || (C.phase === 'scene' && !(C.pv && C.pv.length));
+    if (unrolled) mine = S.player.dice.filter(function (d) { return d.up; }).map(function (d) { return '<span class="rollwait">' + sampleDie(d, 65) + '</span>'; }).join('');
+    if (WIDEUI) { var pq = {}; for (var kq in pp) pq[kq] = pp[kq]; pq.dice = '<div class="mycups cups' + (unrolled ? ' hudtok' : '') + '">' + mine + '</div>'; pq.chips = rollchips; pq.abil = (typeof abil === 'string') ? abil : ''; me = hudBarHTML(pq); rolled = ''; }
     var topbtns = '<div class="topbtns"><button type="button" class="btn" data-act="toggleLog" aria-expanded="' + !!S.showLog + '">' + (S.showLog ? 'Hide log' : 'Log') + '</button>' + '</div>';
     var logpop = S.showLog ? '<div class="logpop"><label class="check" for="oddsBox"><input type="checkbox" id="oddsBox" data-act="odds"' + (S.odds ? ' checked' : '') + '> Read the bones</label><div class="lbl">Log</div>' + log + '</div>' : '';
     // the dice UI always stays in the middle; alerts pop up over it so the portraits never move
@@ -10246,10 +10268,11 @@ var BOSS_PORTRAITS = {"dummy":{"normal":"data:image/webp;base64,UklGRgwlAABXRUJQ
   }
 
   // ---------- battle report ----------
+  function lootSack() { return Math.round(60 * floorCfg().goldMul); }   // the Loot Goblin's sack: 60 on floor 1, scaled by the floor's gold multiplier
   function repBreakdown(def) {
     var p = S.player, parts = (C && C.en && C.en.parts) || [], foes = [], nDice = 0, dummy = def.id === 'dummy', mul = def.xpMul || 1;
     parts.forEach(function (pt) { var n = Math.max(0, pt.n0 || 0); if (dummy) n = 1; nDice += n; foes.push({ id: pt.def.id, name: pt.name, n: n }); });
-    var per = dummy ? 1 : Math.round(40 * mul), diceXp = nDice * per, pcts = [], pctSum = 0, flat = [];
+    var per = dummy ? 1 : Math.round(40 * mul * (def.kind === 'elite' ? ELITE_XP : 1)), diceXp = nDice * per, pcts = [], pctSum = 0, flat = [];
     var st = (p.ab && p.ab.study) || 0, wb = webN('xp');
     if (st) pcts.push({ name: 'Quick Study', pct: 15 * st });
     if (wb) pcts.push({ name: 'Web of Bones', pct: wb });
@@ -10259,8 +10282,8 @@ var BOSS_PORTRAITS = {"dummy":{"normal":"data:image/webp;base64,UklGRgwlAABXRUJQ
     if (def.kind === 'boss') flat.push({ name: 'Boss bounty', v: Math.round(100 * mul) });
     if (itm('tin') && !dummy) flat.push({ name: 'Tin Charm', v: 5 * nDice, note: '5 per die' });
     var total = diceXp + bonusXp; flat.forEach(function (f) { total += f.v; });
-    var spoils = def.id === 'lootgob' ? 60 : bonusGold(def.gold[0] + rnd(def.gold[1] - def.gold[0] + 1)), glines = [{ name: def.id === 'lootgob' ? 'Loot sack' : 'Coin purse', v: spoils }], gt = spoils;
-    if (itm('pouch')) { glines.push({ name: 'Loaded Pouch', v: 5 }); gt += 5; }
+    var spoils = def.id === 'lootgob' ? lootSack() : bonusGold(def.gold[0] + rnd(def.gold[1] - def.gold[0] + 1)), glines = [{ name: def.id === 'lootgob' ? 'Loot sack' : 'Coin purse', v: spoils }], gt = spoils;
+    if (itm('pouch')) { var pch = Math.round(5 * floorCfg().goldMul); glines.push({ name: 'Loaded Pouch', v: pch }); gt += pch; }
     return { foes: foes, xp: { n: nDice, per: per, dice: diceXp, pcts: pcts, pctSum: pctSum, bonus: bonusXp, flat: flat, total: total }, gold: { lines: glines, total: gt } };
   }
   function foeArtById(id, state) {
@@ -10512,10 +10535,12 @@ var BOSS_PORTRAITS = {"dummy":{"normal":"data:image/webp;base64,UklGRgwlAABXRUJQ
     C.phase = 'won'; C.result = null; C.bleedWin = true; C.winNote = ['Skipped', 'You walk past it and take what it owes you.'];
     afterCombat();
   }
+  var REST_HEAL = [2, 3, 4, 4];   // camp rest and the heal on reaching a new floor, by floor (balance pass 2026-10-10)
+  function restHeal() { return REST_HEAL[(S.floorNum || 1) - 1] || 4; }
   function campHTML() {
     var p = S.player;
     return encShell('campfire', 'green', '<h2>Campfire</h2><p class="muted">The fire is low and the dark is patient. Choose one.</p><div class="cards">' +
-      '<button type="button" class="card" data-act="campRest"' + (hp(p) < p.dice.length ? '' : ' disabled') + '><h3>Rest</h3><p>' + (hp(p) < p.dice.length ? 'Recover 2 HP.' : 'You are at full strength.') + '</p></button>' +
+      '<button type="button" class="card" data-act="campRest"' + (hp(p) < p.dice.length ? '' : ' disabled') + '><h3>Rest</h3><p>' + (hp(p) < p.dice.length ? 'Recover ' + restHeal() + ' HP.' : 'You are at full strength.') + '</p></button>' +
       '<button type="button" class="card" data-act="campTinker"' + (S.player.dice.some(function (d) { return d.faces.some(function (v) { return v > 0; }); }) ? '' : ' disabled') + '><h3>Tinker</h3><p>Choose one face of one die to tinker with. You increase its number by two. Numbers above six are wild.</p></button></div>');
   }
   function forgeHTML() {
@@ -10670,9 +10695,9 @@ var BOSS_PORTRAITS = {"dummy":{"normal":"data:image/webp;base64,UklGRgwlAABXRUJQ
       else {
         var dep = ev.dep || 0;
         h = '<h2>' + info.title + '</h2><p class="muted">' + info.flavor + '</p>' +
-          '<div class="piggyrow"><div class="piggy' + (ev.pigPulse ? ' pulse' : '') + '" data-tip="note:Drop coins from your pouch onto the piggy bank. Whatever you put in comes back doubled when you reach the next floor."><img class="pigimg" alt="" src="' + GA['pig_' + pigPoseOf(ev)] + '"></div></div>' +
+          '<div class="piggyrow"><div class="piggy' + (ev.pigPulse ? ' pulse' : '') + '" data-tip="note:Drop coins from your pouch onto the piggy bank. Whatever you put in comes back with half as much again when you reach the next floor."><img class="pigimg" alt="" src="' + GA['pig_' + pigPoseOf(ev)] + '"></div></div>' +
           '<p class="piggynote">' + (p.gold < 1 && !dep ? '<span class="bad">Your pouch is empty.</span>' : 'Open your coin pouch and drag coins onto the piggy bank.') + '</p>' +
-          (dep ? '<p class="piggyres">In the piggy: <b class="gold">' + dep + ' gold</b> <span class="good">→ ' + dep * 2 + ' gold on the next floor</span></p>' : '') +
+          (dep ? '<p class="piggyres">In the piggy: <b class="gold">' + dep + ' gold</b> <span class="good">→ ' + Math.round(dep * BANK_RATE) + ' gold on the next floor</span></p>' : '') +
           '<div class="row">' + (p.gold >= 1 ? '<button type="button" class="btn small" data-act="bankAll">Put it all in</button>' : '') + '<button type="button" class="btn ' + (dep ? 'torch' : 'ghost') + '" data-act="evLeave">' + (dep ? 'Done' : 'Walk away') + '</button></div>';
       }
     } else if (info.kind === 'blackjack') {
@@ -10986,7 +11011,7 @@ var BOSS_PORTRAITS = {"dummy":{"normal":"data:image/webp;base64,UklGRgwlAABXRUJQ
     cutpurse: ['Each hit that gets through steals 5 gold from you.'],
     blackjack: ['Each hit stuns one of your dice: the enemy sees it and you cannot reroll it for a round.'],
     fence: ['Each hit gives it a 25% chance to steal a card from your deck.'],
-    lootgob: ['Carries a sack of gold: 60 gold if you kill it.', 'Tries to flee at the end of every round (15% chance to escape). If it escapes, there is no reward.'],
+    lootgob: ['Carries a sack of gold: {SACK} gold if you kill it.', 'Tries to flee at the end of every round (15% chance to escape). If it escapes, there is no reward.'],
     weathercock: ['Changes with the wind: each round it plays either sharp or sloppy.'],
     sanguine: ['Each of its hits has a 5% chance to deal double damage.'],
     selcouth: ['Every die it owns rolls an odd number.'],
@@ -11015,7 +11040,7 @@ var BOSS_PORTRAITS = {"dummy":{"normal":"data:image/webp;base64,UklGRgwlAABXRUJQ
   FOE_TRAITS.bloodletter = ['When it wounds you, you start bleeding: you lose a die every 3 rounds for the rest of the fight. Bleeding does not stack.'];
   FOE_TRAITS.contractdemon = ['Every round it offers you a contract. Sign in blood or refuse.', 'Contracts: 80 gold for one of your dice, both lose two dice, or both gain two dice.'];
   function foeTipHTML(pt) {
-    var def = pt.def, tr = (FOE_TRAITS[def.id] || []).slice(), h;
+    var def = pt.def, tr = (FOE_TRAITS[def.id] || []).map(function (x) { return x.replace('{SACK}', lootSack()); }), h;
     if (def.sig && MODS[def.sig]) tr.push('Its dice carry the ' + MODS[def.sig].name + ' seal.');
     if (pt.berserk) tr.push('Berserk: tears a die out of itself at the start of the fight, and every blow it lands hits harder.');
     if (pt.bleed) tr.push('Bleeding: loses dice over time.');
@@ -12722,7 +12747,7 @@ var BOSS_PORTRAITS = {"dummy":{"normal":"data:image/webp;base64,UklGRgwlAABXRUJQ
       case 'dropLeave': S.victory.dropDone = true; render(); break;
       case 'ability': if (S.abilPick) break; S.abilPick = 1; (function () { var all = document.querySelectorAll('.card.abilpop'), k; for (k = 0; k < all.length; k++) all[k].classList.add(all[k] === b ? 'picked' : 'dimmed'); sfx('item'); setTimeout(function () { S.abilPick = 0; chooseAbility(id); }, REDUCED ? 0 : 650); })(); break;
       case 'reward': chooseReward(i); break;
-      case 'campRest': heal(S.player, 2); completeNode(); break;
+      case 'campRest': heal(S.player, restHeal()); completeNode(); break;
       case 'campTinker': openForge('tinker', { onDone: completeNode, onCancel: function () { S.screen = 'camp'; render(); } }); break;
       case 'forgeDie': forgeDie(i); break;
       case 'forgeFace': forgeFace(i); break;
