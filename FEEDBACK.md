@@ -57,6 +57,22 @@ Raw reports come from the in-game "feels bad" buttons (artifact db collection `f
 - [x] **Toss the buck** (2026-10-09): the first-turn spinner is now a coin toss (`firstSpin`, CSS `#firstfx.toss`): big coin flips mid-screen, knight face = you win the buck (enemy opens), skull = enemy wins; lands, banner, then flies to the portrait of whoever bids first. OPEN QUESTION: the banner says "YOU'RE THE BUCK" but the marker then sits on the enemy (they open). Decide whether winning the toss should mean you open instead.
 - Calibrating the AI skill slider is a dev-tool concern, low priority (user).
 
+## 2026-10-09 19:45 (working file, not yet published; built on the other session's art pass, merge ee9b225)
+- [x] Merged the other session's Gemini art pass (ee9b225) under this session's unpublished work; clean 3-way merge. Their PASS coin (`BID_ART.pass/passx`, `--pass-coin*`) and level-up card face (`LVL_CARD`, `--lvlcard`) stay parked: user chose (a) for both.
+- [x] PASS button reads "The buck"; on hover it reads "Pass the buck" (`.pbl`/`.pbh` spans), shows its explanation and makes the buck marker glow (`#buckmark.hl`).
+- [x] Coin toss: the first toss ever (localStorage `lc_tossed`) waits for a click; every later toss plays itself after 0.25 s (1.6 s when the Dummy skip button is showing), spins faster, shorter banner (about 3.8 s in all). Auto-roll checkbox removed from the toss; red X stays hidden. Reset tutorials clears `lc_tossed`.
+- [x] No screen scrolls (checked at 1920x1080 and 1366x768, every screen and event): encounter trays never scroll (`.enctrayin` zoom-fits; a much-too-tall event window becomes tall first); the app's scrollbar is hidden outside Rules / skill web. Rules still scrolls (deferred by user).
+- [x] Level-up: all four ability buttons the same height; narrower and taller, with gaps between them and from the tray edge.
+- [x] Map: the camera keeps your room and the rooms ahead clear of the portrait cluster (left lane above 62% of the view). Rooms behind you can still sit under it on the taller parchment; while the pawn is held the portrait cluster fades to 28% and lets the drop through. Fixed: the folded HUD bar swallowed clicks on the pawn when it stood on the start room.
+
+## 2026-10-09 19:10 (working file, not yet published)
+- [x] Settings cog copies the playtester cog's behaviour: hover label "Settings" (gold), hover sound + spin, stays turned while the settings panel is open, chime on open, draggable anywhere with a 6 px threshold, position saved in localStorage `lc_cogpos`, label flips side when the cog is on the left half.
+- [x] Map arrival: every time the map screen comes up the HUD is open, the map drops in from above, bounces twice and lands with a thud, then the dice/XP/deck fold into the portrait (`hudAutoFold` -> `hudAutoDrop`, CSS `body.mapdrop` / `body.mappre`). After START CRAWLING it waits for the black-out to lift. `hudMapFit` waits until the map has landed (its measurement is off mid-drop).
+- [x] Buck wording: tutorial card now "When you hold the buck, it is your turn. When the enemy holds it, it is theirs."; marker tooltip "If you hold it, it is your turn."
+
+## 2026-10-09 19:00 (working file)
+- [x] Stale text fixed: Rules "press Bid" -> drag or click a die; Rules buck row now says PASS sits next to Liar and Spot On (or click the buck); Weathercock tooltip "90% or 10% skill" -> "sharp or sloppy".
+
 ## 2026-10-09 18:30 batch (working file, not yet published)
 - [x] Dice, XP bar, deck and relic row follow the portrait when it is dragged (shared `--pdx/--pdy` translate).
 - [x] Level-up: ability cards 15% smaller (`zoom .64`) on the parchment art (`--encparch`); one banner ("Level N: choose an ability"), the parchment line only when there is a die note (`.noflav`).
