@@ -4445,6 +4445,10 @@ body.spk-mead .foe:not(.slain) .portbtn:not(.spelltgt) { animation: tgtglow .55s
   html:has(#tut) #fbcl, html:has(#tut) #ptk { z-index: 98000; }
   /* Dummy fight: the skip for players who have seen it */
   #firstfx .dumskip { margin-top: 18px; font: 700 18px var(--display, monospace); letter-spacing: 1px; padding: 12px 26px; color: #f3e3bd; text-shadow: 0 2px 0 #000; cursor: pointer; border: 4px solid #0d0a08; border-bottom-width: 10px; border-radius: 10px; background: linear-gradient(170deg, #7a5230 0%, #4a2e18 55%, #2a1a0c 100%); box-shadow: inset 2px 2px 0 rgba(255,220,160,.18), inset -2px -2px 0 rgba(0,0,0,.4), 0 5px 8px rgba(0,0,0,.5); animation: fxspinpop .6s ease-out .9s backwards; }
+  .foeinfo { position: relative; }
+  .dumskip2 { position: absolute; left: 0; top: calc(100% + 10px); white-space: nowrap; font: 700 22px var(--display, monospace); letter-spacing: 1px; padding: 8px 20px; color: #f3e3bd; text-shadow: 0 2px 0 #000; cursor: pointer; border: 4px solid #0d0a08; border-bottom-width: 9px; border-radius: 10px; background: linear-gradient(170deg, #7a5230, #4a2f1a); box-shadow: 0 4px 10px rgba(0,0,0,.5); z-index: 5; }
+  .dumskip2:hover { filter: brightness(1.15) drop-shadow(0 0 8px rgba(255,200,100,.5)); }
+  .dumskip2:active { transform: translateY(5px); border-bottom-width: 4px; }
   #firstfx .dumskip:hover { filter: brightness(1.15) drop-shadow(0 0 8px rgba(255,200,100,.5)); } #firstfx .dumskip:active { transform: translateY(6px); border-bottom-width: 4px; }
   #firstfx.air .dumskip, #firstfx .fxbox.hit .dumskip { opacity: 0; pointer-events: none; transition: opacity .3s; }
   /* the result banner sits under the landed coin, not across it (the coin also lifts a little) */
@@ -6194,7 +6198,7 @@ body.spk-mead .foe:not(.slain) .portbtn:not(.spelltgt) { animation: tgtglow .55s
     reroll: { name: 'Bone Shake', desc: '+1 reroll per fight.', max: 3 },
     crit: { name: 'Deadly Aim', desc: 'Your critical strikes deal one additional damage', max: 1 },
     wind: { name: 'Stubborn Pulse', desc: 'Recover 1 HP after each fight.', max: 2 },
-    plunder: { name: 'Plunder', desc: 'Earn 1 extra gold for every enemy die you knock out.', max: 2 },
+    plunder: { name: 'Plunder', desc: 'Earn 2 extra gold for every enemy die you knock out (4 at rank 2, 6 at rank 3).', max: 3 },
     hardy: { name: 'Fortify', desc: 'Roll 2 dice. On 8+, gain 1 +max.', max: 2 },
     grave: { name: 'Grave Robber', desc: 'The dead give up their spoils more easily. +10% ' + RARIC + '.', max: 3 },
     study: { name: 'Quick Study', desc: 'Every lesson the dungeon teaches sticks. Gain 15% more XP from fights.', max: 3 }
@@ -6756,13 +6760,14 @@ body.spk-mead .foe:not(.slain) .portbtn:not(.spelltgt) { animation: tgtglow .55s
   var firstFx = null, AUTOROLL = false, autoLast = 0;
   try { AUTOROLL = localStorage.getItem('lcAutoRoll') === '1'; } catch (e) { }
   // auto roll: clicks the roll coin by itself each round (and spins the first-turn spinner)
+  // (2026-10-10) it now throws the dice straight away instead of waiting for a button that had to be drawn first
   setInterval(function () {
     try {
-      if (!AUTOROLL || !S || S.screen !== 'combat' || document.getElementById('firstfx') || (window.__pause && window.__pause.on)) return;
-      var b = document.querySelector('.hudport .btn.rollbtn'); if (!b || b.disabled || !b.offsetParent || getComputedStyle(b).visibility === 'hidden') return;
-      var t = window.__rawNow(); if (t - autoLast < 1400) return; autoLast = t; b.click();
+      if (!AUTOROLL || !S || S.screen !== 'combat' || !C || C.phase !== 'roll' || C.meeting || document.getElementById('firstfx') || document.getElementById('tut') || (window.__pause && window.__pause.on)) return;
+      if (document.body.hasAttribute('data-meet')) return;
+      var t = window.__rawNow(); if (t - autoLast < 600) return; autoLast = t; doRoll();
     } catch (e) { }
-  }, 500);
+  }, 120);
   // being the buck is the prize: gold confetti, coins and a fanfare
   function buckParty(host) {
     try {
@@ -8198,7 +8203,7 @@ body.spk-mead .foe:not(.slain) .portbtn:not(.spelltgt) { animation: tgtglow .55s
     }
     if (hit && hit.spike) hurtEnemy(hit.spike, part);
     var removed = Math.max(0, enBefore - C.en.n);
-    if (loser === 'e' && removed > 0 && S.player.ab.plunder) { var pg = removed * S.player.ab.plunder; S.player.gold += pg; notes.push('<span class="gold">Plunder: +' + pg + ' gold.</span>'); C.log.push('Plunder: +' + pg + ' gold.'); }
+    if (loser === 'e' && removed > 0 && S.player.ab.plunder) { var pg = removed * 2 * S.player.ab.plunder; S.player.gold += pg; notes.push('<span class="gold">Plunder: +' + pg + ' gold.</span>'); C.log.push('Plunder: +' + pg + ' gold.'); }
     if (loser === 'e') notes = notes.concat(thiefWound(part, kind === 'exact' && ok && caller === 'p'));
     if (loser === 'e' && kind === 'exact' && ok && caller === 'p' && itm('sword')) { if (addMaxDie(S.player)) { notes.push('<span class="crit">Bloodsworn Blade: max HP +1.</span>'); C.log.push('The Bloodsworn Blade drinks deep: max HP +1.'); } }
     if (gob && gob.kind === 'stun') C.pv.forEach(function (x) { if (!x.baby && x.i === gob.di) { x.spied = true; x.marked = true; x.stunned = true; } });
@@ -8597,7 +8602,8 @@ body.spk-mead .foe:not(.slain) .portbtn:not(.spelltgt) { animation: tgtglow .55s
     var rp = repBreakdown(def), xp = rp.xp.total, gold = rp.gold.total, oldGold = p.gold;
     p.xp += xp; p.gold += gold; AUD.lastGold = p.gold; XP.hold = true; M.total++; S.runWins = (S.runWins || 0) + 1; S.runKills = (S.runKills || 0) + ((C.en && C.en.parts && C.en.parts.length) || 1);
     var debt = 0; if (S.owed && def.kind !== 'fight') { debt = addDice(p, S.owed); S.owed = 0; }   // the pawnbroker pays after your next elite or boss win
-    var healed = p.ab.wind ? heal(p, p.ab.wind) : 0;
+    var healed = heal(p, 1);   // every won fight mends one fallen die (user, 2026-10-10); Stubborn Pulse and Mending Hands add on top
+    if (p.ab.wind) healed += heal(p, p.ab.wind);
     if (own('mending')) healed += heal(p, 1);
     var before = p.level; S.pending = 0;
     var hpUp = 0;
@@ -9807,7 +9813,8 @@ var BOSS_PORTRAITS = {"dummy":{"normal":"data:image/webp;base64,UklGRgwlAABXRUJQ
   }
   function hudPortrait(extra) {
     var cl = CLASSES[(S && S.cls) || 'fighter'] || CLASSES.fighter;
-    var rolling = S.screen === 'combat' && C && C.phase === 'roll';
+    // with Auto-roll on the button is never drawn (it used to sit on the portrait for up to a second before the auto-click: the 'flash'); the tutorial still shows it
+    var rolling = S.screen === 'combat' && C && C.phase === 'roll' && !(AUTOROLL && !document.getElementById('tut'));
     return '<div class="hudport' + (extra ? ' ' + extra : '') + (rolling ? ' rollturn' : '') + '" data-portrait="1" data-tip="' + (rolling ? 'rollbtn:' : 'char:') + '">' + (rolling ? '<button type="button" class="btn rollbtn" data-act="roll" aria-label="Roll your dice"><svg viewBox="0 0 16 16" shape-rendering="crispEdges" aria-hidden="true"><rect x="2" y="2" width="12" height="12" rx="2" fill="#f4f2ea" stroke="#14110d" stroke-width="1.2"/><rect x="4.6" y="4.6" width="2" height="2" fill="#14110d"/><rect x="9.4" y="4.6" width="2" height="2" fill="#14110d"/><rect x="7" y="7" width="2" height="2" fill="#14110d"/><rect x="4.6" y="9.4" width="2" height="2" fill="#14110d"/><rect x="9.4" y="9.4" width="2" height="2" fill="#14110d"/></svg><b>ROLL</b></button>' : '') + (haloOn() ? '<span class="halo-b' + (haloReady() ? ' ready' : '') + (S.haloDrop ? ' drop' : '') + '"></span>' : '') + '<span class="hudframe"><span class="portrait" style="--c1:' + cl.c1 + ';--c2:' + cl.c2 + ';--eye:' + cl.eye + '">' + portraitArt((S && S.cls) || 'fighter', cl, portraitState()) + '</span></span>' + (haloOn() ? '<button type="button" class="halorune' + (haloReady() ? ' ready' : '') + (S.haloDrop ? ' drop' : '') + '" data-act="halo" data-halobtn="1"' + (haloReady() ? '' : ' disabled') + ' aria-label="Halo of Dawn" data-tip="halo:"></button>' : '') + '<span class="lvbadge">' + S.player.level + '</span>' + shieldTag() + '</div>';
   }
   function slotHTML(loc, iid, locked) {
@@ -10238,7 +10245,9 @@ var BOSS_PORTRAITS = {"dummy":{"normal":"data:image/webp;base64,UklGRgwlAABXRUJQ
       var lg = C.lunge && C.lunge.part === pi && Date.now() < C.lunge.t0 + 650 && !REDUCED ? ' style="animation: foelunge .55s steps(6) both; animation-delay: ' + ((C.lunge.t0 - Date.now()) / 1000).toFixed(2) + 's"' : '';
       enemy += '<div class="foe' + (pt.n === 0 ? ' slain' : '') + (C.phase === 'fled' && pt.def.id === 'lootgob' ? ' fled' : '') + '"' + lg + '><button type="button" class="portbtn" data-tip="foe:' + pi + '" data-act="foe" data-i="' + pi + '" aria-label="Talk to ' + pt.name + '"><div class="portrait ' + pd.kind + (pd.id === 'house' ? ' wideport' : pd.id === 'dealer' && pt.n === 0 ? ' widedead' : '') + (sl ? ' hurt' : '') + '" style="--c1:' + pd.c1 + ';--c2:' + pd.c2 + ';--eye:' + pd.eye + '">' + foeArt(pt, pd) + sl + jd + '</div></button>' + bub +
         (C.foeDmg && C.foeDmg.part === pi ? foeDmgHTML(C.foeDmg) : '') + '<div class="foeinfo"><div><h3>' + pt.name + ' <span class="muted">· ' + (pt.n === 0 ? 'slain' : plural(pt.n, 'die')) + '</span></h3><p class="muted">' + pd.tag + '</p>' + (echips ? '<div class="chips" style="margin-top:4px">' + echips + '</div>' : '') + '</div>' +
-        '<div class="cups">' + cups + '</div>' + (pi === En.parts.length - 1 ? thinking : '') + '</div></div>';
+        '<div class="cups">' + cups + '</div>' + (pi === En.parts.length - 1 ? thinking : '') +
+        // a player who has beaten the Dummy before can walk past it (2026-10-10; the old button lived on the toss screen and was removed with the toss clean-up)
+        (pd.id === 'dummy' && M.dummyDone && C.phase !== 'won' && C.phase !== 'lost' && !document.getElementById('tut') ? '<button type="button" class="dumskip2" data-act="dummySkipFight">Skip this fight</button>' : '') + '</div></div>';
     });
     if (En.parts.length > 1) enemy = '<div class="foes">' + enemy + '</div>';
 

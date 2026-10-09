@@ -57,7 +57,7 @@ function addXp(p, n) {
     if (p.level % O.dieEvery === 0 && p.dice < O.maxDice) { p.dice++; p.hp++; }
     // the level-up ability pick: approximate the useful ones (wind heals after fights, hardy +die 42%, study +15% xp) by a random draw from the pool of 8
     const k = pick(['peek', 'reroll', 'crit', 'wind', 'plunder', 'hardy', 'grave', 'study']);
-    if (k === 'wind' && p.wind < 2) p.wind++; else if (k === 'hardy' && p.hardy < 2) { p.hardy++; if (Math.random() < 15 / 36 && p.dice < O.maxDice) { p.dice++; p.hp++; } } else if (k === 'plunder' && p.plunder < 2) p.plunder++; else if (k === 'study' && p.study < 3) p.study++; else if (k === 'grave' && p.grave < 3) p.grave++;
+    if (k === 'wind' && p.wind < 2) p.wind++; else if (k === 'hardy' && p.hardy < 2) { p.hardy++; if (Math.random() < 15 / 36 && p.dice < O.maxDice) { p.dice++; p.hp++; } } else if (k === 'plunder' && p.plunder < 3) p.plunder++; else if (k === 'study' && p.study < 3) p.study++; else if (k === 'grave' && p.grave < 3) p.grave++;
   }
 }
 function fight(p, id, fnum, stats) {
