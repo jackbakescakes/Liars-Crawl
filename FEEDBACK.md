@@ -57,6 +57,11 @@ Raw reports come from the in-game "feels bad" buttons (artifact db collection `f
 - [x] **Toss the buck** (2026-10-09): the first-turn spinner is now a coin toss (`firstSpin`, CSS `#firstfx.toss`): big coin flips mid-screen, knight face = you win the buck (enemy opens), skull = enemy wins; lands, banner, then flies to the portrait of whoever bids first. OPEN QUESTION: the banner says "YOU'RE THE BUCK" but the marker then sits on the enemy (they open). Decide whether winning the toss should mean you open instead.
 - Calibrating the AI skill slider is a dev-tool concern, low priority (user).
 
+## 2026-10-09 evening, batch 3 (working file, not yet published)
+- [x] BUG: winning the toss gave the opening bid to the enemy (old "buck = enemy opens" rule in `startCombat`). Now the buck holder bids first; the coin flies to the holder; the first Dummy toss always lands on the player (tutorial needs live controls).
+- [x] Settings cog moved to `<html>` (unzoomed), 56 px, top 12, right 128; playtester cog left 128 (stale saved 12,12 position re-homed).
+- [ ] Re-review recommendations (see the Remaining Recommendations doc): toss banner to ~1.2 s / toss only first fight + bosses; PASS into the Liar/Spot On row; tutorial cut to ~9 cards + scripted Dummy beats; Dummy skip button in wood style or on the toss screen; forge die buttons 72 px + seal drag hint; pawn idle shimmer when it is your move.
+
 ## 2026-10-09 evening, batch 2 (working file, not yet published)
 - [x] Fight tutorial on the first Dummy fight (`TUT_STEPS`, `#tut`; localStorage `lc_fighttut`; Reset tutorials clears it). Game clock frozen while a card is up.
 - [x] Dummy fight can no longer be skipped from the map; inside the fight a returning player gets "I've seen this before: skip" (`.dumskip`, `dummySkipFight`).

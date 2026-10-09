@@ -4378,7 +4378,15 @@ body.spk-mead .foe:not(.slain) .portbtn:not(.spelltgt) { animation: tgtglow .55s
   html body #cog.cog.btn svg { transition: transform .55s cubic-bezier(.3,1.5,.4,1); filter: drop-shadow(0 1px 0 rgba(0,0,0,.45)); }
   html body #cog.cog.btn:hover:not(:disabled) { transform: scale(1.13); filter: brightness(1.12); box-shadow: 0 5px 0 #2e1c04, inset 0 2px 0 rgba(255,255,255,.4), 0 0 18px 4px rgba(255,214,90,.7) !important; }
   html body #cog.cog.btn:hover svg { transform: rotate(60deg); }
-  html body #cog.cog.btn:active:not(:disabled) { transform: scale(.93) !important; transition-duration: .08s; }
+  html #cog.cog.btn:active:not(:disabled) { transform: scale(.93) !important; transition-duration: .08s; }
+  html #cog.cog.btn, html #cog.cog.btn:hover:not(:disabled), html #cog.cog.btn:active:not(:disabled) { position: fixed !important; zoom: 1 !important; right: 128px !important; left: auto !important; top: 12px !important; width: 56px !important; height: 56px !important; padding: 0 !important; margin: 0 !important; display: grid; place-items: center; background: radial-gradient(circle at 35% 28%, #ffe28a, #b8821a 70%) !important; border: 4px solid #5a3a08 !important; border-radius: 50%; box-shadow: 0 4px 0 #2e1c04, inset 0 2px 0 rgba(255,255,255,.4) !important; clip-path: none !important; z-index: 460; box-sizing: border-box; cursor: pointer; transition: transform .22s cubic-bezier(.3,1.7,.5,1), box-shadow .2s, filter .2s; }
+  html #cog.cog.btn svg { width: 36px; height: 36px; transition: transform .55s cubic-bezier(.3,1.5,.4,1); filter: drop-shadow(0 1px 0 rgba(0,0,0,.45)); }
+  html #cog.cog.btn:hover:not(:disabled) { transform: scale(1.13); filter: brightness(1.12); box-shadow: 0 5px 0 #2e1c04, inset 0 2px 0 rgba(255,255,255,.4), 0 0 18px 4px rgba(255,214,90,.7) !important; }
+  html #cog.cog.btn:hover svg { transform: rotate(60deg); }
+  html #cog.cog.btn:active:not(:disabled) { transform: scale(.93) !important; transition-duration: .08s; }
+  html #cog.cog.btn::before, html #cog.cog.btn::after { display: none !important; }
+  html #ptk { left: 128px; }
+  html #ptk::after { left: 70px; }
   .encwin.forgewin .encflav small { display: block; font-size: 20px; margin-top: 6px; color: #6a4a2a; }
   .encwin.forgewin .enctray .dropgrid, .encwin.forgewin .enctray .dicegrid { width: 100%; justify-items: center; }
   .encwin.forgewin .enctray .dicegrid { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 8px; }
@@ -6611,7 +6619,8 @@ body.spk-mead .foe:not(.slain) .portbtn:not(.spelltgt) { animation: tgtglow .55s
     } catch (e) { }
   }
   function firstSpin(done) {   // (kept name) TOSS THE BUCK: a coin toss for the first turn
-    var fin = false, el = document.createElement('div'), CS = 240, spun = false, winner = Math.random() < 0.5 ? 'p' : 'e', raf = 0, skipT = 0, flown = false;
+    var tutFirst = false; try { tutFirst = !!(C && C.def && C.def.id === 'dummy' && localStorage.getItem('lc_fighttut') !== '1'); } catch (e) { }
+    var fin = false, el = document.createElement('div'), CS = 240, spun = false, winner = tutFirst ? 'p' : (Math.random() < 0.5 ? 'p' : 'e'), raf = 0, skipT = 0, flown = false;
     function finish() { if (fin) return; fin = true; clearTimeout(skipT); cancelAnimationFrame(raf); firstFx = null; el.classList.add('out'); setTimeout(function () { if (el.parentNode) el.parentNode.removeChild(el); }, 380); done(winner); }
     el.id = 'firstfx'; el.className = 'toss';
     el.innerHTML = '<div class="fxbox">' +
@@ -6635,7 +6644,7 @@ body.spk-mead .foe:not(.slain) .portbtn:not(.spelltgt) { animation: tgtglow .55s
     function flyHome(quick) {
       if (fin || flown) return; flown = true; el.classList.add('fly');
       try {
-        var toFoe = winner === 'p', tgt = toFoe ? document.querySelector('.foe .portbtn, .foe .portrait') : document.querySelector('.hudport'), r = coinw.getBoundingClientRect();   // the buck lands where the marker will sit: on whoever bids first
+        var toFoe = winner === 'e', tgt = toFoe ? document.querySelector('.foe .portbtn, .foe .portrait') : document.querySelector('.hudport'), r = coinw.getBoundingClientRect();   // the buck lands where the marker will sit: on whoever bids first
         if (!tgt || !r.width) { finish(); return; }
         var t = tgt.getBoundingClientRect(), tx = t.left + t.width / 2, ty = Math.max(28, t.top + 4), cx = r.left + r.width / 2, cy = r.top + r.height / 2;
         var dx = tx - cx, dy = ty - cy, k = 44 / r.width, dur = quick ? 420 : 760;
@@ -6694,7 +6703,7 @@ body.spk-mead .foe:not(.slain) .portbtn:not(.spelltgt) { animation: tgtglow .55s
         document.body.removeAttribute('data-meet'); C.meeting = false;
         firstSpin(function (w) {
           if (C !== Cm || !C || C.phase !== 'roll') return;
-          if (w === 'p') { C.opener = 'e'; C.turn = 'e'; C.rollFor = 'e'; C.buck = true; }   // the buck: the enemy opens, you hold the advantage
+          if (w === 'e') { C.opener = 'e'; C.turn = 'e'; C.rollFor = 'e'; }   // whoever has the buck bids first: the skull face gives it to the enemy
           render();
         });
       };
@@ -9890,7 +9899,7 @@ var BOSS_PORTRAITS = {"dummy":{"normal":"data:image/webp;base64,UklGRgwlAABXRUJQ
     else if (C.phase === 'count' && C.count) center = '<div class="lbl">The count</div>';
     else if (C.phase === 'bid') {
       if (C.bid) center = '<div class="lbl">' + (C.bid.by === 'p' ? 'Your bid' : 'Their bid') + '</div><div class="bid-main"><span>' + C.bid.qty + ' ×</span>' + dieHTML(C.bid.face, { s: 38 }) + '</div>' + '<p class="muted tdice">' + totalDice() + ' ' + dieHTML(0, { s: 34, back: true }) + '</p>';
-      else center = '<p class="muted tdice">' + totalDice() + ' ' + dieHTML(0, { s: 34, back: true }) + '</p>';
+      else center = '';   // (the total-dice count that sat here was removed 2026-10-09; the player can count)
     } else {
       center = C.result ? (C.phase === 'reveal' ? '' : '<p class="result">' + resultHTML() + '</p>') : C.bleedWin ? (C.winNote ? '<div class="lbl">' + C.winNote[0] + '</div><p class="muted">' + C.winNote[1] + '</p>' : '<div class="lbl">Bled out</div><p class="muted">The enemy bleeds out on the table.</p>') : (C.phase === 'lost' ? '<div class="nodice small">No dice</div>' : '');
     }
@@ -11806,7 +11815,7 @@ var BOSS_PORTRAITS = {"dummy":{"normal":"data:image/webp;base64,UklGRgwlAABXRUJQ
       });
       (function () { var bt = pan.querySelector('#d3Btn'); function lab() { bt.textContent = DICE3D ? 'On' : 'Off'; } lab(); bt.addEventListener('click', function () { setDice3D(!DICE3D); lab(); sfx('click'); }); })();
       pan.querySelector('#webBtn').addEventListener('click', function () { pan.hidden = true; openWeb(); sfx('click'); });
-      document.body.appendChild(cog); document.body.appendChild(pan);
+      document.documentElement.appendChild(cog); document.body.appendChild(pan);
       var vm = pan.querySelector('#volMusic'), vs = pan.querySelector('#volSfx'), om = pan.querySelector('#valMusic'), os = pan.querySelector('#valSfx'), mb = pan.querySelector('#muteBtn');
       function paint() { var rb = pan.querySelector('#runBtns'); if (rb) rb.hidden = !(S && S.player && S.screen !== 'end' && S.screen !== 'title'); var pb = pan.querySelector('#pawnBtn'); if (pb) pb.hidden = !(S && S.player && S.screen === 'map'); vm.value = Math.round(AUD.vol.music * 100); vs.value = Math.round(AUD.vol.sfx * 100); om.textContent = vm.value + '%'; os.textContent = vs.value + '%'; mb.textContent = AUD.vol.mute ? 'Sound: OFF' : 'Sound: ON'; cog.classList.toggle('muted', AUD.vol.mute); }
       function openP(o) { pan.hidden = !o; if (o) { audInit(); paint(); } }
@@ -13582,7 +13591,7 @@ var POUCH_SVG = pixSVG(["................", "................", ".....kkkkkk....
       });
       cog.addEventListener('pointerenter', function () { sfx('hover'); });
       // ---- drag the toolkit anywhere (the panel follows; position is remembered) ----
-      var PKEY = 'lc_ptkpos', drag = null, dragEnd = 0, curX = 12, curY = 12;
+      var PKEY = 'lc_ptkpos', drag = null, dragEnd = 0, curX = 128, curY = 12;   // rests 128 px in from the left edge, the mirror of the settings cog
       function placeAt(x, y) {
         var vw = window.innerWidth, vh = window.innerHeight; x = Math.max(4, Math.min(vw - 60, x)); y = Math.max(4, Math.min(vh - 60, y));
         cog.style.left = x + 'px'; cog.style.top = y + 'px'; curX = x; curY = y;
@@ -13591,7 +13600,7 @@ var POUCH_SVG = pixSVG(["................", "................", ".....kkkkkk....
         panel.style.left = Math.max(4, Math.min(vw - pw - 4, x)) + 'px'; panel.style.top = (below ? y + 68 : Math.max(4, y - ph - 12)) + 'px';
         panel.style.transformOrigin = below ? '28px -10px' : '28px ' + (ph + 10) + 'px';
       }
-      try { var sp = JSON.parse(localStorage.getItem(PKEY) || 'null'); if (sp && isFinite(sp.x) && isFinite(sp.y)) placeAt(sp.x, sp.y); } catch (e) { }
+      try { var sp = JSON.parse(localStorage.getItem(PKEY) || 'null'); if (sp && isFinite(sp.x) && isFinite(sp.y) && !(sp.x === 12 && sp.y === 12)) placeAt(sp.x, sp.y); } catch (e) { }
       window.addEventListener('resize', function () { placeAt(curX, curY); });
       cog.addEventListener('pointerdown', function (e) {
         if (e.button > 0) return;
@@ -13624,19 +13633,18 @@ var POUCH_SVG = pixSVG(["................", "................", ".....kkkkkk....
       function fightTutMark() { try { localStorage.setItem('lc_fighttut', '1'); } catch (e) { } }
       var TUT_STEPS = [
         { at: null, title: 'THE TABLE', txt: 'Every fight is a game of Liar’s Dice. You and the enemy each roll hidden dice, then take turns bidding on how many of a face are on the whole table. Your dice are also your life.' },
-        { at: '.hpdice', title: 'YOUR DICE', txt: 'Six dice. They are your health as well as your hand: lose a call and one of them dies. Lose them all and the crawl is over.' },
+        { at: '.hpdice', title: 'YOUR DICE', txt: 'These are your health as well as your hand: lose a call and one of them dies. Lose them all and the crawl is over.' },
         { at: '#buckmark', title: 'THE BUCK', txt: 'The buck sits on whoever must bid. The coin toss decides who gets it first. When the turn passes, the buck moves to the other side.' },
-        { at: '.hudport', title: 'ROLL', txt: 'Click your portrait to shake your dice.', wait: 'roll', next: 'Go on, roll' },
-        { at: '.hpdice', title: 'YOUR ROLL', txt: 'Only you can see these. Count your faces: that is what every bid of yours should be built on.' },
-        { at: '.foe .portbtn, .foe .cups', title: 'THE ENEMY', txt: 'The Training Dummy. Its dice stay hidden under the cups. The skulls beside it show how many it holds.' },
-        { at: '.felt .bidbox', title: 'THE WHOLE TABLE', txt: 'The number on the felt is every die in play, yours and theirs together. Bids are about this whole pile, not just your hand.' },
-        { at: '.bfrow', title: 'BIDDING', txt: 'Each die here is a bid: “at least THIS MANY dice on the whole table show THIS face.” Click a die to bid it. The arrows raise or lower the count. Every bid must be higher than the one before.' },
-        { at: '[data-act="liar"]', title: 'LIAR', txt: 'Think the last bid is too high? Call it. Every die is shown. If the bid was a lie, the bidder loses a die. If it was true, you do.' },
-        { at: '[data-act="exact"]', title: 'SPOT ON', txt: 'Think the last bid is exactly right? Call it and the bidder loses TWO dice. Wrong, and you lose one. The enemy can call it on you too, so never bid your exact count.' },
-        { at: '#buckmark, #buckmark .bpass', title: 'PASS THE BUCK', txt: 'Once per fight you may pass the buck: the enemy must bid instead of you. The gold PASS button appears beside the buck when it is yours.' },
-        { at: '.deckcorner', title: 'YOUR CARDS', txt: 'One-shot tricks. The Looking Glass buys you another pass; the Healing Potion gives back a die. Open the deck on your turn.' },
+        { at: '.hudport .btn.rollbtn, .rollpop', title: 'ROLL', txt: 'Click ROLL to shake your dice.', wait: 'roll', next: 'Go on, roll' },
+        { at: '.hpdice', title: 'YOUR ROLL', txt: 'Only you can see these dice.' },
+        { at: '.foe .portbtn, .foe .cups', title: 'THE ENEMY', txt: 'The Training Dummy. Its rolls stay hidden, but the number of dice it holds is shown here.' },
+        { at: '.bfrow', title: 'BIDDING', txt: 'A bid says: “at least THIS MANY dice on the whole table show THIS face.” Drag a die onto the table, or click it, to make that bid. The arrows raise or lower the count. Every bid must be higher than the one before.' },
+        { at: '[data-act="liar"]', title: 'LIAR', txt: 'Think the last bid is too high? Call it. Every die is shown. If the bid was a lie, the bidder loses a die. Otherwise, you do.' },
+        { at: '[data-act="exact"]', title: 'SPOT ON', txt: 'Think the last bid is exactly right? Call it and the bidder loses TWO dice. Wrong, and you lose one. The enemy can call it on you too.' },
+        { at: '#buckmark .bpass', title: 'PASS THE BUCK', txt: 'Once per fight you may pass the buck: the enemy must bid instead of you. The gold PASS button appears beside the buck when it is yours.' },
+        { at: '.deckcorner', title: 'YOUR CARDS', txt: 'Feeling stuck? Look in your deck for tools to help you out of a sticky situation. You can open it on any turn.' },
         { at: '.topbtns', title: 'THE LOG', txt: 'Every bid of the round is written down here, in case you lose the thread.' },
-        { at: null, title: 'THAT IS THE GAME', txt: 'Bid higher, or call. Watch what they bid and what they do not. The Dummy has never once told a lie. Go and win your first fight.', next: 'Fight' }
+        { at: null, title: "THAT IS LIAR'S DICE", txt: 'Bid higher, or call. Watch what they bid and what they do not. The Dummy has never once told a lie. Go and win your first fight.', next: 'Fight' }
       ];
       var TUT = { el: null, i: 0, on: false, paused: false, poll: 0, raf: 0 };
       function tutZoom() { return parseFloat(document.body.style.zoom) || 1; }
