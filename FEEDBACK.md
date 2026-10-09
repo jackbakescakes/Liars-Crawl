@@ -57,6 +57,28 @@ Raw reports come from the in-game "feels bad" buttons (artifact db collection `f
 - [x] **Toss the buck** (2026-10-09): the first-turn spinner is now a coin toss (`firstSpin`, CSS `#firstfx.toss`): big coin flips mid-screen, knight face = you win the buck (enemy opens), skull = enemy wins; lands, banner, then flies to the portrait of whoever bids first. OPEN QUESTION: the banner says "YOU'RE THE BUCK" but the marker then sits on the enemy (they open). Decide whether winning the toss should mean you open instead.
 - Calibrating the AI skill slider is a dev-tool concern, low priority (user).
 
+## 2026-10-09 18:30 batch (working file, not yet published)
+- [x] Dice, XP bar, deck and relic row follow the portrait when it is dragged (shared `--pdx/--pdy` translate).
+- [x] Level-up: ability cards 15% smaller (`zoom .64`) on the parchment art (`--encparch`); one banner ("Level N: choose an ability"), the parchment line only when there is a die note (`.noflav`).
+- [x] Chest window: the three choices sit side by side, all visible (grid, zoom .62), no scroll box (review bug 3). The chest tile in the report's spoils area already opened it on click (user's design).
+- [x] "You hold N" badge: REJECTED (too busy).
+- [x] Fortify and every roll-two-dice event: the parchment says "Choose two dice."; two dashed slots fill as you pick; unpicked dice pulse until two are chosen; ROLL beats when ready; the roll is the 3D tumble at 96 px, 90 px apart, with a landing sound per die; the total and verdict are held back until the dice land (1.15 s) and arrive with a win/lose/neutral sting (`.evslots`, `.evpick.need`, `.evrolled`, `.evresult.evwait/.evshow`).
+- [ ] NEXT (own sessions): enemy personalities (7 chosen, one enemy in three); relics equip-on-pickup + satchel back.
+
+## 2026-10-09 18:00 user decisions on the re-review (queue, in order)
+- [x] PASS THE BUCK as a third gold button in the Liar / Spot On row (`.passbtn.liargold`, data-act buck); clicking the buck marker also passes; the little `.bpass` is hidden.
+- [x] Dummy skip for returning players: wood button on the toss screen (`#firstfx .dumskip`).
+- [x] Pawn shimmers on the map while it waits (`pawnshimmer`).
+- [x] Forge windows: die buttons 72 px; the seal pulses until hovered (`sealpulse`).
+- [?] Enemy Spot On did 1 damage instead of 2: code path checked. `resolveCallNow` sets dmg = 2 for an enemy Spot On; the only things that reduce it are the Shield skill / Iron Plate (`C.shield` blocks 1 per hit, with a "blocked" note), the Skullcap relic (caps at 1), Smoke, and the Gauntlet's 5% parry. Most likely the Fighter's Shield skill. Awaiting the user's confirmation; no change made.
+- [x] BUG FIXED: the jostle. `fitZoom` re-ran its overflow shrink on every render, so transient overflow (dice slide, bid die, report) shrank the page a few percent and sprang back; in the old build zoom was 0.721 in the fight and 0.766 on the report. Now measured once per fight+viewport (`ZFIT`) and held; a persistent overflow re-measures after 700 ms.
+- [x] BUG FIXED: level-up cards vanished on mouse-out. `.card.abilpop:hover` set `animation: none`, cancelling the staggered entry animation (`abilin`, starts at opacity 0 with a delay); on mouse-out it restarted from invisible. Hover styling now applies only to `.settled` cards, plus a 1.5 s fallback that settles any card whose animationend never fired.
+- [ ] Enemy personalities CHOSEN: Honest, Bluffer, Patient, Gullible, Suspicious, Counter, Mute. NOT wanted: Hair-trigger, Coward, Gambler, Exact-caller, Mirror. **Only about one enemy in three gets a trait** (too much to parse otherwise); the rest play plain. Next: map each to an `ai` knob set + tooltip phrase, assign, check in the simulator.
+- [ ] "All-in eye": REJECTED for now (user: a foe on one die is not more dangerous; it calls Spot On because it has no credible raise). Revisit how to make that legible without a red UI glow.
+- [ ] RELICS (own session): equip on pickup -> relic button glows, tray opens, relic flies into its slot, a passive-buff indicator at the top of the screen (placeholder), tray closes. At three relics a fourth opens a "you already hold three: choose which three to equip" window; the rest go to the satchel (re-enable `SATCHEL_ON`). Sellable from the satchel.
+- [ ] WHOLE-GAME TEXT PASS: make every screen less text-heavy (tutorial, events, rules, tooltips). Do after this batch.
+- Toss length (5 s): user will play and judge. Tutorial trimming: user did a pass; revisit in the text pass.
+
 ## 2026-10-09 evening, batch 3 (working file, not yet published)
 - [x] BUG: winning the toss gave the opening bid to the enemy (old "buck = enemy opens" rule in `startCombat`). Now the buck holder bids first; the coin flies to the holder; the first Dummy toss always lands on the player (tutorial needs live controls).
 - [x] Settings cog moved to `<html>` (unzoomed), 56 px, top 12, right 128; playtester cog left 128 (stale saved 12,12 position re-homed).
