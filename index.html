@@ -5,6 +5,7 @@ KNOWN ISSUES (art still to come)
 - All 8 merchant portraits use cropped Gemini art. Paint and Pawn come from a different (more illustrated) sheet than the other six.
 - Pit Dicer hurt portrait is a recoloured Demonic Cardsharp reeling; Contract Demon dead is a recoloured Pit Dicer dead. Replace with proper art if desired.
 -->
+<meta charset="utf-8">
 <title>Liar's Crawl</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -4305,6 +4306,36 @@ body.spk-mead .foe:not(.slain) .portbtn:not(.spelltgt) { animation: tgtglow .55s
   @media (prefers-reduced-motion: reduce) { #stern .sglow { animation: none !important; } }
   html #ptk { cursor: grab; touch-action: none; } html #ptk.drag { cursor: grabbing; transform: scale(1.12) rotate(-6deg); transition: none; box-shadow: 0 10px 0 #1a0a35, 0 0 26px 6px rgba(190,140,255,.75); } html #ptk.drag::after { display: none; }
   html.ptk-dragging, html.ptk-dragging * { cursor: grabbing !important; user-select: none; }
+  /* ---- training room (dev tools) ---- */
+  #trainwin[hidden] { display: none !important; }
+  html #trainwin { position: fixed; right: 12px; top: 64px; z-index: 452; width: 340px; }
+  html #trainwin .trbox { position: relative; max-height: calc(100vh - 80px); overflow-y: auto; overflow-x: hidden; padding: 14px 16px 12px; background: #1d0f33; border: 4px solid #6b3fb0; border-radius: 10px; color: #f1e4ff; font-size: 17px; box-shadow: 0 12px 40px rgba(0,0,0,.6); }
+  html #trainwin .trhead { font: 700 26px/1 var(--display, monospace); color: #d9b8ff; margin: 0 0 10px; }
+  html #trainwin .trrow { display: flex; align-items: center; gap: 8px; margin: 4px 0; }
+  html #trainwin .trrow label { width: 112px; flex: none; font-size: 16px; color: #e6d6ff; }
+  html #trainwin .trrow input[type=range] { flex: 1; min-width: 0; accent-color: #b98cff; }
+  html #trainwin .trrow .trv { width: 42px; flex: none; text-align: right; font: 700 16px/1 monospace; color: #ffd37a; }
+  html #trainwin .trauto { width: 44px; flex: none; font: 700 11px/1 monospace; padding: 4px 0; color: #1d0f33; background: #b98cff; border: 0; border-radius: 4px; cursor: pointer; visibility: hidden; }
+  html #trainwin .trrow.manual .trauto { visibility: visible; }
+  html #trainwin .trnone { visibility: hidden; }
+  html #trainwin .trcheck { display: block; margin: 10px 0 8px; font-size: 15px; color: #e6d6ff; }
+  html #trainwin .trbtns { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+  html #trainwin .trbtns .btn { font-size: 20px; padding: 8px 18px; }
+  html #trainwin #trtally { font: 700 14px/1 monospace; color: #ffd37a; }
+  html #trainwin #trlog { margin: 0; height: 150px; overflow: auto; padding: 8px; font: 13px/1.35 monospace; color: #d9b8ff; background: #120a22; border: 2px solid #3a2060; border-radius: 6px; white-space: pre-wrap; }
+  html #trainwin .winx { top: 6px; right: 6px; width: 40px !important; height: 40px !important; }
+  /* ---- pass the buck ---- */
+  .abilrow .buckbtn img { width: 34px; height: 34px; vertical-align: middle; margin-right: 6px; image-rendering: pixelated; }
+  /* ---- the one seal screen ---- */
+  .panel.sealfound .lu-ban { font-size: 30px; letter-spacing: 12px; color: #f6d66a; text-shadow: 3px 3px 0 #000; margin-bottom: 4px; }
+  .panel.sealfound .sealhint { margin: 0 0 6px; font-size: 20px; color: #c9b58a; }
+  .panel.sealfound .dropdie:disabled { opacity: .35; filter: grayscale(1); }
+  .panel.sealfound .dropdie:not(:disabled) { border-color: #f6d66a; background: rgba(246,214,106,.10); }
+  .panel.sealfound { text-align: center; }
+  .popfx.sealgonefx .sealgone { text-align: center; padding: 16px 28px 18px; background: rgba(22,13,8,.94); border: 4px solid #6b4a22; border-radius: 10px; box-shadow: 0 0 0 3px #1e1209, 0 14px 40px rgba(0,0,0,.6); color: #f3e3bd; font-size: 22px; animation: sealgone 2.2s ease-out forwards; }
+  .popfx.sealgonefx .sealgone .sealbig { width: 110px; height: 110px; margin: 0 auto 4px; filter: grayscale(.8) brightness(.8); }
+  .popfx.sealgonefx .sealgone b { display: block; font-size: 26px; color: #ffd37a; } .popfx.sealgonefx .sealgone p { margin: 4px 0 0; }
+  @keyframes sealgone { 0% { opacity: 0; transform: scale(.92); } 12% { opacity: 1; transform: none; } 75% { opacity: 1; } 100% { opacity: 0; transform: translateY(14px); } }
 </style>
 
 <main class="wrap">
@@ -4377,77 +4408,308 @@ body.spk-mead .foe:not(.slain) .portbtn:not(.spelltgt) { animation: tgtglow .55s
     return items[items.length - 1];
   }
 
-  // The enemy reads your bids to guess what you hold, then imagines many possible hands for you.
-  // For each move it plays out how a sensible player would answer, and weighs calling liar,
-  // calling exact and each raise by the dice it expects to win or lose. Lower skill adds noise and
-  // makes it pick worse moves more often.
-  function aiDecide(c) {
-    var n = c.oppN, own = c.own, m = own.length, total = m + n, skill = c.skill, bids = c.oppBids || [], q, f, i;
-    var crit = c.critDmg || 2;
-    if (c.dummy) return c.bid ? { type: 'bid', qty: c.bid.qty + 1, face: 1 } : { type: 'bid', qty: 1, face: 1 };
-    // what the player's bids say about their hand: they lean toward faces they hold
-    var wt = [0, 1, 1, 1, 1, 1, 1];
-    bids.forEach(function (bf, k) { wt[bf] += (k === bids.length - 1 ? 0.55 : 0.3); });
-    var wsum = 0; for (f = 1; f <= 6; f++) wsum += wt[f];
-    function pf(face) { return Math.min(0.5, wt[face] / wsum + 0.01); }
-    var myCount = []; for (f = 1; f <= 6; f++) myCount[f] = countFace(own, f);
-    function pTrue(qq, ff) { return binomTail(n, pf(ff), qq - myCount[ff]); }
-    function pExact(qq, ff) { return binomPmf(n, pf(ff), qq - myCount[ff]); }
-    var noiseAmp = 0.7 * Math.pow(1 - skill, 1.5);
-    function noise() { return (Math.random() - 0.5) * noiseAmp; }
-    var temp = 0.01 + 0.7 * Math.pow(1 - skill, 2);
-    var S = Math.round(50 + 150 * skill);
-    // the player's hand is unknown: draw plausible hands for it
-    function sampleHand() {
-      var h = [], k, r, v; for (k = 0; k < n; k++) { r = Math.random() * wsum; for (v = 1; v <= 6; v++) { r -= wt[v]; if (r <= 0) break; } h.push(Math.min(v, 6)); }
-      return h;
+  // ---- the enemy AI ----
+  // How it thinks, in one breath: it lists every hand your hidden dice could be (or a big sample when there are too many), weighs each by how
+  // likely a sensible player holding it would have made the bids you made this round, then rates each of its own moves by the chance of
+  // winning the whole fight: a call is settled against every hand at once; a bid is played forward through how you would answer it (call Liar,
+  // call Spot On, or raise, and then what it would do about your raise). Lower skill adds noise, picks worse moves more often and bluffs badly.
+  // One set of knobs per fight: aiParams() derives them from a foe's skill, then applies overrides from the foe itself (def.ai), from the training
+  // room's global switch (AIG) and from a training fight (C.aiOver). The training room's sliders are built from AI_KNOBS.
+  var AI_KNOBS = [
+    { k: 'skill', name: 'Skill', min: 0, max: 1, step: 0.01, tip: 'The master dial. At 1 it plays as well as it knows how. Noise, Softness, Bluff, Adapt and Last-die gamble follow it unless moved by hand.' },
+    { k: 'noise', name: 'Noise', min: 0, max: 0.4, step: 0.01, auto: true, tip: 'Random error in how it rates each move, in win chance. 0 = it sees its true best move.' },
+    { k: 'temp', name: 'Softness', min: 0.005, max: 0.4, step: 0.005, auto: true, tip: 'How often it plays a move it rates a little below its best. Low = nearly always the top move.' },
+    { k: 'bluff', name: 'Bluff', min: 0, max: 1, step: 0.01, auto: true, tip: 'Chance, each bid, that it tries a bluff: a bid on a face it does not hold. A skilled foe only goes through with a bluff that costs it little.' },
+    { k: 'read', name: 'Read', min: 0, max: 2, step: 0.05, tip: 'How sensible it assumes you are: how much your bids tell it about your hand, and how well it predicts your calls. 0 = it treats your play as random.' },
+    { k: 'gull', name: 'Your trust', min: 0, max: 1, step: 0.05, tip: 'How much it thinks you believe its bids. High = it expects you to raise into its bluffs rather than call them.' },
+    { k: 'adapt', name: 'Adapt', min: 0, max: 1, step: 0.05, auto: true, tip: 'How much it learns from the rounds so far this run: whether you call a lot or a little, and how honest your bids are.' },
+    { k: 'liar', name: 'Liar bias', min: -0.3, max: 0.3, step: 0.01, tip: 'Added to the win chance it gives calling Liar. Above 0 it calls Liar more.' },
+    { k: 'exact', name: 'Spot On bias', min: -0.3, max: 0.3, step: 0.01, tip: 'Added to the win chance it gives calling Spot On.' },
+    { k: 'lastDie', name: 'Last-die gamble', min: 0, max: 0.3, step: 0.01, auto: true, tip: 'Extra pull toward Spot On when it is down to one die. Fades to nothing at full skill.' },
+    { k: 'reach', name: 'Reach', min: 1, max: 5, step: 1, tip: 'How many quantities above the current bid it will consider raising to.' }
+  ];
+  // the skill curve: how the auto knobs follow Skill (tuned in the sims so the slider runs from hopeless to as good as it gets)
+  var AI_TUNE = { noise: 0.16, temp: 0.15, tempMin: 0.003, bluff0: 0.3, bluff1: 0.1, lastDie: 0.12, hands0: 150, hands1: 1500, bluffCost0: 0.25, bluffCost1: 0.02, dieWorth: 0.05 };
+  // dieWorth: a little credit per die won or lost on top of the win chance, so it still plays sharply when the fight is all but won or lost and the win chance has gone flat
+  function aiParams(skill, over) {
+    var has = function (k) { return !!(over && over[k] !== null && over[k] !== undefined && over[k] !== '' && !isNaN(+over[k])); };
+    var s = clamp(has('skill') ? +over.skill : (+skill || 0), 0, 1), p = { skill: s };
+    p.noise = has('noise') ? +over.noise : AI_TUNE.noise * Math.pow(1 - s, 1.5);
+    p.temp = has('temp') ? Math.max(0.005, +over.temp) : AI_TUNE.tempMin + AI_TUNE.temp * Math.pow(1 - s, 2);
+    p.bluff = has('bluff') ? +over.bluff : AI_TUNE.bluff0 + (AI_TUNE.bluff1 - AI_TUNE.bluff0) * s;
+    p.read = has('read') ? +over.read : 1;
+    p.gull = has('gull') ? +over.gull : AI_OPP.gull;
+    p.adapt = has('adapt') ? +over.adapt : s;
+    p.liar = has('liar') ? +over.liar : 0;
+    p.exact = has('exact') ? +over.exact : 0;
+    p.lastDie = has('lastDie') ? +over.lastDie : AI_TUNE.lastDie * (1 - s);
+    p.reach = has('reach') ? Math.max(1, Math.round(+over.reach)) : 3;
+    // derived, not knobs: how many of your possible hands it weighs, and how much win chance it will give up to bluff
+    p.hands = Math.round(AI_TUNE.hands0 + (AI_TUNE.hands1 - AI_TUNE.hands0) * s * s);
+    p.bluffCost = AI_TUNE.bluffCost1 + (AI_TUNE.bluffCost0 - AI_TUNE.bluffCost1) * (1 - s) * (1 - s);
+    return p;
+  }
+  var AI_LAST = null;   // the enemy's last decision and what it was weighing, kept when a fight is traced (the training room shows it)
+
+  // ---- the win table: AI_W[open][m][n] = chance the enemy wins the fight from the start of a round with m dice against n, where open is 1 when
+  // the player opens that round. Measured by self-play of this AI at full skill (sim/wtable.js); beyond the table both counts shrink in proportion. ----
+  var AI_WMAX = 12, AI_W = null;
+  var AI_W_DATA = [[[0.395,0.124,0.042,0.008,0.003,0.001,0,0,0,0,0,0],[0.959,0.441,0.246,0.03,0.015,0.007,0.003,0.002,0.001,0,0,0],[0.982,0.826,0.458,0.108,0.064,0.022,0.011,0.006,0.004,0.002,0.001,0.001],[0.993,0.979,0.937,0.562,0.154,0.079,0.031,0.017,0.01,0.005,0.003,0.002],[0.999,0.988,0.951,0.867,0.489,0.263,0.126,0.053,0.02,0.012,0.006,0.003],[1,0.995,0.984,0.927,0.778,0.52,0.328,0.164,0.075,0.036,0.018,0.01],[1,0.997,0.987,0.97,0.88,0.722,0.536,0.351,0.215,0.109,0.061,0.031],[1,0.999,0.995,0.985,0.944,0.841,0.7,0.516,0.374,0.216,0.132,0.078],[1,0.999,0.997,0.991,0.973,0.916,0.833,0.68,0.513,0.357,0.216,0.138],[1,1,0.999,0.996,0.987,0.96,0.901,0.795,0.664,0.491,0.366,0.259],[1,1,0.999,0.998,0.993,0.98,0.951,0.866,0.772,0.615,0.51,0.358],[1,1,1,0.999,0.996,0.99,0.973,0.925,0.87,0.754,0.635,0.482]],[[0.58,0.057,0.024,0.011,0.001,0.001,0,0,0,0,0,0],[0.896,0.669,0.117,0.04,0.01,0.006,0.004,0.002,0.001,0.001,0,0],[0.956,0.768,0.539,0.078,0.051,0.024,0.014,0.007,0.004,0.002,0.001,0.001],[0.992,0.976,0.911,0.453,0.159,0.067,0.035,0.019,0.01,0.005,0.003,0.001],[0.998,0.989,0.965,0.888,0.524,0.245,0.105,0.05,0.023,0.011,0.007,0.004],[1,0.996,0.982,0.928,0.782,0.536,0.311,0.138,0.077,0.033,0.017,0.008],[1,0.998,0.989,0.969,0.894,0.719,0.546,0.36,0.213,0.128,0.062,0.03],[1,0.999,0.995,0.981,0.944,0.853,0.687,0.528,0.378,0.231,0.146,0.077],[1,0.999,0.997,0.991,0.971,0.92,0.826,0.648,0.506,0.342,0.245,0.153],[1,1,0.999,0.996,0.986,0.957,0.893,0.802,0.657,0.517,0.35,0.226],[1,1,0.999,0.998,0.993,0.98,0.943,0.867,0.764,0.633,0.493,0.388],[1,1,1,0.999,0.997,0.989,0.973,0.933,0.869,0.756,0.636,0.484]]];   // measured by self-play of this AI at full skill (scratch sim/wtable.js): [player opens][my dice - 1][their dice - 1]
+  function aiWinTable() {
+    if (AI_W) return AI_W;
+    var t = [[], []], o, m, n;
+    for (o = 0; o < 2; o++) for (m = 0; m <= AI_WMAX; m++) { t[o][m] = []; for (n = 0; n <= AI_WMAX; n++) t[o][m][n] = m <= 0 ? 0 : n <= 0 ? 1 : (AI_W_DATA ? AI_W_DATA[o][m - 1][n - 1] : m / (m + n)); }
+    AI_W = t; return t;
+  }
+  function aiWin(open, m, n) {
+    if (m <= 0) return 0; if (n <= 0) return 1;
+    if (m > AI_WMAX || n > AI_WMAX) { var s = AI_WMAX / Math.max(m, n); m = Math.max(1, Math.round(m * s)); n = Math.max(1, Math.round(n * s)); }
+    return aiWinTable()[open ? 1 : 0][m][n];
+  }
+
+  // ---- what a sensible player does: the model the AI uses both to read your bids (which hands would have made them) and to predict your answers ----
+  var AI_OPP = { beta: 4, eps: 0.08, reach: 2, gull: 0.3, callLeaf: 1 };   // callLeaf: when it imagines raising again, the chance it gives you of calling that raise (the rest of the time the round is treated as a wash)
+  // their picture of my hidden dice: 1/6 a face, nudged toward faces I have bid on this round (the latest bid nudges most)
+  function aiOppView(mu, myFaces, gull) {
+    var bump = [0, 0, 0, 0, 0, 0, 0], i, f, tot = 0, pf = [], T = [], E = [], k;
+    for (i = 0; i < myFaces.length; i++) bump[myFaces[i]] += (i === myFaces.length - 1 ? 0.55 : 0.3) * gull;
+    for (f = 1; f <= 6; f++) tot += bump[f];
+    for (f = 1; f <= 6; f++) {
+      pf[f] = Math.min(0.5, (1 / 6 + bump[f]) / (1 + tot) + 0.01);
+      T[f] = []; E[f] = [];
+      for (k = 0; k <= mu + 1; k++) { T[f][k] = binomTail(mu, pf[f], k); E[f][k] = binomPmf(mu, pf[f], k); }
     }
-    var hands = []; for (i = 0; i < S; i++) hands.push(sampleHand());
-    var hc = hands.map(function (h) { var a = [0]; for (var ff = 1; ff <= 6; ff++) a[ff] = countFace(h, ff); return a; });
-    // how a sensible player answers a bid, from their side of the table
-    var P0 = 1 / 6 + 0.01, tailT = [], pmfT = [], kk;
-    for (kk = 0; kk <= m + 1; kk++) { tailT[kk] = binomTail(m, P0, kk); pmfT[kk] = binomPmf(m, P0, kk); }
-    function tail0(k) { return k <= 0 ? 1 : k > m ? 0 : tailT[k]; }
-    function pmf0(k) { return k < 0 || k > m ? 0 : pmfT[k]; }
-    var raiseCache = {};
-    function pRaiseMine(qq, ff) { var key = qq * 8 + ff; if (raiseCache[key] === undefined) raiseCache[key] = binomTail(n, pf(ff), qq - myCount[ff]); return raiseCache[key]; }
-    function replyValue(qq, ff, prev, hi) {
-      // returns my result (in dice) if I make bid qq x ff
-      var cnt = myCount[ff] + hc[hi][ff], truth = cnt >= qq, hcf = hc[hi][ff];
-      var pt = tail0(qq - hcf);
-      if (pt < 0.38) return truth ? 1 : -1;                                  // they call liar
-      var pe = pmf0(qq - hcf);
-      if (pe > 0.4 && qq >= 2) return cnt === qq ? -crit : 1;                  // they call exact
-      // they raise: pick the safest legal raise
-      var best = -1, bq = 0, bf = 0, q2, f2, pr;
-      for (q2 = qq; q2 <= Math.min(total, qq + 2); q2++) for (f2 = 1; f2 <= 6; f2++) {
-        if (!(q2 > qq || f2 > ff)) continue;
-        pr = tail0(q2 - hc[hi][f2]);
-        if (pr > best + 0.0001) { best = pr; bq = q2; bf = f2; }
+    return { mu: mu, T: T, E: E };
+  }
+  // the actions open to them facing bid prev (or opening), and the chance of each for every hand. probs[h * A + a]. Their known dice = their
+  // counts kc (hand + the dice both sides can see) plus the hand's own counts; nerve shifts how keen they are to call; beta is how sharp they are.
+  var AI_PROBS = new Float64Array(1024);
+  function aiOppActs(view, prev, total, hands, kc, critP, beta, nerve, reachP) {
+    var acts = [], q, f, A, h, a, H = hands.H, cnt = hands.cnt, T = view.T, E = view.E, mu = view.mu, u = [], mx, s, need, t, p;
+    if (prev) {
+      acts.push({ type: 'liar' }); acts.push({ type: 'exact' });
+      for (q = prev.qty; q <= Math.min(total, prev.qty + reachP); q++) for (f = 1; f <= 6; f++) if (isLegalBid(prev, q, f, total)) acts.push({ type: 'bid', qty: q, face: f });
+    } else {
+      for (q = 1; q <= Math.min(total, Math.ceil(total / 2) + 1); q++) for (f = 1; f <= 6; f++) acts.push({ type: 'bid', qty: q, face: f });
+    }
+    A = acts.length;
+    if (AI_PROBS.length < H * A) AI_PROBS = new Float64Array(H * A * 2);
+    var probs = AI_PROBS, eps = AI_OPP.eps, unif = eps / A, pq = prev ? prev.qty : 0;
+    for (h = 0; h < H; h++) {
+      var o = h * 7; mx = -1e9;
+      for (a = 0; a < A; a++) {
+        var ac = acts[a];
+        if (ac.type === 'liar') { need = pq - kc[prev.face] - cnt[o + prev.face]; t = need <= 0 ? 1 : need > mu ? 0 : T[prev.face][need]; u[a] = 1 - 2 * t + nerve; }
+        else if (ac.type === 'exact') { need = pq - kc[prev.face] - cnt[o + prev.face]; t = (need < 0 || need > mu) ? 0 : E[prev.face][need]; u[a] = critP * t - (1 - t) + nerve; }
+        else { need = ac.qty - kc[ac.face] - cnt[o + ac.face]; t = need <= 0 ? 1 : need > mu ? 0 : T[ac.face][need]; u[a] = prev ? 0.9 * t - 0.6 - 0.03 * (ac.qty - pq) : 0.9 * t - 0.6 - 0.04 * ac.qty; }
+        if (u[a] > mx) mx = u[a];
       }
-      if (!bq) return truth ? 0.4 : -0.4;
-      // my answer to that raise, judged with what I know
-      var pRaise = pRaiseMine(bq, bf);
-      return Math.max(1 - 2 * pRaise, -0.2) * 0.9;
+      s = 0; for (a = 0; a < A; a++) { p = Math.exp(beta * (u[a] - mx)); u[a] = p; s += p; }
+      for (a = 0; a < A; a++) probs[h * A + a] = (1 - eps) * u[a] / s + unif;
     }
-    function bidValue(qq, ff, prev) {
-      var s = 0, hi;
-      for (hi = 0; hi < S; hi++) s += replyValue(qq, ff, prev, hi);
-      return s / S;
+    return { acts: acts, probs: probs };
+  }
+
+  // ---- every hand your hidden dice could make, as face counts (a wild adds one to every face) with its chance. dists[i][v] is die i's chance of value v (0 = wild).
+  // Exact when there are at most cap hands, otherwise a sample of cap hands. ----
+  function aiHands(dists, cap) {
+    var n = dists.length, i, j, v, f, cur = [{ c: [0, 0, 0, 0, 0, 0, 0], w: 1 }], out, map, h, p, c, key, e, exact = true;
+    for (i = 0; i < n && exact; i++) {
+      map = {}; out = [];
+      for (j = 0; j < cur.length && exact; j++) {
+        h = cur[j];
+        for (v = 0; v <= 6; v++) {
+          p = dists[i][v]; if (!p) continue;
+          c = h.c.slice(); if (v === 0) { for (f = 1; f <= 6; f++) c[f]++; } else c[v]++;
+          key = c[1] + (c[2] << 5) + (c[3] << 10) + (c[4] << 15) + (c[5] << 20) + c[6] * 33554432;
+          e = map[key]; if (e) e.w += h.w * p; else { e = { c: c, w: h.w * p }; map[key] = e; out.push(e); if (out.length > cap) { exact = false; } }
+        }
+      }
+      cur = out;
     }
-    var opts = [], b = c.bid;
-    if (!b) {
-      for (q = 1; q <= Math.min(total, Math.ceil(total / 2) + 1); q++) for (f = 1; f <= 6; f++) opts.push({ a: { type: 'bid', qty: q, face: f }, ev: bidValue(q, f, null) + noise() });
-      return pickWeighted(opts, temp).a;
+    if (!exact) {
+      map = {}; out = [];
+      for (j = 0; j < cap; j++) {
+        c = [0, 0, 0, 0, 0, 0, 0];
+        for (i = 0; i < n; i++) { var r = Math.random(), d = dists[i]; for (v = 0; v <= 6; v++) { r -= d[v]; if (r <= 0) break; } if (v > 6) v = 6; if (v === 0) { for (f = 1; f <= 6; f++) c[f]++; } else c[v]++; }
+        key = c[1] + (c[2] << 5) + (c[3] << 10) + (c[4] << 15) + (c[5] << 20) + c[6] * 33554432;
+        e = map[key]; if (e) e.w += 1; else { e = { c: c, w: 1 }; map[key] = e; out.push(e); }
+      }
+      cur = out;
     }
-    var cur = pTrue(b.qty, b.face);
-    opts.push({ a: { type: 'liar' }, ev: 1 - 2 * cur + noise() });
-    if (c.canExact && (skill >= 0.3 || m === 1)) { var pe0 = pExact(b.qty, b.face); opts.push({ a: { type: 'exact' }, ev: crit * pe0 - (1 - pe0) + (m === 1 ? 0.4 : 0) + noise() }); }   // a foe on its last die gambles for the big swing
-    for (q = b.qty; q <= Math.min(total, b.qty + 3); q++) for (f = 1; f <= 6; f++) {
+    var H = cur.length, cnt = new Int16Array(H * 7), w = new Float64Array(H), tot = 0;
+    for (j = 0; j < H; j++) { for (f = 0; f < 7; f++) cnt[j * 7 + f] = cur[j].c[f]; w[j] = cur[j].w; tot += w[j]; }
+    for (j = 0; j < H; j++) w[j] /= tot;
+    return { H: H, cnt: cnt, w: w, exact: exact };
+  }
+  function aiFairDie() { return [0, 1 / 6, 1 / 6, 1 / 6, 1 / 6, 1 / 6, 1 / 6]; }
+
+  // ---- what the rounds so far have taught it about you. A small grid of hypotheses: nerve (how keen you are to call) and sharpness (how
+  // closely your bids follow your dice). Updated at the end of each round, when every die is on the table; old rounds fade. ----
+  var AI_NERVES = [-0.25, -0.12, 0, 0.12, 0.25], AI_SHARPS = [0.5, 1, 1.5];
+  function aiLearnNew() { var lw = []; for (var i = 0; i < AI_NERVES.length * AI_SHARPS.length; i++) lw.push(0); return { lw: lw, rounds: 0 }; }
+  function aiLearnRead(L, adapt) {
+    var nerve = 0, sharp = 1;
+    if (L && L.lw && adapt > 0) {
+      var i, j, k = 0, mx = -1e9, s = 0, ws = [], en = 0, es = 0;
+      for (i = 0; i < L.lw.length; i++) if (L.lw[i] > mx) mx = L.lw[i];
+      for (i = 0; i < AI_NERVES.length; i++) for (j = 0; j < AI_SHARPS.length; j++, k++) { ws[k] = Math.exp(L.lw[k] - mx); s += ws[k]; en += ws[k] * AI_NERVES[i]; es += ws[k] * AI_SHARPS[j]; }
+      nerve = adapt * en / s; sharp = 1 + adapt * (es / s - 1);
+    }
+    return { nerve: nerve, sharp: sharp };
+  }
+  // info: { hist: [{by, qty, face}], theirVals: all of their dice values, myVals: my dice values, peeked: my values they had seen, total }
+  function aiLearnRound(L, info) {
+    if (!L || !info || !info.hist) return;
+    var hc = [0, 0, 0, 0, 0, 0, 0], pc = [0, 0, 0, 0, 0, 0, 0], f, k, i, j;
+    for (f = 1; f <= 6; f++) { hc[f] = countFace(info.theirVals, f); pc[f] = countFace(info.peeked || [], f); }
+    var mu = info.myVals.length - (info.peeked || []).length, one = { H: 1, cnt: new Int16Array(7), w: new Float64Array([1]) }, kc = [], any = false;
+    for (f = 0; f < 7; f++) { one.cnt[f] = hc[f]; kc[f] = pc[f]; }
+    var myFaces = [], prev = null, probs, add = [];
+    for (i = 0; i < L.lw.length; i++) add[i] = 0;
+    for (k = 0; k < info.hist.length; k++) {
+      var b = info.hist[k];
+      if (b.by === 'p') {
+        var view = aiOppView(mu, myFaces, AI_OPP.gull), n = 0;
+        for (i = 0; i < AI_NERVES.length; i++) for (j = 0; j < AI_SHARPS.length; j++, n++) {
+          var oa = aiOppActs(view, prev, info.total, one, kc, info.critP || 2, AI_OPP.beta * AI_SHARPS[j], AI_NERVES[i], AI_OPP.reach), acts = oa.acts, a; probs = oa.probs;
+          for (a = 0; a < acts.length; a++) if (acts[a].type === 'bid' && acts[a].qty === b.qty && acts[a].face === b.face) { add[n] += Math.log(Math.max(1e-6, probs[a])); any = true; break; }
+        }
+      } else myFaces.push(b.face);
+      prev = { qty: b.qty, face: b.face };
+    }
+    // the call that ended the round is evidence too: did they call, and on what
+    if (info.callBy === 'p' && info.callKind && prev && info.hist.length && info.hist[info.hist.length - 1].by === 'e') {
+      var view2 = aiOppView(mu, myFaces, AI_OPP.gull), n2 = 0;
+      for (i = 0; i < AI_NERVES.length; i++) for (j = 0; j < AI_SHARPS.length; j++, n2++) {
+        var oa2 = aiOppActs(view2, prev, info.total, one, kc, info.critP || 2, AI_OPP.beta * AI_SHARPS[j], AI_NERVES[i], AI_OPP.reach), acts2 = oa2.acts, a2; probs = oa2.probs;
+        for (a2 = 0; a2 < acts2.length; a2++) if (acts2[a2].type === info.callKind) { add[n2] += Math.log(Math.max(1e-6, probs[a2])); any = true; break; }
+      }
+    }
+    if (!any) return;
+    for (i = 0; i < L.lw.length; i++) L.lw[i] = L.lw[i] * 0.93 + add[i];
+    L.rounds++;
+  }
+
+  // ---- the decision ----
+  // c: { own: my dice values, seen: their dice I can see, oppN: their hidden dice, oppDist: [per hidden die [p0..p6]] (fair when missing),
+  //      bid, hist: this round's bids [{by, qty, face}], canExact, crit (my Spot On damage), oppCrit, oppLiarDmg (what a bluff of mine costs when caught),
+  //      rebuke (extra I lose calling Liar wrongly), hitBonus (extra my hits do), theirBonus (extra their hits do), myN (my dice as health),
+  //      oppHP (their real dice), babies, shield, armour, peeked (my values they have seen), learn (what it knows about them), P, skill, trace, dummy }
+  function aiDecide(c) {
+    var t0 = Date.now(), P = c.P || aiParams(c.skill, null);
+    var own = c.own || [], seen = c.seen || [], m = own.length, n = c.oppN, total = m + seen.length + n, f, q, h, i, a;
+    if (c.dummy) return c.bid ? { type: 'bid', qty: c.bid.qty + 1, face: 1 } : { type: 'bid', qty: 1, face: 1 };
+    var myN = c.myN || m, oppHP = c.oppHP != null ? c.oppHP : n + seen.length, babies = c.babies || 0, shield = c.shield || 0, armour = c.armour || 0;
+    var crit = c.crit || 2, oppCrit = c.oppCrit || 2, liarDmg = c.oppLiarDmg || 1, rebuke = c.rebuke || 0, hb = c.hitBonus || 0, tb = c.theirBonus || 0;
+    var hist = c.hist || [], peeked = c.peeked || [];
+    // what I know for sure: my dice and theirs that I can see
+    var myC = [0, 0, 0, 0, 0, 0, 0], seenC = [0, 0, 0, 0, 0, 0, 0], peekC = [0, 0, 0, 0, 0, 0, 0], base = [], kc = [];
+    for (f = 1; f <= 6; f++) { myC[f] = countFace(own, f); seenC[f] = countFace(seen, f); peekC[f] = countFace(peeked, f); base[f] = myC[f] + seenC[f]; kc[f] = seenC[f] + peekC[f]; }
+    // the hands their hidden dice could be
+    var dists = [], hands;
+    for (i = 0; i < n; i++) dists.push((c.oppDist && c.oppDist[i]) || aiFairDie());
+    hands = aiHands(dists, P.hands);
+    var H = hands.H, cnt = hands.cnt, w = new Float64Array(hands.w);
+    // what the rounds so far say about them
+    var learned = aiLearnRead(c.learn, P.adapt), beta = AI_OPP.beta * P.read * learned.sharp, nerve = learned.nerve;
+    var mu = m - peeked.length, probs, view, acts, A, o, oa;
+    // read this round's bids: weigh every hand by how likely a sensible player holding it would have bid as they did
+    var myFaces = [], prev = null, k;
+    for (k = 0; k < hist.length; k++) {
+      var hb_ = hist[k];
+      if (hb_.by === 'p') {
+        if (P.read > 0) {
+          view = aiOppView(mu, myFaces, P.gull);
+          oa = aiOppActs(view, prev, total, hands, kc, oppCrit, beta, nerve, AI_OPP.reach); acts = oa.acts; probs = oa.probs; A = acts.length;
+          for (a = 0; a < A; a++) if (acts[a].type === 'bid' && acts[a].qty === hb_.qty && acts[a].face === hb_.face) break;
+          if (a < A) { var s = 0; for (h = 0; h < H; h++) { w[h] *= probs[h * A + a]; s += w[h]; } if (s > 0) for (h = 0; h < H; h++) w[h] /= s; }
+        }
+      } else myFaces.push(hb_.face);
+      prev = { qty: hb_.qty, face: hb_.face };
+    }
+    // what each outcome is worth: the chance of winning the fight from the round after it. The loser opens.
+    var LM = [], LT = [], d;
+    var dw = AI_TUNE.dieWorth;
+    for (d = 0; d <= 9; d++) { var lm = Math.max(0, d - armour), lt = Math.max(0, d - Math.min(1, shield)); LM[d] = aiWin(0, myN - lm, oppHP) - dw * lm; LT[d] = aiWin(1, myN, oppHP - Math.max(0, lt - babies)) + dw * lt; }
+    // what each call costs whom: dMW = my Liar call wrong, dMX = my Spot On hits, dMXW = my Spot On wrong, dTW = their Liar call wrong, dCaught = my bluff caught, dCrit = their Spot On hits
+    var dMW = 1 + rebuke + tb, dMX = 2 + hb, dMXW = 1, dTW = 1 + hb, dCaught = liarDmg + tb, dCrit = oppCrit + tb, dTXW = 1;
+    function vMyLiar(cf, qq) { return cf >= qq ? LM[dMW] : LT[1]; }
+    function vMyExact(cf, qq) { return cf === qq ? LT[dMX] : LM[dMXW]; }
+    function vTheyLiar(cf, qq) { return cf >= qq ? LT[dTW] : LM[dCaught]; }
+    function vTheyExact(cf, qq) { return cf === qq ? LM[dCrit] : LT[dTXW]; }
+    // a raise of mine two moves deep: they call it (callLeaf of the time) or the round goes on, which is treated as a wash
+    var W0 = 0.5 * (aiWin(0, myN, oppHP) + aiWin(1, myN, oppHP)), cl = AI_OPP.callLeaf, cl1 = (1 - cl) * W0;
+    function vLeaf(cf, qq) { return cl * vTheyLiar(cf, qq) + cl1; }
+    // the chance a bid is true, and exactly right, under what I believe
+    function pTrue(qq, ff) { var s = 0, b0 = base[ff]; for (h = 0; h < H; h++) if (b0 + cnt[h * 7 + ff] >= qq) s += w[h]; return s; }
+    function pExact(qq, ff) { var s = 0, b0 = base[ff]; for (h = 0; h < H; h++) if (b0 + cnt[h * 7 + ff] === qq) s += w[h]; return s; }
+    // a bid of mine, played forward: how they answer it, and what I do about a raise
+    var reachP = AI_OPP.reach, choice = [];
+    function evalBid(qq, ff) {
+      var vw = aiOppView(mu, myFaces.concat([ff]), P.gull), bid = { qty: qq, face: ff };
+      var oa2 = aiOppActs(vw, bid, total, hands, kc, oppCrit, beta, nerve, reachP), ac = oa2.acts, probs = oa2.probs, AA = ac.length, j, hh, s, f3, q3, b0 = base[ff];
+      // for each raise they might make: what I would do, judged with the hands that would make that raise
+      for (j = 2; j < AA; j++) {
+        var rq = ac[j].qty, rf = ac[j].face, sw = 0, eL = 0, eE = 0, bf = ac[j].face, b3 = base[rf];
+        for (hh = 0; hh < H; hh++) { var ww = w[hh] * probs[hh * AA + j]; if (!ww) continue; sw += ww; var cf = b3 + cnt[hh * 7 + rf]; eL += ww * vMyLiar(cf, rq); eE += ww * vMyExact(cf, rq); }
+        if (sw < 1e-9) { choice[j] = { t: 'liar' }; continue; }
+        var best = { t: 'liar', v: eL / sw + P.liar };
+        if (c.canExact && (P.skill >= 0.3 || myN === 1)) { var ve = eE / sw + P.exact + (myN === 1 ? P.lastDie : 0); if (ve > best.v) best = { t: 'exact', v: ve }; }
+        // or raise again, as safely as I can, and expect a call
+        for (f3 = 1; f3 <= 6; f3++) {
+          q3 = f3 > rf ? rq : rq + 1; if (q3 > total) continue;
+          var v3 = 0, b4 = base[f3];
+          for (hh = 0; hh < H; hh++) { var ww2 = w[hh] * probs[hh * AA + j]; if (ww2) v3 += ww2 * vLeaf(b4 + cnt[hh * 7 + f3], q3); }
+          v3 /= sw; if (v3 > best.v) best = { t: 'bid', v: v3, q: q3, f: f3 };
+        }
+        choice[j] = best;
+      }
+      // now the value of the bid itself, hand by hand
+      var ev = 0;
+      for (hh = 0; hh < H; hh++) {
+        var o2 = hh * AA, cf0 = b0 + cnt[hh * 7 + ff], v = probs[o2] * vTheyLiar(cf0, qq) + probs[o2 + 1] * vTheyExact(cf0, qq);
+        for (j = 2; j < AA; j++) {
+          var pj = probs[o2 + j]; if (!pj) continue; var ch = choice[j];
+          if (ch.t === 'liar') v += pj * vMyLiar(base[ac[j].face] + cnt[hh * 7 + ac[j].face], ac[j].qty);
+          else if (ch.t === 'exact') v += pj * vMyExact(base[ac[j].face] + cnt[hh * 7 + ac[j].face], ac[j].qty);
+          else v += pj * vLeaf(base[ch.f] + cnt[hh * 7 + ch.f], ch.q);
+        }
+        ev += w[hh] * v;
+      }
+      return ev;
+    }
+    var noiseAmp = P.noise;
+    function noise() { return noiseAmp ? (Math.random() - 0.5) * 2 * noiseAmp : 0; }
+    var opts = [], b = c.bid, cur = null, pe0 = null;
+    if (b) {
+      cur = pTrue(b.qty, b.face); pe0 = pExact(b.qty, b.face);
+      opts.push({ a: { type: 'liar' }, ev: (1 - cur) * LT[1] + cur * LM[dMW] + P.liar + noise() });
+      if (c.canExact && (P.skill >= 0.3 || myN === 1)) opts.push({ a: { type: 'exact' }, ev: pe0 * LT[dMX] + (1 - pe0) * LM[dMXW] + P.exact + (myN === 1 ? P.lastDie : 0) + noise() });
+    }
+    // bids worth weighing: within reach, legal, and not hopeless unless nothing else is legal
+    var cands = [], q0 = b ? b.qty : 1, q1 = b ? Math.min(total, b.qty + P.reach) : Math.min(total, Math.ceil(total / 2) + 1);
+    for (q = q0; q <= q1; q++) for (f = 1; f <= 6; f++) {
       if (!isLegalBid(b, q, f, total)) continue;
-      opts.push({ a: { type: 'bid', qty: q, face: f }, ev: bidValue(q, f, b) + noise() });
+      var pt = pTrue(q, f);
+      cands.push({ q: q, f: f, pt: pt, hopeless: pt < 0.06 && q > base[f] });
     }
-    return pickWeighted(opts, temp).a;
+    var live = cands.filter(function (x) { return !x.hopeless; });
+    if (!live.length && cands.length) live = cands.slice(0, 6);
+    for (i = 0; i < live.length; i++) opts.push({ a: { type: 'bid', qty: live[i].q, face: live[i].f }, ev: evalBid(live[i].q, live[i].f) + noise(), pt: live[i].pt, bluff: myC[live[i].f] === 0 });
+    if (!opts.length) return { type: 'liar' };
+    // the pick: usually the best (softly), sometimes a bluff when it is cheap enough for this foe
+    var top = null, topBluff = null;
+    for (i = 0; i < opts.length; i++) { if (!top || opts[i].ev > top.ev) top = opts[i]; if (opts[i].bluff && (!topBluff || opts[i].ev > topBluff.ev)) topBluff = opts[i]; }
+    var bluffTurn = topBluff && Math.random() < P.bluff, pick;
+    if (bluffTurn && topBluff.ev >= top.ev - P.bluffCost) pick = topBluff; else pick = pickWeighted(opts, P.temp);
+    if (c.trace) {
+      var ranked = opts.slice().sort(function (x, y) { return y.ev - x.ev; }).slice(0, 5).map(function (x) { return { a: x.a, ev: +x.ev.toFixed(3) }; });
+      AI_LAST = { t: Date.now(), ms: Date.now() - t0, a: pick.a, ev: +pick.ev.toFixed(3), bluffTurn: !!bluffTurn, bluffed: !!pick.bluff, holds: pick.a.type === 'bid' ? myC[pick.a.face] : null,
+        pTrue: pick.a.type === 'bid' ? +pick.pt.toFixed(2) : null, curTrue: cur === null ? null : +cur.toFixed(2), curExact: pe0 === null ? null : +pe0.toFixed(2),
+        bid: b ? { qty: b.qty, face: b.face } : null, top: ranked, own: own.slice(), oppN: n, hands: H, exact: hands.exact, nerve: +nerve.toFixed(2), sharp: +learned.sharp.toFixed(2), P: P };
+    }
+    return pick.a;
   }
   // ===== ENGINE END =====
 
@@ -5533,6 +5795,13 @@ body.spk-mead .foe:not(.slain) .portbtn:not(.spelltgt) { animation: tgtglow .55s
   function xpFor(def) { if (def.id === 'dummy') return 1; var st = (S && S.player && S.player.ab && S.player.ab.study) || 0, mul = def.xpMul || 1; return Math.round(def.dice * Math.round(40 * mul) * (1 + 0.15 * st + 0.01 * webN('xp'))) + (def.kind === 'boss' ? Math.round(100 * mul) : 0); }
   // items: buff items you carry in three slots. (Seals are the upgrades you put on your dice.)
   var INV_SLOTS = 3, BAG_SLOTS = 3;
+  // ======================= RETIRED: THE SATCHEL (2026-10-09) =======================
+  // The satchel (the bag icon, the see-inside panel, the apple found in it, cards dropped into it, loose icons tucked away for fights) is switched off, not deleted.
+  // Flip SATCHEL_ON to true and all of it comes back. Every site it touches checks this flag: iconLayerSync (bag icon), locClick('satchel') (open/close + the apple),
+  // startCombat (tucking loose icons away), sealLayerSync (the panel + items marked bag), the card-onto-satchel drop (deck pointerdown), iconUp (the pouch into the bag).
+  // Art stays wired: NEWART.bagpanel, NEWART.bagicon / ITEM_ART.bag, X_SVG; CSS .fibag, #satchelpanel, .sp-x.
+  var SATCHEL_ON = false;
+  // ======================= END RETIRED: THE SATCHEL =======================
   var ITEMS = {
     whetstone: { name: 'Whetstone', desc: 'Your first wound each fight cuts 1 deeper (1 extra damage).', base: 30, rar: 'common' },
     coin: { name: 'Lucky Coin', desc: 'Once per fight, flip one die back into the dark and reroll it for free.', base: 35, rar: 'common' },
@@ -5555,7 +5824,7 @@ body.spk-mead .foe:not(.slain) .portbtn:not(.spelltgt) { animation: tgtglow .55s
     rend: { name: 'Soul Rend', desc: 'Created whenever your roll adds up to 50 or more. Tear one enemy die out of play for good and steal its seals.', base: 0, rar: 'epic' },
     apple: { name: 'Apple', desc: 'Found in your satchel. Drag it onto your portrait to eat it and restore 1 fallen die.', base: 10, rar: 'common' },
     armour: { name: 'Iron Plate', desc: 'Throw it on in a fight to gain 2 armour. Each point of armour blocks 1 damage. Used up when played.', base: 40, rar: 'uncommon' },
-    glass: { name: 'Looking Glass', desc: 'Use it on your turn to force the enemy to bid again instead of you. One use.', base: 20, rar: 'common' },
+    glass: { name: 'Looking Glass', desc: 'Play it in a fight to gain one more Pass the Buck: the enemy must bid again instead of you. One use.', base: 20, rar: 'common' },
     mead: { name: 'Mead', desc: 'Drink it in a fight: the enemy’s next bid will be for the wrong face. One use.', base: 45, rar: 'uncommon' },
     xp: { name: 'XP Drought', desc: 'Drink it in a fight to gain 100 XP instantly. One use.', base: 55, rar: 'uncommon' },
     frenzy: { name: 'Blood Frenzy', desc: 'Berserk a single time: lose 1 die, and every attack you land this fight hits harder. Used up when played.', base: 90, rar: 'epic' },
@@ -5571,7 +5840,7 @@ body.spk-mead .foe:not(.slain) .portbtn:not(.spelltgt) { animation: tgtglow .55s
   // usable items are cards: they live in the deck, not in your hands
   var CARD_IDS = ['potion', 'knife', 'bleach', 'eyeglass', 'smoke', 'bandage', 'armour', 'frenzy', 'glass', 'mead', 'xp', 'razor', 'serrated', 'rend'], DECK_MAX = 12;
   var CARD_INFO = {
-    potion: { txt: 'Restore 2 fallen dice.', type: 'Target', key: 'potion' },
+    potion: { txt: 'Restore 2 fallen dice.', fl: 'Bitter. It works.', type: 'Target', key: 'potion' },
     knife: { txt: 'Smash one enemy die and deal 1 damage.', fl: 'Quick. Quiet. Gone.', type: 'Target', key: 'knife' },
     bleach: { txt: 'Blank an enemy die. It counts for nothing this round.', fl: 'It scrubs out more than stains.', type: 'Target', key: 'bleach' },
     eyeglass: { txt: 'Peek at one enemy die.', fl: 'One lens left. One lie fewer.', type: 'Target', key: 'eye' },
@@ -5579,7 +5848,7 @@ body.spk-mead .foe:not(.slain) .portbtn:not(.spelltgt) { animation: tgtglow .55s
     smoke: { txt: 'Take no damage from the next call.', fl: 'Cough. Vanish. Live.', type: 'Self' },
     armour: { txt: 'Gain 2 armour. Each point blocks 1 damage.', fl: 'Heavy. Ugly. Worth it.', type: 'Target', key: 'armour' },
     mead: { txt: 'The enemy’s next bid is for the wrong face.', fl: 'Sweet, strong, and not for sharing.', type: 'Target', key: 'mead' },
-    glass: { txt: 'Use on your turn: force the enemy to bid again.', fl: 'Your move? Look again.', type: 'Self' },
+    glass: { txt: '+1 Pass the Buck this fight.', fl: 'Your move? Look again.', type: 'Self' },
     xp: { txt: 'Gain 100 XP instantly.', fl: 'A dry, bitter lesson.', type: 'Self' },
     frenzy: { txt: 'Berserk once: lose a die, hit harder this fight.', fl: 'Pain is only a price.', type: 'Self' },
     razor: { txt: '1 bleed: the foe loses a die every 3 rounds.', fl: 'Tetanus is a kind of patience.', type: 'Target', key: 'razor' },
@@ -5654,7 +5923,7 @@ body.spk-mead .foe:not(.slain) .portbtn:not(.spelltgt) { animation: tgtglow .55s
   function locClick(str) {
     if (!S.player) return;
     var l = locParse(str);
-    if (l.k === 'satchel' && !S.hold) { S.bagOpen = !S.bagOpen; if (S.bagOpen && !S.appleFound && S.player) { S.appleFound = true; S.loose = S.loose || []; var asp = freeBagSpot(); S.loose.push({ id: ++LOOSE_ID, item: 'apple', bag: true, bx: asp.bx, by: asp.by, x: null, y: null }); sfx('item'); } render(); return; }
+    if (l.k === 'satchel' && !S.hold) { if (!SATCHEL_ON) return; S.bagOpen = !S.bagOpen; if (S.bagOpen && !S.appleFound && S.player) { S.appleFound = true; S.loose = S.loose || []; var asp = freeBagSpot(); S.loose.push({ id: ++LOOSE_ID, item: 'apple', bag: true, bx: asp.bx, by: asp.by, x: null, y: null }); sfx('item'); } render(); return; }
     if (S.screen === 'combat') return;
     if (!S.hold) { if (locGet(l)) setHold(l); return; }
     if (S.hold.k === l.k && S.hold.i === l.i) { setHold(null); return; }
@@ -6045,7 +6314,7 @@ body.spk-mead .foe:not(.slain) .portbtn:not(.spelltgt) { animation: tgtglow .55s
       }
     } catch (e) { beginning = false; startRun(); }
   }
-  function startRun() { try { var cv = MUSC.v; if (cv && cv.k === 'calm' && !cv.prev && AUD.ctx && AUD.ctx.state === 'running') { MUSC.pick = null; MUSC.epick = null; /* the title music is the same calm track as the map: let it play on, no cut and no restart */ } else musicHardStop(); } catch (e) { } XP.shown = null; XP.anim = null; AUD.lastGold = null; S.newItems = {}; S.loose = []; S.appleFound = false; S.cards = []; S.pouchBag = null; S.pcPos = {}; S.pcZ = 0; S.sealArm = null; S.bagOpen = false; S.bagPos = null; S.owed = 0; S.shopLuck = webN('luck'); S.bonus = { double: 0, block: 0, drop: 0 }; S.tokBanked = false; S.runKills = 0; S.swap = null; S.discardArm = null; S.hold = null; S.destroy = null; S.bagOpen = false; S.player = newPlayer(); S.player.deck.push('potion'); S.player.deck.push('glass'); S.bank = 0; S.bankNote = 0; S.floorNum = 1; S.floor = makeFloor(1); initFloorState(); S.screen = 'map'; S.forge = null; S.upgrade = null; S.event = null; S.pending = 0; S.finalShop = false; S.showDice = false; S.pact = false; S.runPts = 0; S.runWins = 0; S.sk = {}; S.sp = 0; S.shopLevel = 0; render(); }
+  function startRun() { try { var cv = MUSC.v; if (cv && cv.k === 'calm' && !cv.prev && AUD.ctx && AUD.ctx.state === 'running') { MUSC.pick = null; MUSC.epick = null; /* the title music is the same calm track as the map: let it play on, no cut and no restart */ } else musicHardStop(); } catch (e) { } XP.shown = null; XP.anim = null; AUD.lastGold = null; S.newItems = {}; S.loose = []; S.appleFound = false; S.cards = []; S.pouchBag = null; S.pcPos = {}; S.pcZ = 0; S.sealArm = null; S.bagOpen = false; S.bagPos = null; S.owed = 0; S.shopLuck = webN('luck'); S.bonus = { double: 0, block: 0, drop: 0 }; S.tokBanked = false; S.runKills = 0; S.swap = null; S.discardArm = null; S.hold = null; S.destroy = null; S.bagOpen = false; S.player = newPlayer(); S.player.deck.push('potion'); S.player.deck.push('glass'); S.aiLearn = aiLearnNew(); S.bank = 0; S.bankNote = 0; S.floorNum = 1; S.floor = makeFloor(1); initFloorState(); S.screen = 'map'; S.forge = null; S.upgrade = null; S.event = null; S.pending = 0; S.finalShop = false; S.showDice = false; S.pact = false; S.runPts = 0; S.runWins = 0; S.sk = {}; S.sp = 0; S.shopLevel = 0; render(); }
   var bossBusy = false;
   // floor boss: fade to black and fade the music out, then the boss track plays from its first note
   function bossCue(go) {
@@ -6280,10 +6549,10 @@ body.spk-mead .foe:not(.slain) .portbtn:not(.spelltgt) { animation: tgtglow .55s
     if (def.group) parts[0].n = (def.group.min + rnd(def.group.max - def.group.min + 1)) * def.group.dice;
     parts.forEach(function (pt) { pt.n0 = pt.n; pt.armour = pt.def.armour || 0; pt.dm = genEnemyDm(pt.def, pt.n); if (pt.def.dropRandom) { var fm = []; pt.dm.forEach(function (l) { l.forEach(function (m) { fm.push(m); }); }); if (fm.length) pt.def.drop = fm[rnd(fm.length)]; } pt.gain = 0; pt.regen = 0; pt.berserk = S.floorNum === 4; pt.berserkOn = false; });
     C = { bubble: null, node: node, def: def, berserk: false, speaker: -1, en: { n: def.group ? parts[0].n : def.dice, dice: [], owner: [], dmc: [], peeked: {}, smote: {}, bleached: {}, parts: parts }, round: 0, bid: null, turn: 'p', opener: 'p', phase: 'bid',
-      pbids: [], shield: own('shield') ? (own('bulwark') ? 3 : 1) : 0, charges: { peek: p.ab.peek + (itm('peek') ? 1 : 0) + ((S.stash || {}).peek || 0), reroll: p.ab.reroll + (itm('reroll') ? 1 : 0) + ((S.stash || {}).reroll || 0), coin: itm('coin') ? 1 : 0, bless: 0, smite: 0 }, target: null, sel: { qty: 1, face: 1 }, result: null, log: [], pv: [], anim: null, fx: {} };
+      pbids: [], hist: [], shield: own('shield') ? (own('bulwark') ? 3 : 1) : 0, charges: { peek: p.ab.peek + (itm('peek') ? 1 : 0) + ((S.stash || {}).peek || 0), reroll: p.ab.reroll + (itm('reroll') ? 1 : 0) + ((S.stash || {}).reroll || 0), coin: itm('coin') ? 1 : 0, buck: 1, bless: 0, smite: 0 }, target: null, sel: { qty: 1, face: 1 }, result: null, log: [], pv: [], anim: null, fx: {} };
     C.base = { peek: p.ab.peek + (itm('peek') ? 1 : 0), reroll: p.ab.reroll + (itm('reroll') ? 1 : 0) };
     C.rerollSel = []; C.lastFace = S.lastFace || 0; C.marks = {}; C.forced = false; C.pbleed = null; C.en.baby = {};
-    try { (S.loose || []).forEach(function (q) { if (!q.bag) { var fs = freeBagSpot(); q.bag = true; q.bx = fs.bx; q.by = fs.by; q.flying = false; } }); } catch (e) { }   // seals left floating on the screen are tucked into the satchel for the fight
+    if (SATCHEL_ON) try { (S.loose || []).forEach(function (q) { if (!q.bag) { var fs = freeBagSpot(); q.bag = true; q.bx = fs.bx; q.by = fs.by; q.flying = false; } }); } catch (e) { }   // (satchel) icons left floating on the screen are tucked into the satchel for the fight
     S.screen = 'combat';
     var Cmeet = !S.skipSpin && !REDUCED; if (Cmeet) { C.meeting = true; document.body.setAttribute('data-meet', 'hide'); }
     newRound('p');
@@ -6308,7 +6577,7 @@ body.spk-mead .foe:not(.slain) .portbtn:not(.spelltgt) { animation: tgtglow .55s
     }
   }
   function newRound(opener) {
-    C.round++; C.bid = null; C.pbids = []; C.result = null; C.phase = 'bid'; C.target = null;
+    C.round++; C.bid = null; C.pbids = []; C.hist = []; C.result = null; C.phase = 'bid'; C.target = null;
     C.opener = opener; C.turn = opener; C.en.peeked = {}; C.en.smote = {}; C.en.bleached = {}; C.en.kill = {}; C.coinMode = false;
     if (C.round > 1 && bleedTick()) return;
     C.forced = false;
@@ -7316,14 +7585,35 @@ body.spk-mead .foe:not(.slain) .portbtn:not(.spelltgt) { animation: tgtglow .55s
     if (C && C.phase === 'bid' && C.turn === 'e') { timer = setTimeout(enemyAct, 1300 + rnd(700)); setTimeout(function () { if (C && C.phase === 'bid' && C.turn === 'e') ebidThink(); }, 260); }
   }
   var EASY_FOES = ['dummy'];
+  // AI overrides stack, weakest first: the foe's own def.ai, then the training room's global switch (AIG, Dev tools > Training room > "every enemy"), then a training fight's own knobs (C.aiOver)
+  var AIG = { on: false, knobs: {}, trace: false };
+  try { var aig0 = JSON.parse(localStorage.getItem('lc_aiknobs') || 'null'); if (aig0 && typeof aig0 === 'object') { AIG.knobs = aig0.knobs || {}; AIG.on = !!aig0.on; } } catch (e) { }
+  function aiOverrides(def) { var o = {}, k; [def && def.ai, AIG.on ? AIG.knobs : null, C && C.aiOver].forEach(function (s) { if (s) for (k in s) if (s[k] !== null && s[k] !== undefined && s[k] !== '') o[k] = s[k]; }); return o; }
+  function aiDieDist(d) {
+    var p = [0, 0, 0, 0, 0, 0, 0], nP = modCount(d, 'poly'), nS = 6 + 2 * nP, nW = modCount(d, 'weighted'), nO = modCount(d, 'optimist'), i;
+    var sixes = d.faces.filter(function (x) { return x === 6 || x === 0 || x > 6; }), fw = (nW && sixes.length) ? WEIGHT_FORCE[Math.min(3, nW)] : 0;
+    function put(v0, pr) { var v = v0 > 6 ? 0 : v0; if (nO) v = (v === 0 || v + nO > 6) ? 0 : v + nO; p[v] += pr; }
+    for (i = 0; i < nS; i++) put(i < 6 ? d.faces[i] : 0, (1 - fw) / nS);
+    if (fw) sixes.forEach(function (x) { put(x, fw / sixes.length); });
+    return p;
+  }
   function enemyAct() {
     if (!C || S.screen !== 'combat' || C.phase !== 'bid' || C.turn !== 'e') { ebidClear(); return; }
     if (sharpSteal()) { if (C.phase === 'lost') { clearTimeout(timer); render(); return; } }
     var ps = C.en.parts, sp = C.speaker, k;
     for (k = 1; k <= ps.length; k++) { var cand = (sp + k + ps.length) % ps.length; if (ps[cand].n > 0) { sp = cand; break; } }
     C.speaker = sp;
-    var seen = C.pv.filter(function (x) { return x.spied; }).map(function (x) { return x.val; });
-    var a = aiDecide({ own: C.en.dice.filter(function (v, i) { return !C.en.smote[i] && !(C.en.bleached && C.en.bleached[i]); }).concat(seen), oppN: C.pv.length - seen.length, bid: C.bid, oppBids: C.pbids, skill: ps[sp].def.moody ? (C.wcSharp ? 0.9 : 0.1) : Math.min(0.99, ps[sp].def.skill + 0.12 + (S.floorNum === 4 ? 0.1 : 0) - (EASY_FOES.indexOf(ps[sp].def.id) > -1 ? 0.025 : 0)), canExact: !(EASY_FOES.indexOf(ps[sp].def.id) > -1 && Math.random() > 0.5), critDmg: 2, dummy: ps[sp].def.id === 'dummy' });
+    var seen = [], hidden = [];
+    C.pv.forEach(function (x) { if (x.spied) seen.push(x.val); else hidden.push(x); });
+    var sdef = ps[sp].def, effSkill = sdef.moody ? (C.wcSharp ? 0.9 : 0.1) : Math.min(1, sdef.skill + 0.12 + (S.floorNum === 4 ? 0.1 : 0) - (EASY_FOES.indexOf(sdef.id) > -1 ? 0.025 : 0));
+    var P = aiParams(effSkill, aiOverrides(sdef));
+    var alive = function (v, i) { return !C.en.smote[i] && !(C.en.bleached && C.en.bleached[i]); }, peeked = [];
+    C.en.dice.forEach(function (v, i) { if (alive(v, i) && C.en.peeked[i]) peeked.push(v); });
+    if (!S.aiLearn) S.aiLearn = aiLearnNew();
+    var a = aiDecide({ own: C.en.dice.filter(alive), seen: seen, oppN: hidden.length, oppDist: hidden.map(function (x) { return x.baby || !S.player.dice[x.i] ? aiFairDie() : aiDieDist(S.player.dice[x.i]); }),
+      bid: C.bid, hist: C.hist || [], skill: P.skill, P: P, trace: !!(C.train || AIG.trace), canExact: !(EASY_FOES.indexOf(sdef.id) > -1 && Math.random() > 0.5), dummy: sdef.id === 'dummy',
+      crit: 2, oppCrit: critDmg(), oppLiarDmg: own('judgement') ? 4 : 1, rebuke: own('rebuke') ? 1 : 0, hitBonus: ps[sp].berserkOn ? 1 : 0, theirBonus: C.berserk ? 1 : 0,
+      myN: C.en.n, oppHP: hp(S.player), babies: liveBabies(), shield: C.shield || 0, armour: ps[sp].armour || 0, peeked: peeked, learn: S.aiLearn });
     if (C.glassed) {
       C.glassed = false;
       if (a.type !== 'bid') {
@@ -7344,7 +7634,7 @@ body.spk-mead .foe:not(.slain) .portbtn:not(.spelltgt) { animation: tgtglow .55s
       }
     }
     if (a.type === 'bid') {
-      C.bid = { qty: a.qty, face: a.face, by: 'e', part: sp };
+      C.bid = { qty: a.qty, face: a.face, by: 'e', part: sp }; (C.hist = C.hist || []).push({ by: 'e', qty: a.qty, face: a.face });
       C.log.push(ps[sp].name + ' bids ' + a.qty + ' × ' + fico(a.face));
       C.turn = 'p';
       var chm = C.en.parts.filter(function (q) { return q.def.charm && q.n > 0; })[0];
@@ -7366,7 +7656,7 @@ body.spk-mead .foe:not(.slain) .portbtn:not(.spelltgt) { animation: tgtglow .55s
     var mine = C.pv.filter(function (x) { return x.val === C.sel.face || x.val === 0; }).length;
     if (!force && C.sel.qty - mine > 2) { C.confirmBid = { qty: C.sel.qty, face: C.sel.face, mine: mine }; render(); return; }
     C.confirmBid = null;
-    C.bid = { qty: C.sel.qty, face: C.sel.face, by: 'p' }; C.pbids.push(C.sel.face); C.lastFace = C.sel.face; S.lastFace = C.sel.face;
+    C.bid = { qty: C.sel.qty, face: C.sel.face, by: 'p' }; C.pbids.push(C.sel.face); (C.hist = C.hist || []).push({ by: 'p', qty: C.sel.qty, face: C.sel.face }); C.lastFace = C.sel.face; S.lastFace = C.sel.face;
     C.log.push('You bid ' + C.sel.qty + ' × ' + fico(C.sel.face));
     C.turn = 'e'; render(); scheduleEnemy();
   }
@@ -7563,6 +7853,11 @@ body.spk-mead .foe:not(.slain) .portbtn:not(.spelltgt) { animation: tgtglow .55s
   function resolveCallNow(kind, caller) {
     C.forced = false;
     var b = C.bid, actual = countFace(allVals(), b.face), loser, dmg = 1, ok;
+    try {   // every die is on the table now: the AI learns how this player bids and calls (S.aiLearn lasts the run)
+      var lv = C.en.dice.filter(function (v, i) { return !C.en.smote[i] && !(C.en.bleached && C.en.bleached[i]); }), lp = [];
+      C.en.dice.forEach(function (v, i) { if (!C.en.smote[i] && !(C.en.bleached && C.en.bleached[i]) && C.en.peeked[i]) lp.push(v); });
+      aiLearnRound(S.aiLearn || (S.aiLearn = aiLearnNew()), { hist: C.hist || [], theirVals: C.pv.map(function (x) { return x.val; }), myVals: lv, peeked: lp, total: totalDice(), critP: critDmg(), callBy: caller, callKind: kind });
+    } catch (e) { }
     if (kind === 'liar') { ok = actual >= b.qty; loser = ok ? caller : b.by; }
     else { ok = actual === b.qty; if (ok) { loser = b.by; dmg = caller === 'p' ? critDmg() : 2; } else loser = caller; }
     if (kind === 'exact' && ok && caller === 'p' && webN('crit') && Math.random() < 0.01 * webN('crit')) dmg += 1;
@@ -7915,10 +8210,17 @@ body.spk-mead .foe:not(.slain) .portbtn:not(.spelltgt) { animation: tgtglow .55s
     removeCard('mead'); C.mead = true; sfx('item');
     C.log.push('You knock back the Mead and slam the mug down. The enemy’s next bid will be for the wrong face.'); render();
   }
+  // the Looking Glass card adds a Pass the Buck charge; passing the buck makes the enemy bid again instead of you
   function useGlass() {
-    if (!C || C.phase !== 'bid' || C.turn !== 'p' || C.target || C.forced || !itm('glass')) return;
-    removeCard('glass'); C.glassed = true; sfx('item');
-    C.log.push('You raise the Looking Glass and wait. The enemy must bid again.');
+    if (!C || C.phase !== 'bid' || !itm('glass')) return;
+    removeCard('glass'); C.charges.buck = (C.charges.buck || 0) + 1; sfx('item');
+    C.log.push('You raise the Looking Glass: one more pass of the buck.');
+    render();
+  }
+  function passBuck() {
+    if (!C || C.phase !== 'bid' || C.turn !== 'p' || C.target || C.forced || !(C.charges.buck > 0)) return;
+    C.charges.buck--; C.glassed = true; sfx('item');
+    C.log.push('You pass the buck. The enemy must bid again.');
     C.turn = 'e'; render(); scheduleEnemy();
   }
   function useXpCard() {
@@ -7979,6 +8281,7 @@ body.spk-mead .foe:not(.slain) .portbtn:not(.spelltgt) { animation: tgtglow .55s
   var DROP_BASE = 0.25; // base seal-drop chance; future boosts add onto this
   function dropChance(def) { if (def && def.id === 'dummy') return 1; return Math.min(1, (DROP_BASE + shopRarity() / 100) * (itm('hook') ? 2 : 1)); }
   function afterCombat() {
+    if (C && C.train) { trainEnd(C.phase === 'won'); return; }   // a training-room fight: nothing is won, lost or kept
     var def = C.def, p = S.player;
     returnStolen();
     if (C.phase === 'lost') { S.endKind = 'dead'; S.screen = 'end'; render(); return; }
@@ -7997,7 +8300,6 @@ body.spk-mead .foe:not(.slain) .portbtn:not(.spelltgt) { animation: tgtglow .55s
       S.victory.drop = def.drop;
       var fl = fightLuck(def);
       if (fl > 0 && Math.random() < fl / 100) { var up = drawByRarity(MOD_ORDER.filter(anyApplicable), 1, function (m) { return m; }, 0, fl * 2)[0]; if (up) S.victory.drop = up; }
-      S.victory.dropId = giveSeal(S.victory.drop, { slot: true }).id;
     }
     if (def.id === 'dummy' && S.victory) S.victory.dummy = true; if (def.id === 'dummy' && !noteSeen() && !S.noteGone) S.noteShow = true;
     if (def.id === 'dummy' && !M.dummyDone) { M.dummyDone = true; saveMeta(); }
@@ -8019,7 +8321,7 @@ body.spk-mead .foe:not(.slain) .portbtn:not(.spelltgt) { animation: tgtglow .55s
     return '<section class="panel"><p>You have <span class="pts">' + n + '</span> skill point' + (n > 1 ? 's' : '') + ', enough to learn a new skill.</p>' +
       '<div class="row"><button type="button" class="btn torch" data-act="spendOpen">Choose a skill</button><button type="button" class="btn ghost" data-act="spendLater">Not now</button></div></section>';
   }
-  function nextAfterVictory() { if (S.victory && S.victory.loot && !S.victory.lootDone) { S.victory.lootDone = true; var tk = S.victory.taken || {}; var left = [].concat(S.victory.loot).filter(function (id) { return !tk[id]; }).filter(function (id) { if (isCard(id) && deckOf().length < DECK_MAX) { deckOf().push(id); return false; } return true; }); if (left.length) { giveItems(left, nextAfterVictory); return; } } if (S.pending > 0) openLevelUp(); else afterLevels(); }
+  function nextAfterVictory() { if (S.victory && S.victory.drop && !S.victory.dropDone && !(S.victory.loot && !S.victory.lootDone)) { S.victory.dropDone = true; acquireSeal(S.victory.drop, nextAfterVictory); return; } if (S.victory && S.victory.loot && !S.victory.lootDone) { S.victory.lootDone = true; var tk = S.victory.taken || {}; var left = [].concat(S.victory.loot).filter(function (id) { return !tk[id]; }).filter(function (id) { if (isCard(id) && deckOf().length < DECK_MAX) { deckOf().push(id); return false; } return true; }); if (left.length) { giveItems(left, nextAfterVictory); return; } } if (S.pending > 0) openLevelUp(); else afterLevels(); }
 
   function openLevelUp() {
     var p = S.player;
@@ -8127,7 +8429,7 @@ body.spk-mead .foe:not(.slain) .portbtn:not(.spelltgt) { animation: tgtglow .55s
     else if (o.t === 'maxdie2') { var gotD = addDice(p, 2); if (gotD < 2) p.gold += capGold(2 - gotD); fin(); }
     else if (o.t === 'gold') { p.gold += o.gold; fin(); }
     else if (o.t === 'item') giveItems([o.item], fin);
-    else if (o.t === 'mod') { giveSeal(o.mod); fin(); }
+    else if (o.t === 'mod') acquireSeal(o.mod, fin);
     else openForge('face', { onDone: fin, onCancel: back });
   }
   function closeChestWin() { var e = document.getElementById('chestwin'); if (e && e.parentNode) e.parentNode.removeChild(e); }
@@ -8164,7 +8466,19 @@ body.spk-mead .foe:not(.slain) .portbtn:not(.spelltgt) { animation: tgtglow .55s
   }
 
   // ---------- forge: change a face, add a wild face, or add an improvement ----------
-  function openForge(kind, o) { S.forge = { kind: kind, val: o.val || 0, mod: o.mod || null, step: 'die', die: null, face: null, onApply: o.onApply || null, onDone: o.onDone, onCancel: o.onCancel }; S.screen = 'forge'; render(); }
+  function openForge(kind, o) { S.forge = { kind: kind, val: o.val || 0, mod: o.mod || null, step: 'die', die: null, face: null, found: !!o.found, askDrop: false, onApply: o.onApply || null, onDone: o.onDone, onCancel: o.onCancel }; S.screen = 'forge'; render(); }
+  // ---------- seals: every seal you obtain opens the one seal screen (drag the seal onto a die, or click the die), then the "seal bound" screen. A seal is never a loose object. ----------
+  function acquireSeal(mod, next) {
+    next = next || function () { if (S.screen === 'forge' || S.screen === 'upgrade') S.screen = S.floor ? 'map' : 'char'; render(); };
+    if (!MODS[mod]) { next(); return; }
+    if (S.forge && S.forge.found) { (S.sealQueue = S.sealQueue || []).push(mod); return; }   // a second seal arriving while the screen is up waits its turn; the batch moves on with the first seal's next
+    var after = function () { var q = S.sealQueue && S.sealQueue.shift(); if (q) acquireSealRun(q, after); else next(); };
+    acquireSealRun(mod, after);
+  }
+  function acquireSealRun(mod, after) {
+    if (!anyApplicable(mod)) { popOverlay('<div class="sealgone"><span class="sealbig">' + ITEM_ART[mod] + '</span><b>' + MODS[mod].name.replace(' Die', ' seal') + '</b><p>Every die already carries all of this it can. It crumbles.</p></div>', 'sealgonefx', 2200); sfx('grumble'); after(); return; }
+    openForge('mod', { mod: mod, found: true, onDone: after, onCancel: after });
+  }
   function finishForge(i, label, desc, val, ex) {
     var F = S.forge; if (F.onApply) F.onApply();
     S.forge = null; S.upgrade = { i: i, label: label, desc: desc, val: val, next: F.onDone, mod: ex && ex.mod, tier: ex && ex.tier }; S.screen = 'upgrade'; render();
@@ -8205,7 +8519,9 @@ body.spk-mead .foe:not(.slain) .portbtn:not(.spelltgt) { animation: tgtglow .55s
     if (v <= cur) return; S.player.dice[F.die].faces[F.face] = v; markAlt(S.player.dice[F.die], F.face);
     finishForge(F.die, 'Tattooed face', 'One face of this die is now tattooed with a ' + v + '.', v);
   }
-  function forgeCancel() { var c = S.forge.onCancel; S.forge = null; c(); }
+  function forgeCancel() { var F = S.forge; if (F.found && !F.askDrop) { F.askDrop = true; render(); return; } S.forge = null; F.onCancel(); }
+  function forgeDrop() { var F = S.forge; S.forge = null; sfx('grumble'); F.onCancel(); }
+  function forgeKeep() { if (S.forge) { S.forge.askDrop = false; render(); } }
 
   // ---------- shop ----------
   function priceOf(base) { return Math.max(5, Math.round(base * floorCfg().priceMul * (1 - 0.01 * webN('price')) / 5) * 5); }
@@ -8430,12 +8746,12 @@ body.spk-mead .foe:not(.slain) .portbtn:not(.spelltgt) { animation: tgtglow .55s
   }
   function idolSeal(i) {
     var ev = S.event, o = ev && ev.result && ev.result.offers; if (!o || !o[i]) return;
-    giveSeal(o[i]); completeNode();
+    acquireSeal(o[i], completeNode);
   }
   function evContinue() {
     var ev = S.event;
     if (ev.result && ev.result.modId) {
-      giveSeal(ev.result.modId); completeNode();
+      acquireSeal(ev.result.modId, completeNode);
     } else completeNode();
   }
   // ---- scratch card ----
@@ -8615,7 +8931,7 @@ body.spk-mead .foe:not(.slain) .portbtn:not(.spelltgt) { animation: tgtglow .55s
   }
   function slotClaim() {
     var ev = S.event; if (!ev || !ev.claim) return;
-    giveSeal(ev.claim.mod); ev.claim = null; S.screen = 'event'; render();
+    var cm = ev.claim.mod; ev.claim = null; acquireSeal(cm, function () { S.screen = 'event'; render(); });
   }
   function slotLeave() {
     var ev = S.event; if (!ev || ev.spinning || ev.claim) return;
@@ -9084,7 +9400,8 @@ var BOSS_PORTRAITS = {"dummy":{"normal":"data:image/webp;base64,UklGRgwlAABXRUJQ
       keyRow('<span class="xpic">XP</span>', 'XP', 'Experience a foe gives. Fill the bar to level up and earn a skill point.'),
       keyRow(fxIcon('shop'), 'Rarity', 'Raises the odds of rarer wares in shops and after fights, and of slain foes dropping their seal. Shop upgrades, haggler dice, the Grave Robber and more add to it.'),
       keyRow(fxIcon('peek'), 'Peek', 'Look under one of the enemy’s cups.'),
-      keyRow(fxIcon('reroll'), 'Reroll', 'Throw chosen dice of yours again.')
+      keyRow(fxIcon('reroll'), 'Reroll', 'Throw chosen dice of yours again.'),
+      keyRow('<img class="keyink" alt="" src="' + FIRSTART.tok_player + '">', 'Pass the buck', 'The enemy must bid again instead of you. Once per fight; a Looking Glass adds one more.')
     ]);
     if (mode === 'map') return out;
     function fold(t, rows) { out += '<details class="keyfold"><summary class="btn">' + t + ' <span class="muted">(' + rows.length + ')</span></summary><div class="keygrid">' + rows.join('') + '</div></details>'; }
@@ -9480,6 +9797,7 @@ var BOSS_PORTRAITS = {"dummy":{"normal":"data:image/webp;base64,UklGRgwlAABXRUJQ
         if (S.player.ab.peek > 0 || C.charges.peek > 0) abil += '<button type="button" class="btn" data-act="peek"' + (C.charges.peek < 1 ? ' disabled' : '') + '>Peek (' + C.charges.peek + ')</button>';
         if (C.smoke) abil += '<span class="chip chip-blood">Smoke screen</span>';
         if (itm('coin')) abil += '<button type="button" class="btn" data-act="coin"' + (C.charges.coin < 1 ? ' disabled' : '') + '>Lucky Coin (' + C.charges.coin + ')</button>';
+        abil += '<button type="button" class="btn buckbtn" data-act="buck"' + (C.charges.buck < 1 ? ' disabled' : '') + ' data-tip="note:Pass the buck: the enemy must bid again instead of you. Once per fight. A Looking Glass adds one more." aria-label="Pass the buck"><img alt="" draggable="false" src="' + FIRSTART.tok_player + '">' + (C.charges.buck || 0) + '</button>';
         if (S.player.ab.reroll > 0 || C.charges.reroll > 0) abil += '<button type="button" class="btn" data-act="reroll"' + (C.charges.reroll < 1 ? ' disabled' : '') + '>Reroll (' + C.charges.reroll + ')</button>';
         if (own('bless')) abil += '<button type="button" class="btn blessbtn" data-act="bless" data-blessbtn="1"' + (C.charges.bless < 1 ? ' disabled' : '') + ' title="Drag onto one of your dice, or tap">' + BLESS_ICON + 'Bless (' + C.charges.bless + ')</button>';
         if (own('smite')) abil += '<button type="button" class="btn smitebtn" data-act="smite"' + (C.charges.smite < 1 ? ' disabled' : '') + '>' + BLESS_ICON + 'Smite (' + C.charges.smite + ')</button>';
@@ -9570,7 +9888,7 @@ var BOSS_PORTRAITS = {"dummy":{"normal":"data:image/webp;base64,UklGRgwlAABXRUJQ
     var info = (v.healed ? '<p class="good">Your wounds knit themselves shut: ' + v.healed + ' HP recovered.</p>' : '') +
       ((v.leveled || v.gained) ? '<p class="crit">' + (v.leveled ? 'Level ' + S.player.level : '') + (v.leveled && v.gained ? ' ' : '') + (v.gained ? '+' + v.gained + ' Skill point' + (v.gained > 1 ? 's' : '') : '') + '</p>' : '') + (v.hpUp ? '<p class="good">+' + v.hpUp + ' max health.</p>' : '') + (v.debt ? '<p class="good">The pawnbroker keeps his word: +' + v.debt + ' dice in your cup.</p>' : '');
     var loot = (v.loot && !v.lootDone ? [].concat(v.loot).filter(function (id) { return !(v.taken && v.taken[id]); }).map(function (id) { return isCard(id) ? sp('<button type="button" class="rptcardbtn" data-act="rptPreview" data-id="' + id + '" aria-label="Take ' + ITEMS[id].name + '">' + tcardHTML(id, { cls: 'rptcard' }) + '</button>', ' rp-spcard') : sp('<p class="good rp-sptext">' + v.name + ' also drops the ' + ITEMS[id].name + '. ' + ITEMS[id].desc + '</p>', ' rp-spwide'); }).join('') : '');
-    var slots = (v.slotIds || []).filter(looseHas).map(function (lid) { return sp('<span class="sealslot" data-loose="' + lid + '" style="--i:' + n + '"></span>', ' rp-spslot'); }).join('') + (v.dropId && looseHas(v.dropId) ? sp('<span class="sealslot" data-loose="' + v.dropId + '" style="--i:' + n + '"></span>', ' rp-spslot') : '');
+    var slots = (v.slotIds || []).filter(looseHas).map(function (lid) { return sp('<span class="sealslot" data-loose="' + lid + '" style="--i:' + n + '"></span>', ' rp-spslot'); }).join('') + (v.drop && !v.dropDone ? sp('<span class="sealslot sealfixed" data-tip="loose:' + v.drop + '" style="--i:' + n + '">' + ITEM_ART[v.drop] + '</span>', ' rp-spslot') : '');
     var chest = (v.chest && !v.chest.taken) ? sp('<button type="button" class="chestbtn" data-act="openChest" aria-label="Open the treasure chest"><img alt="" src="' + ENCART.chest_closed + '"></button>', ' rp-spchest') : '';
     return info + (n ? '<div class="rp-sec rp-spsec">Spoils</div><div class="rp-spoils">' + chest + loot + slots + '</div>' : '');
   }
@@ -9805,11 +10123,11 @@ var BOSS_PORTRAITS = {"dummy":{"normal":"data:image/webp;base64,UklGRgwlAABXRUJQ
       '<button type="button" class="card" data-act="campTinker"' + (S.player.dice.some(function (d) { return d.faces.some(function (v) { return v > 0; }); }) ? '' : ' disabled') + '><h3>Tinker</h3><p>Raise one face of a die by 2. Above 6 it turns wild but keeps its number.</p></button></div>');
   }
   function forgeHTML() {
-    var F = S.forge, p = S.player, body = '', title = F.kind === 'tat' ? 'Choose your victim' : F.kind === 'wild' ? 'Add a wild face' : F.kind === 'mod' ? MODS[F.mod].name : F.kind === 'tinker' ? 'Tinker with a die' : F.kind === 'arm' ? 'Armour a die' : 'Tattoo a die';
+    var F = S.forge, p = S.player, body = '', title = F.kind === 'tat' ? 'Choose your victim' : F.kind === 'wild' ? 'Add a wild face' : F.kind === 'mod' ? (F.found ? MODS[F.mod].name.replace(' Die', ' seal') : MODS[F.mod].name) : F.kind === 'tinker' ? 'Tinker with a die' : F.kind === 'arm' ? 'Armour a die' : 'Tattoo a die';
     if (F.step === 'die' && F.kind === 'mod') {
       var tint = (typeof TINTS !== 'undefined' && TINTS[F.mod]) || '#b4382e';
       var tk = '<span class="waxtoken" data-token="1" tabindex="0" role="img" aria-label="' + MODS[F.mod].name + ' seal"><span class="sealbig">' + ITEM_ART[F.mod] + '</span></span>';
-      body = '<div class="sealstage">' + tk + '<p class="muted sealdesc">' + MODS[F.mod].desc + '</p></div><div class="dropgrid">' +
+      body = '<div class="sealstage">' + tk + '<p class="muted sealdesc">' + MODS[F.mod].desc + '</p></div>' + (F.found ? '<p class="sealhint">Drag the seal onto a die.</p>' : '') + '<div class="dropgrid">' +
         p.dice.map(function (d, i) {
           var dis = !canApply(d, F.mod);
           return '<button type="button" class="dropdie" data-act="forgeDie" data-i="' + i + '" data-drop="' + i + '" data-tip="dfaces:' + i + '"' + (dis ? ' disabled' : '') + '>' + sampleDie(d, 56) + '<span class="sr">' + dieTitle(d, i) + '</span></button>';
@@ -9827,7 +10145,8 @@ var BOSS_PORTRAITS = {"dummy":{"normal":"data:image/webp;base64,UklGRgwlAABXRUJQ
       for (var v = 1; v <= 6; v++) vals += '<button type="button" class="diebtn" data-act="forgeVal" data-v="' + v + '"' + ((F.kind === 'lower' ? v >= cur : v <= cur) ? ' disabled' : '') + ' aria-label="Set to ' + v + '">' + dieHTML(v, { s: 120 }) + '</button>';
       body = '<p class="muted">' + (F.kind === 'lower' ? 'Paint this face over with a lower number:' : 'Raise this face to a higher number:') + '</p><div class="valrow big">' + vals + '</div>';
     }
-    return '<section class="panel"><h2>' + title + '</h2>' + body + '<div class="row"><button type="button" class="btn ghost" data-act="forgeCancel">Back</button></div></section>';
+    var ask = F.found && F.askDrop ? '<div class="confirmback"></div><div class="confirmbox" role="alertdialog" aria-label="Leave the seal behind?"><div class="cbart">' + ITEM_ART[F.mod] + '</div><h3>Leave the seal behind?</h3><div class="row" style="justify-content:center"><button type="button" class="btn torch" data-act="forgeDrop">Leave it</button><button type="button" class="btn ghost" data-act="forgeKeep">Keep it</button></div></div>' : '';
+    return '<section class="panel' + (F.found ? ' sealfound' : '') + '">' + (F.found ? '<div class="lu-ban">SEAL FOUND</div>' : '') + '<h2>' + title + '</h2>' + body + '<div class="row"><button type="button" class="btn ghost" data-act="forgeCancel">' + (F.found ? 'Leave it' : 'Back') + '</button></div></section>' + ask;
   }
   function upgradeHTML() {
     var U = S.upgrade, d = S.player.dice[U.i], sparks = '', k;
@@ -10298,7 +10617,7 @@ var BOSS_PORTRAITS = {"dummy":{"normal":"data:image/webp;base64,UklGRgwlAABXRUJQ
     if (kind === 'note') return '<p>' + arg + '</p>';
     if (key === 'maxhp') return '<b>Max HP</b><p>Each point of max HP is one more die in your cup. More dice to bid with, and more hits you can take before you fall.</p>';
     if (kind === 'ware') return WARETIP[arg] || '';
-    if (kind === 'loose' && MODS[arg]) return '<b><span class="rar-' + rarOf(arg) + '">' + MODS[arg].name.replace(' Die', '') + ' seal</span></b><p>' + MODS[arg].desc + '</p>' + (S.screen === 'reward' ? '<p><b>Click to take it.</b></p>' : '<p><b>Drag this to any die to apply.</b></p>');
+    if (kind === 'loose' && MODS[arg]) return '<b><span class="rar-' + rarOf(arg) + '">' + MODS[arg].name.replace(' Die', '') + ' seal</span></b><p>' + MODS[arg].desc + '</p>' + (S.screen === 'reward' ? '<p><b>Click to take it.</b></p>' : S.screen === 'victory' ? '<p><b>Bound to a die when you continue.</b></p>' : '');
     if (kind === 'foe' && C && C.en && C.en.parts[+arg]) return foeTipHTML(C.en.parts[+arg]);
     if (kind === 'dfaces') { var fd = S.player.dice[+arg]; if (!fd) return ''; var fx = ''; if (S.forge && S.forge.kind === 'mod' && S.forge.step === 'die') fx = !canApply(fd, S.forge.mod) ? '<p class="dim">Fully upgraded.</p>' : (modCount(fd, S.forge.mod) ? '<p class="good">Becomes ' + tierName(S.forge.mod, modCount(fd, S.forge.mod) + 1) + ' Die.</p>' : '');
       return '<b>' + dieTitle(fd, +arg) + '</b>' + modChips(fd) + strip(fd, { size: 34 }) + fx + (fd.up ? '' : '<p class="bad">Fallen. It does not roll until you recover it.</p>'); }
@@ -11025,7 +11344,7 @@ var BOSS_PORTRAITS = {"dummy":{"normal":"data:image/webp;base64,UklGRgwlAABXRUJQ
       var up = function (ev) {
         document.removeEventListener('pointerup', up, true);
         if (Math.abs(ev.clientX - x0) + Math.abs(ev.clientY - y0) < 14) return;
-        var t = document.elementFromPoint(ev.clientX, ev.clientY), over = t && t.closest ? t.closest('#satchelpanel, .fibag') : null; if (!over || !S || !S.player || deckOf().indexOf(id) < 0) return;
+        var t = document.elementFromPoint(ev.clientX, ev.clientY), over = t && t.closest ? t.closest('#satchelpanel, .fibag') : null; if (!SATCHEL_ON || !over || !S || !S.player || deckOf().indexOf(id) < 0) return;
         ev.stopPropagation(); ev.preventDefault();
         try { if (typeof cdrag !== 'undefined' && cdrag) cardDragStop(); } catch (er) { }
         try { if (typeof sarrow !== 'undefined' && sarrow) stopSpellArrow(); } catch (er) { }
@@ -11268,7 +11587,8 @@ var BOSS_PORTRAITS = {"dummy":{"normal":"data:image/webp;base64,UklGRgwlAABXRUJQ
       { sel: '#fbnote .fbnbox', fn: function () { window.fbCloseNote && window.fbCloseNote(); } },
       { sel: '#fbwin .fbbox', fn: function () { document.getElementById('fbwin').hidden = true; } },
       { sel: '#sealtut .tutbox', fn: function () { sealTutClose(true); } },
-      { sel: '#devmenu', fn: function () { document.getElementById('devmenu').hidden = true; } }
+      { sel: '#devmenu', fn: function () { document.getElementById('devmenu').hidden = true; } },
+      { sel: '#trainwin .trbox', fn: function () { trClose(); } }
     ];
     function scan() {
       try {
@@ -11387,6 +11707,7 @@ var BOSS_PORTRAITS = {"dummy":{"normal":"data:image/webp;base64,UklGRgwlAABXRUJQ
   // ---------- loose seals: every seal that drops is a draggable icon; drop it on a die to apply, or leave it anywhere ----------
   var LOOSE_ID = 0, sealLayer = null, sealDrag = null, bagEl = null, bagDrag = null;
   var SP_W = 351, SP_H = 519, BAG_L = 22, BAG_T = 165, BAG_R = 326, BAG_B = 470;
+  // RETIRED 2026-10-09: loose seals. Seals now go through acquireSeal() and the one seal screen; giveSeal is kept (unused) in case loose seals come back.
   function giveSeal(mod, o) { S.loose = S.loose || []; var q = { id: ++LOOSE_ID, mod: mod, x: null, y: null }; if (!(o && o.slot)) { q.x = 0.5; q.y = 0.5; } S.loose.push(q); return q; }
   function looseHas(id) { return !!(S && S.loose && S.loose.some(function (q) { return q.id === id; })); }
   function looseGet(id) { return ((S && S.loose) || []).filter(function (z) { return z.id === id; })[0] || null; }
@@ -11554,7 +11875,7 @@ var BOSS_PORTRAITS = {"dummy":{"normal":"data:image/webp;base64,UklGRgwlAABXRUJQ
         sealLayer.appendChild(bagEl);
       }
       var hide = !S || !S.player || ['title', 'char', 'rules', 'tree', 'end'].indexOf(S.screen) > -1;
-      var list = hide ? [] : (S.loose || []), have = {}, W = window.innerWidth, H = window.innerHeight, open = !hide && !!S.bagOpen;
+      var list = hide ? [] : (S.loose || []), have = {}, W = window.innerWidth, H = window.innerHeight, open = !hide && !!S.bagOpen && SATCHEL_ON;
       bagEl.style.display = open ? '' : 'none'; if (open) bagPlace();
       var br = open ? bagRect() : null;
       list.forEach(function (q) {
@@ -11566,6 +11887,7 @@ var BOSS_PORTRAITS = {"dummy":{"normal":"data:image/webp;base64,UklGRgwlAABXRUJQ
         }
         if (sealDrag && sealDrag.id === q.id) return;
         var cx, cy;
+        if (q.bag && !SATCHEL_ON) { q.bag = false; if (q.x == null) { q.x = q.item ? 0.93 : 0.5; q.y = q.item ? 0.4 : 0.5; } }
         if (q.bag) { if (!br) { el.style.display = 'none'; return; } el.style.display = ''; el.style.left = Math.round(br.left + q.bx) + 'px'; el.style.top = Math.round(br.top + q.by) + 'px'; return; }
         if (q.x == null) {
           var sl = document.querySelector('.sealslot[data-loose="' + q.id + '"]'), r = sl && sl.getBoundingClientRect();
@@ -11906,6 +12228,7 @@ var BOSS_PORTRAITS = {"dummy":{"normal":"data:image/webp;base64,UklGRgwlAABXRUJQ
       case 'liar': if (C.phase === 'bid' && C.turn === 'p' && C.bid && !C.target && !C.forced) resolveCall('liar', 'p'); break;
       case 'exact': if (C.phase === 'bid' && C.turn === 'p' && C.bid && !C.target) resolveCall('exact', 'p'); break;
       case 'peek': useAbility('peek'); break;
+      case 'buck': passBuck(); break;
       case 'reroll': useAbility('reroll'); break;
       case 'halo': castHalo(b); break;
       case 'bless': useAbility('bless'); break;
@@ -11953,6 +12276,8 @@ var BOSS_PORTRAITS = {"dummy":{"normal":"data:image/webp;base64,UklGRgwlAABXRUJQ
       case 'forgeFace': forgeFace(i); break;
       case 'forgeVal': forgeVal(v); break;
       case 'forgeCancel': forgeCancel(); break;
+      case 'forgeDrop': forgeDrop(); break;
+      case 'forgeKeep': forgeKeep(); break;
       case 'upgradeContinue': var nx = S.upgrade.next; S.upgrade = null; nx(); break;
       case 'pactOk': if (C) { C.pactPop = null; } render(); break;
       case 'idolSeal': idolSeal(i); break;
@@ -11990,7 +12315,7 @@ var BOSS_PORTRAITS = {"dummy":{"normal":"data:image/webp;base64,UklGRgwlAABXRUJQ
       case 'bjStand': bjStand(); break;
       case 'bjDouble': bjDouble(); break;
       case 'scratchFight': scratchFight(); break;
-      case 'scratchSeal': { var sev = S.event; if (sev && sev.mod) { giveSeal(sev.mod); completeNode(); } break; }
+      case 'scratchSeal': { var sev = S.event; if (sev && sev.mod) acquireSeal(sev.mod, completeNode); break; }
       case 'slotClaim': slotClaim(); break;
       case 'slotLeave': slotLeave(); break;
       case 'swapPick': swapPick(i); break;
@@ -12237,7 +12562,7 @@ var BOSS_PORTRAITS = {"dummy":{"normal":"data:image/webp;base64,UklGRgwlAABXRUJQ
     if (id === 'smoke') return !C.smoke;
     if (id === 'bandage') return !!C.pbleed;
     if (id === 'mead') return !C.mead;
-    if (id === 'glass') return C.phase === 'bid' && C.turn === 'p' && !C.target && !C.forced;
+    if (id === 'glass') return C.phase === 'bid';
     if (id === 'armour') return true;
     if (id === 'frenzy') return !C.berserk && hp(S.player) > 1;
     if (id === 'razor' || id === 'serrated') return C.en.dice.some(function (v, i) { return !C.en.smote[i]; });
@@ -12543,10 +12868,10 @@ var POUCH_SVG = pixSVG(["................", "................", ".....kkkkkk....
       iconLayer.style.display = hide ? 'none' : '';
       if (hide) return;
       var b = iconLayer.querySelector('.fibag'), q = iconLayer.querySelector('.fipouch');
-      b.classList.toggle('dim', false); b.classList.toggle('open', !!S.bagOpen); q.classList.toggle('open', !!S.pouchOpen);
+      b.classList.toggle('dim', false); b.classList.toggle('open', !!S.bagOpen); q.classList.toggle('open', !!S.pouchOpen); b.style.display = SATCHEL_ON ? '' : 'none';
       if (!(idr && idr.el === b)) iconPlace(b, ICONPOS.bag, 148);
       var forcedOut = S.screen === 'combat' || S.screen === 'victory' || (S.screen === 'event' && S.event && S.event.type === 'bank');
-      var inBag = !!S.pouchBag && !forcedOut, brr = inBag ? bagRect() : null;
+      var inBag = SATCHEL_ON && !!S.pouchBag && !forcedOut, brr = inBag ? bagRect() : null;
       iconLayer.style.zIndex = (S.bagOpen || (inBag && brr)) ? '335' : '';
       if (inBag) {
         if (!brr) q.style.display = 'none';
@@ -12632,7 +12957,7 @@ var POUCH_SVG = pixSVG(["................", "................", ".....kkkkkk....
         S.pouchBag = { bx: Math.round(Math.min(BAG_R - 102 - 4, Math.max(BAG_L + 4, lf - br0.left))), by: Math.round(Math.min(BAG_B - 102 - 4, Math.max(BAG_T + 4, tp - br0.top))) }; into = true;
       } else {
         d.el.style.pointerEvents = 'none'; var ub = document.elementFromPoint(e.clientX, e.clientY); d.el.style.pointerEvents = '';
-        if (ub && ub.closest && ub.closest('.fibag') && S.screen !== 'combat') { S.pouchBag = freeBagSpot(); into = true; sfx('item'); }
+        if (SATCHEL_ON && ub && ub.closest && ub.closest('.fibag') && S.screen !== 'combat') { S.pouchBag = freeBagSpot(); into = true; sfx('item'); }
         else S.pouchBag = null;
       }
       if (into) ICONPOS.pouch = d.pos0;
@@ -12956,6 +13281,121 @@ var POUCH_SVG = pixSVG(["................", "................", ".....kkkkkk....
       var e = document.createElement('i'); e.className = g[0]; e.style.left = g[1] + '%'; e.style.top = g[2] + '%'; if (g[0] === 'amb' || g[0] === 'lant') e.style.width = ''; f.appendChild(e);
     });
     document.documentElement.appendChild(f);
+  })();
+  // ---------- training room (Dev tools > Training room): fight a goblin whose AI knobs are sliders, and watch what it was thinking ----------
+  // TR.knobs holds one value per AI_KNOBS entry. Knobs marked auto (Noise, Softness, Bluff) follow the Skill slider until they are moved by hand (TR.manual).
+  // A training fight never touches the run: the player is snapshotted before and restored after, it awards nothing, and it never ends the run.
+  var TR = { el: null, knobs: {}, manual: {}, dice: 3, w: 0, l: 0, log: [], lastT: 0 };
+  var TR_SKILL = 0.52;   // a floor-1 goblin: skill 0.4 plus the 0.12 every foe gets in enemyAct
+  try { var tr0 = JSON.parse(localStorage.getItem('lc_trainroom2') || 'null'); if (tr0 && typeof tr0 === 'object') { TR.knobs = tr0.knobs || {}; TR.manual = tr0.manual || {}; TR.dice = tr0.dice || 3; } } catch (e) { }
+  function trReset() { var d = aiParams(TR_SKILL, null); TR.knobs = {}; AI_KNOBS.forEach(function (k) { TR.knobs[k.k] = d[k.k]; }); TR.manual = {}; TR.dice = 3; }
+  // what it has learnt about you so far this run, for the training room's log
+  function trLearnLine() { var r = aiLearnRead(S.aiLearn, 1); return 'it reads you as: nerve ' + (r.nerve > 0 ? '+' : '') + r.nerve.toFixed(2) + ', honesty ' + r.sharp.toFixed(2) + ' (' + ((S.aiLearn && S.aiLearn.rounds) || 0) + ' rounds seen)'; }
+  if (!AI_KNOBS.every(function (k) { return typeof TR.knobs[k.k] === 'number'; })) trReset();
+  function trSave() { try { localStorage.setItem('lc_trainroom2', JSON.stringify({ knobs: TR.knobs, manual: TR.manual, dice: TR.dice })); localStorage.setItem('lc_aiknobs', JSON.stringify({ on: AIG.on, knobs: AIG.knobs })); } catch (e) { } }
+  function trOverrides() { var o = {}; AI_KNOBS.forEach(function (k) { o[k.k] = TR.knobs[k.k]; }); return o; }
+  function trFollowSkill() { var d = aiParams(TR.knobs.skill, null); AI_KNOBS.forEach(function (k) { if (k.auto && !TR.manual[k.k]) TR.knobs[k.k] = d[k.k]; }); }
+  function trFmt(k, v) { return k === 'reach' ? String(Math.round(v)) : k === 'temp' ? (+v).toFixed(3) : (+v).toFixed(2); }
+  function trKnobLine() { return AI_KNOBS.map(function (k) { return k.name.toLowerCase().replace(/ /g, '-') + ' ' + trFmt(k.k, TR.knobs[k.k]); }).join(' · ') + ' · dice ' + TR.dice; }
+  function trLogLine(s) { TR.log.push(s); if (TR.log.length > 10) TR.log.shift(); var el = TR.el && TR.el.querySelector('#trlog'); if (el) { el.textContent = TR.log.join('\n'); el.scrollTop = el.scrollHeight; } }
+  function trFace(f) { return f + 's'; }
+  function trBuild() {
+    if (TR.el) return;
+    var w = document.createElement('div'); w.id = 'trainwin'; w.hidden = true;
+    var rows = AI_KNOBS.map(function (k) {
+      return '<div class="trrow" data-k="' + k.k + '" title="' + k.tip.replace(/"/g, '&quot;') + '"><label>' + k.name + '</label><input type="range" min="' + k.min + '" max="' + k.max + '" step="' + k.step + '" data-knob="' + k.k + '"><b class="trv"></b>' + (k.auto ? '<button type="button" class="trauto" data-auto="' + k.k + '" title="Follow the Skill slider again">auto</button>' : '<span class="trauto trnone"></span>') + '</div>';
+    }).join('');
+    w.innerHTML = '<div class="trbox"><div class="trhead">Training room</div>' +
+      '<div class="trrow" title="How many dice the goblin brings."><label>Goblin dice</label><input type="range" min="1" max="9" step="1" data-dice="1"><b class="trv" id="trdice"></b><span class="trauto trnone"></span></div>' + rows +
+      '<label class="trcheck"><input type="checkbox" id="trall"> Use these knobs for every enemy (this session)</label>' +
+      '<div class="trbtns"><button type="button" class="btn torch" id="trfight">Fight</button><button type="button" class="btn ghost" id="trreset">Reset</button><span id="trtally"></span></div>' +
+      '<pre id="trlog"></pre></div>';
+    document.documentElement.appendChild(w); TR.el = w;
+    try { w.style.fontFamily = getComputedStyle(document.body).fontFamily; } catch (e) { }
+    w.addEventListener('input', function (e) {
+      var t = e.target; if (!t) return;
+      if (t.hasAttribute('data-dice')) { TR.dice = +t.value; trPaint(); trSave(); return; }
+      var k = t.getAttribute('data-knob'); if (!k) return;
+      TR.knobs[k] = +t.value;
+      var def = AI_KNOBS.filter(function (x) { return x.k === k; })[0];
+      if (def && def.auto) TR.manual[k] = 1;
+      if (k === 'skill') trFollowSkill();
+      if (C && C.train) C.aiOver = trOverrides();
+      if (AIG.on) AIG.knobs = trOverrides();
+      trPaint(); trSave();
+    });
+    w.addEventListener('click', function (e) {
+      var t = e.target; if (!t || !t.closest) return;
+      var au = t.closest('[data-auto]'); if (au) { delete TR.manual[au.getAttribute('data-auto')]; trFollowSkill(); if (C && C.train) C.aiOver = trOverrides(); if (AIG.on) AIG.knobs = trOverrides(); trPaint(); trSave(); sfx('click'); return; }
+      if (t.closest('#trfight')) { trStart(); return; }
+      if (t.closest('#trreset')) { trReset(); if (C && C.train) C.aiOver = trOverrides(); if (AIG.on) AIG.knobs = trOverrides(); trPaint(); trSave(); sfx('click'); return; }
+    });
+    w.querySelector('#trall').addEventListener('change', function (e) { AIG.on = !!e.target.checked; AIG.knobs = AIG.on ? trOverrides() : {}; trSave(); sfx('click'); trPaint(); });
+    trPaint();
+  }
+  function trPaint() {
+    var w = TR.el; if (!w) return;
+    AI_KNOBS.forEach(function (k) {
+      var row = w.querySelector('.trrow[data-k="' + k.k + '"]'), inp = row.querySelector('input'), v = TR.knobs[k.k];
+      if (document.activeElement !== inp) inp.value = v;
+      row.querySelector('.trv').textContent = trFmt(k.k, v);
+      row.classList.toggle('manual', !!(k.auto && TR.manual[k.k]));
+    });
+    var di = w.querySelector('[data-dice]'); if (document.activeElement !== di) di.value = TR.dice; w.querySelector('#trdice').textContent = TR.dice;
+    w.querySelector('#trall').checked = !!AIG.on;
+    var busy = !!(S && S.screen === 'combat'), can = !!(S && S.player && !busy && ['title', 'char', 'rules', 'end', 'tree'].indexOf(S.screen) < 0);
+    var fb = w.querySelector('#trfight'); fb.disabled = !can; fb.textContent = busy && C && C.train ? 'Fighting…' : busy ? 'In a fight' : (S && S.player ? 'Fight' : 'Start a run first');
+    w.querySelector('#trtally').textContent = (TR.w + TR.l) ? TR.w + ' won · ' + TR.l + ' lost' : '';
+  }
+  function trOpen() { trBuild(); TR.el.hidden = false; trPaint(); sfx('wchime'); }
+  function trClose() { if (TR.el) TR.el.hidden = true; }
+  function trStart() {
+    if (!S || !S.player || S.screen === 'combat' || ['title', 'char', 'rules', 'end', 'tree'].indexOf(S.screen) > -1) return;
+    var n = Math.max(1, Math.min(9, TR.dice | 0)), base = ENEMIES.cutpurse;
+    var g = E('Training Goblin', n, 0.4, [0, 0], 'fight', 'goblin', base ? base.c1 : '#6f9a4e', base ? base.c2 : '#8a3f3a', base ? base.eye : '#f0d24a', 'It lives in the training room. It fights for nothing and drops nothing.');
+    g.id = 'traingob'; g.noSeal = true; g.xpMul = 0; g.train = true; ENEMIES.traingob = g;
+    if (!LINES.traingob) LINES.traingob = ['Again.', 'Your gold is no good here. Neither is mine.', 'Lose all you like. Nobody is counting.', 'I am paid by the hour, not by the die.'];
+    try { if (BOSS_PORTRAITS.cutpurse && !BOSS_PORTRAITS.traingob) BOSS_PORTRAITS.traingob = BOSS_PORTRAITS.cutpurse; } catch (e) { }
+    S.train = { snap: JSON.stringify(S.player), back: S.screen, event: S.event, victory: S.victory, forge: S.forge, upgrade: S.upgrade, pending: S.pending, backAsk: S.backAsk, dummyAsk: S.dummyAsk, relicOpen: S.relicOpen };
+    TR.log = []; trLogLine('fight ' + (TR.w + TR.l + 1) + ' · ' + trKnobLine()); try { trLogLine(trLearnLine()); } catch (e) { }
+    S.skipSpin = true;
+    try { startCombat({ id: 'TRAIN', enemy: 'traingob', type: 'fight', train: true }); } finally { S.skipSpin = false; }
+    if (C) { C.train = true; C.aiOver = trOverrides(); }
+    trPaint();
+  }
+  function trainEnd(won) {
+    var t = S.train; if (!t) return;
+    var rounds = C ? C.round : 0; clearTimeout(timer); C = null;
+    try { var snap = JSON.parse(t.snap), k; for (k in S.player) if (!(k in snap)) delete S.player[k]; for (k in snap) S.player[k] = snap[k]; } catch (e) { }
+    S.screen = t.back; S.event = t.event; S.victory = t.victory; S.forge = t.forge; S.upgrade = t.upgrade; S.pending = t.pending; S.backAsk = t.backAsk; S.dummyAsk = t.dummyAsk; S.relicOpen = t.relicOpen; S.train = null;
+    if (won) TR.w++; else TR.l++;
+    trLogLine((won ? 'WON' : 'LOST') + ' in ' + rounds + ' round' + (rounds === 1 ? '' : 's'));
+    render(); trPaint(); sfx(won ? 'item' : 'grumble');
+  }
+  // the readout: one line per enemy decision while a traced fight runs
+  setInterval(function () {
+    try {
+      if (!TR.el || TR.el.hidden) return;
+      trPaint();
+      var L = AI_LAST; if (!L || L.t === TR.lastT || !C || !C.train) return;
+      TR.lastT = L.t;
+      var a = L.a, line = 'r' + (C.round || 0) + ': ';
+      if (a.type === 'bid') line += 'bids ' + a.qty + '×' + trFace(a.face) + ' · holds ' + L.holds + ' · true ' + Math.round(L.pTrue * 100) + '%' + (L.bluffed ? ' · BLUFF' : L.bluffTurn ? ' · (bluff turn)' : '');
+      else if (a.type === 'liar') line += 'LIAR on ' + (L.bid ? L.bid.qty + '×' + trFace(L.bid.face) : '?') + ' · it rated the bid ' + Math.round(L.curTrue * 100) + '% true';
+      else line += 'SPOT ON on ' + (L.bid ? L.bid.qty + '×' + trFace(L.bid.face) : '?') + ' · it rated exact ' + Math.round(L.curExact * 100) + '%';
+      line += ' · win ' + Math.round(L.ev * 100) + '% · ' + L.hands + ' hands' + (L.nerve || L.sharp !== 1 ? ' · reads you: nerve ' + (L.nerve > 0 ? '+' : '') + L.nerve + ', honesty ' + L.sharp : '') + ' · ' + L.ms + 'ms';
+      trLogLine(line);
+    } catch (e) { }
+  }, 250);
+  // the Dev tools entry
+  (function () {
+    var tries = 0, iv = setInterval(function () {
+      var dm = document.getElementById('devmenu'); if (!dm) { if (++tries > 40) clearInterval(iv); return; }
+      clearInterval(iv); if (dm.querySelector('[data-dev="train"]')) return;
+      var b = document.createElement('button'); b.type = 'button'; b.setAttribute('data-dev', 'train'); b.textContent = 'Training room';
+      dm.insertBefore(b, dm.querySelector('[data-dev="rpt"]') || null);
+      b.addEventListener('click', function (e) { e.stopPropagation(); dm.hidden = true; trOpen(); });
+    }, 250);
   })();
   // ---------- playtester toolkit: one small purple cog (top left) holds every playtester / developer button; welcome sequence on first visit ----------
   (function () {

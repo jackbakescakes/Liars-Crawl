@@ -12,6 +12,31 @@ Raw reports come from the in-game "feels bad" buttons (artifact db collection `f
 - [x] **"Crawl" wording** (closed 2026-10-08: it was the character select layout; user decided to leave it as is) ("the word crawl should be below the options, or just remove crawl to start - feels weird"). Unclear which screen; likely START CRAWLING on title/class screen. Ask user.
 - [x] **Ability text confusing**: "when choosing an ability it's confusing: roll 2 die and on 8+ gain 1 (symbol I don't understand)". Find which level-up card, rewrite in plain words / explain the icon.
 
+## Enemy AI rebuild (2026-10-09, published)
+- New engine: Bayesian read of the player's hand from this round's bids, win-chance lookahead (depth 2) with a measured win table, learns the player's nerve and honesty within a run. Knobs and training room updated (new sliders: Your trust, Adapt; Skill runs to 1.00).
+- Sim results (tools/ai): at full skill vs the old AI at its max, 97% wins at 6v6; an honest-maths player beat the old 3-die goblin at max skill 87% of the time, now 17%.
+- OPEN: calibrate the skill curve. At 0.52 (floor-1 goblin) the honest-maths player wins ~52% (was 83%). Tune `AI_TUNE` so 0.5 feels like the old goblin while 1.0 keeps the full strength, then look at per-enemy skill numbers. Third win-table pass (with `dieWorth` in the self-play objective) to embed when done.
+- OPEN: check the AI's think time on slow machines in the biggest fights (12+ player dice vs 9); cap `P.hands` lower if it stutters.
+
+## To do (from the 2026-10-09 review; details and repro steps in the review doc)
+- [x] Seals: one screen for every seal (drag onto a die, then Seal bound); no loose seals.
+- [x] Pass the buck: once-per-fight charge; Looking Glass adds a charge.
+- [x] Enemy AI: bluffing + difficulty knobs; Training room in Dev tools.
+- [x] Satchel retired (flag `SATCHEL_ON`).
+- [x] `<meta charset>`; potion card `undefined` flavour line.
+- [ ] Dropped Note "click to read" and "Skip tip" cannot be clicked (under the HP row / portrait); the note stays all run.
+- [ ] Elite chest shows one of three rewards in a 254 px scroll box.
+- [ ] Pit Boss blackjack hand draws all player dice as dead Xs.
+- [ ] Floor 4 map: the House room is scrolled above the frame.
+- [ ] HUD portrait cluster covers bottom-left map rooms (column 0, row 6).
+- [ ] 1366×768: buck spinner and Auto roll checkbox sit over the dice row.
+- [ ] Relic bought in the shop lands on the shop floor; relic button covered by the panel footer.
+- [ ] Report sits on top of the floor shop after the Pit Boss; first TAKE YOUR SPOILS press does nothing visible.
+- [ ] Level-up repeats "(have 1)" picks; pool of 8 repeats by level 4.
+- [ ] Soul Rend text: item says 50+, card says 30.
+- [ ] Roll-coin tooltip covers the bid row when the mouse rests on the coin.
+- [ ] Balance (sim): floor-1 fights cost an honest player ~1.7 dice; last-die Spot On gamble (now the `lastDie` knob, default 0.4) — tune in the Training room.
+
 ## Other open items (from the dev session)
 - [x] **Log button art** (done 2026-10-08, Gemini plates 9-sliced) (prompt C in `assets/prompts.md`) (code-drawn iron-and-wood plaque for now, `.topbtns .btn`); replace with Gemini art matching the settings cog if wanted.
 - [x] **Max hit point icon art** (done 2026-10-08) (prompt B) ("+1 max HP", used by `maxIc()` in Fortify, level-up window, ability text). Currently a code-drawn die-with-green-plus (`MAXIC_SVG`). Needs Gemini art; save per asset rules, swap into `maxIc()`, record in `assets/INDEX.md` + `assets/prompts.md`.
