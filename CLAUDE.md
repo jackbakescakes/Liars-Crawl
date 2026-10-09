@@ -84,3 +84,8 @@ The user is having Gemini draw a full alphabet in the style of the "LIAR'S CRAWL
 - The dummy room on floors 2 and 3 is an ordinary fight.
 - Split-assets publish has now been run for real (artifact version 310: index.html 3.6 MB + 371 img/ + 16 audio/ = 388 files, uploaded in two calls; audio already live so it was not re-sent). Version 326 (2026-10-09, the AI batch) only had to send index.html: every `img/` hash was already live (compare `ls dist/img` with the artifact's file listing first and send only new hashes, `null` for stale ones).
 - Older parked items: House chaser days/keys (`HOUSE_ON=false`), boss badge re-roll, "this coin wont go in the pouch" wording, Loot Goblin ambush art, arrowhead art, seal balance pass, knight drawing placement (96px), relic open-state art, polyhedra dice only once d8/d12/d20 exist.
+
+## Test harness and art tools (added 2026-10-09)
+- `tools/lc_test/` is the headless harness (serve the game over http, drive it with Playwright, eval inside the game closure, screenshot). Start with `tools/lc_test/README.md`; ready-made scenarios in `tools/lc_test/scenarios/` (one per art item).
+- `tools/lc_art/` has the Gemini sheet cutter (`cut_sheet.py`) and the base64 embedder (`embed_art.py`). Start with `tools/lc_art/README.md`.
+- The Gemini art pass of 2026-10-09 (ART_TODO items 1-9) is logged in `assets/INDEX.md` under "Gemini art pass 2026-10-09" and `assets/prompts.md`.
