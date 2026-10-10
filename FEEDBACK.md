@@ -199,15 +199,140 @@ Raw reports come from the in-game "feels bad" buttons (artifact db collection `f
 - [x] Plunder (user, 2026-10-10): 2 / 4 / 6 gold per enemy die knocked out at ranks 1 / 2 / 3 (max raised from 2 to 3).
 - [x] Every won fight heals 1 fallen die (user, 2026-10-10, to make the game a little easier); Stubborn Pulse and Mending Hands add on top. Shown on the report as 'Your wounds knit themselves shut'.
 - [x] Dummy skip is back (2026-10-10): a wooden 'Skip this fight' button under the Training Dummy's name (`.dumskip2`, calls `dummySkipFight`), only for players who have beaten the Dummy before (`M.dummyDone`), not during the fight tutorial. User will judge the placement.
-## 2026-10-10 00:00 batch (fixes from the night review; see the review file for the evidence)
-- [x] Music quieter on the map, louder entering a fight (same loop): `stagePlay` faded the playing calm voice 1->0 over the rest of its loop whenever calm was re-requested while a fight track was still pending (any fight won before its music began), and the next fight snapped it back to 1. Now the scheduled-voice branch returns when the stage asked for is the one still playing.
-- [x] Toss banner said YOU HAVE THE BUCK while the enemy got it: banner text, subtitle and the landed coin face still used the old "winner -> other side opens" rule; flipped to follow `winner` (knight up + "You bid first" when you win).
-- [x] Bid arrows: hover painted nothing and a disabled arrow looked live (three CSS generations at equal specificity). The first-pass url() rules and the green code-drawn block are gone; the `--bfarr-*` block is the only arrow styling and restates every property.
-- [x] SEAL FOUND: the dragged seal did not follow the mouse: the drag ghost (z 50) sat under the encounter window (z 90). Ghost now z 300.
-- [x] Chest tooltips behind the reward window: `html .tip` had been lowered to z 700 (under #chestwin 99000). Back to 100000; the toss and the fight tutorial hide tips instead.
-- [x] Map arrival: the panel dropped in at its raw CSS size and snapped smaller on landing (hudMapFit waited for the animation); the border chased the parchment on a 150 ms timer (up to 230 px behind). The width is applied at once, the centring subtracts the drop's translate, and the border follows the panel every frame while it drops.
-- [x] Split build: the floor's map art (parchment, frame, icons, pawn) and the encounter-window art are warmed (`warmMapArt`/`warmEncArt`) at run start and on descend, so the first map of a floor and event windows (scratch card) no longer load piece by piece.
-- [x] Relics: right-click > Equip no longer waits on the paused game clock; in carry mode a click on an ordinary button (TAKE YOUR SPOILS, Continue, a room) puts the relic back and goes through instead of being eaten. (The v335 silent refusal in combat was already removed.)
-- [x] Settings cog: `logClear()` re-runs when the cog is dropped after a drag.
-- [x] `fitZoom`: the fight's zoom was measured against #app overflow that still carried the previous viewport's inline offsets, so the same window could settle on 0.58 / 0.62 / 0.66 depending on how it got there; offsets are cleared before a fresh measurement.
-- [ ] OPEN: player cluster pushed off the bottom after an early toss. Not reproducible in-page; every symptom matches the page being laid out for a frame taller than the visible panel (host iframe clipping; recreated locally with a 930 px iframe in a 795 px panel). The recorder now also runs on the map, snapshots `visualViewport`/`screen.availHeight`/`document.hasFocus()`, and fires "portrait clipped by the host frame" via an IntersectionObserver when the portrait is inside the page's viewport but not fully visible. Ask the next tester who sees it to press Copy my reports.
+
+## 2026-10-10 bug hunt (working file, not yet published)
+- Checks run: random-click fuzzer, 3,000 clicks over two runs (floor 1, fights, map, report, forge, level-up, tree, camp, events, end screen): 0 errors. Static check of the script for undeclared names (0) and for button actions with no handler (0 of 128). Scripted tour of floors 1-3 (all 20 events with random clicks inside each, buying every shop ware, every foe, elite and boss with every card played, wins, chests, seals, level-ups to 15, all four end screens): 0 game errors. Floor 4 played for real (descend, the House, chest, final shop, won ending): 0 errors. The House shows at most 11 dice (Berserk takes one on round 1), which fits the row.
+- [x] ~~Grave Robber's Hook made every dropped seal rare or epic~~ (reverted the same morning: the user set drops to 50% and the Hook back to doubling it, see below).
+- [x] Stale seal-drop text: the dropped-note, the Rarity key row and the seal tooltip (rewritten again for 50% drops, below).
+- [ ] Noted, not changed: Heist says it "steals a die from the enemy" but only adds a die to your cup (the crit already damages the enemy).
+
+## 2026-10-10 09:27 batch: seal drops, rarity odds, two new shops (working file, not yet published)
+- [x] Seal drop chance 50% (`DROP_BASE = 0.5`, was 1 overnight, 0.25 before). Rarity luck adds to it; the Grave Robber's Hook doubles it again ("Enemies are twice as likely to drop their seal."). The Dummy always drops. Floor 3+ still turns a dropped seal rare/epic (`lateDrop`, Hook clause removed). Droplet note, Rarity key row and seal tooltip text match again.
+- [x] Extra seal: every won fight (not the Dummy) has a 25% chance (`EXTRA_SEAL`) of a second seal, drawn from every seal your dice can take with the rarity weights and your luck (`S.victory.drop2`). It shows as a second seal in the Spoils (click it, or it opens after the first one when you continue; `openDropSeal(2)`, `nextAfterVictory`).
+- [x] Rarity odds in rarity colours (`rarOdds`, `rarOddsHTML`; tier weights from `rarW` at your luck, Pendant's 10% epic folded in): above the wares in the Black Market, the Seal Stall and the Dice Carver; in the character tooltip; in the Rarity tooltips (HUD stat, shop upgrade button); in the two new rooms' map tooltips. At 0% luck: Common 50, Uncommon 28, Rare 15, Epic 7, Legendary 0. Legendary only starts above 50% luck (unchanged rule).
+- [x] Seal Stall (event `sealshop`, kind smith with `stay`): three seals drawn by rarity, Smith prices, buy as many as you like (sold ones grey out), then Leave.
+- [x] Dice Carver (event `diceshop`, kind `dice`, `diceBuy`): three dice, each slot drawn by rarity (d6 common 80, d8 uncommon 110, d10 rare 140, d12 epic 175, d20 legendary 220, times the floor price multiplier; repeats allowed). A bought die is a new die with poly seals (`addPolyDie`). Respects the dice cap. The Black Market's "The D20" (one per run) is separate and unchanged; Carver d20s are not limited.
+- [x] (09:48, user) The two shops are extra DEAD ENDS on every floor, not rooms taken from the lanes: floors 1-3 now have four dead ends (slots, chest, Seal Stall, Dice Carver; one per row, outer lanes, `spurT` in `makeFloor`), floor 4 has none (user took them off floor 4 at 10:34). Own icons (`MAPINK.sealshop/diceshop`), key rows added. Checked 900 generated floors: all four dead ends every time, each joined to one room.
+- [x] d10s: already in the game (one more poly seal on a d8; d10 art existed). New: the d20 now draws as a d20 (`.die.dp20`, placeholder art); before it was a square d6 showing "20".
+- [x] Character tooltip "Heal after fights" now counts the base 1 HP every win gives.
+- Placeholders waiting for Gemini art (prompts in `assets/prompts.md`, 2026-10-10 shops and the d20): d20 body, two shop portraits (using the Roll-for-a-Seal and Roll-for-Gold portraits for now), two map icons (shop stall + drawn badge).
+- [ ] Watch: balance of the extra seal + 50% drops (about 0.75 seals a fight before luck, was 1.0 overnight) and the Carver's d10/d12 prices.
+
+### 2026-10-10 11:20-11:24 small changes
+- Removed "Thank you very much for testing my game." from the second (purple) playtester window.
+- Skill trees: "Shield path" is now "Path of the Aegis"; thief "Path of Blood" is now "Path of Pain".
+- First-fight spinner art (buck coins, banners) is pre-decoded at startup so it no longer paints in halves.
+- Fight tutorial: removed "Your dice are also your life." from THE TABLE; the "YOUR ROLL" card waits until every die has stopped rolling.
+- Shop art is now Gemini (map icons, both portraits, d20); prompts are in assets/prompts.md.
+- Seals in the battle-report Spoils: no backing square, as tall as the cards (`.rp-spoil.rp-spslot`, loose seals resize to the slot).
+- Two-dice events: drag a die into a slot as well as click (`evPlace`, pointer handlers before `evToggle`).
+- Event map nodes no longer swap to old pixel icons on hover/done (`evk = ''`; CSS removed). Tooltip title icon removed too.
+- Face Painter: one centred button with Gemini art (assets/ui/paint_pot.webp, src sheets/paintpot_20261010_src.jpg), no "Free", no Seal tag. `PAINT_ART`.
+- Seal drag ghost (token) shrinks 5% only (152px of 160px).
+- Buck flying to the player at fight start landed ~20% short of the marker (body zoom multiplies translate): `flyHome` now divides by the measured zoom; it ends exactly on the marker (398,556,44x44 in the 1376x768 harness).
+- 2x DAMAGE effect: any double-damage hit on the enemy (Cutthroat's Ring, Headsman's Edge, Headsman's Whisper web) now plays `doubleStrike()`: a Gemini blood splatter slaps down behind a stamped "2x DAMAGE" with flying drops and a screen shake. Art: assets/ui/blood_splat.webp (src sheets/blood_splat_20261010_src.jpg), `BLOOD_SPLAT`, CSS `.dblfx`.
+- Relic button glows brighter while a relic is held; free relic slots in an open tray pulse (`rslotglow`).
+- Battle report: TOTAL GOLD now sits on the same bottom line as TOTAL XP (`.rp-col > .rp-tot { margin-top: auto }`).
+- Seal level-ups: SEAL STRENGTHENED banner is bigger (yellow at lvl 2, purple at lvl 3); the seal pops and blazes in the upgrade window; seal badges on dice glow yellow at lvl 2 and purple at lvl 3 (`badgeKeys().tiers`, `.mb-seal.lv2/.lv3`).
+- Chaser warnings (days 6/7): the map pans down to the entrance where it will appear, that node wobbles with a red glow and the map shakes, then it pans back up to the player (`chaserWarnCam`, CSS `.node.nwobble`).
+- Piggy bank (Bone Bank) fixes: the tooltip that flashed up on every coin drop is gone; the window no longer shrinks to a smaller 'tall' size after a deposit (the deposit line has reserved space, shorter flavour text, smaller pig, bank excluded from autotall in encFit); the text under the pig is no longer cut off.
+- Bone Bank: the coin pouch opens bottom-left (clear of the piggy and text); hovering the piggy shows 'You have deposited N gold... comes back as M' after a 1s delay, and never right after a coin drop (`piggy` tip, `S.pigTipOK`).
+
+## 11:56 Ogre Bouncer portrait shift
+- The hurt and win portraits had his head lower and further right than the normal one, so he appeared to jump when it changed. Re-aligned both to the normal head position (assets/portraits/enc_ogre_hurt_realigned.webp, enc_ogre_win_realigned.webp). Embedded in BOSS_PORTRAITS.ogre.
+
+## 11:57 Straight bonus animation not playing
+- The Straight/Yahtzee animation ran on a fixed 1.5 s timer, so it could fire while the dice were still rolling or under the buck toss. It now waits until the dice stop and the toss is gone, then plays (rollBonusCheck).
+
+## 11:58 Music hard cut after the Ogre Bouncer
+- Elite fight loops (fight3a/b/c) were cut at the next 10 s phrase when the fight ended. Every fight loop now plays to its end before the calm music enters (stagePlay). A fight3c loop is 41 s, so the calm music can take up to 41 s to return after an elite fight.
+
+## 12:04 Evil has awoken pan
+- "Evil has awoken" now does the same map pan as the day 6 and 7 warnings: down to the entrance where the chaser appears, wobble the node, then back to the player (completeNode wake branch, chaserWarnCam).
+
+## 12:07 Calm music in quarters for faster fight entry
+- Calm plays exactly as before (intro, then A and B looping). It is only treated as quarters (A1 A2 B1 B2, about 20.6 s each; the intro as two halves) for leaving it: a fight now takes over at the end of the current quarter, so the wait is at most about 20 s instead of up to 82 s (stagePlay). Fight loops still play to their end.
+
+## 12:17 Seal icons stay at the bottom of the die
+- Seals now always sit on the bottom edge of the die (mostly below it), smaller, so the pips are never covered. They start overlapping each other from four seals, a little more with each extra one. The old rule that laid 4+ seals over the face of the die is gone.
+- 12:23 The seals on a die now vary slightly in height (a fixed repeating pattern, up or down by up to about 10% of a seal), so the row looks less tidy. Pips stay clear.
+
+## 12:26 Bleed icon, bleed damage animation, seal tag order
+- New Gemini blood drop icon (assets/ui/bleed_drop.webp, `BLEED_DROP`). It sits on the portrait of any foe that is bleeding (`.bleedico`).
+- When the bleed takes dice (`bleedTick` -> `bleedFx`): a red BLEEDING band naming the foe and the dice lost, blood drops falling off the portrait (`.bleedfx`), a red -N rising from it, a hit sound and a small screen shake.
+- Seal tags on a die, in its tooltip and in its menus now follow the same order as the die's name (`NAME_ORDER` shared with `modList`). Colours on the die (`TINT_ORDER`) are unchanged.
+
+## 12:31 Rolled die tooltip counts wilds
+- Hovering a rolled die now counts wild faces in the total and shows the split, e.g. "You rolled 4 × 3 this round (2 3 + 2 wild)" (tooltip kind `pv`).
+
+## 12:36 Dealer art and the scratch card deal
+- All six Dealer portraits (normal, win, dead, confused, angry, hurt) are new Gemini art, all green orc (`BOSS_PORTRAITS.dealer`, assets/portraits/boss_dealer_*.webp).
+- The Dealer's scratch card now starts as a normal deal: his card flips, and the second card is a small silver-foil scratch card the size of a playing card. After about 2.3 s he goes "Huh?" (confused portrait), at about 3.9 s he gets angry ("Scratch it. Now.", screen shake, angry portrait), and at about 5.6 s the full scratch card appears to scratch (`scr.stage`, `bigScratch`, nextRound).
+- Cards dealt in this game (Dealer's card, the slip card scene) now use the playing-card art (`CARDART` faces, `NEWART.card_back`) instead of the code-drawn cards. Cards in the blackjack table already used it.
+
+## 12:39 Cards won mid-fight stay out of the spoils
+- If you win a card during a fight (the Dealer's slip or scratch card, or any card claimed in combat), the battle report's spoils no longer hold a card: the scheduled card loot (the Mead on win 3, and the Looking Glass roll) is skipped for that fight (`C.cardWon` set in `claimCard`, read in `afterCombat`). Relic loot such as the knife, ring or gauntlet is unaffected.
+- 12:38 Dealer dead portrait "grey square": could not reproduce on floors 1 to 4 (the new image has a transparent background and nothing behind it is grey). Waiting for a screenshot.
+
+## 12:41 Bought wares leave the shelf
+- In the shop, anything you buy (seals, relics, cards, potions) is removed from the shelf once the purchase goes through, so you cannot buy the same one again. A seal only goes once it has been applied to a die; backing out of the forge window keeps it on the shelf (`buy` -> `pay`, `S.shopSel`).
+- In the Seal Stall, the Dice Carver and Old Pasteboard, sold wares no longer stay on the shelf greyed out as "Sold"; they disappear.
+
+## 12:43 15% card drop after every battle
+- Every won fight (not the dummy) has a 15% chance (`CARD_DROP`) of a random card in the spoils, drawn by rarity (a Healing Draught only if you are hurt). Skipped if your deck is full or you already won a card in that fight. This is in addition to the Looking Glass chance and the Mead on win 3. Tested over 300 simulated wins: about 14% of fights had loot.
+
+## 12:50 — Coin pouch gold counter
+- Gold number on the pouch enlarged (22px -> 34px) and nudged up/right to keep it clear of the pouch.
+
+## 12:55 — Spoils cards after a mid-fight card
+- Spoils can hold a card again even after you won one in the fight (Dealer), but never the same card you already won (no second Razor); the 15% card drop redraws around it.
+
+## 12:52 — Optimistic seal wording
+- Text now reads "Adds N to whatever it rolls. If that goes past 6, it is wild." (all three tiers). Behaviour unchanged.
+
+## 12:58 — Long die names stay inside the title banner
+- `encFit` now shrinks any window title (wrapping to two lines if needed) until it sits inside its banner, so a die with many seals (e.g. "Incurably Optimistic Fecund Weighted Golden Die II") no longer spills over the edges.
+
+## 12:59 — "Used up when played" wording
+- Iron Plate, Blood Frenzy, Rusty Razor and Serrated Knife now say "Discarded after use." (text only).
+
+## 13:02 — Boss map icons
+- All bosses use the generic crowned skull on the map again; the per-boss badges (Dealer, Croupier, Pit Boss, House) are no longer used there (assets kept, `MAPINK.boss_*`).
+
+## 13:04 — Baby die text tag removed
+- Spawned baby dice no longer carry the "baby" label; their small size says it (tooltip unchanged).
+
+## 13:08 — Log button no longer shakes
+- The hit screen-shake now moves the battle's pieces instead of the whole app, so the Log button stays still while an attack lands.
+
+## 13:12 — Reroll screen
+- Reroll controls moved into the same control block as Bid/Liar so the dice row no longer sits on top of the buttons (that is what made it take many clicks); Reroll and Cancel now use the marble buttons (gold and red); text shortened; the cup's drop area is bigger so a dragged die lands more easily.
+
+## 13:13 — Die tooltips show every face
+- Hovering a rolled die or a die in the HUD now ends with a strip of all its faces (tattooed and wild faces included).
+
+## 13:20 — Reroll cup, 6 / 6 counter
+- New Gemini dice-cup icon on the reroll screen (`assets/ui/dice_cup.webp`, `CUP_ART`); the old pixel cup is no longer drawn there. Reroll screen text reduced to a hover tip; Reroll/Cancel clear the XP bar.
+- The "6 / 6" under the player portrait (`.unithp`) is hidden.
+
+## 13:30 — Wild face art
+- Wild faces use new Gemini art (chaos star) instead of the pixel star. Three alternates are saved (jester mask, magic eye, lightning star) in `assets/ui/wild_*.png` if you prefer one.
+
+## 13:36 — Same-number hover glow stronger
+- Dice sharing the hovered die's number now glow with a wider, brighter golden halo that gently pulses (`.die.hlv`).
+
+## 13:40 — Swarm enemies are 2-3 separate foes; empty black box
+- Shattered Remnants and Hellions are now 2 or 3 separate foes (Rattle/Clack/Knuckle, Giggle/Snicker/Cackle), each with its own portrait, name and 2 dice, instead of one foe with 4-6 dice. With 3 foes (or any with 5+ dice) they stand as columns across the top (portrait, name, dice in blocks of three); checked with 3 foes x 6 dice.
+- Removed a long thin black box that could show in the middle of the table between rounds: the alert pop-up was drawn even when it had nothing in it (e.g. while the dice are revealed). It now only appears when it has something to say. Not reproduced from the live game, only found by reading the code, so tell me if it still shows.
+
+## 13:50 — Wild in die tooltips is an icon
+- Hovering a die that rolled wild now shows the wild icon (the Gemini chaos star) in the title and counts ("Rolled 2 × [icon]", "(2 × 4 + 1 [icon])", baby dice) instead of the word "wild".
+
+## 14:00 — Truncated seal has 4 stages (d8, d10, d12, d20)
+- Truncated now goes d8, d10, d12, d20 (names Truncated, Truncated Decahedron, Truncated Dodecahedron, Icosahedron; tier pips and "IV" numeral updated; the seal window shows the right die shape). The shop's D20 ware is now a die with 4 Truncated seals. Faces above 6 stay wild. Dice that already had more seals (the old d14-d18 steps) no longer exist; max is 4.
+
+## 14:02 — "wild" wording is the wild icon everywhere
+- Any text in the game that says "wild" / "wilds" (seal descriptions, chips, tooltips, card text, rules) now shows the wild icon in place of the word. Done by a text filter over the page, so new text is covered automatically. Alt text and the sound/log text are unchanged.
+
+## 2026-10-10 13:45 Ardent Zealot portrait
+Hood was cropped at the top of the ring. New Gemini set for all four states (normal, hurt, win, dead) with clear headroom above the hood; old art in assets/_old/. Sheet: assets/sheets/zealot_portraits_20261010_src.jpg.

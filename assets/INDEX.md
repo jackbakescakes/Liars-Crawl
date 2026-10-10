@@ -282,3 +282,21 @@ Round result window removed: after a call the round auto-advances 2.6 s later (`
 | sheets/buck_knife_carved_20261009_src.png | Gemini re-roll: one worn gold coin with a buckhorn folding knife carved into it, diagonal (handle 8 o'clock, tip 2 o'clock) | 1024x1024 | source of the two pieces below | prompts.md "the buck as a buckhorn-handled knife", re-roll |
 | ui/coin_buck_face_v2.webp | The buck coin: worn gold coin with a carved buckhorn knife (replaces the revolver face) | 240x240 | `GUN_COIN` (JS const) -> toss coin buck face `.cface.cfp` | buck_knife_carved_20261009_src.png |
 | ui/buck_token_v3.webp | Same coin shrunk: the buck turn marker (replaces the revolver chip) | 120x120 | `BUCK_IMG` (JS const) -> `#buckmark .bimg`, toss banner `.fxtok`, Rules key | buck_knife_carved_20261009_src.png, resized |
+
+## Seal Stall, Dice Carver and the d20 (2026-10-10, Gemini art; Gemini prompts in prompts.md "2026-10-10 shops and the d20")
+| file | what it is | size | used in game as | source |
+|---|---|---|---|---|
+| tokens/mapink_sealshop.webp | Seal Stall map icon (Gemini): market stall with hanging wax seals and a red seal on the counter. Source: sheets/mapink_shops_20261010_src.jpg (magenta key, interior filled dark) | 128x128 | `MAPINK.sealshop` | Gemini; old placeholder in _old/ |
+| tokens/mapink_diceshop.webp | Dice Carver map icon (Gemini): stall with a d6 and a d20 on the counter. Same source sheet | 128x128 | `MAPINK.diceshop` | Gemini; old placeholder in _old/ |
+| tokens/die_d20.webp | d20 body (Gemini) in the bone style of d8/d10/d12. Source: sheets/die_d20_20261010_src.jpg (magenta key) | 88x96 | CSS `.die.dp20` background (`--pt: 57%`) | Gemini; old placeholder in _old/ |
+| portraits/enc_sealshop.webp | Seal Stall portrait (Gemini): hooded woman among strings of wax seals. Source: sheets/portrait_sealshop_20261010_src.jpg | 256x256 | `ENCPORT.sealshop`, `ENCMAP.sealshop` | Gemini |
+| portraits/enc_diceshop.webp | Dice Carver portrait (Gemini): old man carving a die from bone. Source: sheets/portrait_diceshop_20261010_src.jpg | 256x256 | `ENCPORT.diceshop`, `ENCMAP.diceshop` | Gemini |
+| ui/paint_pot.webp | Face Painter button art (Gemini): wooden bowl of red pigment with a hair brush. Source: sheets/paintpot_20261010_src.jpg (magenta key) | 160x160 | `PAINT_ART`, `.paintbtn .pbart` (Face Painter event) | Gemini; replaces the 12x12 `itemArt('load')` seal icon on that button |
+| ui/blood_splat.webp | Blood splatter for the 2x DAMAGE effect (Gemini). Source: sheets/blood_splat_20261010_src.jpg (magenta key) | 520x391 | `BLOOD_SPLAT`, `doubleStrike()`, CSS `.dblfx .df-splat` | Gemini |
+| ui/bleed_drop.webp | Blood drop icon for bleeding (Gemini). Source: sheets/bleed_icon_20261010_src.jpg (magenta key) | 58x80 | `BLEED_DROP`, CSS `.bleedico`, `.bleedfx` | Gemini |
+| portraits/boss_dealer_normal.webp, _win, _dead, _confused, _angry, _hurt | The Dealer (green orc card dealer) fight portraits, all six moods in one consistent set (Gemini) | 200x200 each | `BOSS_PORTRAITS.dealer.normal/win/dead/confused/angry/hurt` (replaces the old set, whose hurt and confused faces were not green) | sheets/dealer_portraits_20261010_src.jpg (magenta key, labels on the sheet ignored when cutting) |
+
+| ui/dice_cup.webp, sheets/dice_cup_20261010_src.jpg | Gemini dice-shaker cup, leather with a brass band and two dice (magenta key, cut by cut_sheet.py) | 160x160 | `CUP_ART` (embedded) via `cupHTML()`: the cup in the reroll screen's drop zone (replaces the old pixel `CUP`, which stays in the file unused) | 2026-10-10 |
+
+| ui/wild_star.png (+ wild_jester, wild_eye, wild_lightning .png), sheets/wild_faces_20261010_src.jpg | Gemini wild-face symbols (4 options, green key): chaos star, jester mask, magic eye, lightning star | 128x128 | chaos star embedded as `WILD_ART` -> `STAR` (`dieHTML` for wild faces and `pipMarkup` for v > 6); the other three unused | 2026-10-10 |
+| portraits/boss_portraits_zealot_normal/hurt/win/dead.webp | Ardent Zealot portraits, new set with headroom (Gemini; old cropped set in _old/) | 256x256 each | `BOSS_PORTRAITS.zealot.*` | sheets/zealot_portraits_20261010_src.jpg (fixed-circle cut) |

@@ -254,3 +254,41 @@ Re-roll (follow-up in the same Gemini chat):
 Plan: the one coin is used for both the buck token (`BUCK_IMG`, 120x120) and the coin's buck face (`GUN_COIN`, 240x240).
 
 Re-roll result (`assets/sheets/buck_knife_carved_20261009_src.png`): USED for both `GUN_COIN` and `BUCK_IMG`.
+
+## 2026-10-10 shops and the d20 (not yet drawn; the game uses code-drawn placeholders)
+Wire-in when they arrive: cut with `tools/lc_art/cut_sheet.py`, save the untouched sheet in `assets/sheets/` first.
+
+1. The d20 die (match `.die.dp8/.dp10/.dp12`; attach a screenshot of those three dice to the chat):
+> Generate an image: ONE twenty-sided die (d20 / icosahedron) seen straight from the front, so one triangular face points up in the centre with the other faces around it making a hexagon outline. Chunky pixel art with crisp hard pixel edges, no blur. Carved from old bone: cream #efe4c6 on the faces toward the light, warm grey-tan #b9ab8c on the faces turned away, thin darker tan lines on the edges between faces, a 2 px near-black #14110d outline around the whole die. NO numbers, NO pips, NO letters on any face (the game writes the number). Same style and colours as the attached d8, d10 and d12. Perfectly flat solid magenta #FF00FF background with at least 40 px of plain magenta around the die. No shadow, no glow.
+-> `assets/tokens/die_d20.webp` about 88x96, replaces the background of `.die.dp20` (keep `!important`).
+
+2. Two encounter portraits (circular window, like the Black Market and Smith portraits):
+> Generate an image: two separate square pixel-art portraits side by side on a perfectly flat solid magenta #FF00FF background, at least 40 px of magenta around and between them. Same style as the attached Black Market portrait: grimdark fantasy tavern, chunky pixel art, crisp pixel edges, warm candle light, dark stone. Left: THE SEAL STALL, a hunched old woman behind a wooden counter hung with strings of wax seals in grey, green, blue, purple and gold, one red seal pressed under her thumb. Right: THE DICE CARVER, a gaunt carver with a small knife whittling a die from a knucklebone, a tray of finished dice in front of him: a plain cube, an eight-sided, a ten-sided, a twelve-sided and one glowing twenty-sided die. No text.
+-> `ENCPORT.sealshop`, `ENCPORT.diceshop` (about 236x236), then change `ENCMAP.sealshop`/`ENCMAP.diceshop` to those keys.
+
+3. Two map ink icons (match the existing map icons; attach the shop stall icon):
+> Generate an image: two separate map icons side by side on a perfectly flat solid magenta #FF00FF background, at least 40 px of magenta around and between them. Same ink-and-wash woodcut style as the attached market stall icon: dark brown ink lines, parchment-cream fills, light grey wash, no background. Left: a small market stall with strings of round wax seals hanging from its awning and one big red wax seal on the counter. Right: a small market stall with a big cream six-sided die and a twenty-sided die on its counter. No text.
+-> `MAPINK.sealshop`, `MAPINK.diceshop` (about 128x116).
+
+Result note (2026-10-10): all four Gemini images (d20, Seal Stall portrait, Dice Carver portrait, shop map icon sheet) were accepted as generated and wired in; sources are in assets/sheets/*_20261010_src.jpg.
+
+### 2026-10-10 Face Painter button
+"a single dark-fantasy pixel-art icon, 16-bit style, chunky visible pixels, of a small wooden bowl of glowing red pigment with a paintbrush made of human hair resting across it, a few drops of paint. Dim earthy palette with ochre, ash and crimson, black outline. Centered, no text, no numbers, on a flat solid pure magenta (#FF00FF) background. Square 1:1." Accepted as generated.
+
+### 2026-10-10 Blood splatter (2x DAMAGE)
+"a pixel-art sheet for a dark-fantasy game, 16-bit style, chunky visible pixels, black outline: one big blood splatter in the centre, splashing outward with drips and flying droplets, deep crimson with darker red shading and a few bright highlights, wide and dramatic like a slash impact. Flat solid pure magenta (#FF00FF) background. No text, no numbers, no other objects. Landscape 3:2." Accepted as generated.
+
+### 2026-10-10 Bleed icon
+"a pixel-art sheet for a dark-fantasy game, 16-bit style, chunky visible pixels, black outline: ONE small bleeding status icon, a single bright crimson blood drop with a darker red shaded side, a white highlight pixel, and one tiny second drop falling beneath it. Reads clearly when shrunk to 30 pixels. Flat solid pure magenta (#FF00FF) background with plenty of plain magenta around it. No text, no numbers, no other objects. Square 1:1." Accepted; only the big drop was kept (the tiny second drop was dropped when cutting).
+
+### 2026-10-10 The Dealer portraits (all six)
+"a sheet of SIX separate square pixel-art character portraits of the same character, laid out 3 across and 2 down on a perfectly flat solid magenta #FF00FF background ... Each portrait is a round window with a thick brown wooden ring frame and a dark grey stone-brick wall behind. Grimdark fantasy, chunky 16-bit pixel art ... THE CHARACTER: THE DEALER, a fat olive-green-skinned ORC card dealer (always the same mossy olive-green skin, small tusks, bald head) in a bone-and-leather armour vest studded with playing cards, a pile of gold coins and bones on each shoulder, a bone dice on a chain at his chest. Expressions: NORMAL sly half-smile with fanned cards; WIN grinning wide; DEAD slumped in blood with scattered cards and a chest; CONFUSED scratching head with a question mark; ANGRY snarling with glowing golden cards; HURT wincing, one eye shut, red cuts, STILL green." Accepted as generated (Gemini drew small word labels above each portrait; they were left out when cutting). Old versions are still in git history.
+
+### 2026-10-10 dice cup icon (reroll screen)
+"Create an image: a single game icon of a worn leather dice-shaker cup (tall, slightly tapered, open at the top, stitched leather, dark rim, brass band), front view at a slight angle, two ivory dice peeking out of the top. Grimdark dungeon style: thick uneven black ink outlines, flat muted fills with light hand-painted texture, slightly cartoonish. One icon, centred, ~70% of the frame, square, flat solid magenta #FF00FF background, no text, no grid." First roll accepted.
+
+### 2026-10-10 wild face symbols
+"Create an image: a sheet of 4 different 'wild' symbols for the face of a fantasy dice game, 2x2, generous space, no grid lines, no text. Bold simple emblems that read at tiny size: (1) chaotic eight-pointed star, (2) laughing jester joker mask, (3) swirling magic eye, (4) crackling lightning-struck star. Violet, magenta, cyan glows on deep purple, thick uneven black ink outlines, flat muted fills with light hand-painted texture, slightly cartoonish grimdark. Each centred in its cell at ~70%. Flat solid pure green #00FF00 background." Green key (not magenta) because the art is purple/magenta. First roll accepted; keyed with numpy (g>150 & g>r+60 & g>b+60).
+
+### 2026-10-10 Ardent Zealot portraits (all four, replaces cropped set)
+"Create an image: a sheet of FOUR separate square pixel-art character portraits of the same character, 2 across and 2 down, flat magenta #FF00FF background ... round window with a thick brown wooden ring and dark grey stone-brick wall ... IMPORTANT: the whole head and hood must sit comfortably INSIDE the ring with clear empty wall above the hood, character about 75% of ring height ... THE ARDENT ZEALOT: dark brown hooded robe with gold trim and rope belt, gaunt bearded face, spiked iron mace. Expressions: NORMAL, HURT, WIN, DEAD." First roll accepted. Cut by fixed circle (centres 392,192 / 997,192 / 389,572 / 997,572, radius 177) so the dead pose's dropped mace outside the ring is excluded.
