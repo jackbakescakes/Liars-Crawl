@@ -3919,7 +3919,7 @@ html body[data-screen="combat"]:not([data-screen="title"]):not([data-screen="cha
   /* floor 4's parchment is near-black: no tan showing through at its torn edges */
   html body[data-floor="4"] .mappanel .map.mapart.ink { background: #140c09 var(--mapbg) center / 100% 100% no-repeat !important; }
 
-  #introblack { position: fixed; inset: 0; z-index: 2147483000; background: #000; cursor: pointer; display: flex; align-items: flex-end; justify-content: center; padding-bottom: 6vh; transition: opacity 2.4s ease-out; }
+  #introblack { position: fixed; inset: 0; z-index: 2147483000; background: #000; cursor: pointer; display: flex; align-items: flex-end; justify-content: center; padding-bottom: 6vh; transition: opacity .6s ease-out; }
   #introblack span { font-family: var(--display); font-size: 26px; letter-spacing: .1em; text-transform: uppercase; color: #fff; opacity: .22; transition: opacity .4s; }
   #introblack.go span { opacity: 0; }
   #introblack.off { opacity: 0; pointer-events: none; }
@@ -7747,18 +7747,18 @@ body:not([data-screen="title"]):not([data-screen="char"]):not([data-screen="rule
   }
   // BIG BIG: ten or more of any one number (wilds count) wrecks the table for 10 damage
 
-  // small bonuses for a lucky roll (wilds never count): a straight (1 to 6 all showing) or five of one face each pay 10 gold
+  // small bonuses for a lucky roll (wilds never count): a straight (1 to 6 all showing) or five of one face (or five natural wilds; baby dice count) each pay 10 gold
   function rollBonusCheck() {
     try {
       if (!C || !S || !S.player) return;
       var cnt = {}, f, list = [];
-      C.pv.forEach(function (x) { if (!x.baby && x.val >= 1 && x.val <= 6) cnt[x.val] = (cnt[x.val] || 0) + 1; });
+      C.pv.forEach(function (x) { if (x.val >= 0 && x.val <= 6) cnt[x.val] = (cnt[x.val] || 0) + 1; });   // baby dice count too; 0 = a natural wild (user, 2026-10-10)
       var straight = true; for (f = 1; f <= 6; f++) if (!cnt[f]) straight = false;
-      var yah = 0; for (f = 1; f <= 6; f++) if (cnt[f] >= 5) yah = f;
+      var yah = 0; for (f = 1; f <= 6; f++) if (cnt[f] >= 5) yah = f; if (!yah && cnt[0] >= 5) yah = 'w';   // five natural wilds is a Yahtzee too
       if (straight) list.push({ k: 'STRAIGHT', face: 0 });
       if (yah) list.push({ k: 'YAHTZEE', face: yah });
       list.forEach(function (b, i) {
-        S.player.gold += 10; C.log.push(b.k === 'STRAIGHT' ? 'Straight! One of every face in a single roll: +10 gold.' : 'Yahtzee! Five ' + fico(b.face) + ' in a single roll: +10 gold.');
+        S.player.gold += 10; C.log.push(b.k === 'STRAIGHT' ? 'Straight! One of every face in a single roll: +10 gold.' : 'Yahtzee! Five ' + (b.face === 'w' ? wico(20) : fico(b.face)) + ' in a single roll: +10 gold.');
         var tries = 0;
         (function go() {   // wait until the dice have finished rolling and no toss/tutorial overlay is covering the table, then play it
           var busy = document.querySelector('#app .die.throw, #app .die.rolling') || document.getElementById('firstfx');
@@ -7772,7 +7772,7 @@ body:not([data-screen="title"]):not([data-screen="char"]):not([data-screen="rule
     try {
       if (!S || S.screen !== 'combat') return;
       var dice = Array.prototype.slice.call(document.querySelectorAll('.mycups .die'));
-      dice = dice.filter(function (d) { return b.face ? d.getAttribute('data-face') === String(b.face) : !!d.getAttribute('data-face'); });
+      dice = dice.filter(function (d) { return b.face === 'w' ? d.getAttribute('data-v') === '0' : b.face ? d.getAttribute('data-face') === String(b.face) : !!d.getAttribute('data-face'); });
       dice.forEach(function (d, i) { d.style.setProperty('--bd', (i * 70) + 'ms'); d.classList.add('bonusjump'); });
       setTimeout(function () { dice.forEach(function (d) { d.classList.remove('bonusjump'); }); }, 2400 + dice.length * 70);
       sfx('item');
@@ -15272,11 +15272,12 @@ var POUCH_SVG = pixSVG(["................", "................", ".....kkkkkk....
     if (/[?&]nointro\b/.test(location.search)) return;
     el = document.createElement('div'); el.id = 'introblack'; el.setAttribute('role', 'button'); el.setAttribute('aria-label', 'Click to begin');
     el.innerHTML = '<span>click to begin</span>'; document.documentElement.appendChild(el);
-    function reveal() { if (!el) return; var e = el; el = null; e.classList.add('off'); setTimeout(function () { if (e.parentNode) e.parentNode.removeChild(e); }, 2700); }
+    function reveal() { if (!el) return; var e = el; el = null; e.classList.add('off'); setTimeout(function () { if (e.parentNode) e.parentNode.removeChild(e); }, 800); }
     function begin(ev) {
       if (started || window.__welcomeActive) return; started = true; if (ev && ev.preventDefault) ev.preventDefault();
       el.classList.add('go'); t0 = Date.now();
       try { audInit(); musicSet(trackFor()); } catch (e) { }
+      if (true) { reveal(); return; }   // user, 2026-10-10: the click goes straight to character select (no wait for the first big hit)
       var iv = setInterval(function () {
         if (!el) { clearInterval(iv); return; }
         var v = MUSC.v, c = AUD.ctx, waited = Date.now() - t0;
