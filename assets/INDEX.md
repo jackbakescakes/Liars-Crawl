@@ -310,3 +310,50 @@ Round result window removed: after a call the round auto-advances 2.6 s later (`
 | (none: reuses existing art) | Skill-tree travel nodes (12): reroll/peek nodes show `ABIL_ART.reroll` / `ABIL_ART.peek`, armour nodes show `ITEM_ART.armour` (the Armour card art) | n/a | `SK_ART[tn_*]` set from `TRAVEL` | placeholder, replace with Gemini skill icons if supplied (one per node: Steady Hand, Mail Shirt, Battle Sense, Iron Bracers, Prayer Beads, Blessed Vestments, Searching Gaze, Warding Sigil, Eye for a Mark, Leather Jerkin, Nimble Fingers, Shadow Cloak) |
 | (code) `.bfhold` | "You hold N" badge on the bid faces | 46 px circle | CSS `.felt .bfdie .bfhold`, JS `holdBadge` | code-drawn |
 | (code) `.mergefx` / `.mergeflash` / `.mergelbl`, `#diechoice` | Dice merge animation (spin together, flash, "D8!" label) and the Move / Merge window | n/a | `dieMerge`, `dieChoice` | code-drawn, replace with Gemini art if supplied |
+
+## Face-down enemy polyhedral dice (2026-10-11, grabbed from Gemini by Claude)
+Source sheet `assets/sheets/enemy_dice_hidden_20261011_src.png` (1024x506, 4x2 cells; rebuilt from 8 full-screen captures of the Gemini image, so very slightly soft). Magenta keyed, trimmed, 128 px tall.
+| file | what it is | size | used in game as | source |
+|---|---|---|---|---|
+| tokens/edie_hidden_d8.webp | face-down enemy d8 (skull, red eyes) | 128x128 | `.edie .dpw8 .die.hiddie` `--ei` | enemy_dice_hidden_20261011_src, prompt 2026-10-11 |
+| tokens/edie_hidden_d8_hover.webp | same, hover-lit | 125x128 | `.edie:hover .dpw8 .die.hiddie` | same |
+| tokens/edie_hidden_d10.webp | face-down enemy d10 | 122x128 | `.edie .dpw10 .die.hiddie` | same |
+| tokens/edie_hidden_d10_hover.webp | same, hover-lit | 122x128 | `.edie:hover .dpw10 .die.hiddie` | same |
+| tokens/edie_hidden_d12.webp | face-down enemy d12 | 125x128 | `.edie .dpw12 .die.hiddie` | same |
+| tokens/edie_hidden_d12_hover.webp | same, hover-lit | 132x128 | `.edie:hover .dpw12 .die.hiddie` | same |
+| tokens/edie_hidden_d20.webp | face-down enemy d20 | 115x128 | `.edie .dpw20 .die.hiddie` | same |
+| tokens/edie_hidden_d20_hover.webp | same, hover-lit | 117x128 | `.edie:hover .dpw20 .die.hiddie` | same |
+
+## The House portrait frame (2026-10-11, grabbed from Gemini by Claude)
+| file | what it is | size | used in game as | source |
+|---|---|---|---|---|
+| ui/house_frame_gold.webp | ornate gold oval frame, rubies + filigree, card-fan crest top, skull cartouche bottom; magenta keyed | 443x443 | `.foe .portrait.wideport::after` (The House combat portrait only; opening = 0.95 x 0.80 of the portrait's oval so the band hides the old picture's top and bottom rim; portrait shifted 50px down with side margins) | `sheets/house_frame_gold_round_20261011_src.png` (rebuilt from a screen capture of the Gemini image); first, too-flat roll kept as `sheets/house_frame_gold_20261011_src.png`; prompts in `prompts.md` 2026-10-11 |
+
+## The House face-down dice (2026-10-11, grabbed from Gemini by Claude)
+Source `sheets/house_dice_gold_20261011_src.png` (Gemini drew a 3x3 grid, not the 5x2 asked for: row 1 d6 d8 d10, row 2 d6-ruby-eyes d12 d20, row 3 glowing d6 / d12-ish / d20; only the five normal dice are used). Magenta keyed, 128 px tall.
+| file | what it is | size | used in game as | source |
+|---|---|---|---|---|
+| tokens/house_die_d6.webp | gold d6, filigree border, skull and crossbones | 131x128 | `.foe:has(.portrait.wideport) .edie .die.hiddie` `--ei` | house_dice_gold_20261011_src |
+| tokens/house_die_d8.webp | gold d8 | 129x128 | same + `.dpw8` | same |
+| tokens/house_die_d10.webp | gold d10 | 119x128 | same + `.dpw10` | same |
+| tokens/house_die_d12.webp | gold d12 | 124x128 | same + `.dpw12` | same |
+| tokens/house_die_d20.webp | gold d20 | 111x128 | same + `.dpw20` | same |
+| (code-drawn) House dice hover glow | brightness + gold drop-shadow on `.edie:hover` | - | `.foe:has(.portrait.wideport) .edie:hover .die.hiddie` | replace with Gemini hover art if wanted |
+
+## The House revealed (face-up) dice (2026-10-11, grabbed from Gemini by Claude)
+| file | what it is | size | used in game as | source |
+|---|---|---|---|---|
+| tokens/house_d6_face1..6.webp | gold d6 faces with raised ruby pips, 1-6 | ~128x128 | `.foe:has(.portrait.wideport) .edie .die[data-face="N"]:not(.hiddie)` `--ei` | `sheets/house_d6_faces_gold_20261011_src.png` (3x3 grid; rows 1-2 used, row 3 was glow extras) |
+| tokens/house_face_d8/d10/d12/d20.webp | ornate blank gold poly bodies (filigree, ruby studs) with an empty front panel | ~120x128 | `.foe:has(.portrait.wideport) .edie .die.dpN:not(.hiddie)` background | `sheets/house_poly_blank_ornate_20261011_src.png` (3x3; middle and right columns of rows 1-2). Replaced the plainer first set, now `_old/house_face_d*_plain.webp` (from `sheets/house_poly_blank_gold_20261011_src.png`) |
+| tokens/house_digit_0..9.webp | ruby-red pixel numerals with gold top highlight | ~48x64 | JS `HOUSE_DIG` + `houseDigits()` (runs after every render; swaps `.pnum` text for digit images, class `.pnum.hdig`) | `sheets/house_digits_ruby_20261011_src.png` (5x2 grid) |
+| tokens/house_face_d8/d10/d12/d20_plate.webp | the ornate bodies on a 128x128 canvas with a big copy of each die's own front face laid over the middle (dark outline + soft shadow), so the number has a proper face to sit in | 128x128 | replaces `house_face_dN` as the `.foe:has(.portrait.wideport) .edie .die.dpN:not(.hiddie)` background; digit at 56.25% down, 29.7% tall on every die | built in code from `house_face_dN.webp` (2026-10-11, user's idea) |
+| tokens/house_d6_blank.webp | blank ornate gold d6 face (for a wild d6: the wild star sits on it) | 128x128 | `.foe:has(.portrait.wideport) .edie .die.wild:not(.dpN)` `--ei` | `sheets/house_poly_blank_ornate_20261011_src.png` cell (0,1) |
+
+## Elite and boss portrait frames (2026-10-11, grabbed from Gemini by Claude; user picked Elite B and Boss B)
+Source `sheets/portrait_frames_elite_boss_20261011_src.png` (2x2: elite A / boss A on top, elite B / boss B below; rebuilt from a screen capture). Opening (hole) box given per file.
+| file | what it is | size | used in game as | source |
+|---|---|---|---|---|
+| ui/frame_elite_a.webp | blackened iron + bronze ring, silver rivets, iron spikes at the diagonals, bronze skull plaque top (darker band) | 211x211, hole 40,45-169,169 | unused | sheet above, top-left |
+| ui/frame_elite_b.webp | same, warmer bronze band | 211x211, hole 40,43-169,168 | combat `.foe .portrait.elite:has(img.photo)::after` (126% box, replaces the floor ring on elites; portrait nudged down 15% with side margins) | bottom-left |
+| ui/frame_boss_a.webp | dark gold + iron ring with runes, black horns, iron crown with ruby top, skull and crossbones bottom, rubies, blood drips | 207x217, hole 41,53-166,173 | unused | top-right |
+| ui/frame_boss_b.webp | same without the crown (big ruby at the top instead) | 212x216, hole 43,45-167,165 | combat `.foe .portrait.boss:has(img.photo)::after` (132% box, replaces the floor ring on bosses except The House; nudged down 19%) | bottom-right |

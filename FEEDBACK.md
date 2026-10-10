@@ -438,3 +438,52 @@ Not changed (noted): small roll-event windows have left-aligned, edge-to-edge ru
 - While a die is held the satchel glows (`.fibag.dieglow`) and the dice it can merge with are outlined gold (`.mergeok`). Rules menu has a "Moving and merging dice" card.
 - 23:35: the buck marker shows the red enemy face while the enemy holds it and the knife face while you hold it; on a hand-off it flips over in the air (rotateY) and swaps faces at the edge-on moment.
 - 23:42: Big Big now deals 1 damage (`BIGBIG_DMG`, was 10). Wilds no longer count towards a number; ten natural wilds is its own Big Big. Rules card updated.
+- 23:58 Continue run: the button was only on the title screen (`titleHTML`, `data-act="continueRun"`), but the game has opened on character select since 2026-10-07 and nothing goes to the title screen, so it never showed although the autosave (render wrapper -> `saveWrite`) worked. Now on character select under the class list (`.charcont`, shown when `saveHas()`).
+
+## 2026-10-11 00:00 batch (working file)
+- Bid pane / table no longer move during a fight: shift is a CSS variable on <body> (`--bidshift`), set once per fight; felt position (`C.feltWant`) set once per fight; both recomputed only on a window resize; enemy-bid jolt (`ebidshake`) off.
+- Picking up a seal (or spare die) on the map with the dice tray folded opens the tray; put down unused, it folds away again (`sealDrag.openedTray`).
+- Relic tutorial: step 1 titled "RELIC!", step 2 points at the relic button (`.relicbtn`) instead of the tray.
+- Satchel's default spot moved down and left (`ICONPOS.bag` 0.85, 0.58) so a new relic (lands at 0.93, 0.4) never sits on it; spare dice land at 0.74.
+- Relic button: the button no longer lifts under the mouse (its bottom edge slipped out from under the pointer and flickered); the picture lifts and glows on hover.
+- Slot machine loaded in pieces (code-drawn bulbs first, machine art later): `warmCssArt` only matched embedded `data:` art, so in the published split build it warmed nothing (roulette too); it now matches any url and also warms `.slotm2`. The machine also waits, invisible, until its art is decoded (`artGate`, `.artwait`, 4 s cap).
+
+## TO-DO (open)
+- **Lucky Coin is underpowered** (user 2026-10-11): once per fight it rerolls a single die. Probably closer to right: one free reroll per fight (a whole reroll charge). Look at it in the next balance pass.
+- The Bone Peddler trades one die for 3 cards (was 2).
+- **Swarm naming** (user 2026-10-11): swarm members are "Shattered Remnant A / B / C" and "Hellion A / B / C" for now (`group.one` + a letter); the user wants to come up with a more elegant way to name and tell swarm members apart.
+- Swarm member names larger (38 px) and wrapped under each portrait.
+- Chest/reward relic hover text is just what the relic does (the "A relic: it arrives as an icon..." line is gone).
+- Seal applied from the battle report: the window that follows is the glowing new-die showcase again (`upgradeHTML`: rays, name, tier pips, the die large and hoverable, what it does; no row of faces). The encounter-window version is kept as `upgradeHTMLWin`. Report seals still waiting stay hidden while it is up.
+- Deck pile fans like a held hand for every size (2+ cards: the computed fan, left card under right; 2-5 cards used to sit in fixed slots with the middle card on top).
+- Fixed a clash from the Move/Merge work: a second `dieName` (size only, "d6") replaced the full-name function everywhere (tooltips, Pit Boss scene, new-die window) since v346. It is `dieSize` now.
+- New-die window after a seal: "SEAL BOUND / SEAL STRENGTHENED" small at the top, the die's full name below, then the die bouncing in a glow with sparks (`.upgshow`, `.upghappy`, `.upgglow`); hover the die for its faces. No description or chips.
+- Every in-dungeon screen (event, shop, camp, dummy, forge, swap, victory, levelup, upgrade, tree) uses its floor's background on floors 1-4 (floors 2-4 fell back to the old stone pattern on most of them).
+- Scratch card appears in one piece: the card waits until its frame, prize and foil are ready (`artGate('.scratchwrap')`, `.foilwait` until the foil image is painted).
+- Slot machine no longer changes size: the result line keeps its space while spinning, and the window's scale is set when the machine opens and held (`S.event._z`).
+- Map no longer bumps when a seal is applied on the map: the rebuilt map panel was painted for one frame at its natural size before `hudMapFit` ran (it was deferred with setTimeout); `fitZoom` now fits it straight away as well.
+- Drag a relic out of its relic slot to unequip it (not in fights, same as right-click Unequip): it becomes a loose icon under the pointer; drop it anywhere, on the satchel, or on a slot.
+- Enemy Truncated dice look like what they are: a revealed enemy d8 / d10 / d12 / d20 uses the polyhedral shapes and numbers (it read only one copy of the seal, so every one was a d8, and the enemy die art covered the shape). Face-down ones are still the d6 skull tile: needs Gemini art (prompt in assets/prompts.md, 2026-10-11).
+- The yellow d8 / d10 / d12 / d20 tag under polyhedral dice is gone everywhere except the Dice Carver's shelf.
+- Dev tools: Warp to floor 2 / 3 / 4 removed (Advance floor does the job).
+
+## 2026-10-11 01:15 batch (working file, not yet published)
+- [x] Face-down enemy d8/d10/d12/d20 now use Gemini art (grabbed by Claude from Gemini; `assets/tokens/edie_hidden_*`, wired on `.edie .dpwN .die.hiddie`, hover-lit versions too).
+- [x] Coin purse can go in the satchel again, now during fights too (it used to be pushed out in combat; still pushed out on the fight report and at the bank, which count gold into it). Coins fly to the satchel while the purse is tucked away (`goldTarget`).
+- [x] The buck sits at 9 o'clock on both portraits (`buckSpot`); the opening toss swings out left and lands sideways on that spot. Reason: at 12 o'clock it hid the cleric's last upgrade.
+- [x] Big Big PARKED (user: silly idea, too strong with too many other things). `BIGBIG_ON = false` next to `bigBigCheck`; its Rules entry is hidden too. Code kept, including a calmer animation made just before it was parked (words pop up in the logo font, fly into the enemy as one hit, -10 lands on impact; no rainbow rays, confetti or screen shake).
+- [x] Soul Rend: stolen seals no longer open the seal screen mid-fight (that left the fight and cut the music). Each stolen seal floats on the felt as a loose seal to drag onto a die (`claimStolen`).
+- [x] Cleric halo: hovering the halo ring shows the Halo of Dawn tooltip (`.halo-b` `data-tip="skill:aura"`, only the top 62% catches the mouse).
+- [ ] Portrait not opening the skills screen after the halo: could not reproduce (works on every screen in the working file and in the published build). In fights the portrait has never opened the tree. Waiting on which screen it happened on.
+- [x] Enemy block (portrait + name + dice) is centred on the screen like the table (`foe.style.left` in the HUD-lock code, comment "the whole enemy block ... is centred"). It used to sit in the player's portrait column, which pushed long dice rows (The House, 11 dice) off to the right. Side effect: with few dice the enemy portrait no longer lines up with the player's.
+- [x] The House portrait has a gold Gemini frame (`ui/house_frame_gold.webp`, `.portrait.wideport::after`) hiding the flat cut-offs at the top and bottom of the portrait.
+- [x] The House: the table was locked in place during the round-1 rake scene and sat too low all fight (overlapping the player's XP bar). The lock now skips the scene (`C.feltWant`).
+- [x] Iron Plate / potion / bless no longer light up the enemy dice while aiming.
+- [x] "Everything went tiny" vs The House (not reproduced): the fight's held zoom could only shrink. In the roll/bid phase, once a round, a held zoom below 85% of normal is re-measured from scratch and the event is recorded (`{kind:'zoombug'}` in lcFeelsBadAll / Copy my reports, `[lc] ZOOM BUG` in the console). If testers hit it, ask for Copy my reports to find the root cause.
+- [x] House frame: flatter opening (0.95 x 0.80 of the portrait oval) hides the old picture's top and bottom rim lines; the card fan is laid again over the gold band (`.hcrown`, a second copy of the portrait clipped to the fan) under the crest plaque (`.hcrest`, the frame image clipped to the plaque). User approved 2026-10-11.
+- [x] The House's face-down dice are gold with a skull and crossbones (d6/d8/d10/d12/d20, Gemini), with a gold glow on hover.
+- [x] The House's dice stay gold when revealed: gold d6 faces with ruby pips; d8-d20 gold bodies with the number made of Gemini ruby digits (`houseDigits()`).
+- [x] House revealed dice: each body has an enlarged copy of its own front face in the middle; the number is the same size and in the same place on every die; faces above 6 (wilds) show only the wild star, centred, no number; a wild d6 is a blank gold d6 with the star.
+- [x] Elites and bosses have their own portrait frames (Gemini Elite B: iron/bronze, rivets, spikes, skull; Boss B: gold/iron, runes, horns, rubies, skull and bones, blood). The House keeps its gold oval. Elite A / Boss A kept in assets/ui as alternatives.
+- [x] All enemy portraits (normal, elite, boss) now sit the same distance lower (`translate: 0 19%` on `.foe .portrait:not(.wideport)`), so they line up whatever the frame.
+- [x] Seal balance (user, 2026-10-11, "too many seals"): main fight drop 50% -> 40% (`DROP_BASE`); the automatic 25% second seal is gone (`EXTRA_SEAL` 0); the Web of Bones second-seal nodes still add their +1% / +5%. Measured: 38% main, 0% second without nodes, ~6% second with 7% of nodes. Light Fingers checked: only moves seals already on the enemy's dice, never creates one.
