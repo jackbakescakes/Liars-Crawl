@@ -336,3 +336,59 @@ Raw reports come from the in-game "feels bad" buttons (artifact db collection `f
 
 ## 2026-10-10 13:45 Ardent Zealot portrait
 Hood was cropped at the top of the ring. New Gemini set for all four states (normal, hurt, win, dead) with clear headroom above the hood; old art in assets/_old/. Sheet: assets/sheets/zealot_portraits_20261010_src.jpg.
+
+## 2026-10-10 15:20 character select portrait borders solid
+Ring on the Fighter/Cleric/Thief portraits was forced to 55% opacity (`.portrait::after` on `.tavern .clsbtn.charcard`) and the card's dither overlay sat over it. Ring is now fully opaque and the portrait sits above the overlay.
+
+## 2026-10-10 15:30 buck hand-off after the toss
+The flying buck faded out (~0.4 s) while the real marker waited for its poll and a 0.25 s fade-in, so it vanished for a moment on arrival. Now the flying buck is removed on the landing frame and the marker (`window.__buckNow`) appears in the same frame with no fade, then re-syncs on the next frame. Measured per frame: marker opacity 1 at the same spot on the first frame after the flier is gone.
+
+## 2026-10-10 15:35 battle report: Skip button removed
+The "Skip" button (`.rp-skip`, `data-act="rptSkip"`) is no longer drawn on the battle report (`rptFoot` row near `data-act="rptSkip"`). The handler and CSS are left in place, unused.
+
+## 2026-10-10 15:40 die hover glow and lift
+- Same-number glow pulse (`.die.hlv`, `@keyframes hlvpulse`): both keyframes now have the same four drop-shadows (a mismatched list made the filter snap instead of tween), and the pulse is 2.4 s instead of 0.7 s, so it breathes softly.
+- A die you point at lifts 5 px (`translate`, own transition) on the enemy cups, your cups and the HUD dice.
+- Before the roll (`C.phase === 'roll'`) every die reads 6, so the same-number glow lit all of them; now only the die under the mouse glows. After the roll it is the matching-number group as before. Checked in the harness: 1 glowing die unrolled, 3 matching dice rolled.
+
+- 2026-10-10 15:40 fight-three music: when a fight loop is replaced by the calm/report music it plays to its loop end, fading over the last 3 s (stagePlay leaveFight). Claim button ("Examine the remains") popup now fades in (.wonpop, .12s delay) to hide any spawn-at-top settle. Also this session (uncommitted): solid character-select ring, report name centring/resize dead-band, no card flavour on hover, Liar-row fix (.unithp visibility), Level Up button, deck pile up to 5 backs.
+- 2026-10-10 15:55 ogre: hurt portrait shifted 6px left and win 3px left inside the ring (art was drawn off-centre vs normal); other enemies checked, no systematic offset.
+
+- 2026-10-10 15:55 relic tutorial (first relic outside a fight): A RELIC -> RELIC BUTTON (tray opens) -> satchel pops in with sparks -> YOUR SATCHEL. Uses the fight-tutorial styling (TUT.steps/kind). Satchel unlocked via localStorage lc_satchel (apple stays off); a relic dropped on the relic button while the tray is full, or on the satchel icon, is stowed in the satchel; sellable from it. Dev "Reset tutorials" clears lc_relictut + lc_satchel.
+- 2026-10-10 15:58 Snake-Eyes Charm: now triggers on exactly two natural 1s (wilds never count, any other dice fine), once per fight.
+- 2026-10-10 16:05 music: fight2m now needs at least 2 other loops before it can return (MUSC.m2 counter, reset per fight).
+- 2026-10-10 16:08 Pass the Buck button always reads 'Pass the buck' (no hover swap).
+- 2026-10-10 16:12 chaser warning wobble: 'An ancient shadow stirs' (day 6) is a faint wiggle (±2.5deg, no map shake); 'The dark is rising' (day 7) a little less than before (±8deg, 4 wobbles); 'Evil has awoken' unchanged.
+- 2026-10-10 16:20 chaser hunt: glide 700 -> 1500 ms per tile (camera follows it), camera holds 1400 ms after it lands (was 550) before panning back (HCAM.hop/hold).
+- 2026-10-10 16:25 XP orbs: generated a darker pixel-art orb set (assets/xp_orbs) to replace the bright CSS .rp-bub; awaiting Jack's approval before wiring.
+- 2026-10-10 16:30 XP orbs v1 too dark: made in-between recolours (assets/xp_orbs/mid_a, mid_b: saturation x1.7/2.0, brightness x1.5/1.8). Awaiting pick; magenta fringe on the outline edge still to trim when wiring.
+- 2026-10-10 16:40 XP bubbles wired: Middle B recolour of the Gemini orbs (the oval #5 dropped), fringe trimmed, 64px webp x5 (assets/xp_orbs/final), XP_ORBS random pick for .rp-bub in the battle report; size 18-34px, faint green drop-shadow.
+- 2026-10-10 16:50 skill hint: arrow + 'You have enough points for a new skill' box points at the skill-point badge on the portrait on map/shop/event/camp while a skill can be learned; goes away when the skill tree is opened (returns when you gain more points).
+- 2026-10-10 17:05 seal window dice: sealed (tinted) dice get a framed look: dark outer line, light inner rim, bevel highlight/shadow, gloss + fine dither overlay, drop shadow, brighter hover (CSS only, scoped to .dropgrid .dropdie).
+- 2026-10-10 17:20 re-order dice: drag a die in the tray (fights: before the roll or while bidding, not during reroll/target spells; HUD dice elsewhere) and release on another die to swap their places (p.dice + rolled values + marks swap, 0.26s slide, source dims, target glows). A plain click still bids.
+- 2026-10-10 17:30 boss fade-to-black: holds on black 1 s longer (bossCue 1300->2300 ms). Battle report bubbles: if the XP/gold node is gone or hidden, the start point now falls back to the live element / window centre instead of the top-left corner (could not reproduce the top-left flight in the harness).
+- 2026-10-10 17:40 report Continue pressed mid-count: its timers are stopped (gen bump, fx cleaned, gold/xp jump to final) so no XP/gold bubbles fly from the top-left after the window is gone.
+
+## Dealer card game: die-loss impact (2026-10-10, uncommitted)
+- Request: losing a die to the Dealer's card game only warned, then went straight to the next turn; wanted the loss to hit.
+- Change: the hit is now deferred ~2.8 s after the card reveal (`cardsImpact`), then `dieShatter`: the tray die leaps to the centre, trembles and cracks, then bursts (red flash, ring, shards, "-1 DIE", screen shake, hurt/crit sfx). Continue appears ~5.2 s on a hit. Pressing Continue early applies the hit instantly (quick path).
+- 2026-10-10 17:55 boss music on victory: the boss track no longer cuts when the fight ends; its loop plays out to the end, fades over its last 3 s, then the calm music fades in (same as the fight themes).
+- 2026-10-10 18:10 chest relics: a relic in the chest window can now be dragged out (ghost follows the pointer) and dropped anywhere; it lands as a loose icon where you let go (dropping on the relic button equips it as before). A plain click still takes it (appears at the right edge). Also fixed the card/relic drag in the chest window only working when S.screen was 'reward'.
+- 2026-10-10 18:25 level-up window: the 'Level N: choose an ability' title was shrunk to ~13px by the title auto-fit (needed 24px spare height in a 40px banner); the level-up window now only needs 2px so it stays at 32px. Battle-report button that read 'Level Up' now reads 'Ok' (it opens the ability/seal screen).
+- 2026-10-10 18:35 final-floor shop renamed 'Spoils of the Floor' -> 'The Victor\'s Stall' (it is a shop, not loot already gained); boss info text matches.
+- 2026-10-10 18:50 stairs scene ('Floor 2: The Catacombs' window between floors): had no floor background rule so it showed the old default; it now shows the background of the floor you are descending to (floor 2/3/4 art). The window is now the encounter-window style (campfire portrait, banner title, parchment flavour, Descend in the footer).
+- 2026-10-10 19:10 bid label: the enemy's bid now reads "[Enemy name]’s bid" (the bidding part's name for packs) instead of 'Their bid'.
+- 2026-10-10 19:30 seals in the battle report are loose seals again (no seal screen): drag one onto an eligible die to apply it (old 'die upgraded' pop-up with the long die name, then back to the report), let go over the report to drop it back in its slot, let go elsewhere to leave it there, drop on the satchel to tuck it in. Seals still in a slot when you press OK go into the satchel. (Harness-tested: side, back, apply; satchel branch mirrors the relic one but was not exercisable because the satchel is not unlocked in the test run.)
+- 2026-10-10 19:35 swarm enemies (Shattered Remnants, Hellions, Rat Swarm): portraits line up side by side, every member is just called by the monster's name (no Rattle/Clack/etc).
+- 2026-10-10 19:55 skeletons: new bloodless Shattered Remnants portraits (all four moods; old bloody set in assets/_old/). Skeleton Dicer, Shattered Remnants and the Bone Dealer are now immune to bleed: a bleed attempt (the thief's bleed skill, the razor/serrated cards) shows an IMMUNE banner (Gemini art, gold) popping over that portrait and logs "X is immune to bleeding"; the bleed cards are not spent.
+- 2026-10-10 20:10 bid table: the table/bid pane is kept exactly halfway between the enemy's dice and your bid-face row (JS `bidBalance`, every 250 ms, applied as a CSS translate on .bidbox; measured equal gaps at 1600x900, 1280x720, 1920x1080).
+- 2026-10-10 20:25 win button: 'Ransack the carcass' (and Pick the bones clean / Examine the remains) is hidden (space kept, not clickable) until the killing blow's animations have finished: at least 0.9 s after the win, then once no finite animation has been running in the battle for ~0.35 s (hard cap 6 s). Harness check with a forced win and no animations: hidden for ~1 s, then visible; a real kill with long animations was not run.
+
+## 2026-10-10 (saves, poly faces, deck pile) — uncommitted
+- Run saves: autosave to localStorage `lc_run_v1` on the map between fights (cleared on game over); "Continue run" on the title; "Code" (title) / "Save code" (settings) dialog to copy or load an export code (gzip+base64, `LC1:`). Reference-preserving encoder `saveEnc/saveDec`; version mismatch falls back to a new run.
+- Tinker / tattoo / paint / armour now show and accept every face of a poly die (d8-d20): `faceVals(d)`, `setDieFace`, extra faces stored in `d.xf`; rollDie and aiDieDist honour changed extra faces. Tooltips (`strip`) show all faces in the die's shape.
+- Deck pile on the map shows one card back per card in the deck (was capped at 5).
+- The Collector has proper portraits (normal/hurt/win/dead) from Gemini instead of the small hood sprite. Roulette art (wheel, ball, pointer, bet board, chip) is now pre-decoded (`warmCssArt`) so it appears together instead of piece by piece.
+- Croupier + Collector fight: the first foe is no longer pulled into the player's column (it covered the Croupier's dice); both foes now sit side by side.
+- Baby die tooltip now says how many of its number you rolled (wilds counted), like other dice.
+- Dice tray (`trayFit`): past 12 dice the rows of 6 shrink so every row fits the old two-row height; the portrait, XP bar and deck never move (user picked this over 9-wide rows). A third full-size row had pushed the portrait/XP bar up under the bid buttons and made the UI jump.
