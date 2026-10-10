@@ -85,6 +85,12 @@ The user is having Gemini draw a full alphabet in the style of the "LIAR'S CRAWL
 ## Move / Merge dice (2026-10-10 night)
 - Drop a die on a cup die -> `dieChoice` window (Move = `dswSwap`, Merge = `dieMerge` when `mergeOk`: same size, below d20). Full cup -> `spareDie` (loose `{die}` in `S.loose`, satchel switches on). Satchel glows while a die is held (`dieGlow`). Details in FEEDBACK.md 2026-10-10 23:30.
 
+## Title screen art (in progress, 2026-10-11, pick up here)
+- Picking a title-screen background from Gemini (image only; title and buttons go on later). All previews are 800x446 screen captures in `assets/sheets/title_*_20261011_preview.png`; prompts for every round in `assets/prompts.md` ("2026-10-11 Title screen options").
+- **The user's favourites:** composition of `title_crossroads_20261011_preview.png` (round 2 "A": lone adventurer from behind, low camera, three arches); the adventurer from `title_xroads_ruin_20261011_preview.png` (hooded cloak, leather backpack and bedroll, lantern raised); the subtle moods idea (a little smoke from the left passage, a faint distant campfire down the middle, a faint mist on the right).
+- User's notes: no stone dome, but a tall room and cramped, claustrophobic passages; low camera looking up; passages muted and natural (no bright colours); NO card signpost; dice above the doors optional and must be SMALL and subtle (1, 2, 3 pips left to right).
+- Latest round (round 4): `title_xroads2_a/b/c_20261011_preview.png` captured. Three more (d: taller walls and lower camera, e: chains/cobwebs/water stains, f: moodier light) were generated but not captured: they are the last three images in the Gemini chat https://gemini.google.com/app/689f48a102ee7a60 (built-in browser; the pane must be visible to screenshot). Capture them, show the user, then get the chosen one at full size (save to `assets/sheets/title_<name>_<date>_src.png`) and fix the dice pips if needed.
+
 ## Parked features
 - **Big Big** (ten of a kind = 10 damage) is out of the game since 2026-10-11: `BIGBIG_ON = false`. Code and Rules entry kept behind the flag.
 
