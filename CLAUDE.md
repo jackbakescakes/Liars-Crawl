@@ -99,3 +99,6 @@ The user is having Gemini draw a full alphabet in the style of the "LIAR'S CRAWL
 - Wheel is blocked except over a panel that really scrolls (CSS overflow-y auto/scroll and taller than itself). A new panel that scrolls another way needs an exemption there.
 - Page scrolling snaps back to 0, so anything that overflows a screen is cut off, not reachable: re-run the no-scroll scan after layout changes.
 - **No auto-repair on purpose** (user's call: safeguards that fix things hide the bug). The open bug: player cluster pushed off the bottom just after an early coin toss (1881x795 claude.ai frame), never reproduced. The recorder saves one snapshot per fight when the portrait is off screen for 0.8 s or the page was found scrolled: `{kind:"layoutbug", ...}` in localStorage `lcFeelsBadAll` (comes out with "Copy my reports") and `[lc] LAYOUT BUG` in the console. Ask testers who hit it to press Copy my reports.
+
+## Web of Bones v2 (2026-10-10)
+- Six themed wedges + border nodes, PoE-style path buying. Data: `WEB_SECT`, `WEB_BRIDGE`, layout `WEB_T`/`WEB_TE`; effects read with `webN('<fx key>')` (keys listed in FEEDBACK.md 2026-10-10). Old ring web refunded once by `webMigrate()`. Prototype page: https://claude.ai/artifact/18RbPVHRP6KcFW8enbS1mf (source /home/claude/proto/web-of-bones.html). Balance untuned.

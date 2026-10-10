@@ -1,0 +1,266 @@
+<title>Web of Bones Prototype</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Jersey+10&family=Courier+Prime:wght@400;700&display=swap">
+<style>
+/* layout: one dark game screen — the web fills the left, a parchment ledger sits on the right (stacks under on phones) */
+:root {
+  --ink: #0f0c0a; --stone: #1b1612; --bone: #e8dcbc; --bone-dim: #6d6352; --ember: #e8a23a; --blood: #b4382e;
+  --gold: #e6bd45; --rarity: #6fd0e0; --seals: #c58bf0; --dice: #e9e2cf; --defence: #8fb0d6; --attack: #ef6f6f;
+  --display: 'Jersey 10', 'Courier New', monospace; --body: 'Courier Prime', 'Courier New', monospace;
+  color-scheme: dark;
+}
+html, body { height: 100%; }
+body { background: var(--ink); color: var(--bone); font: 15px/1.4 var(--body); margin: 0; }
+.wrap { display: grid; grid-template-columns: minmax(0, 1fr) 340px; gap: 16px; height: 100%; padding-inline: 16px; padding-block: 12px; box-sizing: border-box; }
+.stage { position: relative; min-width: 0; min-height: 0; background: radial-gradient(circle at 50% 50%, #241c16 0%, var(--stone) 45%, var(--ink) 100%); border: 3px solid #3a2c20; border-radius: 6px; overflow: hidden; }
+svg { width: 100%; height: 100%; display: block; touch-action: none; cursor: grab; }
+svg.drag { cursor: grabbing; }
+.hud { position: absolute; left: 12px; top: 10px; display: flex; flex-direction: column; gap: 4px; pointer-events: none; }
+.hud h1 { font: 40px/1 var(--display); margin: 0; letter-spacing: 2px; color: var(--bone); text-shadow: 0 2px 0 #000; }
+.hud .pts { font: 22px/1 var(--display); color: var(--ember); }
+.zoom { position: absolute; right: 10px; top: 10px; display: flex; gap: 6px; }
+button { font: 18px/1 var(--display); color: var(--bone); background: #2a2119; border: 2px solid #5a4128; border-radius: 4px; padding: 6px 10px; cursor: pointer; }
+button:hover { border-color: var(--ember); } button:focus-visible { outline: 2px solid var(--ember); outline-offset: 2px; }
+.ledger { min-width: 0; min-height: 0; overflow: auto; background: #e6d6ad; color: #2a1c10; border: 3px solid #5a4128; border-radius: 6px; padding: 14px 16px; box-sizing: border-box; }
+.ledger h2 { font: 30px/1 var(--display); margin: 0 0 6px; letter-spacing: 1px; text-wrap: balance; }
+.ledger h3 { font: 20px/1 var(--display); margin: 14px 0 4px; letter-spacing: 1px; }
+.ledger p { margin: 4px 0; }
+.budget { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; font-variant-numeric: tabular-nums; }
+.budget input { width: 80px; font: 16px var(--body); background: #f4e8c8; border: 2px solid #5a4128; border-radius: 3px; padding: 2px 6px; color: #2a1c10; }
+.tip { background: #f4e8c8; border: 2px solid #5a4128; border-radius: 4px; padding: 8px 10px; min-height: 96px; }
+.tip .nm { font: 24px/1 var(--display); }
+.tip .kind { font-size: 12px; letter-spacing: .12em; text-transform: uppercase; opacity: .7; }
+.tip .cost { font-variant-numeric: tabular-nums; font-weight: 700; color: #7a2016; }
+.totals { display: grid; gap: 6px; }
+.sec { border-left: 6px solid var(--c); padding: 2px 0 2px 8px; }
+.sec b { font: 18px/1 var(--display); letter-spacing: 1px; }
+.sec ul { margin: 2px 0 0; padding-left: 16px; font-size: 13px; }
+.muted { opacity: .7; font-size: 13px; }
+.legend { display: flex; flex-wrap: wrap; gap: 8px 14px; font-size: 13px; }
+.legend span { display: inline-flex; align-items: center; gap: 5px; }
+.legend i { width: 12px; height: 12px; border-radius: 50%; background: var(--c); display: inline-block; }
+@media (max-width: 820px) { .wrap { grid-template-columns: 1fr; grid-template-rows: 70vh auto; height: auto; } }
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
+.node { transition: opacity .15s; }
+.node:hover { filter: brightness(1.3); }
+@keyframes pulse { 50% { opacity: .35; } }
+.reach { animation: pulse 1.6s ease-in-out infinite; }
+</style>
+
+<div class="wrap">
+  <div class="stage">
+    <svg id="web" viewBox="-760 -760 1520 1520" aria-label="Web of Bones skill web"></svg>
+    <div class="hud"><h1>Web of Bones</h1><span class="pts" id="ptsHud"></span></div>
+    <div class="zoom"><button type="button" id="zin" aria-label="Zoom in">+</button><button type="button" id="zout" aria-label="Zoom out">−</button><button type="button" id="zfit">Fit</button></div>
+  </div>
+  <aside class="ledger">
+    <h2>The Bone Ledger</h2>
+    <p class="muted">Prototype. Click a node to take the shortest path to it. Click a taken node to give it back (only if nothing hangs off it). Each node costs 5 knucklebones plus 1 for every node you already own, as in the game now.</p>
+    <div class="budget"><label for="pouch">Knucklebones in pouch</label><input id="pouch" type="number" min="0" step="10" value="400"><button type="button" id="reset">Reset</button></div>
+    <p class="budget"><span id="spent"></span></p>
+    <h3>Hover a node</h3>
+    <div class="tip" id="tip"><span class="muted">Small nodes give +1%. Larger notables sit 4 or 5 steps out. Each wedge ends in a keystone about 8 steps from the heart. Diamonds on the borders mix two wedges.</span></div>
+    <h3>What you have</h3>
+    <div class="totals" id="totals"></div>
+    <h3>Wedges</h3>
+    <div class="legend" id="legend"></div>
+  </aside>
+</div>
+
+<script>
+(function () {
+  // ---- content: six wedges, clockwise from the top; gold sits between attack and rarity so an early gold path can turn into either ----
+  var SECT = [
+    { k: 'gold', name: 'Magpie', col: 'var(--gold)', hex: '#e6bd45',
+      small: [['+1% gold', 'gold', 1], ['+1% gold from chests and events', 'goldev', 1], ['Shops 1% cheaper', 'price', 1]],
+      NA: ['Nest Egg', 'Start each run with 20 gold.'], NB: ['Tithe of Bones', 'Gain 15 gold each time you level up.'], NM: ['Loaded Purse', '+5% gold.'],
+      K: ['Hoarder’s Interest', 'After each boss, gain 10% of your unspent gold (up to 60).'] },
+    { k: 'rarity', name: 'Pawnbroker', col: 'var(--rarity)', hex: '#6fd0e0',
+      small: [['+1% rarity', 'rar', 1], ['+1% rarity in shops', 'rarshop', 1], ['Shop rerolls 1 gold cheaper', 'reroll', 1]],
+      NA: ['Keen Eye', '+5% rarity.'], NB: ['Treasure Sense', 'Chests offer one extra choice.'], NM: ['Gilded Shelves', 'Shops stock one extra relic.'],
+      K: ['Collector’s Mark', 'Every shop has at least one rare or better item. +10% rarity.'] },
+    { k: 'seals', name: 'Waxwright', col: 'var(--seals)', hex: '#c58bf0',
+      small: [['+1% seal drop chance', 'sdrop', 1], ['+1% chance of a second seal', 'sdrop2', 1], ['Seals 1% cheaper', 'sprice', 1]],
+      NA: ['Hot Wax', '+5% seal drop chance.'], NB: ['Twin Stamp', '+5% chance of a second seal.'], NM: ['Sealed Fate', 'The first elite on each floor always drops its seal.'],
+      K: ['Signet Ring', 'Start each run with a random seal on one of your dice.'] },
+    { k: 'dice', name: 'Carver', col: 'var(--dice)', hex: '#e9e2cf',
+      small: [['+1% chance a foe drops a d6', 'ddrop', 1], ['Dice Carver 1% cheaper', 'dprice', 1]],
+      NA: ['Bone Collector', '+5% chance a foe drops a die.'], NB: ['Odd Angles', 'Dropped dice are a d8 one time in five.'], NM: ['Spare Knuckles', 'Your cup holds 1 more die.'],
+      K: ['Deep Pockets', 'Start each run with 1 extra die.'] },
+    { k: 'defence', name: 'Callused Hide', col: 'var(--defence)', hex: '#8fb0d6',
+      small: [['+1% chance to block a hit', 'block', 1], ['+1% chance to avoid all damage', 'dodge', 1]],
+      NA: ['Iron Skin', 'Start each fight with 1 armour.'], NB: ['Shield Drill', 'Gain 1 shield each time you level up.'], NM: ['Thick Hide', '+5% chance to block a hit.'],
+      K: ['Bulwark', 'Start each run with 2 shields.'] },
+    { k: 'attack', name: 'Headsman', col: 'var(--attack)', hex: '#ef6f6f',
+      small: [['+1% chance to deal double damage', 'double', 1], ['+1% chance a Liar call deals 1 extra damage', 'liarx', 1]],
+      NA: ['First Blood', 'Your first winning call each fight deals 1 extra damage.'], NB: ['Cruel Odds', '+5% chance to deal double damage.'], NM: ['Needle in the Ribs', '+10% chance a Spot On call deals 1 extra damage.'],
+      K: ['Headsman’s Due', 'Your Spot On calls always deal 1 extra damage.'] }
+  ];
+  // the borders between wedges, clockwise: [inner small, outer notable]
+  var BRIDGE = [
+    [['+1% gold and +1% rarity'], ['Fence’s Eye', 'Sell relics for 25% more.']],
+    [['+1% rarity and +1% seal drop chance'], ['Wax Collector', 'Seals in shops are 15% cheaper.']],
+    [['+1% seal drop chance and +1% die drop chance'], ['Inked Bones', 'Dice that drop from foes carry a random seal one time in ten.']],
+    [['+1% die drop chance and +1% block'], ['Spare Ribs', 'The first die you lose on each floor comes back after the fight.']],
+    [['+1% block and +1% double damage'], ['Riposte', 'A blocked hit deals 1 damage back.']],
+    [['+1% double damage and +1% gold'], ['Bounty', 'Gain 3 gold for every enemy die you destroy.']]
+  ];
+  // ---- one wedge's shape (angle in degrees from the wedge's centre line, depth in rings) ----
+  var T = [
+    ['e', 0, 1, 's'],
+    ['a1', -9, 2, 's'], ['a2', -15, 3, 's'], ['a3', -19, 4, 's'], ['NA', -20, 5.1, 'n'],
+    ['b1', 9, 2, 's'], ['b2', 15, 3, 's'], ['b3', 19, 4, 's'], ['NB', 20, 5.1, 'n'],
+    ['m1', 0, 2.6, 's'], ['w1', -7, 3.6, 's'], ['w2', 7, 3.6, 's'], ['w3', 7, 5.2, 's'], ['w4', -7, 5.2, 's'], ['NM', 0, 4.4, 'n'],
+    ['o1', -17, 6.3, 's'], ['o2', 17, 6.3, 's'], ['o3', 0, 6.2, 's'], ['o4', -8, 7.1, 's'], ['o5', 8, 7.1, 's'], ['K', 0, 8.3, 'k']
+  ];
+  var TE = [['e', 'a1'], ['a1', 'a2'], ['a2', 'a3'], ['a3', 'NA'], ['e', 'b1'], ['b1', 'b2'], ['b2', 'b3'], ['b3', 'NB'], ['e', 'm1'], ['m1', 'w1'], ['m1', 'w2'], ['w1', 'w4'], ['w2', 'w3'], ['w3', 'w4'], ['w1', 'NM'], ['w2', 'NM'],
+    ['NA', 'o1'], ['NB', 'o2'], ['w3', 'o3'], ['w4', 'o3'], ['o1', 'o4'], ['o2', 'o5'], ['o3', 'o4'], ['o3', 'o5'], ['o4', 'K'], ['o5', 'K'], ['a1', 'm1'], ['b1', 'm1']];
+  function R(d) { return 70 + d * 64; }
+  var N = {}, E = [];
+  function add(n) { n.nb = []; N[n.id] = n; }
+  function link(a, b) { N[a].nb.push(b); N[b].nb.push(a); E.push([a, b]); }
+  add({ id: 'heart', x: 0, y: 0, kind: 'h', name: 'The Heart', desc: 'Where every crawler starts. Free.', sec: -1 });
+  SECT.forEach(function (S, i) {
+    var c = -90 + i * 60, si = 0;
+    T.forEach(function (t) {
+      var a = (c + t[1]) * Math.PI / 180, r = R(t[2]), id = i + ':' + t[0], n = { id: id, x: Math.cos(a) * r, y: Math.sin(a) * r, kind: t[3], sec: i };
+      if (t[3] === 's') { var v = S.small[si++ % S.small.length]; n.name = S.name; n.desc = v[0]; n.stat = v[1]; n.val = v[2]; }
+      else { var d = S[t[0]]; n.name = d[0]; n.desc = d[1]; }
+      add(n);
+    });
+    TE.forEach(function (e) { link(i + ':' + e[0], i + ':' + e[1]); });
+    link('heart', i + ':e');
+  });
+  // borders: inner small links b2 of this wedge to a2 of the next, outer notable links o2 to o1
+  SECT.forEach(function (S, i) {
+    var j = (i + 1) % SECT.length, c = -90 + i * 60 + 30, B = BRIDGE[i];
+    var a1 = c * Math.PI / 180;
+    add({ id: 'x' + i + 'a', x: Math.cos(a1) * R(3.2), y: Math.sin(a1) * R(3.2), kind: 's', bridge: true, sec: i, sec2: j, name: S.name + ' / ' + SECT[j].name, desc: B[0][0] });
+    add({ id: 'x' + i + 'b', x: Math.cos(a1) * R(6.6), y: Math.sin(a1) * R(6.6), kind: 'b', sec: i, sec2: j, name: B[1][0], desc: B[1][1] });
+    link(i + ':b2', 'x' + i + 'a'); link('x' + i + 'a', j + ':a2');
+    link(i + ':o2', 'x' + i + 'b'); link('x' + i + 'b', j + ':o1');
+  });
+
+  // ---- state ----
+  var own = { heart: 1 }, hoverPath = null;
+  function owned() { return Object.keys(own).filter(function (k) { return k !== 'heart'; }); }
+  function costFor(k, already) { var c = 0; for (var i = 0; i < k; i++) c += 5 + already + i; return c; }
+  function spent() { return costFor(owned().length, 0); }
+  function pouch() { return Math.max(0, +document.getElementById('pouch').value || 0); }
+  function pathTo(id) {
+    if (own[id]) return [];
+    var prev = {}, q = Object.keys(own), seen = {}; q.forEach(function (k) { seen[k] = 1; });
+    while (q.length) { var x = q.shift(); if (x === id) break; N[x].nb.forEach(function (y) { if (!seen[y]) { seen[y] = 1; prev[y] = x; q.push(y); } }); }
+    var p = [], c = id; while (c && !own[c]) { p.unshift(c); c = prev[c]; } return p;
+  }
+  function connectedWithout(id) {
+    var keep = Object.keys(own).filter(function (k) { return k !== id; }), set = {}; keep.forEach(function (k) { set[k] = 1; });
+    var seen = { heart: 1 }, q = ['heart'];
+    while (q.length) { var x = q.shift(); N[x].nb.forEach(function (y) { if (set[y] && !seen[y]) { seen[y] = 1; q.push(y); } }); }
+    return keep.every(function (k) { return seen[k]; });
+  }
+
+  // ---- drawing ----
+  var svg = document.getElementById('web'), NS = 'http://www.w3.org/2000/svg';
+  function el(t, a, p) { var e = document.createElementNS(NS, t); for (var k in a) e.setAttribute(k, a[k]); (p || svg).appendChild(e); return e; }
+  var gWedge = el('g', {}), gE = el('g', {}), gN = el('g', {});
+  SECT.forEach(function (S, i) {   // faint wedge tint so each region reads at a glance
+    var a0 = (-90 + i * 60 - 30) * Math.PI / 180, a1 = (-90 + i * 60 + 30) * Math.PI / 180, r = 740;
+    el('path', { d: 'M0,0 L' + Math.cos(a0) * r + ',' + Math.sin(a0) * r + ' A' + r + ',' + r + ' 0 0 1 ' + Math.cos(a1) * r + ',' + Math.sin(a1) * r + ' Z', fill: S.hex, opacity: .045 }, gWedge);
+    var am = (-90 + i * 60) * Math.PI / 180, t = el('text', { x: Math.cos(am) * 700, y: Math.sin(am) * 700 + 10, 'text-anchor': 'middle', fill: S.hex, opacity: .55, 'font-family': 'Jersey 10, monospace', 'font-size': 34, 'letter-spacing': 3 }, gWedge);
+    t.textContent = S.name.toUpperCase();
+  });
+  var edgeEls = E.map(function (e) { return el('line', { x1: N[e[0]].x, y1: N[e[0]].y, x2: N[e[1]].x, y2: N[e[1]].y, 'stroke-width': 4, 'stroke-linecap': 'round' }, gE); });
+  function colOf(n) { return n.sec < 0 ? '#e8dcbc' : SECT[n.sec].hex; }
+  var nodeEls = {};
+  Object.keys(N).forEach(function (id) {
+    var n = N[id], g = el('g', { class: 'node', transform: 'translate(' + n.x + ',' + n.y + ')', tabindex: 0, role: 'button', 'aria-label': n.name + ': ' + n.desc }, gN), c = colOf(n);
+    if (n.kind === 'k') { el('circle', { r: 34, fill: 'none', stroke: c, 'stroke-width': 2, 'stroke-dasharray': '4 6', class: 'ring' }, g); el('circle', { r: 26, class: 'body', 'stroke-width': 4 }, g); el('circle', { r: 10, class: 'core' }, g); }
+    else if (n.kind === 'n') { el('circle', { r: 18, class: 'body', 'stroke-width': 4 }, g); el('circle', { r: 7, class: 'core' }, g); }
+    else if (n.kind === 'b') { el('rect', { x: -14, y: -14, width: 28, height: 28, transform: 'rotate(45)', class: 'body', 'stroke-width': 4 }, g); el('circle', { r: 5, class: 'core' }, g); }
+    else if (n.kind === 'h') { el('circle', { r: 30, class: 'body', 'stroke-width': 4 }, g); var t = el('text', { y: 7, 'text-anchor': 'middle', 'font-family': 'Jersey 10, monospace', 'font-size': 22, fill: '#2a1c10' }, g); t.textContent = 'HEART'; }
+    else { el('circle', { r: n.bridge ? 9 : 10, class: 'body', 'stroke-width': 3 }, g); }
+    if (n.bridge) g.querySelector('.body').setAttribute('stroke-dasharray', '3 3');
+    g.addEventListener('pointerenter', function () { hover(id); });
+    g.addEventListener('pointerleave', function () { hover(null); });
+    g.addEventListener('focus', function () { hover(id); });
+    g.addEventListener('click', function (ev) { if (dragMoved) return; act(id); });
+    g.addEventListener('keydown', function (ev) { if (ev.key === 'Enter' || ev.key === ' ') { ev.preventDefault(); act(id); } });
+    nodeEls[id] = g;
+  });
+
+  function paint() {
+    var hp = {}; (hoverPath || []).forEach(function (k) { hp[k] = 1; });
+    var reach = {}; Object.keys(own).forEach(function (k) { N[k].nb.forEach(function (y) { if (!own[y]) reach[y] = 1; }); });
+    E.forEach(function (e, i) {
+      var a = own[e[0]], b = own[e[1]], l = edgeEls[i], n = N[own[e[0]] ? e[1] : e[0]];
+      var both = a && b, path = (hp[e[0]] || own[e[0]]) && (hp[e[1]] || own[e[1]]) && (hp[e[0]] || hp[e[1]]);
+      l.setAttribute('stroke', both ? colOf(N[e[1]].sec < 0 ? N[e[0]] : N[e[1]]) : path ? '#e8a23a' : '#3d332a');
+      l.setAttribute('opacity', both ? 1 : path ? .95 : .8);
+      l.setAttribute('stroke-width', both || path ? 5 : 3);
+    });
+    Object.keys(N).forEach(function (id) {
+      var n = N[id], g = nodeEls[id], body = g.querySelector('.body'), core = g.querySelector('.core'), c = colOf(n), o = own[id];
+      body.setAttribute('fill', o ? c : hp[id] ? '#4a3420' : '#1f1915');
+      body.setAttribute('stroke', o ? '#fff6dc' : hp[id] ? '#e8a23a' : reach[id] ? c : '#4d4236');
+      if (core) core.setAttribute('fill', o ? '#fff6dc' : c);
+      if (core) core.setAttribute('opacity', o ? .9 : .5);
+      g.classList.toggle('reach', !!reach[id] && !hp[id]);
+      g.style.opacity = o || reach[id] || hp[id] ? 1 : .55;
+    });
+    var cnt = owned().length, sp = spent(), left = pouch() - sp;
+    document.getElementById('spent').innerHTML = '<b>' + cnt + '</b> nodes taken · <b>' + sp + '</b> spent · <b style="color:' + (left < 0 ? '#7a2016' : 'inherit') + '">' + left + '</b> left · next node costs <b>' + (5 + cnt) + '</b>';
+    document.getElementById('ptsHud').textContent = left + ' knucklebones left';
+    totals();
+  }
+  function hover(id) {
+    hoverPath = id ? pathTo(id) : null;
+    var tip = document.getElementById('tip');
+    if (id) {
+      var n = N[id], kind = n.kind === 'k' ? 'Keystone' : n.kind === 'n' ? 'Notable' : n.kind === 'b' ? 'Border notable' : n.kind === 'h' ? 'Start' : n.bridge ? 'Border node' : 'Small node';
+      var p = hoverPath || [], c = costFor(p.length, owned().length);
+      tip.innerHTML = '<div class="kind">' + kind + (n.sec >= 0 ? ' · ' + SECT[n.sec].name + (n.sec2 != null ? ' / ' + SECT[n.sec2].name : '') : '') + '</div><div class="nm">' + n.name + '</div><p>' + n.desc + '</p>' +
+        (own[id] ? '<p class="muted">Taken. Click to give it back.</p>' : '<p>Path: <b>' + p.length + '</b> node' + (p.length === 1 ? '' : 's') + ' · <span class="cost">' + c + ' knucklebones</span></p>');
+    }
+    paint();
+  }
+  function act(id) {
+    if (id === 'heart') return;
+    if (own[id]) { if (connectedWithout(id)) delete own[id]; paint(); hover(id); return; }
+    var p = pathTo(id), c = costFor(p.length, owned().length);
+    if (c > pouch() - spent()) { document.getElementById('tip').insertAdjacentHTML('beforeend', '<p class="cost">Not enough knucklebones for that path.</p>'); return; }
+    p.forEach(function (k) { own[k] = 1; }); hover(id);
+  }
+  function totals() {
+    var out = document.getElementById('totals'), h = '';
+    SECT.forEach(function (S, i) {
+      var stat = {}, big = [];
+      Object.keys(own).forEach(function (id) { var n = N[id]; if (n.sec !== i && n.sec2 !== i) return; if (n.kind === 's' && !n.bridge) stat[n.desc] = (stat[n.desc] || 0) + 1; else if (n.kind === 's' && n.bridge && n.sec === i) stat[n.desc] = (stat[n.desc] || 0) + 1; else if ((n.kind === 'n' || n.kind === 'k') || (n.kind === 'b' && n.sec === i)) big.push(n.name); });
+      var rows = Object.keys(stat).map(function (d) { return '<li>' + d.replace('+1%', '+' + stat[d] + '%').replace(' 1%', ' ' + stat[d] + '%').replace('1 gold', stat[d] + ' gold') + '</li>'; }).concat(big.map(function (b) { return '<li><b style="font-family:var(--body);font-size:13px">' + b + '</b></li>'; }));
+      if (rows.length) h += '<div class="sec" style="--c:' + S.hex + '"><b>' + S.name + '</b><ul>' + rows.join('') + '</ul></div>';
+    });
+    out.innerHTML = h || '<p class="muted">Nothing yet. Start next to the Heart.</p>';
+  }
+  document.getElementById('legend').innerHTML = SECT.map(function (S) { return '<span style="--c:' + S.hex + '"><i></i>' + S.name + ' (' + S.k + ')</span>'; }).join('');
+  document.getElementById('pouch').addEventListener('input', paint);
+  document.getElementById('reset').addEventListener('click', function () { own = { heart: 1 }; paint(); });
+
+  // ---- pan and zoom ----
+  var vb = { x: -760, y: -760, w: 1520, h: 1520 }, drag = null, dragMoved = false;
+  function setVB() { svg.setAttribute('viewBox', vb.x + ' ' + vb.y + ' ' + vb.w + ' ' + vb.h); }
+  function zoom(f, cx, cy) { var nw = Math.max(300, Math.min(2200, vb.w * f)); f = nw / vb.w; cx = cx == null ? vb.x + vb.w / 2 : cx; cy = cy == null ? vb.y + vb.h / 2 : cy; vb.x = cx - (cx - vb.x) * f; vb.y = cy - (cy - vb.y) * f; vb.w = nw; vb.h = nw; setVB(); }
+  function pt(e) { var r = svg.getBoundingClientRect(), s = Math.max(vb.w / r.width, vb.h / r.height); return { x: vb.x + (e.clientX - r.left - (r.width - vb.w / s) / 2) * s, y: vb.y + (e.clientY - r.top - (r.height - vb.h / s) / 2) * s, s: s }; }
+  svg.addEventListener('wheel', function (e) { e.preventDefault(); var p = pt(e); zoom(e.deltaY > 0 ? 1.12 : 1 / 1.12, p.x, p.y); }, { passive: false });
+  svg.addEventListener('pointerdown', function (e) { drag = { x: e.clientX, y: e.clientY, vx: vb.x, vy: vb.y, s: pt(e).s }; dragMoved = false; });
+  window.addEventListener('pointermove', function (e) { if (!drag) return; var dx = e.clientX - drag.x, dy = e.clientY - drag.y; if (!dragMoved && Math.abs(dx) + Math.abs(dy) < 5) return; dragMoved = true; svg.classList.add('drag'); vb.x = drag.vx - dx * drag.s; vb.y = drag.vy - dy * drag.s; setVB(); });
+  window.addEventListener('pointerup', function () { drag = null; svg.classList.remove('drag'); setTimeout(function () { dragMoved = false; }, 0); });
+  document.getElementById('zin').onclick = function () { zoom(1 / 1.25); };
+  document.getElementById('zout').onclick = function () { zoom(1.25); };
+  document.getElementById('zfit').onclick = function () { vb = { x: -760, y: -760, w: 1520, h: 1520 }; setVB(); };
+
+  // a sample build so the first view shows how it plays: gold first, then turning into rarity
+  pathTo('0:NB').forEach(function (k) { own[k] = 1; });
+  pathTo('x0a').forEach(function (k) { own[k] = 1; });
+  paint();
+})();
+</script>

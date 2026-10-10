@@ -4715,11 +4715,47 @@ html body[data-screen="combat"]:not([data-screen="title"]):not([data-screen="cha
 .savebox{position:relative;width:min(560px,90vw);background:#1b140e;border:3px solid #6b4a2a;border-radius:8px;padding:18px;display:flex;flex-direction:column;gap:10px;color:#e8d9b8}
 .savebox h3{margin:0;text-align:center}.savebox textarea{height:140px;background:#0d0906;color:#e8d9b8;border:2px solid #4a3320;border-radius:6px;font:12px monospace;padding:8px;resize:none}
 .savebox .row{display:flex;gap:10px;justify-content:center}.savebox .savemsg{text-align:center;margin:0;min-height:1.2em}
-.savex{position:absolute;right:8px;top:6px;background:none;border:0;color:#c33;font-size:28px;line-height:1;cursor:pointer}
+.savex{display:none}
 .strip.polystrip{flex-wrap:wrap;justify-content:center;max-width:620px;gap:6px}
 .tip .tipfaces .strip.polystrip{flex-wrap:wrap;max-width:300px}.tip .strip.polystrip{flex-wrap:wrap;max-width:300px}
 body:not([data-screen="title"]):not([data-screen="char"]):not([data-screen="rules"]):not([data-screen="tree"]) .deckpile .fc.cx { transform: translate(var(--dx), var(--dy)) rotate(var(--r)); }
 body:not([data-screen="title"]):not([data-screen="char"]):not([data-screen="rules"]):not([data-screen="tree"]) .deckpile:hover .fc.cx { transform: translate(calc(var(--dx) * 2.4), -12px) rotate(calc(var(--r) * 2)); }
+
+  .splashbtns .btn[data-act="web"], .splashbtns .btn[data-act="web"]:hover, .splashbtns .btn[data-act="web"]:active:not(:disabled) { right: calc(50% + 74px) !important; }
+  .splashbtns .btn[data-act="rules"], .splashbtns .btn[data-act="rules"]:hover, .splashbtns .btn[data-act="rules"]:active:not(:disabled) { left: calc(50% + 74px) !important; }
+  .splashbtns .btn[data-act="saveCode"], .splashbtns .btn[data-act="saveCode"]:hover, .splashbtns .btn[data-act="saveCode"]:active:not(:disabled) { position: absolute; top: calc(78.9% + 96px) !important; bottom: auto !important; left: 0 !important; right: 0 !important; margin: 0 auto; width: max-content; }
+  .splashbtns .btn.wood[data-act="continueRun"], .splashbtns .btn.wood[data-act="continueRun"]:hover, .splashbtns .btn.wood[data-act="continueRun"]:active:not(:disabled) { top: calc(78.9% - 96px) !important; }
+  html body .sktree .coltitle { white-space: normal !important; text-align: center; max-width: 300px; margin-left: auto; margin-right: auto; }   /* long path names wrapped instead of running into each other */
+  body:has(#app .encwin.slotwin) #xpwrap, body:has(#app .encwin.slotwin) .hpdice, body:has(#app .encwin.slotwin) .deckcorner, body:has(#app .encwin.slotwin) .meb .hudport, body:has(#app .encwin.slotwin) .relicbr { visibility: hidden !important; }   /* the tall slot window covers the HUD: hide what peeked out round its edges */
+  html body .encwin .btn:disabled { opacity: .8; }   /* 'Roll the dice' before two dice are picked was nearly invisible */
+
+  #app .encwin.endwin .endstats { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 14px; text-align: center; font-size: 34px; width: 100%; }
+  #app .encwin.endwin .endstats p { margin: 0; }
+  #app .encwin.endwin.endlost .encpor img { filter: saturate(.8); }
+
+  #app .encwin .enctrayin p.evrule { text-align: center; margin-left: auto; margin-right: auto; padding: 0 12px; }   /* dice-roll events: rules centred */
+  #app .encwin .enctrayin .evoffer, #app .encwin .enctrayin .evoffer p { text-align: center; font-size: 30px; line-height: 1.3; margin: 0 auto; padding: 0 16px; }   /* pawnbroker, peddler, goblin: smaller and centred */
+
+  #devpick { position: fixed; inset: 0; z-index: 99990; background: rgba(0,0,0,.55); display: flex; align-items: center; justify-content: center; }
+  #devpick .dpbox { position: relative; width: min(760px, 92vw); max-height: 86vh; overflow: auto; background: #1d1430; border: 3px solid #8e5bd6; border-radius: 8px; padding: 16px 18px; color: #eadcff; font-family: var(--display, monospace); }
+  #devpick h3 { margin: 0 0 4px; text-align: center; font-size: 26px; } #devpick .dpnote, #devpick .dpmsg { text-align: center; margin: 4px 0 10px; font-size: 15px; opacity: .85; } #devpick .dpmsg { color: #ffd36a; min-height: 1.2em; }
+  #devpick .dpgrid { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin-bottom: 10px; }
+  #devpick .dpit { display: flex; flex-direction: column; align-items: center; gap: 3px; width: 92px; padding: 6px 4px; background: #2b2044; border: 2px solid #4a3a6e; border-radius: 6px; color: inherit; cursor: pointer; font: 12px/1.1 var(--display, monospace); }
+  #devpick .dpit:hover { border-color: #c9a2ff; } #devpick .dpit.on { border-color: #ffd36a; box-shadow: 0 0 10px #ffd36a; } #devpick .dpit.off { opacity: .4; }
+  #devpick .dpit svg, #devpick .dpit img { width: 48px; height: 48px; } #devpick .dpdice .dpit { width: auto; }
+  #app .encwin.endwin .endstats .bonesline { display: block; white-space: nowrap; font-size: 28px; }
+
+  .webs .wwedge { opacity: .05; } .webs .wlbl { font: 34px var(--display, monospace); letter-spacing: 3px; text-anchor: middle; opacity: .6; }
+  .webs .we { stroke: #3d332a; stroke-width: 3; stroke-linecap: round; } .webs .we.on { stroke: var(--c); stroke-width: 5; } .webs .we.pp { stroke: #e8a23a; stroke-width: 5; }
+  .wn > :first-child { fill: #17121a; stroke: #3d3342; stroke-width: 3; }
+  .wn.k-k .ring { fill: none !important; stroke: var(--c) !important; stroke-width: 2 !important; stroke-dasharray: 4 6; opacity: .7; }
+  .wn.k-k > circle:nth-child(2), .wn.k-n > circle:first-child, .wn.k-b > rect, .wn.k-h > circle:first-child, .wn.k-s > circle:first-child { fill: #17121a; stroke: #3d3342; stroke-width: 3; }
+  .wn.br > circle:first-child { stroke-dasharray: 3 3; }
+  .wn.av > :not(.hit):not(.core):not(.ring) { stroke: var(--c); stroke-width: 4; }
+  .wn.pp > :not(.hit):not(.core):not(.ring) { stroke: #e8a23a; stroke-width: 4; fill: #4a3420; }
+  .wn.own > :not(.hit):not(.core):not(.ring) { fill: var(--c); stroke: #fff3c4; stroke-width: 3; }
+  .wn.lk { opacity: .6; } .wn .core { fill: var(--c); opacity: .6; stroke: none; } .wn.own .core { fill: #fff6dc; opacity: .9; } .wn.k-h .core { fill: #f6d66a; opacity: 1; }
+  .wn.sel > :not(.hit):not(.core):not(.ring) { stroke: #fff; stroke-width: 5; }
 </style>
 
 <main class="wrap">
@@ -6269,7 +6305,7 @@ body:not([data-screen="title"]):not([data-screen="char"]):not([data-screen="rule
     (S.newItems = S.newItems || {})[id] = 1; sfx('item');
     S.loose = S.loose || []; S.loose.push({ id: ++LOOSE_ID, item: id, x: S.dropAt ? S.dropAt.x : 0.93, y: S.dropAt ? S.dropAt.y : Math.min(0.82, 0.28 + 0.1 * (S.loose.filter(function (q) { return q.item; }).length % 6)) }); return true;
   }
-  function sellValue(id) { return Math.max(5, Math.round(ITEMS[id].base * floorCfg().priceMul * 0.5 / 5) * 5); }
+  function sellValue(id) { return Math.max(5, Math.round(ITEMS[id].base * floorCfg().priceMul * 0.5 * (webN('fence') ? 1.25 : 1) / 5) * 5); }
   function locParse(str) { if (!str) return null; var a = str.split(':'); return { k: a[0], i: +a[1] || 0 }; }
   function locGet(l) { var p = S.player; if (l.k === 'inv') return p.inv[l.i] || null; if (l.k === 'bag') return bagOf(p)[l.i] || null; return null; }
   function locSet(l, id) {
@@ -6340,7 +6376,7 @@ body:not([data-screen="title"]):not([data-screen="char"]):not([data-screen="rule
   function kindTag(key) { var k = kindOf(key); return k ? '<span class="kind kind-' + k + '">' + (k === 'item' ? (isCard(key) ? 'Card' : 'Relic') : 'Seal') + '</span>' : ''; }
   function kindCls(key) { var k = kindOf(key); return k ? ' k-' + k : ''; }
   var MAX_DICE = 16;   // three rows of six with the Bottomless Cup (+2)
-  function maxDice() { return MAX_DICE + (itm('satchel') ? 2 : 0); }
+  function maxDice() { return MAX_DICE + (itm('satchel') ? 2 : 0) + webN('cupx'); }
   var ABIL = {
     peek: { name: 'Carrion Eye', desc: '+1 peek per fight. Look at one of the enemy’s dice.', max: 3 },
     reroll: { name: 'Bone Shake', desc: '+1 reroll per fight.', max: 3 },
@@ -6405,7 +6441,7 @@ body:not([data-screen="title"]):not([data-screen="char"]):not([data-screen="rule
   }
   var META_KEY = 'liarsCrawlFighter1', metaRef = null;
   function applyMeta(o) {
-    M.points = Math.max(0, +o.points || 0); M.cpoints = Math.max(0, +o.cpoints || 0); M.total = Math.max(0, +o.total || 0); M.saved = +o.saved || 0; if (o.dummyDone) M.dummyDone = true; M.tok = Math.max(0, +o.tok || 0); if (o.seenSoul) M.seenSoul = true; if (o.seenBig) M.seenBig = true; M.web = {}; if (o.web && typeof o.web === 'object') Object.keys(o.web).forEach(function (k) { if (o.web[k]) M.web[k] = 1; }); webMemo = null;
+    M.points = Math.max(0, +o.points || 0); M.cpoints = Math.max(0, +o.cpoints || 0); M.total = Math.max(0, +o.total || 0); M.saved = +o.saved || 0; if (o.dummyDone) M.dummyDone = true; M.tok = Math.max(0, +o.tok || 0); if (o.seenSoul) M.seenSoul = true; if (o.seenBig) M.seenBig = true; M.web = {}; if (o.web && typeof o.web === 'object') Object.keys(o.web).forEach(function (k) { if (o.web[k]) M.web[k] = 1; }); webMemo = null; try { webMigrate(); } catch (e) { }
     M.owned = {}; if (o.owned && typeof o.owned === 'object') Object.keys(o.owned).forEach(function (k) { if (TREE[k] && o.owned[k]) M.owned[k] = true; });
   }
   function saveMeta() {
@@ -6852,7 +6888,51 @@ body:not([data-screen="title"]):not([data-screen="char"]):not([data-screen="rule
       [].forEach.call(dice, function (d) { ['--s', 'width', 'height'].forEach(function (k) { d.style.setProperty(k, sz + 'px', 'important'); }); });
     });
   }
-  function startRun() { try { var cv = MUSC.v; if (cv && cv.k === 'calm' && !cv.prev && AUD.ctx && AUD.ctx.state === 'running') { MUSC.pick = null; MUSC.epick = null; /* the title music is the same calm track as the map: let it play on, no cut and no restart */ } else musicHardStop(); } catch (e) { } XP.shown = null; XP.anim = null; AUD.lastGold = null; S.newItems = {}; S.loose = []; S.appleFound = false; S.cards = []; S.pouchBag = null; S.pcPos = {}; S.pcZ = 0; S.sealArm = null; S.bagOpen = false; S.bagPos = null; S.owed = 0; S.shopLuck = webN('luck'); S.bonus = { double: 0, block: 0, drop: 0 }; S.tokBanked = false; S.runKills = 0; S.swap = null; S.discardArm = null; S.hold = null; S.destroy = null; S.bagOpen = false; S.player = newPlayer(); S.player.deck.push('potion'); S.player.deck.push('glass'); S.aiLearn = aiLearnNew(); S.bank = 0; S.bankNote = 0; S.floorNum = 1; S.floor = makeFloor(1); initFloorState(); try { warmEncArt(); } catch (e) { } S.screen = 'map'; S.forge = null; S.upgrade = null; S.event = null; S.pending = 0; S.finalShop = false; S.showDice = false; S.pact = false; S.runPts = 0; S.runWins = 0; S.sk = {}; S.sp = 0; S.shopLevel = 0; render(); }
+
+  // ---- dev tools: pick any seal / die / relic (2026-10-10) ----
+  var DEVPICK = { kind: null, mod: null, msg: '' };
+  function devPick(kind) {
+    DEVPICK.kind = kind; DEVPICK.msg = '';
+    var w = document.getElementById('devpick');
+    if (!w) {
+      w = document.createElement('div'); w.id = 'devpick'; w.innerHTML = '<div class="dpbox"><button type="button" class="dpclose" hidden>x</button><div class="dpin"></div></div>';
+      document.documentElement.appendChild(w);
+      w.addEventListener('pointerdown', function (e) { if (e.target === w) w.remove(); });
+      w.querySelector('.dpclose').onclick = function () { w.remove(); };
+      w.addEventListener('click', function (e) {
+        var b = e.target.closest && e.target.closest('[data-dp]'); if (!b || !S || !S.player) return;
+        var t = b.getAttribute('data-dp'), v = b.getAttribute('data-v'), p = S.player;
+        if (t === 'mod') DEVPICK.mod = v;
+        else if (t === 'die' && DEVPICK.mod) { var d = p.dice[+v]; if (d && canApply(d, DEVPICK.mod)) { applyMod(d, DEVPICK.mod); try { sealSparks(+v, DEVPICK.mod); } catch (er) { } sfx('item'); DEVPICK.msg = tierName(DEVPICK.mod, modCount(d, DEVPICK.mod)) + ' on die ' + (+v + 1); } else DEVPICK.msg = 'That die cannot take more of this seal.'; }
+        else if (t === 'add') { var n = +v; if (p.dice.length >= maxDice()) DEVPICK.msg = 'Your cup is full (' + maxDice() + ' dice).'; else { if (n === 6) p.dice.push(newDie()); else addPolyDie(p, n); sfx('item'); DEVPICK.msg = 'Added a d' + n + '. You have ' + p.dice.length + ' dice.'; } }
+        else if (t === 'relic') { if (owns(v)) DEVPICK.msg = 'You already carry ' + ITEMS[v].name + '.'; else { addItem(v); DEVPICK.msg = ITEMS[v].name + ' added.'; } }
+        try { render(); } catch (er) { } devPaint();
+      });
+    }
+    devPaint();
+  }
+  function devPaint() {
+    var w = document.getElementById('devpick'); if (!w || !S || !S.player) return;
+    var p = S.player, k = DEVPICK.kind, h = '';
+    if (k === 'seals') {
+      h = '<h3>Seals</h3><p class="dpnote">Pick a seal, then click dice to apply it as often as you like.</p><div class="dpgrid">' + MOD_ORDER.map(function (m) { return '<button type="button" class="dpit' + (DEVPICK.mod === m ? ' on' : '') + '" data-dp="mod" data-v="' + m + '" title="' + MODS[m].name + '">' + (ITEM_ART[m] || '') + '<span>' + MODS[m].name.replace(/ Die$/, '') + '</span></button>'; }).join('') + '</div>' +
+        '<div class="dpgrid dpdice">' + p.dice.map(function (d, i) { var ok = DEVPICK.mod && canApply(d, DEVPICK.mod); return '<button type="button" class="dpit' + (DEVPICK.mod && !ok ? ' off' : '') + '" data-dp="die" data-v="' + i + '">' + sampleDie(d, 56) + '</button>'; }).join('') + '</div>';
+    } else if (k === 'dice') {
+      h = '<h3>Dice</h3><p class="dpnote">Click a die to add it to your cup (' + p.dice.length + ' / ' + maxDice() + ').</p><div class="dpgrid">' + DIE_WARES.map(function (n) { return '<button type="button" class="dpit" data-dp="add" data-v="' + n + '">' + dieHTML(n === 6 ? 6 : n, { s: 64, poly: n === 6 ? 0 : n }) + '<span>d' + n + '</span></button>'; }).join('') + '</div>';
+    } else {
+      var rel = Object.keys(ITEMS).filter(function (id) { return !isCard(id); });
+      h = '<h3>Relics</h3><p class="dpnote">Click a relic to take it.</p><div class="dpgrid">' + rel.map(function (id) { var o = owns(id); return '<button type="button" class="dpit' + (o ? ' off' : '') + '" data-dp="relic" data-v="' + id + '" title="' + ITEMS[id].name + '">' + (ITEM_ART[id] || '') + '<span>' + ITEMS[id].name + '</span></button>'; }).join('') + '</div>';
+    }
+    w.querySelector('.dpin').innerHTML = h + '<p class="dpmsg">' + (DEVPICK.msg || '') + '</p>';
+  }
+  // Web of Bones v2 effects at the start of a run
+  function webStartRun(p) {
+    if (webN('nestegg')) p.gold += 20;
+    if (webN('deeppockets')) addMaxDie(p);
+    if (webN('bulwarkw')) p.bankShield = (p.bankShield || 0) + 2;
+    if (webN('signet')) { var ms = MOD_ORDER.filter(function (m) { return m !== 'poly'; }), d = p.dice[Math.floor(Math.random() * p.dice.length)], m = ms[Math.floor(Math.random() * ms.length)]; if (d && canApply(d, m)) applyMod(d, m); }
+  }
+  function startRun() { try { var cv = MUSC.v; if (cv && cv.k === 'calm' && !cv.prev && AUD.ctx && AUD.ctx.state === 'running') { MUSC.pick = null; MUSC.epick = null; /* the title music is the same calm track as the map: let it play on, no cut and no restart */ } else musicHardStop(); } catch (e) { } XP.shown = null; XP.anim = null; AUD.lastGold = null; S.newItems = {}; S.loose = []; S.appleFound = false; S.cards = []; S.pouchBag = null; S.pcPos = {}; S.pcZ = 0; S.sealArm = null; S.bagOpen = false; S.bagPos = null; S.owed = 0; S.shopLuck = webN('luck'); S.bonus = { double: 0, block: 0, drop: 0 }; S.tokBanked = false; S.runKills = 0; S.swap = null; S.discardArm = null; S.hold = null; S.destroy = null; S.bagOpen = false; S.player = newPlayer(); S.player.deck.push('potion'); S.player.deck.push('glass'); try { webStartRun(S.player); } catch (e) { } S.aiLearn = aiLearnNew(); S.bank = 0; S.bankNote = 0; S.floorNum = 1; S.floor = makeFloor(1); initFloorState(); try { warmEncArt(); } catch (e) { } S.screen = 'map'; S.forge = null; S.upgrade = null; S.event = null; S.pending = 0; S.finalShop = false; S.showDice = false; S.pact = false; S.runPts = 0; S.runWins = 0; S.sk = {}; S.sp = 0; S.shopLevel = 0; render(); }
   var bossBusy = false;
   // floor boss: fade to black and fade the music out, then the boss track plays from its first note
   function bossCue(go) {
@@ -6931,7 +7011,7 @@ body:not([data-screen="title"]):not([data-screen="char"]):not([data-screen="rule
     if (n.ambushed) { n.ambushed = false; S.event = newEvent(n.ev === 'goblin' && S.pact ? 'fountain' : n.ev); S.screen = 'event'; render(); return; }   // the goblin ambush is over: the room's own encounter is still waiting
     var wasDone = n.done; n.done = true; S.cur = n.id; S.event = null; S.bankNote = 0; S.backAsk = null;
     if (n.id === 'D' && !S.dayOn) { S.dayOn = true; S.day = 0; }   // the days start counting once the dummy is behind you
-    if (n.type === 'boss') { heal(S.player, S.player.dice.length); /* a boss win heals you fully */ S.screen = 'shop'; S.finalShop = true; S.shopMsg = 'The floor is clear. Spend what you earned.'; S.shopRerolls = 0; S.shopSel = pickSpoils(3); render(); return; }
+    if (n.type === 'boss') { heal(S.player, S.player.dice.length); /* a boss win heals you fully */ var hoardG = webN('hoard') ? Math.min(60, Math.round(S.player.gold * 0.1)) : 0; S.player.gold += hoardG; S.screen = 'shop'; S.finalShop = true; S.shopMsg = 'The floor is clear. Spend what you earned.' + (hoardG ? ' Hoarder\u2019s Interest: +' + hoardG + ' gold.' : ''); S.shopRerolls = 0; S.shopSel = pickSpoils(3); render(); return; }
     S.screen = 'map';
     if (!(n.id === 'D' && !wasDone)) dayEnd();   // every stop uses up the day, camps too
     render();
@@ -7151,7 +7231,7 @@ body:not([data-screen="title"]):not([data-screen="char"]):not([data-screen="rule
     if (def.group) { var gN = def.group.min + rnd(def.group.max - def.group.min + 1); parts = []; for (var gi = 0; gi < gN; gi++) parts.push({ name: def.name, n: def.group.dice, def: def }); }   // swarm members all carry the monster's own name (user, 2026-10-10)
     parts.forEach(function (pt) { pt.n0 = pt.n; pt.armour = pt.def.armour || 0; pt.dm = genEnemyDm(pt.def, pt.n); if (pt.def.dropRandom) { var fm = []; pt.dm.forEach(function (l) { l.forEach(function (m) { fm.push(m); }); }); if (fm.length) pt.def.drop = fm[rnd(fm.length)]; } pt.gain = 0; pt.regen = 0; pt.berserk = S.floorNum === 4; pt.berserkOn = false; });
     C = { bubble: null, node: node, def: def, berserk: false, speaker: -1, en: { n: def.group ? parts.reduce(function (a, x) { return a + x.n; }, 0) : def.dice, dice: [], owner: [], dmc: [], peeked: {}, smote: {}, bleached: {}, parts: parts }, round: 0, bid: null, turn: 'p', opener: 'p', phase: 'bid',
-      pbids: [], hist: [], shield: own('shield') ? (own('bulwark') ? 3 : 1) : 0, charges: { peek: p.ab.peek + (itm('peek') ? 1 : 0) + ((S.stash || {}).peek || 0), reroll: p.ab.reroll + (itm('reroll') ? 1 : 0) + ((S.stash || {}).reroll || 0), coin: itm('coin') ? 1 : 0, buck: 1, bless: 0, smite: 0 }, target: null, sel: { qty: 1, face: 1 }, result: null, log: [], pv: [], anim: null, fx: {} };
+      pbids: [], hist: [], shield: (own('shield') ? (own('bulwark') ? 3 : 1) : 0) + (webN('ironskin') ? 1 : 0) + (p.bankShield || 0), charges: { peek: p.ab.peek + (itm('peek') ? 1 : 0) + ((S.stash || {}).peek || 0), reroll: p.ab.reroll + (itm('reroll') ? 1 : 0) + ((S.stash || {}).reroll || 0), coin: itm('coin') ? 1 : 0, buck: 1, bless: 0, smite: 0 }, target: null, sel: { qty: 1, face: 1 }, result: null, log: [], pv: [], anim: null, fx: {} };
     C.base = { peek: p.ab.peek + (itm('peek') ? 1 : 0), reroll: p.ab.reroll + (itm('reroll') ? 1 : 0) };
     C.rerollSel = []; C.lastFace = S.lastFace || 0; C.marks = {}; C.forced = false; C.pbleed = null; C.en.baby = {};
     if (SATCHEL_ON) try { (S.loose || []).forEach(function (q) { if (!q.bag) { var fs = freeBagSpot(); q.bag = true; q.bx = fs.bx; q.by = fs.by; q.flying = false; } }); } catch (e) { }   // (satchel) icons left floating on the screen are tucked into the satchel for the fight
@@ -8552,6 +8632,9 @@ body:not([data-screen="title"]):not([data-screen="char"]):not([data-screen="rule
     if (kind === 'liar') { ok = actual >= b.qty; loser = ok ? caller : b.by; }
     else { ok = actual === b.qty; if (ok) { loser = b.by; dmg = caller === 'p' ? critDmg() : 2; } else loser = caller; }
     if (kind === 'exact' && ok && caller === 'p' && webN('crit') && Math.random() < 0.01 * webN('crit')) dmg += 1;
+    if (kind === 'exact' && ok && caller === 'p' && webN('headsman')) dmg += 1;
+    if (kind === 'liar' && caller === 'p' && !ok && webN('liarx') && Math.random() < 0.01 * webN('liarx')) dmg += 1;
+    if (caller === 'p' && ((kind === 'liar' && !ok) || (kind === 'exact' && ok)) && webN('firstblood') && !C.firstBlood) { dmg += 1; C.firstBlood = true; }
     var hit = null, part = caller === 'e' ? Math.max(0, C.speaker) : (b.part || 0), selfHit = kind === 'exact' && !ok && caller === 'p', strip = null;
     var judged = false, rebuked = false, notes = [], bleedBonus = 0;
     if (loser === 'e' && kind === 'exact' && ok && caller === 'p' && own('bleed3')) { bleedBonus = bleedAmt(); dmg += bleedBonus; }
@@ -8568,7 +8651,7 @@ body:not([data-screen="title"]):not([data-screen="char"]):not([data-screen="rule
     if (loser === 'p' && kind === 'exact' && ok && caller === 'e' && itm('skullcap') && dmg > 1) { dmg = 1; notes.push('<span class="good">Skullcap: the crit only does 1 damage.</span>'); C.log.push('Your skullcap turns the critical hit down to 1 damage.'); }
     var turned = false, smoked = !!C.smoke; C.smoke = false;
     if (loser === 'p' && smoked) { turned = true; notes.push('<span class="good">Smoke: no damage.</span>'); C.log.push('You vanish in the smoke. No damage.'); dmg = 0; }
-    if (loser === 'p' && !turned && !selfHit && Math.random() < (itm('gauntlet') ? 0.05 : 0) + 0.01 * webN('block')) { turned = true; notes.push('<span class="good">Blow turned aside. No damage.</span>'); C.log.push('You turn the blow aside. No damage.'); dmg = 0; }
+    if (loser === 'p' && !turned && !selfHit && Math.random() < (itm('gauntlet') ? 0.05 : 0) + 0.01 * webN('block')) { turned = true; notes.push('<span class="good">Blow turned aside. No damage.</span>'); C.log.push('You turn the blow aside. No damage.'); dmg = 0; if (webN('riposte')) { hurtEnemy(1, part); notes.push('<span class="good">Riposte: 1 damage back.</span>'); } }
     if (loser === 'p') hit = turned ? { blocked: 0, spike: 0 } : takeHit(dmg, selfHit ? 'self' : 'enemy');
     var gob = null;
     if (sang && !turned && dmg > 0) { notes.push('<span class="bad">' + C.en.parts[part].name + ' cackles. Double damage!</span>'); C.log.push(C.en.parts[part].name + ' hits twice as hard.'); }
@@ -8585,6 +8668,7 @@ body:not([data-screen="title"]):not([data-screen="char"]):not([data-screen="rule
     }
     if (hit && hit.spike) hurtEnemy(hit.spike, part);
     var removed = Math.max(0, enBefore - C.en.n);
+    if (loser === 'e' && removed > 0 && webN('bounty')) { var bg = 3 * removed; S.player.gold += bg; notes.push('<span class="gold">Bounty: +' + bg + ' gold.</span>'); }
     if (loser === 'e' && removed > 0 && S.player.ab.plunder) { var pg = removed * 2 * S.player.ab.plunder; S.player.gold += pg; notes.push('<span class="gold">Plunder: +' + pg + ' gold.</span>'); C.log.push('Plunder: +' + pg + ' gold.'); }
     if (loser === 'e') notes = notes.concat(thiefWound(part, kind === 'exact' && ok && caller === 'p'));
     if (loser === 'e' && kind === 'exact' && ok && caller === 'p' && itm('sword')) { if (addMaxDie(S.player)) { notes.push('<span class="crit">Bloodsworn Blade: max HP +1.</span>'); C.log.push('The Bloodsworn Blade drinks deep: max HP +1.'); } }
@@ -9015,7 +9099,7 @@ body:not([data-screen="title"]):not([data-screen="char"]):not([data-screen="rule
   function lateDrop(m) { if (!m || S.floorNum < 3 || LATE_SEALS.indexOf(m) > -1) return m; var c = LATE_SEALS.filter(anyApplicable); return c.length ? pick(c) : m; }
   var DROP_BASE = 0.5; // seal-drop chance (user, 2026-10-10: 50%; was 1 for a night, 0.25 before). Rarity luck adds to it and the Grave Robber's Hook doubles it.
   var EXTRA_SEAL = 0.25; // every won fight also has this chance of a second seal, drawn from the whole seal pool by rarity
-  function dropChance(def) { if (def && def.id === 'dummy') return 1; return Math.min(1, (DROP_BASE + shopRarity() / 100) * (itm('hook') ? 2 : 1)); }
+  function dropChance(def) { if (def && def.id === 'dummy') return 1; if (def && def.kind === 'elite' && webN('sealfate') && !(S.sealFate && S.sealFate[S.floorNum])) return 1; return Math.min(1, (DROP_BASE + shopRarity() / 100 + webN('sdrop') / 100) * (itm('hook') ? 2 : 1)); }
   var CARD_DROP = 0.15;   // chance of a random card in the spoils of any won fight (not the dummy)
   function afterCombat() {
     if (C && C.train) { trainEnd(C.phase === 'won'); return; }   // a training-room fight: nothing is won, lost or kept
@@ -9025,23 +9109,27 @@ body:not([data-screen="title"]):not([data-screen="char"]):not([data-screen="rule
     var rp = repBreakdown(def), xp = rp.xp.total, gold = rp.gold.total, oldGold = p.gold;
     p.xp += xp; p.gold += gold; AUD.lastGold = p.gold; XP.hold = true; M.total++; S.runWins = (S.runWins || 0) + 1; S.runKills = (S.runKills || 0) + ((C.en && C.en.parts && C.en.parts.length) || 1);
     var debt = 0; if (S.owed && def.kind !== 'fight') { debt = addDice(p, S.owed); S.owed = 0; }   // the pawnbroker pays after your next elite or boss win
-    var healed = heal(p, 1);   // every won fight mends one fallen die (user, 2026-10-10); Stubborn Pulse and Mending Hands add on top
+    if (p.bankShield) p.bankShield = Math.max(0, Math.min(p.bankShield, C.shield || 0));   // lasting shields a hit broke are gone
+    var healed = heal(p, 1) + (webN('spareribs') ? heal(p, 1) : 0);   // every won fight mends one fallen die (user, 2026-10-10); Stubborn Pulse and Mending Hands add on top
     if (p.ab.wind) healed += heal(p, p.ab.wind);
     if (own('mending')) healed += heal(p, 1);
     var before = p.level; S.pending = 0;
     var hpUp = 0;
     while (p.level <= LEVELS.length && p.xp >= LEVELS[p.level - 1]) { p.level++; S.pending++; addPts(S.cls || 'fighter', 1); S.runPts = (S.runPts || 0) + 1; if (p.level % 3 === 0 && addMaxDie(p)) hpUp++; }
+    var webNotes = [];
+    if (p.level > before) { if (webN('tithe')) { p.gold += 15 * (p.level - before); webNotes.push('Tithe of Bones: +' + (15 * (p.level - before)) + ' gold.'); } if (webN('shielddrill')) { p.bankShield = (p.bankShield || 0) + (p.level - before); webNotes.push('Shield Drill: +' + (p.level - before) + ' lasting shield' + (p.level - before > 1 ? 's' : '') + '.'); } }
+    if (def.id !== 'dummy' && webN('ddrop') && Math.random() < webN('ddrop') / 100 && p.dice.length < maxDice()) { var d8 = webN('oddangles') && Math.random() < 0.2; if (d8) addPolyDie(p, 8); else addMaxDie(p); var nd = p.dice[p.dice.length - 1], sealed = ''; if (webN('inked') && Math.random() < 0.1) { var im = MOD_ORDER.filter(function (m) { return m !== 'poly' && canApply(nd, m); }); if (im.length) { var mm = im[Math.floor(Math.random() * im.length)]; applyMod(nd, mm); sealed = ' It carries a ' + MODS[mm].name.replace(/ Die$/, '') + ' seal.'; } } webNotes.push('The foe dropped a ' + (d8 ? 'd8' : 'die') + '. It joins your cup.' + sealed); }
     saveMeta();
-    S.lvlShown = false; S.victory = { rep: rp, anim: 'idle', oldGold: oldGold, name: def.name, xp: xp, gold: gold, healed: healed, leveled: p.level > before, hpUp: hpUp, gained: p.level - before, big: def.kind !== 'fight' || vaultTier() > 0, debt: debt };
+    S.lvlShown = false; S.victory = { webNotes: webNotes, rep: rp, anim: 'idle', oldGold: oldGold, name: def.name, xp: xp, gold: gold, healed: healed, leveled: p.level > before, hpUp: hpUp, gained: p.level - before, big: def.kind !== 'fight' || vaultTier() > 0, debt: debt };
     if (S.victory.big) { S.victory.chest = { opts: makeRewardOpts(def), taken: false }; S.rewardOpts = S.victory.chest.opts; }
     var dropId = lateDrop(def.drop);
     if (dropId && anyApplicable(dropId) && Math.random() < dropChance(def)) {
-      S.victory.drop = dropId;
+      S.victory.drop = dropId; if (def.kind === 'elite') { S.sealFate = S.sealFate || {}; S.sealFate[S.floorNum] = 1; }
       var fl = fightLuck(def);
       if (fl > 0 && Math.random() < fl / 100) { var up = drawByRarity(MOD_ORDER.filter(anyApplicable), 1, function (m) { return m; }, 0, fl * 2)[0]; if (up) S.victory.drop = up; }
     }
     // a second seal: any won fight (not the dummy) has an EXTRA_SEAL chance, drawn from every seal your dice can take, weighted by rarity and your luck
-    if (def.id !== 'dummy' && !def.noSeal && Math.random() < EXTRA_SEAL) { var ex = drawByRarity(MOD_ORDER.filter(anyApplicable), 1, function (m) { return m; }, 0, fightLuck(def))[0]; if (ex) S.victory.drop2 = ex; }
+    if (def.id !== 'dummy' && !def.noSeal && Math.random() < EXTRA_SEAL + webN('sdrop2') / 100) { var ex = drawByRarity(MOD_ORDER.filter(anyApplicable), 1, function (m) { return m; }, 0, fightLuck(def))[0]; if (ex) S.victory.drop2 = ex; }
     if (def.id === 'dummy' && S.victory) S.victory.dummy = true; if (def.id === 'dummy' && !noteSeen() && !S.noteGone) S.noteShow = true;
     if (def.id === 'dummy' && !M.dummyDone) { M.dummyDone = true; saveMeta(); }
     if (S.runWins === 2 && !owns('knife')) S.victory.loot = 'knife';
@@ -9189,6 +9277,7 @@ body:not([data-screen="title"]):not([data-screen="char"]):not([data-screen="rule
     [seal || { t: 'gold', key: 'goldU' }, relic || { t: 'gold', key: 'gold' }, card || { t: 'gold', key: 'gold' }].forEach(function (c) {
       opts.push({ t: c.t, key: c.key, heal: healAmt, gold: Math.round(goldAmt * (GOLD_TIER[c.key] || 1)), mod: c.mod || null, item: c.item || null });
     });
+    if (webN('chestx')) { var ex2 = one(ITEM_ORDER.filter(function (k) { return !isCard(k) && !owns(k) && !opts.some(function (o) { return o.item === k; }); }).map(function (k) { return { t: 'item', key: k, item: k }; })) || one(MOD_ORDER.filter(anyApplicable).map(function (m) { return { t: 'mod', key: m, mod: m }; })); if (ex2) opts.push({ t: ex2.t, key: ex2.key, heal: healAmt, gold: Math.round(goldAmt * (GOLD_TIER[ex2.key] || 1)), mod: ex2.mod || null, item: ex2.item || null }); }   // Treasure Sense
     return opts;
   }
   function capGold(n) { return bonusGold(40 * n * floorCfg().goldMul); }
@@ -9222,6 +9311,7 @@ body:not([data-screen="title"]):not([data-screen="char"]):not([data-screen="rule
         var tr = l[i].querySelector('.enctray'), ti = tr && tr.querySelector('.enctrayin');
         // the slot machine gets a taller tray and may cover the HUD, so the machine and its text are as big as the screen allows (user, 2026-10-10)
         if (ti && ti.querySelector('.smreel') && !l[i].classList.contains('slotwin')) l[i].classList.add('slotwin', 'tall');
+        if (ti && ti.querySelector('.cardshop') && !l[i].classList.contains('slotwin')) l[i].classList.add('slotwin', 'tall');   // the card dealer's two rows of cards were shrunk to unreadable in the small window
         if (ti) {
           ti.style.zoom = '';
           var need = ti.scrollHeight, avail = tr.clientHeight - 8;
@@ -9240,11 +9330,11 @@ body:not([data-screen="title"]):not([data-screen="char"]):not([data-screen="rule
         if (tt && tt.offsetParent !== null && !/\b(rptwin)\b/.test(l[i].className)) {
           tt.style.fontSize = ''; tt.style.lineHeight = '';
           var cs = getComputedStyle(tt), fs0 = parseFloat(cs.fontSize) || 30, sc = (tt.getBoundingClientRect().width / (tt.offsetWidth || 1)) || 1;
-          var wrapOk = cs.whiteSpace === 'nowrap'; if (wrapOk) tt.style.whiteSpace = 'normal';
+          var wrapOk = cs.whiteSpace === 'nowrap' && !/\bencopen\b/.test(l[i].className); if (wrapOk) tt.style.whiteSpace = 'normal';   // the scroll banner (encopen) has room for one line only: shrink instead of wrapping
           var rg = document.createRange(), fs = fs0, tries = 0;
           for (;;) {
             rg.selectNodeContents(tt); var rr = rg.getBoundingClientRect(), br = tt.getBoundingClientRect();
-            var padX = Math.max((parseFloat(cs.paddingLeft) || 0) + (parseFloat(cs.paddingRight) || 0), 90) * sc;
+            var padX = Math.max((parseFloat(cs.paddingLeft) || 0) + (parseFloat(cs.paddingRight) || 0), /\b(lvlenc|encopen)\b/.test(l[i].className) ? 90 : 150) * sc;   // 150: keep clear of the blood splash on the plaque's left end (it hid the first letter)
             if ((rr.height <= br.height - (/\blvlenc\b/.test(l[i].className) ? 2 : 24) * sc && rr.width <= br.width - padX + 1) || fs <= 11 || tries++ > 40) break;
             fs -= 1; tt.style.fontSize = fs + 'px'; if (fs < fs0 - 1) tt.style.lineHeight = '1.05';
           }
@@ -9368,7 +9458,7 @@ body:not([data-screen="title"]):not([data-screen="char"]):not([data-screen="rule
       { id: 'cup2', name: 'Your Cup Runneth Over', desc: 'Permanently add 2 dice to your cup.', price: priceOf(150), ok: p.dice.length < maxDice(), why: 'You cannot hold more than ' + maxDice() + ' dice.' }
     ];
     items.push({ id: 'd20', name: 'The D20', desc: 'Permanently add a d20 to your cup. Every side above 6 is wild and scores its number. One per run.', price: priceOf(220), ok: !p.gotD20 && p.dice.length < maxDice(), why: p.gotD20 ? 'You already own the D20.' : 'You cannot hold more than ' + maxDice() + ' dice.' });
-    MOD_ORDER.forEach(function (m) { items.push({ id: m, name: MODS[m].name, desc: MODS[m].desc, price: priceOf(MODS[m].base * 1.5), ok: anyApplicable(m), why: 'None of your dice can take this.', mod: m }); });
+    MOD_ORDER.forEach(function (m) { items.push({ id: m, name: MODS[m].name, desc: MODS[m].desc, price: priceOf(MODS[m].base * 1.5 * (webN('waxcol') ? 0.85 : 1)), ok: anyApplicable(m), why: 'None of your dice can take this.', mod: m }); });
     ITEM_ORDER.forEach(function (id) {
       var it = ITEMS[id], card = isCard(id), owned = !card && owns(id);
       items.push({ id: id, name: it.name, desc: it.desc, price: priceOf(it.base), ok: !owned && (card ? deckOf(p).length < DECK_MAX : freeRoom()), why: owned ? 'You already carry this.' : card ? 'Your deck is full.' : 'Your hands and satchel are full. Sell something.', inv: true });
@@ -9376,19 +9466,20 @@ body:not([data-screen="title"]):not([data-screen="char"]):not([data-screen="rule
     return items;
   }
   function pickSpoils(n) {
-    n = n || 6;
+    n = (n || 6) + (webN('shelf') ? 1 : 0);
     var all = shopItems().filter(function (x) { return !x.mod; }), okl = all.filter(function (x) { return x.ok; }), src = okl.length >= n ? okl : all;
     var picks = drawByRarity(src, n, function (x) { return x.id; }, S.shopLevel || 0, shopRarity()).map(function (x) { return x.id; });
     // one seal is always on the shelf, at a steep price
     if (picks.indexOf('glass') < 0 && shopItems().some(function (x) { return x.id === 'glass' && x.ok; })) picks[picks.length - 1] = 'glass'; // always one Looking Glass on the shelf
     if (S.floorNum === 1 && picks.indexOf('heal') < 0) picks[0] = 'heal';   // floor 1 shelves always carry a Healing Draught
     var sig = shopItems().filter(function (x) { return x.mod && x.ok; });
+    if (webN('collector') && !picks.some(function (id) { return ['rare', 'epic', 'legendary'].indexOf(rarOf(id)) > -1; })) { var rr = shopItems().filter(function (x) { return !x.mod && x.ok && ['rare', 'epic', 'legendary'].indexOf(rarOf(x.id)) > -1 && picks.indexOf(x.id) < 0; }); if (rr.length) picks[picks.length - 1] = rr[Math.floor(Math.random() * rr.length)].id; }   // Collector's Mark
     if (sig.length) picks.push(drawByRarity(sig, 1, function (x) { return x.id; }, S.shopLevel || 0, shopRarity())[0].id);
     return picks;
   }
   var LEVEL_COSTS = [25, 40, 55, 70, 90, 110, 135, 160, 190, 225];
   function shopRarity() { var gr = (S && S.player && S.player.ab && S.player.ab.grave) || 0; return (S.shopLuck || 0) + 10 * gr + (itm('crown') ? 5 : 0) + webN('drop'); }
-  function rerollCost() { return 5 * ((S.shopRerolls || 0) + 1); }
+  function rerollCost() { return Math.max(1, 5 * ((S.shopRerolls || 0) + 1) - webN('reroll')); }
   function shopReroll() {
     var c = rerollCost(); if (S.player.gold < c) return;
     S.player.gold -= c; S.shopRerolls = (S.shopRerolls || 0) + 1; S.shopSel = pickSpoils(3); S.shopMsg = 'The wares shift. New items.'; S.shopFresh = true; render();
@@ -9472,7 +9563,7 @@ body:not([data-screen="title"]):not([data-screen="char"]):not([data-screen="rule
         flavor: 'Its bulbs flicker like dying stars. The first pull is free, then ' + SLOT_COST + ' gold a pull.',
         nodeTip: 'The first pull is free, then ' + SLOT_COST + ' gold a pull. Win gold, an item, a seal or free spins. Or lose a die.' };
       case 'anvil': return { kind: 'smith', hp: 1, title: 'The Blood Anvil',
-        flavor: '',
+        flavor: 'Three seals glow on a black anvil slick with blood. Hammer one onto a die, and the iron drinks 1 HP from you in payment.',
         nodeTip: 'Three seals glow on the anvil. Hammer one onto a die, and the iron drinks 1 HP from you in payment.' };
       case 'idol': return { kind: 'roll', title: 'The Bone Idol', hi: t.hi, lo: t.lo, G2: bonusGold(20 * cfg.goldMul),
         flavor: 'An idol of stacked knucklebones leers from an alcove, wet with something fresh. Roll for its favour, or leave it be.',
@@ -9506,10 +9597,10 @@ body:not([data-screen="title"]):not([data-screen="char"]):not([data-screen="rule
     if (type === 'bank') { ev.dep = 0; S.pouchOpen = true; S.pouchAuto = true; }
     if (type === 'cardsharp') { ev.offers = drawByRarity(MERCH_IDS.slice(), 3, function (k) { return k; }, S.shopLevel || 0, shopRarity()).map(function (id) { return { id: id, price: priceOf(ITEMS[id].base * 1.2), sold: false }; }); ev.msg = ''; }
     if (type === 'diceshop') {
-      ev.offers = [0, 1, 2].map(function () { var n = drawByRarity(DIE_WARES, 1, function (k) { return 'die' + k; }, S.shopLevel || 0, shopRarity())[0] || 6; return { sides: n, price: priceOf(DIE_PRICE[n]), sold: false }; });
+      ev.offers = [0, 1, 2].map(function () { var n = drawByRarity(DIE_WARES, 1, function (k) { return 'die' + k; }, S.shopLevel || 0, shopRarity())[0] || 6; return { sides: n, price: priceOf(DIE_PRICE[n] * (1 - 0.01 * webN('dprice'))), sold: false }; });
     }
     if (type === 'smith' || type === 'anvil' || type === 'sealshop') {
-      ev.offers = drawByRarity(MOD_ORDER.filter(anyApplicable), 3, function (m) { return m; }, S.shopLevel || 0, shopRarity()).map(function (m) { return { mod: m, price: type === 'anvil' ? 0 : Math.max(5, Math.round(priceOf(MODS[m].base) * 1.3 / 5) * 5) }; });
+      ev.offers = drawByRarity(MOD_ORDER.filter(anyApplicable), 3, function (m) { return m; }, S.shopLevel || 0, shopRarity()).map(function (m) { return { mod: m, price: type === 'anvil' ? 0 : Math.max(5, Math.round(priceOf(MODS[m].base) * (webN('waxcol') ? 0.85 : 1) * 1.3 / 5) * 5) }; });
     }
     return ev;
   }
@@ -9918,7 +10009,7 @@ body:not([data-screen="title"]):not([data-screen="char"]):not([data-screen="rule
       var pr2 = po.getBoundingClientRect();
       if (mr) { mr.style.position = 'fixed'; mr.style.margin = '0'; mr.style.left = (pr2.left / z) + 'px'; mr.style.top = ((pr2.bottom + 4) / z) + 'px'; mr.style.zIndex = '2'; }
       // enemy portrait mirrors the player's: same column, same distance from the top as the player's is from the bottom
-      var foe = document.querySelector('.foe'), pb = foe && foe.querySelector('.portbtn'); if (foe && foe.closest('.foes')) { foe = null; pb = null; }   // several foes sit side by side: do not pull the first one into the player's column
+      var foe = document.querySelector('.foe'), pb = foe && foe.querySelector('.portbtn'); var foesEl = foe && foe.closest('.foes'); if (foesEl) { foe = null; pb = null; }   // several foes sit side by side: do not pull the first one into the player's column
       if (foe && pb) {
         foe.style.position = 'relative'; foe.style.left = '0px'; foe.style.top = '0px';
         var pb0 = pb.getBoundingClientRect(), pr1 = po.getBoundingClientRect();
@@ -9926,12 +10017,12 @@ body:not([data-screen="title"]):not([data-screen="char"]):not([data-screen="rule
         foe.style.left = ((pr1.left - pb0.left) / z) + 'px'; foe.style.top = ((gap - pb0.top) / z) + 'px';
       }
       var felt = document.querySelector('.felt');
-      if (felt && foe) {
+      if (felt && (foe || foesEl)) {
         felt.style.position = 'relative'; felt.style.top = '0px';
         felt.style.left = '0px'; var bb0 = felt.querySelector('.bidbox'); if (bb0) { var bq = bb0.getBoundingClientRect(); felt.style.left = ((((window.innerWidth || 1500) / 2) - (bq.left + bq.right) / 2) / z) + 'px'; }
         var kids = felt.querySelectorAll('.bidbox, .bidctl'), t0 = 1e9, b0 = 0;
         Array.prototype.forEach.call(kids, function (k) { var r = k.getBoundingClientRect(), dn = k.classList.contains('bfctl') ? 22 * z : 0; if (r.height) { t0 = Math.min(t0, r.top - dn); b0 = Math.max(b0, r.bottom - dn); } });   // the dice row sits 44px lower than the block is centred for
-        var fb = foe.querySelector('.portbtn').getBoundingClientRect().bottom, room = xr.top - fb, want = fb + (room - (b0 - t0)) / 2;
+        var fb = foe ? foe.querySelector('.portbtn').getBoundingClientRect().bottom : Math.max.apply(null, [].map.call(foesEl.querySelectorAll('.foe'), function (q) { return q.getBoundingClientRect().bottom; })), room = xr.top - fb, want = fb + (room - (b0 - t0)) / 2;
         if (t0 < 1e8) felt.style.top = ((want - t0) / z) + 'px';
       }
       // keep the whole player block (portrait, hp and total as well as the dice) on screen, however many rows of dice there are
@@ -10977,7 +11068,7 @@ BOSS_PORTRAITS.collector = {"normal":"data:image/webp;base64,UklGRpxRAABXRUJQVlA
   function repExtraHTML(v) {
     var n = 0, sp = function (inner, cls) { return '<span class="rp-spoil' + (cls || '') + '" style="--i:' + (n++) + '">' + SPK + inner + '</span>'; };
     var info = (v.healed ? '<p class="good">Your wounds knit themselves shut: ' + v.healed + ' HP recovered.</p>' : '') +
-      ((v.leveled || v.gained) ? '<p class="crit">' + (v.leveled ? 'Level ' + S.player.level : '') + (v.leveled && v.gained ? ' ' : '') + (v.gained ? '+' + v.gained + ' Skill point' + (v.gained > 1 ? 's' : '') : '') + '</p>' : '') + (v.hpUp ? '<p class="good">+' + v.hpUp + ' max health.</p>' : '') + (v.debt ? '<p class="good">The pawnbroker keeps his word: +' + v.debt + ' dice in your cup.</p>' : '');
+      ((v.leveled || v.gained) ? '<p class="crit">' + (v.leveled ? 'Level ' + S.player.level : '') + (v.leveled && v.gained ? ' ' : '') + (v.gained ? '+' + v.gained + ' Skill point' + (v.gained > 1 ? 's' : '') : '') + '</p>' : '') + (v.hpUp ? '<p class="good">+' + v.hpUp + ' max health.</p>' : '') + (v.debt ? '<p class="good">The pawnbroker keeps his word: +' + v.debt + ' dice in your cup.</p>' : '') + (v.webNotes || []).map(function (t) { return '<p class="good">' + t + '</p>'; }).join('');
     var loot = (v.loot && !v.lootDone ? [].concat(v.loot).filter(function (id) { return !(v.taken && v.taken[id]); }).map(function (id) { return isCard(id) ? sp('<button type="button" class="rptcardbtn" data-act="rptPreview" data-id="' + id + '" data-tip="spcard:' + id + '" aria-label="Take ' + ITEMS[id].name + '">' + tcardHTML(id, { cls: 'rptcard' }) + '</button>', ' rp-spcard') : sp('<p class="good rp-sptext">' + v.name + ' also drops the ' + ITEMS[id].name + '. ' + ITEMS[id].desc + '</p>', ' rp-spwide'); }).join('') : '');
     var slots = (v.slotIds || []).filter(looseHas).map(function (lid) { return sp('<span class="sealslot" data-loose="' + lid + '" style="--i:' + n + '"></span>', ' rp-spslot'); }).join('') + (v.drop && !v.dropDone ? sp('<button type="button" class="sealslot sealfixed" data-act="openDropSeal" data-i="1" aria-label="Apply the seal" data-tip="loose:' + v.drop + '" style="--i:' + n + '">' + ITEM_ART[v.drop] + '</button>', ' rp-spslot') : '') + (v.drop2 && !v.drop2Done ? sp('<button type="button" class="sealslot sealfixed" data-act="openDropSeal" data-i="2" aria-label="Apply the second seal" data-tip="loose:' + v.drop2 + '" style="--i:' + n + '">' + ITEM_ART[v.drop2] + '</button>', ' rp-spslot') : '');
     var chest = (v.chest && !v.chest.taken) ? sp('<button type="button" class="chestbtn" data-act="openChest" aria-label="Open the treasure chest"><img alt="" src="' + ENCART.chest_closed + '"></button>', ' rp-spchest') : '';
@@ -11276,7 +11367,7 @@ BOSS_PORTRAITS.collector = {"normal":"data:image/webp;base64,UklGRpxRAABXRUJQVlA
     var kick = U.mod ? (tier > 1 ? 'SEAL STRENGTHENED' : 'SEAL BOUND') : 'DIE REFORGED';
     return encWinHTML({ key: 'smith', variant: 'brown', cls: 'upgwin tier' + tier, title: (U.mod ? dieName(d) + (tier > 1 ? ' ' + ['', 'I', 'II', 'III', 'IV'][tier] : '') : U.label),
       portHTML: '<div class="forgeport upgport" data-r="' + rar + '"><div class="upgrays" aria-hidden="true"></div><span class="pieframe" style="' + pieStyle(d) + '">' + dieWrap(U.val, { s: 96, mods: badgeKeys(d), poly: polyOf(polyN(d)) }) + '</span><div class="sparks" aria-hidden="true">' + sparks + '</div></div>',
-      flav: '<span class="fw-ban">' + kick + '</span>' + U.desc, tray: pips + '<div class="chips">' + modChips(d) + '</div>' + strip(d),
+      flav: '<span class="fw-ban">' + kick + '</span>' + U.desc, tray: pips + '<div class="chips">' + modChips(d) + '</div>' + strip(d, { size: 64 }),
       foot: '<div class="row"><button type="button" class="btn torch" data-act="upgradeContinue">Continue</button></div>' });
   }
   function shopHTML() {
@@ -11287,7 +11378,7 @@ BOSS_PORTRAITS.collector = {"normal":"data:image/webp;base64,UklGRpxRAABXRUJQVlA
     }).join('') + '</div>';
     var foot = '<div class="row shopctl"><button type="button" class="btn small" data-act="shopReroll"' + (p.gold < rc ? ' disabled' : '') + '>Reroll · ' + rc + '</button>' +
       '<button type="button" class="btn small" data-tip="shopluck" data-act="shopLevel"' + (maxed || p.gold < lc ? ' disabled' : '') + '>' + (maxed ? RARIC + ' maxed' : RARIC + ' +5% · ' + lc) + '</button>' +
-      '<button type="button" class="btn torch" data-act="leaveShop">' + (S.finalShop ? (S.floorNum < FLOORS.length ? 'Head for the stairs' : 'Finish the crawl') : 'Leave the shop') + '</button></div>';
+      '<button type="button" class="btn torch" data-act="leaveShop">' + (S.finalShop ? (S.floorNum < FLOORS.length ? 'To the stairs' : 'Finish the crawl') : 'Leave the shop') + '</button></div>';
     return encWinHTML({ key: 'black_market', variant: 'brown', merch: 'shop', title: (S.finalShop ? 'The Victor\'s Stall' : 'The Black Market') + (shopRarity() ? ' <span class="muted">· ' + RARIC + ' ' + shopRarity() + '%</span>' : ''), flav: S.shopMsg || 'Spend your gold on relics, cards and one seal. Drag a seal or relic onto the merchant to sell it.', tray: wares, foot: foot });
   }
 
@@ -11321,9 +11412,9 @@ BOSS_PORTRAITS.collector = {"normal":"data:image/webp;base64,UklGRpxRAABXRUJQVlA
   function eventHTML() {
     var ev = S.event, info = ev.info, p = S.player, h = '';
     if (info.kind === 'roll') {
-      var bands = info.low ? '<p>Roll two of your dice. Lower is better. <strong>' + info.lo + ' or less:</strong> ' + info.win + '. <strong>' + info.hi + ' or more:</strong> ' + info.lose + '. In between, nothing happens.</p>' : '<p>Roll two of your dice. <strong>' + info.hi + ' or more:</strong> ' + info.win + '. <strong>' + info.lo + ' or less:</strong> ' + info.lose + '. In between, nothing happens.</p>';
-      if (info.title === 'Fortify') bands = '<p>Roll 2 dice. <strong>' + info.hi + '+:</strong> gain 1 ' + maxIc() + '</p>';
-      else if (info.lo < 1) bands = '<p>Roll two of your dice. <strong>' + info.hi + ' or more:</strong> ' + info.win + '. Anything less, and nothing happens.</p>';
+      var bands = info.low ? '<p class="evrule">Roll two of your dice. Lower is better. <strong>' + info.lo + ' or less:</strong> ' + info.win + '. <strong>' + info.hi + ' or more:</strong> ' + info.lose + '. In between, nothing happens.</p>' : '<p class="evrule">Roll two of your dice. <strong>' + info.hi + ' or more:</strong> ' + info.win + '. <strong>' + info.lo + ' or less:</strong> ' + info.lose + '. In between, nothing happens.</p>';
+      if (info.title === 'Fortify') bands = '<p class="evrule">Roll 2 dice. <strong>' + info.hi + '+:</strong> gain 1 ' + maxIc() + '</p>';
+      else if (info.lo < 1) bands = '<p class="evrule">Roll two of your dice. <strong>' + info.hi + ' or more:</strong> ' + info.win + '. Anything less, and nothing happens.</p>';
       if (ev.step === 'pick') {
         var alive = p.dice.map(function (d, i) { return { d: d, i: i }; }).filter(function (x) { return x.d.up; });
         var walk = '<button type="button" class="btn ghost" data-act="evLeave">Slink away</button>'; if (ev.type === 'hardy') walk = '<button type="button" class="btn ghost" data-act="hardyBack">Back</button>';
@@ -11446,7 +11537,7 @@ BOSS_PORTRAITS.collector = {"normal":"data:image/webp;base64,UklGRpxRAABXRUJQVlA
         '<div class="row"><button type="button" class="btn" data-act="tatWild"' + (canWild ? '' : ' disabled') + ' data-tip="note:' + (canWild ? 'Wild ink: replace a 6 on one die with a wild face. The needle hurts: you lose 1 HP.' : 'You need a 6 to replace and at least 2 HP.') + '">Wild ink</button><button type="button" class="btn ghost" data-act="evLeave">Leave</button></div>';
     } else if (info.kind === 'goblin') {
       var can3 = p.dice.length >= 3 && (ev.type !== 'goblin' || p.dice.some(function (d) { return d.up; }));
-      if (ev.step === 'main') h = '<h2>' + info.title + '</h2><p class="muted">' + info.flavor + '</p>' + info.offer +
+      if (ev.step === 'main') h = '<h2>' + info.title + '</h2><p class="muted">' + info.flavor + '</p><div class="evoffer">' + info.offer + '</div>' +
         (can3 ? '' : '<p class="bad">You have too few dice to spare one.</p>') +
         '<div class="row"><button type="button" class="btn torch" data-act="gobAccept"' + (can3 ? '' : ' disabled') + '>' + (info.accept || 'Make the deal') + '</button><button type="button" class="btn ghost" data-act="evLeave">Refuse</button></div>';
       else if (ev.step === 'give') h = '<h2>' + info.title + '</h2><p class="muted">Choose the die to give up. It is gone for good.</p><div class="dicegrid">' + p.dice.map(function (d, i) {
@@ -11470,75 +11561,133 @@ BOSS_PORTRAITS.collector = {"normal":"data:image/webp;base64,UklGRpxRAABXRUJQVlA
 
   // ---------- the Web of Bones: meta progression, bought with Knucklebones ----------
   var BONE_ART = '<svg viewBox="0 0 12 12" aria-hidden="true"><path d="M2 2h2v1h4V2h2v2h-1v1h1v2h-1v1h1v2H8V9H4v1H2V8h1V7H2V5h1V4H2z" fill="#e8dcbc" stroke="#14110d" stroke-width=".8" shape-rendering="crispEdges"/></svg>';
-  var WEB_TYPES = [
-    { k: 'luck', name: 'Pawnbroker’s Favour', desc: '+1% ' + RARIC, col: '#6fd0e0' },
-    { k: 'drop', name: 'Grave Robber’s Itch', desc: '+1% ' + RARIC, col: '#b69be0' },
-    { k: 'block', name: 'Callused Hide', desc: '+1% chance to block an attack', col: '#8d9db6' },
-    { k: 'double', name: 'Headsman’s Whisper', desc: '+1% chance to deal double damage', col: '#ef7f86' },
-    { k: 'gold', name: 'Magpie’s Greed', desc: '+1% gold', col: '#e6bd45' },
-    { k: 'xp', name: 'Carrion Lessons', desc: '+1% experience', col: '#8fe08a' },
-    { k: 'price', name: 'Haggler’s Rot', desc: '1% cheaper shop prices', col: '#c8a06a' },
-    { k: 'crit', name: 'Needle in the Ribs', desc: '+1% chance a spot on call deals 1 extra damage', col: '#ff8a4a' }
+  // ---- the Web of Bones v2 (2026-10-10): six wedges around the Heart, each about one kind of upgrade. Small nodes give +1%; notables sit 4-5 steps out; a keystone ends each wedge ~8 steps out. Border nodes mix two wedges. ----
+  var WEB_SECT = [
+    { k: 'gold', name: 'Magpie', col: '#e6bd45', small: [['+1% gold', { gold: 1 }], ['Shops 1% cheaper', { price: 1 }], ['+1% gold', { gold: 1 }]],
+      NA: ['Nest Egg', 'Start each run with 20 gold.', { nestegg: 1 }], NB: ['Tithe of Bones', 'Gain 15 gold each time you level up.', { tithe: 1 }], NM: ['Loaded Purse', '+5% gold.', { gold: 5 }],
+      K: ['Hoarder’s Interest', 'After each boss, gain 10% of your unspent gold (up to 60).', { hoard: 1 }] },
+    { k: 'rarity', name: 'Pawnbroker', col: '#6fd0e0', small: [['+1% rarity', { luck: 1 }], ['Shop rerolls cost 1 gold less', { reroll: 1 }], ['+1% rarity', { luck: 1 }]],
+      NA: ['Keen Eye', '+5% rarity.', { luck: 5 }], NB: ['Treasure Sense', 'Chests offer one extra choice.', { chestx: 1 }], NM: ['Gilded Shelves', 'Shops stock one extra item.', { shelf: 1 }],
+      K: ['Collector’s Mark', 'Every shop has at least one rare or better item. +10% rarity.', { collector: 1, luck: 10 }] },
+    { k: 'seals', name: 'Waxwright', col: '#c58bf0', small: [['+1% seal drop chance', { sdrop: 1 }], ['+1% chance of a second seal', { sdrop2: 1 }]],
+      NA: ['Hot Wax', '+5% seal drop chance.', { sdrop: 5 }], NB: ['Twin Stamp', '+5% chance of a second seal.', { sdrop2: 5 }], NM: ['Sealed Fate', 'The first elite you beat on each floor always drops its seal.', { sealfate: 1 }],
+      K: ['Signet Ring', 'Start each run with a random seal on one of your dice.', { signet: 1 }] },
+    { k: 'dice', name: 'Carver', col: '#e9e2cf', small: [['+1% chance a foe drops a die', { ddrop: 1 }], ['The Dice Carver is 1% cheaper', { dprice: 1 }], ['+1% chance a foe drops a die', { ddrop: 1 }]],
+      NA: ['Bone Collector', '+5% chance a foe drops a die.', { ddrop: 5 }], NB: ['Odd Angles', 'Dropped dice are a d8 one time in five.', { oddangles: 1 }], NM: ['Spare Knuckles', 'Your cup holds 1 more die.', { cupx: 1 }],
+      K: ['Deep Pockets', 'Start each run with 1 extra die.', { deeppockets: 1 }] },
+    { k: 'defence', name: 'Callused Hide', col: '#8fb0d6', small: [['+1% chance to block a hit', { block: 1 }]],
+      NA: ['Iron Skin', 'Start each fight with 1 armour.', { ironskin: 1 }], NB: ['Shield Drill', 'Gain a lasting shield each time you level up.', { shielddrill: 1 }], NM: ['Thick Hide', '+5% chance to block a hit.', { block: 5 }],
+      K: ['Bulwark', 'Start each run with 2 lasting shields. A lasting shield stays with you from fight to fight until a hit breaks it.', { bulwarkw: 1 }] },
+    { k: 'attack', name: 'Headsman', col: '#ef6f6f', small: [['+1% chance to deal double damage', { double: 1 }], ['+1% chance a Liar call deals 1 extra damage', { liarx: 1 }]],
+      NA: ['First Blood', 'Your first winning call each fight deals 1 extra damage.', { firstblood: 1 }], NB: ['Cruel Odds', '+5% chance to deal double damage.', { double: 5 }], NM: ['Needle in the Ribs', '+10% chance a Spot On call deals 1 extra damage.', { crit: 10 }],
+      K: ['Headsman’s Due', 'Your Spot On calls always deal 1 extra damage.', { headsman: 1 }] }
   ];
-  var WEB_RINGS = 13, WEB_SPOKES = 8, WEB = null, webMemo = null, webSel = null, webEl = null;
+  var WEB_BRIDGE = [
+    [['+1% gold and +1% rarity', { gold: 1, luck: 1 }], ['Fence’s Eye', 'Sell for 25% more.', { fence: 1 }]],
+    [['+1% rarity and +1% seal drop chance', { luck: 1, sdrop: 1 }], ['Wax Collector', 'Seals in shops are 15% cheaper.', { waxcol: 1 }]],
+    [['+1% seal drop chance and +1% die drop chance', { sdrop: 1, ddrop: 1 }], ['Inked Bones', 'Dice that drop from foes carry a random seal one time in ten.', { inked: 1 }]],
+    [['+1% die drop chance and +1% block', { ddrop: 1, block: 1 }], ['Spare Ribs', 'Recover 1 extra HP after every fight you win.', { spareribs: 1 }]],
+    [['+1% block and +1% double damage', { block: 1, double: 1 }], ['Riposte', 'A blocked hit deals 1 damage back.', { riposte: 1 }]],
+    [['+1% double damage and +1% gold', { double: 1, gold: 1 }], ['Bounty', 'Gain 3 gold for every enemy die you destroy.', { bounty: 1 }]]
+  ];
+  var WEB_T = [['e', 0, 1, 's'], ['a1', -9, 2, 's'], ['a2', -15, 3, 's'], ['a3', -19, 4, 's'], ['NA', -20, 5.1, 'n'], ['b1', 9, 2, 's'], ['b2', 15, 3, 's'], ['b3', 19, 4, 's'], ['NB', 20, 5.1, 'n'],
+    ['m1', 0, 2.6, 's'], ['w1', -7, 3.6, 's'], ['w2', 7, 3.6, 's'], ['w3', 7, 5.2, 's'], ['w4', -7, 5.2, 's'], ['NM', 0, 4.4, 'n'], ['o1', -17, 6.3, 's'], ['o2', 17, 6.3, 's'], ['o3', 0, 6.2, 's'], ['o4', -8, 7.1, 's'], ['o5', 8, 7.1, 's'], ['K', 0, 8.3, 'k']];
+  var WEB_TE = [['e', 'a1'], ['a1', 'a2'], ['a2', 'a3'], ['a3', 'NA'], ['e', 'b1'], ['b1', 'b2'], ['b2', 'b3'], ['b3', 'NB'], ['e', 'm1'], ['m1', 'w1'], ['m1', 'w2'], ['w1', 'w4'], ['w2', 'w3'], ['w3', 'w4'], ['w1', 'NM'], ['w2', 'NM'],
+    ['NA', 'o1'], ['NB', 'o2'], ['w3', 'o3'], ['w4', 'o3'], ['o1', 'o4'], ['o2', 'o5'], ['o3', 'o4'], ['o3', 'o5'], ['o4', 'K'], ['o5', 'K'], ['a1', 'm1'], ['b1', 'm1']];
+  var WEB = null, webMemo = null, webSel = null, webEl = null, webHov = null;
   function buildWeb() {
     if (WEB) return WEB;
-    var nodes = [], byId = {}, edges = [], r, sp, i;
-    function add(n) { nodes.push(n); byId[n.id] = n; }
-    add({ id: 'c', r: 0, s: 0, type: null, x: 0, y: 0, nb: [] });
-    for (r = 1; r <= WEB_RINGS; r++) for (sp = 0; sp < WEB_SPOKES; sp++) {
-      var a = sp * Math.PI * 2 / WEB_SPOKES - Math.PI / 2, rad = 46 + r * 38, t = WEB_TYPES[(sp + r) % WEB_TYPES.length];
-      add({ id: 'w' + r + '_' + sp, r: r, s: sp, type: t, x: Math.cos(a) * rad, y: Math.sin(a) * rad, nb: [] });
-    }
-    function link(a, b) { a.nb.push(b.id); b.nb.push(a.id); edges.push([a.id, b.id]); }
-    for (r = 1; r <= WEB_RINGS; r++) for (sp = 0; sp < WEB_SPOKES; sp++) {
-      var n = byId['w' + r + '_' + sp];
-      link(n, byId['w' + r + '_' + ((sp + 1) % WEB_SPOKES)]);
-      link(n, r === 1 ? byId.c : byId['w' + (r - 1) + '_' + sp]);
-    }
+    var nodes = [], byId = {}, edges = [];
+    function R(d) { return 70 + d * 64; }
+    function add(n) { n.nb = []; nodes.push(n); byId[n.id] = n; }
+    function link(a, b) { byId[a].nb.push(b); byId[b].nb.push(a); edges.push([a, b]); }
+    add({ id: 'c', x: 0, y: 0, kind: 'h', sec: -1, name: 'The Heart of the Web', desc: 'Everything starts here. Reach outward.', fx: {} });
+    WEB_SECT.forEach(function (S0, i) {
+      var c = -90 + i * 60, si = 0;
+      WEB_T.forEach(function (t) {
+        var a = (c + t[1]) * Math.PI / 180, r = R(t[2]), n = { id: i + ':' + t[0], x: Math.cos(a) * r, y: Math.sin(a) * r, kind: t[3], sec: i };
+        if (t[3] === 's') { var v = S0.small[si++ % S0.small.length]; n.name = S0.name; n.desc = v[0]; n.fx = v[1]; } else { var d = S0[t[0]]; n.name = d[0]; n.desc = d[1]; n.fx = d[2]; }
+        add(n);
+      });
+      WEB_TE.forEach(function (e) { link(i + ':' + e[0], i + ':' + e[1]); });
+      link('c', i + ':e');
+    });
+    WEB_SECT.forEach(function (S0, i) {
+      var j = (i + 1) % WEB_SECT.length, a = (-60 + i * 60) * Math.PI / 180, B = WEB_BRIDGE[i];
+      add({ id: 'x' + i + 'a', x: Math.cos(a) * R(3.2), y: Math.sin(a) * R(3.2), kind: 's', bridge: true, sec: i, sec2: j, name: S0.name + ' / ' + WEB_SECT[j].name, desc: B[0][0], fx: B[0][1] });
+      add({ id: 'x' + i + 'b', x: Math.cos(a) * R(6.6), y: Math.sin(a) * R(6.6), kind: 'b', sec: i, sec2: j, name: B[1][0], desc: B[1][1], fx: B[1][2] });
+      link(i + ':b2', 'x' + i + 'a'); link('x' + i + 'a', j + ':a2'); link(i + ':o2', 'x' + i + 'b'); link('x' + i + 'b', j + ':o1');
+    });
     WEB = { nodes: nodes, byId: byId, edges: edges };
     return WEB;
+  }
+  function webCostN(k, have) { var c = 0; for (var i = 0; i < k; i++) c += 5 + have + i; return c; }
+  // the old ring web is gone: any nodes bought on it are refunded in full (once)
+  function webMigrate() {
+    if (!M || !M.web) return;
+    var W = buildWeb(), old = Object.keys(M.web).filter(function (k) { return !W.byId[k]; });
+    if (!old.length) return;
+    var n = Object.keys(M.web).length, back = webCostN(n, 0);
+    M.web = {}; M.tok = (M.tok || 0) + back; M.webRefund = back; webMemo = null; try { saveMeta(); } catch (e) { }
   }
   function webOwned(id) { return id === 'c' || !!(M.web && M.web[id]); }
   function webN(k) {
     if (typeof M === 'undefined' || !M || !M.web) return ((typeof S !== 'undefined' && S && S.bonus && S.bonus[k]) || 0);
-    if (!webMemo) { webMemo = {}; var W = buildWeb(); Object.keys(M.web).forEach(function (id) { var n = W.byId[id]; if (n && n.type) webMemo[n.type.k] = (webMemo[n.type.k] || 0) + 1; }); }
+    if (!webMemo) { webMigrate(); webMemo = {}; var W = buildWeb(); Object.keys(M.web).forEach(function (id) { var n = W.byId[id]; if (n && n.fx) Object.keys(n.fx).forEach(function (f) { webMemo[f] = (webMemo[f] || 0) + n.fx[f]; }); }); }
     return (webMemo[k] || 0) + ((typeof S !== 'undefined' && S && S.bonus && S.bonus[k]) || 0);
   }
   function webCost() { return 5 + Object.keys(M.web || {}).length; }
   function webAvail(n) { return !webOwned(n.id) && n.nb.some(webOwned); }
+  // shortest path from what you own to a node (the nodes you would claim, in order)
+  function webPath(id) {
+    var W = buildWeb(); if (!W.byId[id] || webOwned(id)) return [];
+    var prev = {}, seen = {}, q = []; W.nodes.forEach(function (n) { if (webOwned(n.id)) { seen[n.id] = 1; q.push(n.id); } });
+    while (q.length) { var x = q.shift(); if (x === id) break; W.byId[x].nb.forEach(function (y) { if (!seen[y]) { seen[y] = 1; prev[y] = x; q.push(y); } }); }
+    var p = [], c = id; while (c && !webOwned(c)) { p.unshift(c); c = prev[c]; } return p;
+  }
   function webBuy(id) {
-    var W = buildWeb(), n = W.byId[id]; if (!n || !webAvail(n)) return false;
-    var c = webCost(); if ((M.tok || 0) < c) return false;
-    M.tok -= c; M.web = M.web || {}; M.web[id] = 1; webMemo = null; saveMeta(); sfx('item'); return true;
+    var p = webPath(id); if (!p.length) return false;
+    var c = webCostN(p.length, Object.keys(M.web || {}).length); if ((M.tok || 0) < c) return false;
+    M.tok -= c; M.web = M.web || {}; p.forEach(function (k) { M.web[k] = 1; }); webMemo = null; saveMeta(); sfx('item'); return true;
   }
   function webPaint() {
     if (!webEl) return;
-    var W = buildWeb(), sv = webEl.querySelector('.webs'), h = '', c = webCost(), tok = M.tok || 0;
-    W.edges.forEach(function (e) { var a = W.byId[e[0]], b = W.byId[e[1]], on = webOwned(a.id) && webOwned(b.id); var mx = (a.x + b.x) / 2 * (a.r === b.r ? 0.9 : 1), my = (a.y + b.y) / 2 * (a.r === b.r ? 0.9 : 1); h += '<path class="we' + (on ? ' on' : '') + '" fill="none" d="M' + a.x.toFixed(1) + ',' + a.y.toFixed(1) + ' Q' + mx.toFixed(1) + ',' + my.toFixed(1) + ' ' + b.x.toFixed(1) + ',' + b.y.toFixed(1) + '"/>'; });
+    var W = buildWeb(), sv = webEl.querySelector('.webs'), h = '', tok = M.tok || 0, have = Object.keys(M.web || {}).length;
+    var path = webPath(webHov || webSel || ''), onP = {}; path.forEach(function (k) { onP[k] = 1; });
+    WEB_SECT.forEach(function (S0, i) {
+      var a0 = (-120 + i * 60) * Math.PI / 180, a1 = (-60 + i * 60) * Math.PI / 180, r = 740, am = (-90 + i * 60) * Math.PI / 180;
+      h += '<path class="wwedge" d="M0,0 L' + (Math.cos(a0) * r).toFixed(1) + ',' + (Math.sin(a0) * r).toFixed(1) + ' A' + r + ',' + r + ' 0 0 1 ' + (Math.cos(a1) * r).toFixed(1) + ',' + (Math.sin(a1) * r).toFixed(1) + ' Z" fill="' + S0.col + '"/>';
+      h += '<text class="wlbl" x="' + (Math.cos(am) * 700).toFixed(1) + '" y="' + (Math.sin(am) * 700 + 10).toFixed(1) + '" fill="' + S0.col + '">' + S0.name.toUpperCase() + '</text>';
+    });
+    W.edges.forEach(function (e) { var a = W.byId[e[0]], b = W.byId[e[1]], on = webOwned(a.id) && webOwned(b.id), pp = !on && (onP[a.id] || webOwned(a.id)) && (onP[b.id] || webOwned(b.id)); h += '<line class="we' + (on ? ' on' : pp ? ' pp' : '') + '" style="--c:' + (b.sec < 0 ? (WEB_SECT[a.sec] || {}).col : WEB_SECT[b.sec].col) + '" x1="' + a.x.toFixed(1) + '" y1="' + a.y.toFixed(1) + '" x2="' + b.x.toFixed(1) + '" y2="' + b.y.toFixed(1) + '"/>'; });
     W.nodes.forEach(function (n) {
-      var own = webOwned(n.id), av = webAvail(n), col = n.type ? n.type.col : '#f6d66a';
-      h += '<g class="wn' + (own ? ' own' : av ? ' av' : ' lk') + (webSel === n.id ? ' sel' : '') + '" data-id="' + n.id + '" style="--c:' + col + '" transform="translate(' + n.x.toFixed(1) + ',' + n.y.toFixed(1) + ')"><circle r="' + (n.id === 'c' ? 20 : 13) + '"/>' + (n.id === 'c' ? '<circle r="9" class="core"/>' : '') + '<circle r="18" class="hit"/></g>';
+      var own = webOwned(n.id), av = webAvail(n), col = n.sec < 0 ? '#f6d66a' : WEB_SECT[n.sec].col, cls = 'wn k-' + n.kind + (n.bridge ? ' br' : '') + (own ? ' own' : av ? ' av' : ' lk') + (onP[n.id] ? ' pp' : '') + (webSel === n.id ? ' sel' : '');
+      var shape = n.kind === 'h' ? '<circle r="30"/><circle r="12" class="core"/>' : n.kind === 'k' ? '<circle r="34" class="ring"/><circle r="26"/><circle r="10" class="core"/>' : n.kind === 'n' ? '<circle r="18"/><circle r="7" class="core"/>' : n.kind === 'b' ? '<rect x="-14" y="-14" width="28" height="28" transform="rotate(45)"/><circle r="5" class="core"/>' : '<circle r="' + (n.bridge ? 9 : 10) + '"/>';
+      h += '<g class="' + cls + '" data-id="' + n.id + '" style="--c:' + col + '" transform="translate(' + n.x.toFixed(1) + ',' + n.y.toFixed(1) + ')">' + shape + '<circle r="' + (n.kind === 'k' ? 36 : n.kind === 's' ? 18 : 24) + '" class="hit"/></g>';
     });
     sv.innerHTML = h;
     var n = webSel && W.byId[webSel], info = webEl.querySelector('.webinfo .wi'), btn = webEl.querySelector('#webBuy');
     webEl.querySelector('.webtok b').textContent = tok;
-    if (!n) { info.innerHTML = '<b>The Web of Bones</b><span class="muted">Spend Knucklebones to claim a node beside one you own. Each costs one more than the last. Tap a node.</span>'; btn.hidden = true; return; }
-    if (n.id === 'c') { info.innerHTML = '<b>The Heart of the Web</b><span class="muted">Everything starts here. Reach outward.</span>'; btn.hidden = true; return; }
-    var own = webOwned(n.id), av = webAvail(n);
-    info.innerHTML = '<b style="color:' + n.type.col + '">' + n.type.name + '</b><span>' + n.type.desc + '</span><span class="muted">' + (own ? 'Claimed.' : av ? 'Cost: ' + c + ' Knucklebones.' : 'Out of reach. Claim a node beside it first.') + '</span>';
-    btn.hidden = own || !av; btn.disabled = tok < c; btn.textContent = tok < c ? 'Need ' + c : 'Claim it (' + c + ')';
+    var refund = M.webRefund ? '<span class="good">The web has been rewoven. Every Knucklebone you spent on the old web is back in your pouch (+' + M.webRefund + ').</span>' : '';
+    if (!n) { info.innerHTML = '<b>The Web of Bones</b><span class="muted">Six paths: gold, rarity, seals, dice, defence and attack. Small nodes give +1%; the large ones take a few steps to reach. Tap a node: you claim the shortest path to it.</span>' + refund; btn.hidden = true; return; }
+    if (n.id === 'c') { info.innerHTML = '<b>' + n.name + '</b><span class="muted">' + n.desc + '</span>'; btn.hidden = true; return; }
+    var own = webOwned(n.id), c = webCostN(path.length, have), kind = n.kind === 'k' ? 'Keystone' : n.kind === 'n' ? 'Notable' : n.kind === 'b' ? 'Border notable' : n.bridge ? 'Border node' : '';
+    info.innerHTML = '<b style="color:' + WEB_SECT[n.sec].col + '">' + n.name + (kind ? ' <small class="muted">' + kind + '</small>' : '') + '</b><span>' + n.desc + '</span><span class="muted">' + (own ? 'Claimed.' : 'Path: ' + path.length + ' node' + (path.length === 1 ? '' : 's') + ', ' + c + ' Knucklebones.') + '</span>';
+    btn.hidden = own; btn.disabled = tok < c; btn.textContent = tok < c ? 'Need ' + c : (path.length > 1 ? 'Claim the path (' + c + ')' : 'Claim it (' + c + ')');
   }
   function openWeb() {
     if (webEl) return;
-    audInit(); var W = buildWeb();
+    audInit(); webMigrate(); buildWeb();
     webEl = document.createElement('div'); webEl.className = 'webmodal';
-    webEl.innerHTML = '<div class="webbar"><b class="webtitle">The Web of Bones</b><span class="webtok"><span class="boneic">' + BONE_ART + '</span><b>0</b> Knucklebones</span><button type="button" class="btn torch" id="webClose">Close</button></div><div class="webscroll"><svg class="webs" viewBox="-566 -566 1132 1132" preserveAspectRatio="xMidYMid meet"></svg></div><div class="webinfo"><div class="wi"></div><button type="button" class="btn torch" id="webBuy" hidden>Claim it</button></div>';
+    webEl.innerHTML = '<div class="webbar"><b class="webtitle">The Web of Bones</b><span class="webtok"><span class="boneic">' + BONE_ART + '</span><b>0</b> Knucklebones</span><button type="button" class="btn torch" id="webClose">Close</button></div><div class="webscroll"><svg class="webs" viewBox="-760 -760 1520 1520" preserveAspectRatio="xMidYMid meet"></svg></div><div class="webinfo"><div class="wi"></div><button type="button" class="btn torch" id="webBuy" hidden>Claim it</button></div>';
     document.documentElement.appendChild(webEl);
-    var sc = webEl.querySelector('.webscroll'); webSel = null; webPaint();
+    webSel = null; webHov = null; webPaint(); M.webRefund = 0;
     webEl.querySelector('#webClose').addEventListener('click', closeWeb);
     webEl.querySelector('#webBuy').addEventListener('click', function () { if (webSel && webBuy(webSel)) webPaint(); });
-    webEl.querySelector('.webs').addEventListener('click', function (e) { var g = e.target.closest ? e.target.closest('.wn') : null; if (!g) return; webSel = g.getAttribute('data-id'); sfx('tick'); webPaint(); });
+    var sv = webEl.querySelector('.webs');
+    sv.addEventListener('click', function (e) { var g = e.target.closest ? e.target.closest('.wn') : null; if (!g) return; webSel = g.getAttribute('data-id'); sfx('tick'); webPaint(); });
+    sv.addEventListener('pointerover', function (e) { var g = e.target.closest ? e.target.closest('.wn') : null, id = g ? g.getAttribute('data-id') : null; if (id !== webHov) { webHov = id; webPaint(); } });
+    sv.addEventListener('pointerleave', function () { if (webHov) { webHov = null; webPaint(); } });
     sfx('click');
   }
   function closeWeb() { if (webEl && webEl.parentNode) webEl.parentNode.removeChild(webEl); webEl = null; webSel = null; }
@@ -11561,16 +11710,18 @@ BOSS_PORTRAITS.collector = {"normal":"data:image/webp;base64,UklGRpxRAABXRUJQVlA
     return '<p class="bonesline"><span class="boneic">' + BONE_ART + '</span> Knucklebones gathered: <b>+' + (S.tokGot || 0) + '</b> <span class="muted">(' + (M.tok || 0) + ' in your pouch)</span></p>';
   }
   function endHTML() {
-    var p = S.player, won = S.endKind === 'won', quit = S.endKind === 'quit';
-    if (S.endKind === 'ruin') return '<section class="panel ruinend"><img class="ruinart" alt="" draggable="false" src="' + RUIN_ART + '"><h2 class="nodice">' + titleText(CHASER.name, 70) + '</h2><p class="muted">The gambler always loses in the end. You reached floor ' + S.floorNum + '.</p>' +
-      '<p>Level ' + p.level + ' · ' + p.xp + ' XP · ' + p.dice.length + ' max dice · <span class="gold">' + p.gold + ' gold</span></p><p>Foes slain this run: <span class="pts">' + (S.runWins || 0) + '</span></p>' + bankTokens() +
-      '<div class="row"><button type="button" class="btn torch" data-act="again">Crawl again</button><button type="button" class="btn" data-act="web">Web of Bones</button><button type="button" class="btn" data-act="toTitle">Menu</button></div></section>';
-    return '<section class="panel plainend" style="--endbg: url(' + END_STONE + ');"><div class="endmark ' + (won ? 'win' : 'lose') + '">' + icon(won ? 'crown' : 'skull', 64) + '</div>' + (won ? '<h2>The crawl is yours</h2>' : quit ? '<h2>You fled</h2>' : '<h2 class="nodice">No dice</h2>') +
-      '<p class="muted">' + (won ? 'The House folds. Nobody has bluffed their way this high before.' : quit ? 'You left the dungeon alive. You reached floor ' + S.floorNum + '.' : 'The dungeon keeps your bluffs. You reached floor ' + S.floorNum + '.') + '</p>' +
-      '<p>Level ' + p.level + ' · ' + p.xp + ' XP · ' + p.dice.length + ' max dice · <span class="gold">' + p.gold + ' gold</span></p>' +
-      '<p>Foes slain this run: <span class="pts">' + (S.runWins || 0) + '</span></p>' + bankTokens() +
-      '<div class="row"><button type="button" class="btn torch" data-act="again">Crawl again</button><button type="button" class="btn" data-act="web">Web of Bones</button><button type="button" class="btn" data-act="toTitle">Menu</button></div></section>';
+    // the end of a run in the encounter-window art (2026-10-10): your portrait in its dead / victorious state, the verdict on the plaque, the run in the tray
+    var p = S.player, won = S.endKind === 'won', quit = S.endKind === 'quit', ruin = S.endKind === 'ruin';
+    var PP = PORTRAITS[S.cls || 'fighter'] || PORTRAITS.fighter;
+    var port = ruin ? '<img alt="" src="' + RUIN_ART + '">' : '<img alt="" src="' + (won ? PP.win : quit ? PP.normal : PP.dead) + '">';
+    var title = ruin ? CHASER.name : won ? 'The crawl is yours' : quit ? 'You fled' : 'No dice';
+    var flav = ruin ? 'The gambler always loses in the end. You reached floor ' + S.floorNum + '.' : won ? 'The House folds. Nobody has bluffed their way this high before.' : quit ? 'You left the dungeon alive. You reached floor ' + S.floorNum + '.' : 'The dungeon keeps your bluffs. You reached floor ' + S.floorNum + '.';
+    var tray = '<div class="endstats"><p>Level ' + p.level + ' · ' + p.xp + ' XP · ' + p.dice.length + ' max dice · <span class="gold">' + p.gold + ' gold</span></p>' +
+      '<p>Foes slain this run: <span class="pts">' + (S.runWins || 0) + '</span></p>' + bankTokens() + '</div>';
+    var foot = '<div class="row"><button type="button" class="btn torch" data-act="again">Crawl again</button><button type="button" class="btn" data-act="web">Web of Bones</button><button type="button" class="btn" data-act="toTitle">Menu</button></div>';
+    return encWinHTML({ variant: won ? 'green' : quit ? 'brown' : 'red', cls: 'endwin' + (won ? ' endwon' : ' endlost'), title: title, flav: flav, tray: tray, foot: foot, portHTML: port });
   }
+
 
   // ---------- dice animation ----------
   function setFace(el, v) {
@@ -12511,7 +12662,7 @@ BOSS_PORTRAITS.collector = {"normal":"data:image/webp;base64,UklGRpxRAABXRUJQVlA
       try { pos = JSON.parse(localStorage.getItem('lcDevPos') || 'null'); } catch (e) { }
       btn.type = 'button'; btn.id = 'devbtn'; btn.textContent = 'Dev tools'; btn.hidden = true;
       menu.id = 'devmenu'; menu.hidden = true; tag.id = 'devloop'; tag.hidden = true;
-      menu.innerHTML = '<button type="button" data-dev="loop">Current loop</button><button type="button" data-dev="evlog">Event log</button><button type="button" data-dev="floor">Advance floor</button><button type="button" data-dev="gold">Gain gold</button><button type="button" data-dev="xp">Gain XP</button><button type="button" data-dev="rpt">Preview battle report</button><button type="button" data-dev="tutreset">Reset tutorials</button>';
+      menu.innerHTML = '<button type="button" data-dev="loop">Current loop</button><button type="button" data-dev="evlog">Event log</button><button type="button" data-dev="floor">Advance floor</button><button type="button" data-dev="f2">Warp to floor 2</button><button type="button" data-dev="f3">Warp to floor 3</button><button type="button" data-dev="f4">Warp to floor 4</button><button type="button" data-dev="pseals">Seals</button><button type="button" data-dev="pdice">Dice</button><button type="button" data-dev="prelics">Relics</button><button type="button" data-dev="gold">Gain gold</button><button type="button" data-dev="xp">Gain XP</button><button type="button" data-dev="rpt">Preview battle report</button><button type="button" data-dev="tutreset">Reset tutorials</button>';
       var evBox = document.createElement('pre'); evBox.id = 'devev'; evBox.hidden = true; document.documentElement.appendChild(evBox);
       window.dlog = function (m) { if (!window.__evlog) return; var a = (window.__evl = window.__evl || []); a.push(m); if (a.length > 14) a.shift(); evBox.textContent = a.join('\n'); };
       ['pointerdown', 'pointerup', 'pointercancel', 'dragstart', 'mousedown', 'mouseup'].forEach(function (t) { document.addEventListener(t, function (e) { var el = e.target; window.dlog && window.dlog(t + ' ' + (el && el.className && el.className.baseVal === undefined ? String(el.className).slice(0, 28) : (el && el.tagName)) + ' b' + (e.button !== undefined ? e.button : '') + ' bs' + (e.buttons !== undefined ? e.buttons : '')); }, true); });
@@ -12532,6 +12683,8 @@ BOSS_PORTRAITS.collector = {"normal":"data:image/webp;base64,UklGRpxRAABXRUJQVlA
         var b = e.target.closest && e.target.closest('button[data-dev]'); if (!b || !S || !S.player) return; var k = b.getAttribute('data-dev'), p = S.player;
         if (k === 'evlog') { window.__evlog = !window.__evlog; b.classList.toggle('on', window.__evlog); evBox.hidden = !window.__evlog; return; }
         if (k === 'loop') { showLoop = !showLoop; b.classList.toggle('on', showLoop); sync(); return; }
+        if (k === 'pseals' || k === 'pdice' || k === 'prelics') { menu.hidden = true; devPick(k.slice(1)); return; }
+        if (/^f[234]$/.test(k)) { menu.hidden = true; var want = +k.slice(1); clearTimeout(timer); C = null; if (!S.player) startRun(); S.event = null; S.forge = null; S.upgrade = null; S.victory = null; S.finalShop = false; S.pending = 0; S.floorNum = Math.min(S.floorNum, want - 1); while (S.floorNum < want - 1) descend(); descend(); return; }   // warp to the start of that floor (dev tools)
         if (k === 'floor') { menu.hidden = true; if (S.screen === 'combat') { try { C = null; } catch (er) { } } descend(); return; }
         if (k === 'gold') { p.gold += 100; sfx('coin'); render(); return; }
         if (k === 'tutreset') { try { localStorage.removeItem('lc_sealtut'); localStorage.removeItem('lc_welcome'); localStorage.removeItem('lc_ptkseen'); localStorage.removeItem('lc_fighttut'); localStorage.removeItem('lc_tossed'); localStorage.removeItem('lc_relictut'); localStorage.removeItem('lc_satchel'); SATCHEL_UNLOCK = SATCHEL_ON = false; } catch (er) { } sfx('click'); b.textContent = 'Tutorials reset'; setTimeout(function () { b.textContent = 'Reset tutorials'; }, 1500); return; }
@@ -12724,6 +12877,9 @@ BOSS_PORTRAITS.collector = {"normal":"data:image/webp;base64,UklGRpxRAABXRUJQVlA
   (function () {
     var WIN_X = [
       { sel: '#settings .setbox', find: '#setClose' },
+      { sel: '#devpick .dpbox', find: '#devpick .dpclose' },
+      { sel: '#app .scene.sc-contract', fn: function () { try { ctRefuse(); setTimeout(function () { try { ctDone(); } catch (e) { } }, 900); } catch (e) { } } },   // the X refuses the deal and carries on
+      { sel: '#savedlg .savebox', find: '#savedlg .savex' },
       { sel: '#rulesModal .setbox', find: '#rulesClose' },
       { sel: '#jukeModal .setbox', find: '#jukeClose' },
       { sel: '.papermodal .setbox', find: '[data-act*="lose"],[data-act*="paper"]', back: true },

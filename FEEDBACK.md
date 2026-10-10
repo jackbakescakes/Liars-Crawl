@@ -392,3 +392,22 @@ The "Skip" button (`.rp-skip`, `data-act="rptSkip"`) is no longer drawn on the b
 - Croupier + Collector fight: the first foe is no longer pulled into the player's column (it covered the Croupier's dice); both foes now sit side by side.
 - Baby die tooltip now says how many of its number you rolled (wilds counted), like other dice.
 - Dice tray (`trayFit`): past 12 dice the rows of 6 shrink so every row fits the old two-row height; the portrait, XP bar and deck never move (user picked this over 9-wide rows). A third full-size row had pushed the portrait/XP bar up under the bid buttons and made the UI jump.
+
+## 2026-10-10 visual sweep (every screen at 1776x870) — uncommitted
+Fixed:
+- Title: the Code button floated at the top of the card; now sits between Web and Help (Continue run sits above Enter the tavern).
+- Encounter plaque titles: first letter hidden by the blood splash on the plaque (The Black Market, Victor's Stall, Blood Anvil, Tinker with a die...): titles keep 150px clear.
+- Scratch Card banner title wrapped onto a second line outside the banner: now shrinks on one line.
+- Victor's Stall button row overflowed the window: "Head for the stairs" -> "To the stairs".
+- Web of Bones: the two path names ran into each other: they wrap now.
+- The Blood Anvil had an empty parchment: flavour text added.
+- Old Pasteboard (card dealer): cards were shrunk unreadable: it uses the tall slot-size window now.
+- Slot machine window: the HUD peeked out around its edges: hidden while it is open.
+- Die reforged popup: face strip was tiny: bigger.
+- Save code dialog uses the standard red X.
+- Disabled buttons in encounter windows (Roll the dice, Buy) were nearly invisible: more opaque.
+- Two-or-more-foe fights (Hellions, Remnants, Croupier+Collector): the table and Liar/Spot On/Buck row were no longer placed after the side-by-side change and overlapped the XP bar: placed again between the foes and the XP bar.
+Not changed (noted): small roll-event windows have left-aligned, edge-to-edge rule text; Pawnbroker/Peddler/Goblin body text is large and left-aligned; Contract Demon offer has no red X (decision popup); end screens are still the old panel; floor 4 map opens on a dark empty view.
+- 19:07 batch: dice-roll event rules centred (`p.evrule`); Pawnbroker / Bone Peddler / Goblin's Bargain offer text smaller and centred (`.evoffer`); Contract Demon's offer has a red X (refuses and carries on); end screens (No dice / The crawl is yours / You fled / Gambler's Ruin) rebuilt in the encounter-window art with the class portrait (dead / win / normal) or the Ruin art; floor 4 map parked (user will design it later).
+- Dev tools: Warp to floor 2 / 3 / 4 (fresh map at the start of that floor, keeps your character); Seals (pick a seal, click dice to apply as often as you like); Dice (add a d6/d8/d10/d12/d20 to your cup); Relics (take any relic). Picker window `#devpick` with red X.
+- Web of Bones v2 (from the prototype artifact https://claude.ai/artifact/18RbPVHRP6KcFW8enbS1mf): six wedges (Magpie gold, Pawnbroker rarity, Waxwright seals, Carver dice, Callused Hide defence, Headsman attack), +1% small nodes, 3 notables + 1 keystone per wedge, border nodes between wedges. Click a node = claim the shortest path (cost 5 + nodes owned, per node). Old ring-web nodes are refunded in full once (`webMigrate`, note shown in the web). Code: `WEB_SECT`, `WEB_BRIDGE`, `WEB_T/WEB_TE` (wedge shape), `buildWeb`, `webN(key)` sums node `fx`. Effects wired: gold, price, luck (rarity), reroll, sdrop, sdrop2, sealfate, signet, ddrop (+oddangles, inked), dprice, cupx, deeppockets, block, ironskin, shielddrill/bulwarkw (`p.bankShield`, lasting shields added to C.shield each fight, lost when broken), double, liarx, crit, headsman, firstblood, nestegg, tithe, hoard, chestx, shelf, collector, fence, waxcol, spareribs, riposte, bounty. Balance not tuned yet (user will revisit).
