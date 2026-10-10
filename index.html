@@ -7779,7 +7779,7 @@ body:not([data-screen="title"]):not([data-screen="char"]):not([data-screen="rule
     if (wiped) { render(); return; }
     setSel(); render();
   }
-  // BIG BIG: ten or more of any one number (wilds count) wrecks the table for 10 damage
+  // BIG BIG: ten or more of one number (natural faces only), or ten wilds, explodes the table for BIGBIG_DMG damage
 
   // small bonuses for a lucky roll (wilds never count): a straight (1 to 6 all showing) or five of one face (or five natural wilds; baby dice count) each pay 10 gold
   function rollBonusCheck() {
@@ -7825,17 +7825,20 @@ body:not([data-screen="title"]):not([data-screen="char"]):not([data-screen="rule
       setTimeout(function () { if (fx.parentNode) fx.parentNode.removeChild(fx); }, 3000);
     } catch (e) { }
   }
+  var BIGBIG_DMG = 1;   // was 10 (user, 2026-10-10)
   function bigBigCheck() {
     if (!C || C.phase !== 'bid' || C.bigRound === C.round || C.en.n <= 0) return false;
     var vals = C.pv.map(function (x) { return x.val; }), f, hit = 0;
-    for (f = 1; f <= 6; f++) if (countFace(vals, f) >= 10) { hit = f; break; }
+    // natural faces only: wilds no longer count towards a number, but ten wilds is a Big Big of its own (user, 2026-10-10)
+    for (f = 1; f <= 6; f++) if (vals.filter(function (v) { return v === f; }).length >= 10) { hit = f; break; }
+    if (!hit && vals.filter(function (v) { return v === 0; }).length >= 10) hit = 'w';
     if (!hit) return false;
     C.bigRound = C.round;
     if (!M.seenBig) { M.seenBig = true; saveMeta(); }
-    var left = 10, i, firstPart = -1;
-    for (i = 0; i < C.en.dice.length && left > 0; i++) { var pi0 = C.en.owner[i]; if (destroyEnemyDie(i)) { left--; if (firstPart < 0) firstPart = pi0; if (left === 9) C.smiteFx = { i: i, t0: Date.now() }; } }
-    C.log.push('BIG BIG! Ten or more of your dice agree on ' + fico(hit) + ' (wilds count). The table explodes for 10 damage.');
-    if (firstPart > -1) C.foeDmg = { part: firstPart, text: '\u221210', crit: true, t0: Date.now() };
+    var left = BIGBIG_DMG, i, firstPart = -1;
+    for (i = 0; i < C.en.dice.length && left > 0; i++) { var pi0 = C.en.owner[i]; if (destroyEnemyDie(i)) { left--; if (firstPart < 0) firstPart = pi0; if (left === BIGBIG_DMG - 1) C.smiteFx = { i: i, t0: Date.now() }; } }
+    C.log.push('BIG BIG! Ten or more of your dice show ' + (hit === 'w' ? wico(20) : fico(hit)) + '. The table explodes for ' + BIGBIG_DMG + ' damage.');
+    if (firstPart > -1) C.foeDmg = { part: firstPart, text: '\u2212' + BIGBIG_DMG, crit: true, t0: Date.now() };
     bigBigFx();
     if (foeWiped()) C.winNote = ['BIG BIG', 'The table explodes. Nothing is left standing.'];
     return true;
@@ -7850,7 +7853,7 @@ body:not([data-screen="title"]):not([data-screen="char"]):not([data-screen="rule
         h += '<u style="--dx:' + Math.round(Math.cos(a) * dist) + 'px;--dy:' + Math.round(Math.sin(a) * dist) + 'px;--s:' + (6 + rnd(14)) + 'px;--c:' + cols[rnd(7)] + ';--d:' + (rnd(500) / 1000).toFixed(2) + 's"></u>';
       }
       for (k = 0; k < 60; k++) h += '<u class="fall" style="left:' + rnd(100) + '%;--s:' + (6 + rnd(12)) + 'px;--c:' + cols[rnd(7)] + ';--d:' + (rnd(1400) / 1000).toFixed(2) + 's"></u>';
-      host.innerHTML = '<i class="bb-flash"></i><i class="bb-rays"></i><i class="bb-ring"></i><i class="bb-ring r2"></i>' + h + '<div class="bb-txt"><b>BIG BIG!</b><small>10 damage</small></div>';
+      host.innerHTML = '<i class="bb-flash"></i><i class="bb-rays"></i><i class="bb-ring"></i><i class="bb-ring r2"></i>' + h + '<div class="bb-txt"><b>BIG BIG!</b><small>' + BIGBIG_DMG + ' damage</small></div>';
       document.documentElement.appendChild(host);
       if (!REDUCED) { document.body.classList.add('bbcrazy'); setTimeout(function () { document.body.classList.remove('bbcrazy'); }, 1900); }
       setTimeout(function () { if (host.parentNode) host.parentNode.removeChild(host); }, 3800);
@@ -10619,7 +10622,7 @@ BOSS_PORTRAITS.collector = {"normal":"data:image/webp;base64,UklGRpxRAABXRUJQVlA
       '<div class="card"><h3>Rarity</h3><p>How likely shops are to offer rarer relics, cards and seals. It also lifts the odds of a slain foe dropping its seal. Upgrade the Black Market to raise it; Haggler dice, the Grave Robber, the Tarnished Crown and the Web of Bones add to it too. Wandering merchants, the Bone Peddler and the card dealer all sell better wares as it rises.</p></div>' +
       '<div class="card"><h3>Grow stronger</h3><p>Win fights for XP and gold. Sharpen your dice and keep descending, or die trying.</p></div></div>' +
       secretRule('Soul Rend', !!M.seenSoul, 'Some things cannot be explained to someone who has not felt them tear.', '<div class="card"><h3>Soul Rend</h3><p>If the dice in your hand add up to 50 or more (a wild counts as 6, and the extra sides of a bigger die count as their number), a spell appears. Drag its arrow onto an enemy die, or tap it then tap a die. That die is destroyed for good and you steal its seals, then place them on your dice as you choose. Once per round.</p></div>') +
-      secretRule('Big Big', !!M.seenBig, 'A rumour the dice only whisper to those who have already heard it roar.', '<div class="card"><h3>Big Big</h3><p>If ten or more of your dice show the same number, wilds included, the table explodes. The enemy takes 10 damage at once.</p></div>');
+      secretRule('Big Big', !!M.seenBig, 'A rumour the dice only whisper to those who have already heard it roar.', '<div class="card"><h3>Big Big</h3><p>If ten or more of your dice show the same number, or ten of them are wild, the table explodes. Wilds do not count towards a number. The enemy takes 1 damage.</p></div>');
   }
   function keyRow(art, name, txt) { return '<div class="keyrow"><span class="ki">' + art + '</span><p><b>' + name + '</b>' + (txt ? ' ' + txt : '') + '</p></div>'; }
   function inkImg(k) { return '<img class="keyink" alt="" src="' + MAPINK[k] + '">'; }
