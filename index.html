@@ -4767,6 +4767,26 @@ body:not([data-screen="title"]):not([data-screen="char"]):not([data-screen="rule
   .wn.own > :not(.hit):not(.core):not(.ring) { fill: var(--c); stroke: #fff3c4; stroke-width: 3; }
   .wn.lk { opacity: .6; } .wn .core { fill: var(--c); opacity: .6; stroke: none; } .wn.own .core { fill: #fff6dc; opacity: .9; } .wn.k-h .core { fill: #f6d66a; opacity: 1; }
   .wn.sel > :not(.hit):not(.core):not(.ring) { stroke: #fff; stroke-width: 5; }
+
+  /* Move / Merge (2026-10-10) */
+  #diechoice { position: fixed; inset: 0; z-index: 99980; }
+  #diechoice .dcbox { position: fixed; padding: 30px 34px 18px; background: linear-gradient(180deg, #2a1c12, #17100b); border: 3px solid #0b0a09; outline: 3px solid #6a4408; outline-offset: -7px; border-radius: 8px; box-shadow: 0 8px 22px rgba(0,0,0,.6); text-align: center; }
+  #diechoice .dcrow { display: flex; gap: 14px; justify-content: center; }
+  #diechoice .btn { min-width: 118px; font-size: 20px; padding: 10px 14px; display: flex; flex-direction: column; align-items: center; line-height: 1.1; }
+  #diechoice .btn small { font-size: 13px; opacity: .85; margin-top: 2px; }
+  #diechoice .dchint { margin: 10px 0 0; font-size: 15px; color: #c8b48a; }
+  html #iconlayer .fibag.dieglow { filter: drop-shadow(0 0 8px #fff3c4) drop-shadow(0 0 18px #f6d66a) drop-shadow(0 0 30px #ffb347); animation: dieglowp .8s ease-in-out infinite alternate; }
+  @keyframes dieglowp { from { scale: 1; } to { scale: 1.08; } }
+  html body .mergeok { filter: drop-shadow(0 0 6px #fff3c4) drop-shadow(0 0 14px #f6d66a); }
+  html body .mergeok .die { outline: 3px solid #f6d66a; outline-offset: 2px; }
+  #seallayer .looseseal.loosedie { width: 72px; height: 72px; display: flex; align-items: center; justify-content: center; background: none; border: 0; filter: drop-shadow(0 4px 6px rgba(0,0,0,.6)); }
+  .mergefx { position: fixed; inset: 0; z-index: 99970; pointer-events: none; }
+  .mergefx .mergeghost { position: fixed; display: flex; align-items: center; justify-content: center; }
+  .mergefx .mergeflash { position: fixed; width: 30px; height: 30px; margin: -15px 0 0 -15px; border-radius: 50%; background: radial-gradient(circle, #fff 0, #fff3c4 30%, rgba(246,214,106,.7) 55%, rgba(246,214,106,0) 72%); animation: mergeflash .6s ease-out forwards; }
+  @keyframes mergeflash { from { transform: scale(.4); opacity: 1; } to { transform: scale(9); opacity: 0; } }
+  .mergelbl { position: fixed; z-index: 99975; transform: translate(-50%, -100%); pointer-events: none; font: 700 34px/1 var(--display, monospace); color: #fff3c4; text-shadow: 0 0 8px #f6d66a, 0 3px 0 #3a2410, 0 0 2px #000; animation: mergelbl 1.3s ease-out forwards; }
+  @keyframes mergelbl { 0% { opacity: 0; translate: 0 10px; scale: .6; } 20% { opacity: 1; translate: 0 0; scale: 1.15; } 70% { opacity: 1; scale: 1; } 100% { opacity: 0; translate: 0 -24px; } }
+  html #diechoice .winx { width: 34px !important; height: 34px !important; top: -14px; right: -14px; }
 </style>
 
 <main class="wrap">
@@ -6388,7 +6408,7 @@ body:not([data-screen="title"]):not([data-screen="char"]):not([data-screen="rule
   function kindCls(key) { var k = kindOf(key); return k ? ' k-' + k : ''; }
   var MAX_DICE = 12;   // two rows of six (user 2026-10-10: was 16)
   var HEAVY_FLOOR = 3;   // enemies on this floor hit for 1 more: 2 for a lost Liar, 3 for a Spot On (user 2026-10-10)
-  function maxDice() { return MAX_DICE + webN('cupx'); }   // the Bottomless Cup (+2, 'satchel') is out of the relic pools since the cap went to 12: a third row of dice does not fit. Spare Knuckles (web, cupx) can still make it 13: past 12 trayFit shrinks the rows
+  function maxDice() { return MAX_DICE; }   // hard cap: a third row of dice does not fit. The Bottomless Cup (+2, 'satchel') is out of the relic pools; Spare Knuckles (web, cupx) gives armour at a full cup instead (user 2026-10-10)
   var ABIL = {
     peek: { name: 'Carrion Eye', desc: '+1 peek per fight. Look at one of the enemy’s dice.', max: 3 },
     reroll: { name: 'Bone Shake', desc: '+1 reroll per fight.', max: 3 },
@@ -6517,11 +6537,21 @@ body:not([data-screen="title"]):not([data-screen="char"]):not([data-screen="rule
   }
   function heal(p, n) { var h = 0; p.dice.forEach(function (d) { if (!d.up && !d.stolen && h < n) { d.up = true; h++; } }); return h; }
   function returnStolen() { if (S.player) S.player.dice.forEach(function (d) { if (d.stolen) { d.stolen = false; d.up = true; } }); }
-  function addD20(p) { if (p.gotD20 || p.dice.length >= maxDice()) return false; var d = newDie(); for (var k = 0; k < 4; k++) d.mods.push('poly'); p.dice.push(d); p.gotD20 = true; return true; }
+  function addD20(p) { if (p.gotD20) return false; var d = newDie(); for (var k = 0; k < 4; k++) d.mods.push('poly'); p.gotD20 = true; if (p.dice.length >= maxDice()) return spareDie(p, d); p.dice.push(d); return true; }
   function addDice(p, n) { var k = 0; while (k < n && addMaxDie(p)) k++; return k; }
   // a die with more sides: each 'poly' seal is one stage (d8 = 1, d10 = 2, d12 = 3, d20 = 4)
-  function addPolyDie(p, sides) { if (p.dice.length >= maxDice()) return false; var d = newDie(); for (var k = 0; k < Math.max(1, POLY_SIDES.indexOf(sides)); k++) d.mods.push('poly'); p.dice.push(d); return true; }
-  function addMaxDie(p) { if (p.dice.length >= maxDice()) return false; p.dice.push(newDie()); return true; }
+  function addPolyDie(p, sides) { var d = newDie(); for (var k = 0; k < Math.max(1, POLY_SIDES.indexOf(sides)); k++) d.mods.push('poly'); if (p.dice.length >= maxDice()) return spareDie(p, d); p.dice.push(d); return true; }
+  function addMaxDie(p) { if (p.dice.length >= maxDice()) return spareDie(p, newDie()); p.dice.push(newDie()); return true; }
+  // cup full (user 2026-10-10): a new die does not vanish or turn to gold; it waits as a spare die on the screen (or in the satchel).
+  // Drag it onto a die in your cup to Move it in (that die becomes the spare) or Merge the two. Getting one switches the satchel on.
+  function spareDie(p, d) {
+    if (!S || p !== S.player) return false;
+    S.loose = S.loose || []; var n = S.loose.filter(function (q) { return q.die && !q.bag; }).length;
+    S.loose.push({ id: ++LOOSE_ID, die: d, x: 0.88, y: Math.min(0.85, 0.5 + 0.1 * n) });
+    if (!SATCHEL_ON) { SATCHEL_ON = true; try { localStorage.setItem('lc_satchel', '1'); } catch (e) { } }
+    try { sfx('item'); } catch (e) { } setTimeout(function () { try { sealLayerSync(); iconLayerSync(); } catch (e) { } }, 0);
+    return true;
+  }
   function floorCfg() { return FLOORS[S.floorNum - 1]; }
 
   // ---------- floor ----------
@@ -7258,7 +7288,7 @@ body:not([data-screen="title"]):not([data-screen="char"]):not([data-screen="rule
     if (def.group) { var gN = def.group.min + rnd(def.group.max - def.group.min + 1); parts = []; for (var gi = 0; gi < gN; gi++) parts.push({ name: def.name, n: def.group.dice, def: def }); }   // swarm members all carry the monster's own name (user, 2026-10-10)
     parts.forEach(function (pt) { pt.n0 = pt.n; pt.armour = pt.def.armour || 0; pt.dm = genEnemyDm(pt.def, pt.n); if (pt.def.dropRandom) { var fm = []; pt.dm.forEach(function (l) { l.forEach(function (m) { fm.push(m); }); }); if (fm.length) pt.def.drop = fm[rnd(fm.length)]; } pt.gain = 0; pt.regen = 0; pt.berserk = S.floorNum === 4; pt.berserkOn = false; pt.heavy = S.floorNum === HEAVY_FLOOR; });
     C = { bubble: null, node: node, def: def, berserk: false, speaker: -1, en: { n: def.group ? parts.reduce(function (a, x) { return a + x.n; }, 0) : def.dice, dice: [], owner: [], dmc: [], peeked: {}, smote: {}, bleached: {}, parts: parts }, round: 0, bid: null, turn: 'p', opener: 'p', phase: 'bid',
-      pbids: [], hist: [], shield: (own('shield') ? (own('bulwark') ? 3 : 1) : 0) + (webN('ironskin') ? 1 : 0) + (p.bankShield || 0) + tnN('armour'), charges: { peek: p.ab.peek + (itm('peek') ? 1 : 0) + tnN('peek') + ((S.stash || {}).peek || 0), reroll: p.ab.reroll + (itm('reroll') ? 1 : 0) + tnN('reroll') + ((S.stash || {}).reroll || 0), coin: itm('coin') ? 1 : 0, buck: 1, bless: 0, smite: 0 }, target: null, sel: { qty: 1, face: 1 }, result: null, log: [], pv: [], anim: null, fx: {} };
+      pbids: [], hist: [], shield: (own('shield') ? (own('bulwark') ? 3 : 1) : 0) + (webN('ironskin') ? 1 : 0) + (p.bankShield || 0) + tnN('armour') + (webN('cupx') && p.dice.length >= MAX_DICE ? 1 : 0), charges: { peek: p.ab.peek + (itm('peek') ? 1 : 0) + tnN('peek') + ((S.stash || {}).peek || 0), reroll: p.ab.reroll + (itm('reroll') ? 1 : 0) + tnN('reroll') + ((S.stash || {}).reroll || 0), coin: itm('coin') ? 1 : 0, buck: 1, bless: 0, smite: 0 }, target: null, sel: { qty: 1, face: 1 }, result: null, log: [], pv: [], anim: null, fx: {} };
     C.base = { peek: p.ab.peek + (itm('peek') ? 1 : 0), reroll: p.ab.reroll + (itm('reroll') ? 1 : 0) };
     ['peek', 'reroll'].forEach(function (k) { if (C.charges[k] > CHARGE_MAX[k]) { var over = C.charges[k] - CHARGE_MAX[k]; C.charges[k] = CHARGE_MAX[k]; if (S.stash) S.stash[k] = Math.max(0, (S.stash[k] || 0) - over); } });
     C.rerollSel = []; C.lastFace = S.lastFace || 0; C.marks = {}; C.forced = false; C.pbleed = null; C.en.baby = {};
@@ -9153,7 +9183,7 @@ body:not([data-screen="title"]):not([data-screen="char"]):not([data-screen="rule
     while (p.level <= LEVELS.length && p.xp >= LEVELS[p.level - 1]) { p.level++; S.pending++; addPts(S.cls || 'fighter', 1); S.runPts = (S.runPts || 0) + 1; if (p.level % 3 === 0 && addMaxDie(p)) hpUp++; }
     var webNotes = [];
     if (p.level > before) { if (webN('tithe')) { p.gold += 15 * (p.level - before); webNotes.push('Tithe of Bones: +' + (15 * (p.level - before)) + ' gold.'); } if (webN('shielddrill')) { p.bankShield = (p.bankShield || 0) + (p.level - before); webNotes.push('Shield Drill: +' + (p.level - before) + ' lasting shield' + (p.level - before > 1 ? 's' : '') + '.'); } }
-    if (def.id !== 'dummy' && webN('ddrop') && Math.random() < webN('ddrop') / 100 && p.dice.length < maxDice()) { var d8 = webN('oddangles') && Math.random() < 0.2; if (d8) addPolyDie(p, 8); else addMaxDie(p); var nd = p.dice[p.dice.length - 1], sealed = ''; if (webN('inked') && Math.random() < 0.1) { var im = MOD_ORDER.filter(function (m) { return m !== 'poly' && canApply(nd, m); }); if (im.length) { var mm = im[Math.floor(Math.random() * im.length)]; applyMod(nd, mm); sealed = ' It carries a ' + MODS[mm].name.replace(/ Die$/, '') + ' seal.'; } } webNotes.push('The foe dropped a ' + (d8 ? 'd8' : 'die') + '. It joins your cup.' + sealed); }
+    if (def.id !== 'dummy' && webN('ddrop') && Math.random() < webN('ddrop') / 100 ) { var d8 = webN('oddangles') && Math.random() < 0.2; if (d8) addPolyDie(p, 8); else addMaxDie(p); var nd = p.dice[p.dice.length - 1], sealed = ''; if (webN('inked') && Math.random() < 0.1) { var im = MOD_ORDER.filter(function (m) { return m !== 'poly' && canApply(nd, m); }); if (im.length) { var mm = im[Math.floor(Math.random() * im.length)]; applyMod(nd, mm); sealed = ' It carries a ' + MODS[mm].name.replace(/ Die$/, '') + ' seal.'; } } webNotes.push('The foe dropped a ' + (d8 ? 'd8' : 'die') + '. It joins your cup.' + sealed); }
     saveMeta();
     S.lvlShown = false; S.victory = { webNotes: webNotes, rep: rp, anim: 'idle', oldGold: oldGold, name: def.name, xp: xp, gold: gold, healed: healed, leveled: p.level > before, hpUp: hpUp, gained: p.level - before, big: def.kind !== 'fight' || vaultTier() > 0, debt: debt };
     if (S.victory.big) { S.victory.chest = { opts: makeRewardOpts(def), taken: false }; S.rewardOpts = S.victory.chest.opts; }
@@ -9489,10 +9519,10 @@ body:not([data-screen="title"]):not([data-screen="char"]):not([data-screen="rule
   function shopItems() {
     var p = S.player, items = [
       { id: 'heal', name: 'Healing Draught', desc: 'Recover 2 HP.', price: priceOf(20), ok: hp(p) < p.dice.length, why: 'Already at full strength.' },
-      { id: 'cup', name: 'Fill My Cup', desc: 'Permanently add 1 die to your cup.', price: priceOf(80), ok: p.dice.length < maxDice(), why: 'You cannot hold more than ' + maxDice() + ' dice.' },
-      { id: 'cup2', name: 'Your Cup Runneth Over', desc: 'Permanently add 2 dice to your cup.', price: priceOf(150), ok: p.dice.length < maxDice(), why: 'You cannot hold more than ' + maxDice() + ' dice.' }
+      { id: 'cup', name: 'Fill My Cup', desc: 'Permanently add 1 die to your cup.', price: priceOf(80), ok: true, why: '' },
+      { id: 'cup2', name: 'Your Cup Runneth Over', desc: 'Permanently add 2 dice to your cup.', price: priceOf(150), ok: true, why: '' }
     ];
-    items.push({ id: 'd20', name: 'The D20', desc: 'Permanently add a d20 to your cup. Every side above 6 is wild and scores its number. One per run.', price: priceOf(220), ok: !p.gotD20 && p.dice.length < maxDice(), why: p.gotD20 ? 'You already own the D20.' : 'You cannot hold more than ' + maxDice() + ' dice.' });
+    items.push({ id: 'd20', name: 'The D20', desc: 'Permanently add a d20 to your cup. Every side above 6 is wild and scores its number. One per run.', price: priceOf(220), ok: !p.gotD20, why: 'You already own the D20.' });
     MOD_ORDER.forEach(function (m) { items.push({ id: m, name: MODS[m].name, desc: MODS[m].desc, price: priceOf(MODS[m].base * 1.5 * (webN('waxcol') ? 0.85 : 1)), ok: anyApplicable(m), why: 'None of your dice can take this.', mod: m }); });
     ITEM_ORDER.forEach(function (id) {
       var it = ITEMS[id], card = isCard(id), owned = !card && owns(id);
@@ -10578,6 +10608,7 @@ BOSS_PORTRAITS.collector = {"normal":"data:image/webp;base64,UklGRpxRAABXRUJQVlA
   function rulesCards() {
     return '<p class="muted">Every fight is a game of Liar’s Dice, played for blood. Each side rolls in secret and bids on how many of a face lie on the whole table. Raise the bid, or call it out. Lose a round and you lose a die. Your dice are also your life: you start with 6 and your cup holds 18 at most.</p>' +
       '<div class="cards rulecards">' +
+      '<div class="card"><h3>Moving and merging dice</h3><p>Drag a die onto another die in your cup. <b>Move</b> swaps their places. <b>Merge</b> joins two dice of the same size into one bigger die (d6 + d6 = d8, then d10, d12, d20) and keeps the seals of both. Merging two cup dice costs a die (1 max HP). In a fight you can merge between rounds. When your cup is full (12 dice), a new die waits beside it as a spare: drag it onto a cup die to move it in or merge, or keep it in your satchel.</p></div>' +
       '<div class="card"><h3>How to bid</h3><p>Guess how many of one face lie on the whole table, yours and theirs. Drag a die onto the table, or click it, to make that bid; the arrows raise or lower the count. To raise, bid a higher quantity, or the same quantity on a higher face.</p></div>' +
       '<div class="card"><h3>Liar</h3><p>If the bid is a lie, its maker bleeds a die. If it was true, the die is yours to lose.</p></div>' +
       '<div class="card"><h3>Spot on</h3><p>Sure the bid is exactly right? Strike for 2 damage. Miss, and the table takes a die from you.</p></div>' +
@@ -11326,8 +11357,8 @@ BOSS_PORTRAITS.collector = {"normal":"data:image/webp;base64,UklGRpxRAABXRUJQVlA
     return '<div class="cards wares">' + S.rewardOpts.map(function (o, i) {
       var t, d;
       if (o.t === 'heal') { t = 'Recover ' + o.heal + ' HP'; d = 'Drag your fallen dice back from the dark, seals and all.'; }
-      else if (o.t === 'maxdie') { t = 'Fill my cup'; d = 'Permanently add 1 die to your cup.' + (S.player.dice.length >= maxDice() ? ' Your cup is full, so you get gold instead.' : ''); }
-      else if (o.t === 'maxdie2') { t = 'Your cup runneth over'; d = 'Permanently add 2 dice to your cup.' + (S.player.dice.length >= maxDice() - 1 ? ' Your cup is nearly full, so any extra becomes gold.' : ''); }
+      else if (o.t === 'maxdie') { t = 'Fill my cup'; d = 'Permanently add 1 die to your cup.' + (S.player.dice.length >= maxDice() ? ' Your cup is full, so it waits beside your cup as a spare.' : ''); }
+      else if (o.t === 'maxdie2') { t = 'Your cup runneth over'; d = 'Permanently add 2 dice to your cup.' + (S.player.dice.length >= maxDice() - 1 ? ' Your cup is nearly full, so any extra waits beside it as a spare.' : ''); }
       else if (o.t === 'gold') { t = o.gold + ' gold'; d = ({ gold: 'A few coins from the corpse.', goldU: 'A fat purse, still warm.', goldR: 'A heavy hoard of coin.', goldE: 'A dead king\'s treasure.' })[o.key] + ' Spend it before it spends you.'; }
       else if (o.t === 'item') { t = ITEMS[o.item].name; d = ITEMS[o.item].desc + (isCard(o.item) ? ' Drag it anywhere you like.' : ' A relic: it arrives as an icon. Right-click it to equip it in one of your three relic slots.'); }
       else if (o.t === 'mod') { t = MODS[o.mod].name; d = MODS[o.mod].desc; }
@@ -11499,7 +11530,7 @@ BOSS_PORTRAITS.collector = {"normal":"data:image/webp;base64,UklGRpxRAABXRUJQVlA
       h = '<h2>' + info.title + '</h2><p class="muted">' + (ev.msg || info.flavor) + '</p>' + rarOddsHTML(shopRarity()) + '<div class="cards wares">' +
         ev.offers.map(function (o, i) {
           if (o.sold) return '';   // a bought ware leaves the shelf
-          var cant = o.sold ? 'Sold.' : p.gold < o.price ? 'Not enough gold.' : p.dice.length >= maxDice() ? 'You cannot hold more than ' + maxDice() + ' dice.' : '';
+          var cant = o.sold ? 'Sold.' : p.gold < o.price ? 'Not enough gold.' : '';
           return wareHTML({ id: 'die' + o.sides, name: 'd' + o.sides, desc: dieWareDesc(o.sides), art: dieWareArt(o.sides), act: 'diceBuy', i: i, price: o.sold ? 'Sold' : o.price + ' gold', cant: cant, sold: o.sold });
         }).join('') + '</div><div class="row"><button type="button" class="btn ghost" data-act="evLeave">Leave</button></div>';
     } else if (info.kind === 'cards') {
@@ -11615,7 +11646,7 @@ BOSS_PORTRAITS.collector = {"normal":"data:image/webp;base64,UklGRpxRAABXRUJQVlA
       NA: ['Hot Wax', '+5% seal drop chance.', { sdrop: 5 }], NB: ['Twin Stamp', '+5% chance of a second seal.', { sdrop2: 5 }], NM: ['Sealed Fate', 'The first elite you beat on each floor always drops its seal.', { sealfate: 1 }],
       K: ['Signet Ring', 'Start each run with a random seal on one of your dice.', { signet: 1 }] },
     { k: 'dice', name: 'Carver', col: '#e9e2cf', small: [['+1% chance a foe drops a die', { ddrop: 1 }], ['The Dice Carver is 1% cheaper', { dprice: 1 }], ['+1% chance a foe drops a die', { ddrop: 1 }]],
-      NA: ['Bone Collector', '+5% chance a foe drops a die.', { ddrop: 5 }], NB: ['Odd Angles', 'Dropped dice are a d8 one time in five.', { oddangles: 1 }], NM: ['Spare Knuckles', 'Your cup holds 1 more die.', { cupx: 1 }],
+      NA: ['Bone Collector', '+5% chance a foe drops a die.', { ddrop: 5 }], NB: ['Odd Angles', 'Dropped dice are a d8 one time in five.', { oddangles: 1 }], NM: ['Spare Knuckles', 'If your cup is full (12 dice) when a fight starts, gain 1 armour.', { cupx: 1 }],
       K: ['Deep Pockets', 'Start each run with 1 extra die.', { deeppockets: 1 }] },
     { k: 'defence', name: 'Callused Hide', col: '#8fb0d6', small: [['+1% chance to block a hit', { block: 1 }]],
       NA: ['Iron Skin', 'Start each fight with 1 armour.', { ironskin: 1 }], NB: ['Shield Drill', 'Gain a lasting shield each time you level up.', { shielddrill: 1 }], NM: ['Thick Hide', '+5% chance to block a hit.', { block: 5 }],
@@ -12921,6 +12952,7 @@ BOSS_PORTRAITS.collector = {"normal":"data:image/webp;base64,UklGRpxRAABXRUJQVlA
     var WIN_X = [
       { sel: '#settings .setbox', find: '#setClose' },
       { sel: '#devpick .dpbox', find: '#devpick .dpclose' },
+      { sel: '#diechoice .dcbox', find: '#diechoice .dcx' },
       { sel: '#app .scene.sc-contract', fn: function () { try { ctRefuse(); setTimeout(function () { try { ctDone(); } catch (e) { } }, 900); } catch (e) { } } },   // the X refuses the deal and carries on
       { sel: '#savedlg .savebox', find: '#savedlg .savex' },
       { sel: '#rulesModal .setbox', find: '#rulesClose' },
@@ -13293,9 +13325,10 @@ BOSS_PORTRAITS.collector = {"normal":"data:image/webp;base64,UklGRpxRAABXRUJQVlA
         have[q.id] = 1;
         var el = sealLayer.querySelector('.looseseal[data-id="' + q.id + '"]');
         if (!el) {
-          el = document.createElement('div'); el.className = 'looseseal r-' + rarOf(q.item || q.mod); el.setAttribute('data-id', q.id);
-          el.setAttribute('data-tip', q.item ? 'looseitem:' + q.item : 'loose:' + q.mod); el.innerHTML = ITEM_ART[q.item || q.mod] || ''; sealLayer.appendChild(el);
+          el = document.createElement('div'); el.className = 'looseseal ' + (q.die ? 'loosedie' : 'r-' + rarOf(q.item || q.mod)); el.setAttribute('data-id', q.id);
+          el.setAttribute('data-tip', q.die ? 'note:' + spareTip(q.die) : q.item ? 'looseitem:' + q.item : 'loose:' + q.mod); el.innerHTML = q.die ? '' : ITEM_ART[q.item || q.mod] || ''; sealLayer.appendChild(el);
         }
+        if (q.die) { var dk = JSON.stringify([q.die.mods, q.die.faces]); if (el._dk !== dk) { el._dk = dk; el.innerHTML = sampleDie(q.die, 64); el.setAttribute('data-tip', 'note:' + spareTip(q.die)); } }
         if (sealDrag && sealDrag.id === q.id) return;
         var cx, cy;
         if (q.bag && !SATCHEL_ON) { q.bag = false; if (q.x == null) { q.x = q.item ? 0.93 : 0.5; q.y = q.item ? 0.4 : 0.5; } }
@@ -13339,7 +13372,7 @@ BOSS_PORTRAITS.collector = {"normal":"data:image/webp;base64,UklGRpxRAABXRUJQVlA
     e.preventDefault(); var r = el.getBoundingClientRect(), q = looseGet(+el.getAttribute('data-id')); if (q) q.flying = false;
     sealDrag = { id: +el.getAttribute('data-id'), el: el, dx: e.clientX - r.left, dy: e.clientY - r.top, sx: e.clientX, sy: e.clientY, moved: false, item: !!(q && q.item) };
     try { el.setPointerCapture(e.pointerId); } catch (er) { }
-    el.classList.add('held'); hideTip(); sealGlow();
+    el.classList.add('held'); hideTip(); sealGlow(); if (q && q.die) dieGlow(true, q.die, -1);
   });
   document.addEventListener('pointermove', function (e) {
     if (bagDrag) { S.bagPos.x = bagDrag.ox + e.clientX - bagDrag.sx; S.bagPos.y = bagDrag.oy + e.clientY - bagDrag.sy; bagPlace(); sealLayerSync(); return; }
@@ -13357,6 +13390,7 @@ BOSS_PORTRAITS.collector = {"normal":"data:image/webp;base64,UklGRpxRAABXRUJQVlA
     d.el.style.pointerEvents = 'none'; var t = document.elementFromPoint(e.clientX, e.clientY); d.el.style.pointerEvents = '';
     var q = looseGet(d.id), W = window.innerWidth, H = window.innerHeight;
     if (!q) { sealLayerSync(); return; }
+    if (q.die) { dieGlow(false); if (d.moved && t) { var tsl = dswSlot(t); if (tsl && S.player.dice[tsl.i]) { dieChoice({ spare: q.id, b: tsl.i, x: e.clientX, y: e.clientY }); sealLayerSync(); return; } } }
     if (q.item && isCard(q.item) && d.moved && t && t.closest && t.closest('.deckcorner, .handtray, [data-act="deckOpen"]')) {
       if (deckOf().length >= DECK_MAX) { sfx('grumble'); } else { S.loose = S.loose.filter(function (z) { return z.id !== q.id; }); deckOf().push(q.item); sfx('item'); render(); return; }
     }
@@ -13371,8 +13405,8 @@ BOSS_PORTRAITS.collector = {"normal":"data:image/webp;base64,UklGRpxRAABXRUJQVlA
       if (sl) { var si = parseInt(sl.getAttribute('data-loc').slice(4), 10); if (!isNaN(si)) { equipRelic(q, si); return; } }
     }
     if (q.mod && d.moved && S.screen === 'victory' && S.victory && (S.victory.slotIds || []).indexOf(q.id) > -1 && (function () { var els = document.elementsFromPoint(e.clientX, e.clientY), k; for (k = 0; k < els.length; k++) { if (els[k].closest && els[k].closest('.looseseal')) continue; return !!els[k].closest('.panel.report, .encwin'); } return false; })()) { q.x = null; q.y = null; q.bag = false; sfx('click'); sealLayerSync(); relicGlow(); return; }   // let go over the report: it drops back into its slot
-    if (d.moved && SATCHEL_ON && (q.mod || (q.item && !isCard(q.item))) && !q.bag && t && t.closest && t.closest('.fibag')) { var fs3 = freeBagSpot(); q.bag = true; q.bx = fs3.bx; q.by = fs3.by; q.flying = false; sfx('item'); var fb3 = document.querySelector('.fibag'); if (fb3) { fb3.classList.remove('satpop'); void fb3.offsetWidth; fb3.classList.add('satpop'); } sealLayerSync(); relicGlow(); return; }
-    if (d.moved && merchHere() && t && t.closest && t.closest('.merchport')) { sellLoose(q); return; }
+    if (d.moved && SATCHEL_ON && (q.mod || q.die || (q.item && !isCard(q.item))) && !q.bag && t && t.closest && t.closest('.fibag')) { var fs3 = freeBagSpot(); q.bag = true; q.bx = fs3.bx; q.by = fs3.by; q.flying = false; sfx('item'); var fb3 = document.querySelector('.fibag'); if (fb3) { fb3.classList.remove('satpop'); void fb3.offsetWidth; fb3.classList.add('satpop'); } sealLayerSync(); relicGlow(); return; }
+    if (d.moved && merchHere() && !q.die && t && t.closest && t.closest('.merchport')) { sellLoose(q); return; }
     if (!d.moved) { if (q.mod) S.sealArm = S.sealArm === d.id ? null : d.id; else if (q.item && !isCard(q.item)) { carryStart(q, 'move'); carry.fresh = true; return; } }
     else {
       var left = e.clientX - d.dx, top = e.clientY - d.dy, br = bagRect();
@@ -13479,7 +13513,7 @@ BOSS_PORTRAITS.collector = {"normal":"data:image/webp;base64,UklGRpxRAABXRUJQVlA
       var t = e.target && e.target.closest ? e.target : null; if (!t || !S || !S.player) return;
       var tk = t.closest('.looseseal');
       if (tk) {
-        e.preventDefault(); var q = looseGet(+tk.getAttribute('data-id')); if (!q) return;
+        e.preventDefault(); var q = looseGet(+tk.getAttribute('data-id')); if (!q || q.die) return;
         var sell = merchHere(), isSeal = !!q.mod, nm = isSeal ? 'seal' : 'relic';
         openCtx(e, qName(q), [
           isSeal ? { label: 'Apply seal', fn: function () { carryStart(q, 'apply'); } } : { label: 'Equip relic', fn: function () { equipRelic(q); } },
@@ -13870,9 +13904,16 @@ BOSS_PORTRAITS.collector = {"normal":"data:image/webp;base64,UklGRpxRAABXRUJQVlA
     if (d.g && d.g.parentNode) d.g.parentNode.removeChild(d.g);
     Array.prototype.forEach.call(document.querySelectorAll('.dswover, .dswsrc'), function (x) { x.classList.remove('dswover', 'dswsrc'); });
     if (!d.moved) return; noClickUntil = Date.now() + 300;
+    dieGlow(false);
     if (!drop) return;
-    var t = dswSlot(document.elementFromPoint(e.clientX, e.clientY)); if (!t) return;
+    var under = document.elementFromPoint(e.clientX, e.clientY), t = dswSlot(under);
+    if (!t) { if (under && under.closest && under.closest('.fibag, #satchelpanel')) trayToBag(d.i); return; }
     var a = d.i, b = t.i, D = S.player.dice; if (b === a || !D[a] || !D[b]) return;
+    dieChoice({ a: a, b: b, x: e.clientX, y: e.clientY });
+  }
+  // swap two dice in the cup (the old drag behaviour; now the Move button)
+  function dswSwap(a, b) {
+    var D = S.player.dice; if (!D[a] || !D[b] || a === b) return;
     var before = dswRects(), tmp = D[a]; D[a] = D[b]; D[b] = tmp;
     if (S.screen === 'combat' && C) {
       if (C.pv && C.pv.length) {
@@ -13891,12 +13932,108 @@ BOSS_PORTRAITS.collector = {"normal":"data:image/webp;base64,UklGRpxRAABXRUJQVlA
       try { n.animate([{ translate: ((r0.left - r1.left) / z) + 'px ' + ((r0.top - r1.top) / z) + 'px' }, { translate: '0 0' }], { duration: 260, easing: 'cubic-bezier(.3,1.4,.5,1)' }); } catch (er) { }
     });
   }
+  // ---------- Move / Merge (user 2026-10-10) ----------
+  // Drop a die (from the cup, or a spare die) on a die in the cup: a small window offers Move (swap places; a spare die takes the slot and the cup die
+  // becomes the spare) and, for two dice of the same size below a d20, Merge (one die a size up: d6+d6 -> d8 -> d10 -> d12 -> d20, keeping every seal of
+  // both that still fits). Merging two cup dice costs a die (1 max HP); merging a spare in costs nothing. In a fight, merging and spare moves wait
+  // until the dice are back in the cup between rounds (C.pv empty); swapping two rolled dice still works.
+  function dieName(d) { return 'd' + polySides(polyN(d)); }
+  function spareTip(d) { return 'A spare ' + dieName(d) + '. Drag it onto a die in your cup to move it in or merge them, or into your satchel.'; }
+  function trayEl(i) { var hit = null; Array.prototype.forEach.call(document.querySelectorAll('.mycups > *, .hpdice [data-tip^="hud:"]'), function (x) { var sl = dswSlot(x); if (sl && sl.i === i && !hit) hit = x; }); return hit; }
+  function diceRolled() { return S.screen === 'combat' && C && C.pv && C.pv.length > 0; }
+  function mergeOk(src, dst) { return !!(src && dst && src !== dst && dst.up !== false && src.up !== false && polyN(src) === polyN(dst) && polyN(dst) < 4); }
+  // the satchel glows while you hold a die, and the dice it could merge with light up
+  function dieGlow(on, d, skip) {
+    try {
+      var b = document.querySelector('#iconlayer .fibag'); if (b) b.classList.toggle('dieglow', !!on && SATCHEL_ON);
+      Array.prototype.forEach.call(document.querySelectorAll('.mergeok'), function (x) { x.classList.remove('mergeok'); });
+      if (!on || !d || diceRolled()) return;
+      S.player.dice.forEach(function (o, i) { if (i !== skip && mergeOk(d, o)) { var el = trayEl(i); if (el) el.classList.add('mergeok'); } });
+    } catch (e) { }
+  }
+  // a cup die dropped on the satchel becomes a spare (not in fights; the cup keeps at least one die)
+  function trayToBag(i) {
+    var D = S.player.dice; if (!SATCHEL_ON || S.screen === 'combat' || D.length < 2 || !D[i] || D[i].up === false) { sfx('grumble'); return; }
+    var d = D.splice(i, 1)[0], sp = freeBagSpot(); S.loose = S.loose || []; S.loose.push({ id: ++LOOSE_ID, die: d, bag: true, bx: sp.bx, by: sp.by, x: null, y: null });
+    sfx('item'); var fb = document.querySelector('.fibag'); if (fb) { fb.classList.remove('satpop'); void fb.offsetWidth; fb.classList.add('satpop'); }
+    render(); sealLayerSync();
+  }
+  function dieChoiceClose() { var w = document.getElementById('diechoice'); if (w) w.remove(); }
+  function dieChoice(o) {
+    dieChoiceClose();
+    var D = S.player.dice, q = o.spare != null ? looseGet(o.spare) : null, src = q ? q.die : D[o.a], dst = D[o.b]; if (!src || !dst) return;
+    var rolled = diceRolled(), canMove = q ? (!rolled && dst.up !== false) : true, same = mergeOk(src, dst), canMerge = same && !rolled;
+    if (!canMove) { sfx('grumble'); return; }
+    var w = document.createElement('div'); w.id = 'diechoice';
+    w.innerHTML = '<div class="dcbox"><button type="button" class="dcx" hidden>x</button><div class="dcrow"><button type="button" class="btn torch" data-dc="move">Move</button>' + (canMerge ? '<button type="button" class="btn torch dcmerge" data-dc="merge">Merge<small>' + dieName(src) + ' + ' + dieName(dst) + ' = d' + polySides(polyN(dst) + 1) + '</small></button>' : '') + '</div>' + (same && rolled ? '<p class="dchint">Merge between rounds</p>' : '') + '</div>';
+    document.documentElement.appendChild(w);
+    var bx = w.querySelector('.dcbox'), r = bx.getBoundingClientRect(), W = window.innerWidth, H = window.innerHeight;
+    bx.style.left = Math.round(Math.min(W - r.width - 8, Math.max(8, o.x - r.width / 2))) + 'px'; bx.style.top = Math.round(Math.min(H - r.height - 8, Math.max(8, o.y - r.height - 28))) + 'px';
+    w.addEventListener('pointerdown', function (e) { if (e.target === w) dieChoiceClose(); });
+    w.querySelector('.dcx').onclick = dieChoiceClose;
+    w.addEventListener('click', function (e) {
+      var bt = e.target.closest && e.target.closest('[data-dc]'); if (!bt) return; var act = bt.getAttribute('data-dc'); dieChoiceClose();
+      if (act === 'move') { if (q) spareMove(q, o.b); else dswSwap(o.a, o.b); }
+      else if (act === 'merge') dieMerge(o);
+    });
+    try { sfx('click'); } catch (e) { }
+  }
+  // Move with a spare die: it takes the cup slot; the cup die becomes the spare where the spare was (on screen or in the satchel)
+  function spareMove(q, b) {
+    var D = S.player.dice; if (!q || !q.die || !D[b] || diceRolled()) return;
+    var old = D[b]; D[b] = q.die; q.die = old; sfx('click'); render(); sealLayerSync();
+    var el = trayEl(b); if (el && el.animate) try { el.animate([{ scale: '1.35' }, { scale: '1' }], { duration: 320, easing: 'cubic-bezier(.3,1.5,.5,1)' }); } catch (e) { }
+  }
+  function dieMerge(o) {
+    var D = S.player.dice, q = o.spare != null ? looseGet(o.spare) : null, src = q ? q.die : D[o.a], dst = D[o.b];
+    if (!mergeOk(src, dst) || diceRolled()) return;
+    var sEl = q ? document.querySelector('#seallayer .looseseal[data-id="' + q.id + '"]') : trayEl(o.a), dEl = trayEl(o.b);
+    var sr = sEl && sEl.getBoundingClientRect(), dr = dEl && dEl.getBoundingClientRect();
+    function apply() {
+      applyMod(dst, 'poly');
+      MOD_ORDER.forEach(function (m) { if (m === 'poly') return; var n = modCount(src, m); for (var k = 0; k < n; k++) if (canApply(dst, m)) applyMod(dst, m); });
+      var nb = o.b;
+      if (q) S.loose = S.loose.filter(function (z) { return z.id !== q.id; });
+      else {
+        D.splice(o.a, 1); if (o.a < o.b) nb = o.b - 1;
+        if (S.screen === 'combat' && C && C.marks) { var mk = {}; Object.keys(C.marks).forEach(function (k) { var i = +k; if (i === o.a) return; mk[i > o.a ? i - 1 : i] = C.marks[k]; }); C.marks = mk; }
+      }
+      if (polyN(dst) >= 4) S.player.gotD20 = true;
+      try { sfx('seal'); } catch (e) { }
+      render(); sealLayerSync();
+      var nEl = trayEl(nb);
+      if (nEl) {
+        try { nEl.animate([{ scale: '1.7', filter: 'brightness(2.2)' }, { scale: '0.9', filter: 'brightness(1.4)', offset: 0.55 }, { scale: '1', filter: 'brightness(1)' }], { duration: 650, easing: 'ease-out' }); } catch (e) { }
+        try { popBurst(nEl, 22, ['#fff3c4', '#f6d66a', '#ffb347', '#e9e2cf']); } catch (e) { }
+        var nr = nEl.getBoundingClientRect(), lb = document.createElement('div'); lb.className = 'mergelbl'; lb.textContent = dieName(dst).toUpperCase() + '!';
+        lb.style.left = Math.round(nr.left + nr.width / 2) + 'px'; lb.style.top = Math.round(nr.top - 6) + 'px'; document.documentElement.appendChild(lb); setTimeout(function () { lb.remove(); }, 1300);
+      }
+    }
+    if (!sr || !dr || REDUCED) { apply(); return; }
+    // the two dice spin into each other, flash, and the bigger die pops out
+    var fx = document.createElement('div'); fx.className = 'mergefx'; document.documentElement.appendChild(fx);
+    var z = parseFloat(document.body.style.zoom) || 1;
+    function ghost(el, r, zm) { var g = document.createElement('div'); g.className = 'mergeghost'; g.innerHTML = el.innerHTML; g.style.left = r.left + 'px'; g.style.top = r.top + 'px'; g.style.width = r.width + 'px'; g.style.height = r.height + 'px'; if (zm) Array.prototype.forEach.call(g.children, function (c) { c.style.zoom = z; }); fx.appendChild(g); return g; }
+    var gs = ghost(sEl, sr, !q), gd = ghost(dEl, dr, true), cx = dr.left + dr.width / 2, cy = dr.top + dr.height / 2;
+    sEl.style.visibility = 'hidden'; dEl.style.visibility = 'hidden';
+    var dx = cx - (sr.left + sr.width / 2), dy = cy - (sr.top + sr.height / 2);
+    try {
+      gs.animate([{ transform: 'translate(0,0) rotate(0deg) scale(1)' }, { transform: 'translate(' + (dx * 0.5) + 'px,' + (dy * 0.5 - 60) + 'px) rotate(200deg) scale(1.15)', offset: 0.5 }, { transform: 'translate(' + dx + 'px,' + dy + 'px) rotate(400deg) scale(.6)' }], { duration: 520, easing: 'ease-in', fill: 'forwards' });
+      gd.animate([{ transform: 'rotate(0deg) scale(1)' }, { transform: 'rotate(-12deg) scale(1.08)', offset: 0.3 }, { transform: 'rotate(10deg) scale(1.1)', offset: 0.6 }, { transform: 'rotate(0deg) scale(.6)' }], { duration: 520, easing: 'ease-in-out', fill: 'forwards' });
+    } catch (e) { }
+    try { sfx('dice'); } catch (e) { }
+    setTimeout(function () {
+      var fl = document.createElement('div'); fl.className = 'mergeflash'; fl.style.left = cx + 'px'; fl.style.top = cy + 'px'; fx.appendChild(fl);
+      gs.remove(); gd.remove(); sEl.style.visibility = ''; dEl.style.visibility = '';
+      apply(); setTimeout(function () { fx.remove(); }, 700);
+    }, 520);
+  }
   function dswMove(e) {
     var d = dsw; if (!d) return;
     if (!d.moved && Math.hypot(e.clientX - d.sx, e.clientY - d.sy) > 6) {
       d.moved = true; hideTip();
       var g = document.createElement('div'); g.className = 'token dragging dieghost'; g.innerHTML = d.el.innerHTML; var z = parseFloat(getComputedStyle(document.body).zoom) || 1;
-      g.style.transform = 'translate(-50%, -50%) scale(' + z + ')'; g.style.pointerEvents = 'none'; document.documentElement.appendChild(g); d.g = g; d.el.classList.add('dswsrc');
+      g.style.transform = 'translate(-50%, -50%) scale(' + z + ')'; g.style.pointerEvents = 'none'; document.documentElement.appendChild(g); d.g = g; d.el.classList.add('dswsrc'); dieGlow(true, S.player.dice[d.i], d.i);
     }
     if (!d.moved) return;
     d.g.style.left = e.clientX + 'px'; d.g.style.top = e.clientY + 'px';
