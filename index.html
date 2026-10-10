@@ -7149,7 +7149,8 @@ body:not([data-screen="title"]):not([data-screen="char"]):not([data-screen="rule
     el.innerHTML = '<div class="bfly"><i class="bglow"></i><div class="bring"><img class="bimg" alt="" draggable="false" src="' + BUCK_IMG + '"></div>' +
       '<button type="button" class="bpass" data-tip="note:Pass the buck: the enemy must bid again instead of you. Once per fight; a Looking Glass adds one more." aria-label="Pass the buck"><svg viewBox="0 0 12 12" shape-rendering="crispEdges" aria-hidden="true"><path d="M5 1h2v1H5zM4 2h4v1H4zM3 3h6v1H3zM2 4h8v1H2zM5 5h2v6H5z"/></svg><b class="bcount"></b></button></div>';
     document.documentElement.appendChild(el);
-    var fly = el.firstChild, pass = el.querySelector('.bpass'), cnt = el.querySelector('.bcount'), px = null, py = null;
+    var fly = el.firstChild, pass = el.querySelector('.bpass'), cnt = el.querySelector('.bcount'), bimg = el.querySelector('.bimg'), px = null, py = null, flipT = null;
+    function face(who) { var src = who === 'e' ? ENEMY_COIN : BUCK_IMG; if (bimg.getAttribute('src') !== src) bimg.setAttribute('src', src); }   // the enemy holds the red side of the buck, you hold the knife side (user, 2026-10-10)
     pass.addEventListener('click', function (e) { e.stopPropagation(); if (pass.classList.contains('spent')) { try { sfx('grumble'); } catch (x) { } return; } passBuck(); });
     document.addEventListener('mouseover', function (e) { var b = e.target && e.target.closest && e.target.closest('[data-act="buck"]'); el.classList.toggle('hl', !!(b && !b.disabled)); });
     el.addEventListener('click', function (e) { if (!el.classList.contains('mine')) return; if (!(C && C.charges.buck > 0)) { try { sfx('grumble'); } catch (x) { } return; } passBuck(); });
@@ -7166,16 +7167,19 @@ body:not([data-screen="title"]):not([data-screen="char"]):not([data-screen="rule
         var n = C.charges.buck || 0;
         el.classList.toggle('mine', who === 'p' && C.phase === 'bid' && !C.target && !C.forced); pass.classList.toggle('spent', n < 1); cnt.textContent = n > 1 ? n : '';
         el.style.left = x + 'px'; el.style.top = y + 'px';
-        if (!el.classList.contains('on')) { el.classList.add('on'); }
+        if (!el.classList.contains('on')) { el.classList.add('on'); face(who); }
         else if (last && last !== who && px !== null && fly.animate) {
           var dx = px - x, dy = py - y;
+          // it flips over in the air: the old face turns edge-on, the other side shows, and it lands face up
           fly.animate([
-            { transform: 'translate(' + dx + 'px,' + dy + 'px) scale(1) rotate(0deg)' },
-            { transform: 'translate(' + (dx * 0.5) + 'px,' + (dy * 0.5 - 110) + 'px) scale(1.5) rotate(180deg)', offset: 0.5 },
-            { transform: 'translate(0,0) scale(1) rotate(360deg)' }
+            { transform: 'translate(' + dx + 'px,' + dy + 'px) scale(1) rotateY(0deg)' },
+            { transform: 'translate(' + (dx * 0.5) + 'px,' + (dy * 0.5 - 110) + 'px) scale(1.5) rotateY(90deg)', offset: 0.5 },
+            { transform: 'translate(0,0) scale(1) rotateY(0deg)' }
           ], { duration: 780, easing: 'cubic-bezier(.45,.05,.35,1)' });
+          var w2 = who; clearTimeout(flipT); flipT = setTimeout(function () { flipT = null; face(w2); }, 390);
           try { sfx('coin'); } catch (e) { }
-        }
+        } else if (!flipT || last === who) face(who);
+        if (!last && px === null) face(who);
         last = who; px = x; py = y;
       } catch (e) { }
     }
