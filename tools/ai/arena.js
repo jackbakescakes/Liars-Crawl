@@ -61,6 +61,7 @@ function randomPol(){
 // ---- one fight. sides: {p: policy, e: policy}; dice: {p, e}; crit: {p, e}. Returns {win:'p'|'e', rounds, pn, en, ms:{p,e}}
 function fight(sides, dice, crit={p:2,e:2}, opts={}){
   let pn=dice.p, en=dice.e, opener=opts.opener||(Math.random()<0.5?'p':'e'), rounds=0;
+  let shield=opts.shield||0;   // player armour at fight start: each point blocks 1 damage of one hit (the game's C.shield)
   const learn={p: sides.p.learns?NEW.aiLearnNew():null, e: sides.e.learns?NEW.aiLearnNew():null};
   const ms={p:0,e:0}, calls={p:0,e:0}, caught={p:0,e:0}, exacts={p:0,e:0}, bluffs={p:0,e:0}, bids={p:0,e:0};
   while(pn>0&&en>0&&rounds<300){
@@ -83,6 +84,8 @@ function fight(sides, dice, crit={p:2,e:2}, opts={}){
     if(loser==null) throw new Error('round did not end');
     // learning from the revealed round
     for(const side of ['p','e']){ if(!learn[side]) continue; const other=side==='p'?'e':'p'; NEW.aiLearnRound(learn[side], { hist: hist.map(b=>({by: b.by===side?'e':'p', qty:b.qty, face:b.face})), theirVals: other==='p'?pd:ed, myVals: side==='p'?pd:ed, peeked:[], total:pn+en, critP:crit[other], callBy: callBy===side?'e':'p', callKind }); }
+    if(loser==='p' && opts.eplus && !(callKind==='exact' && callBy==='p' && loser==='p')) dmg+=opts.eplus;   // enemy hits harder (like the game's berserk: not on your own wrong Spot On)
+    if(loser==='p' && shield>0 && dmg>0){ shield--; dmg--; }
     if(loser==='p') pn-=dmg; else en-=dmg;
     opener=loser;
   }

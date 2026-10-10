@@ -1,0 +1,11 @@
+bloodletter 8 {"win":0.075,"lostWin":1.8333333333333333,"lostAll":7.5375,"rounds":5.75,"foeDiceKO":1.675}
+bloodletter 10 {"win":0.175,"lostWin":2.9285714285714284,"lostAll":8.7625,"rounds":7.0125,"foeDiceKO":2.6875}
+bloodletter 12 {"win":0.45,"lostWin":4.305555555555555,"lostAll":8.5375,"rounds":8.5125,"foeDiceKO":4.45}
+contractdemon 8 {"win":0.0375,"lostWin":1.3333333333333333,"lostAll":7.75,"rounds":5.9375,"foeDiceKO":1.8375}
+contractdemon 10 {"win":0.225,"lostWin":3.6666666666666665,"lostAll":8.575,"rounds":7.4875,"foeDiceKO":3.3875}
+contractdemon 12 {"win":0.425,"lostWin":3.235294117647059,"lostAll":8.275,"rounds":8.5125,"foeDiceKO":4.55}
+pitboss 8 {"win":0,"lostWin":null,"lostAll":8,"rounds":6.2125,"foeDiceKO":1.7625}
+pitboss 10 {"win":0.0125,"lostWin":4,"lostAll":9.925,"rounds":7.2125,"foeDiceKO":1.925}
+pitboss 12 {"win":0.1,"lostWin":4.5,"lostAll":11.25,"rounds":8.775,"foeDiceKO":3.125}
+house 8 {"win":0,"lostWin":null,"lostAll":8,"rounds":6.1625,"foeDiceKO":1.6}
+house 10 {"win":0,"lostWin":null,"lostAll":10,"rounds":7.6375,"foeDiceKO":2.05}

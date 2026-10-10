@@ -3,7 +3,7 @@
 // usage: node runsim.js <runs> [key=value overrides...]
 const fs = require('fs'), path = require('path');
 const ROSTER = JSON.parse(fs.readFileSync(path.join(__dirname, 'roster.json')));
-const OV = {}; process.argv.slice(3).forEach(a => { const [k, v] = a.split('='); OV[k] = isNaN(+v) ? v : +v; });
+const OV = {}; process.argv.slice(3).forEach(a => { const [k, v] = a.split('='); OV[k] = /^\[/.test(v) ? JSON.parse(v) : isNaN(+v) ? v : +v; });
 const FT = {}; fs.readdirSync(__dirname).filter(f => /^ft_.*\.json$/.test(f)).forEach(f => Object.assign(FT, JSON.parse(fs.readFileSync(path.join(__dirname, f)))));
 if (OV.tables) fs.readdirSync(path.join(__dirname, OV.tables)).filter(f => /^ft_.*\.json$/.test(f)).forEach(f => Object.assign(FT, JSON.parse(fs.readFileSync(path.join(__dirname, OV.tables, f)))));
 const O = Object.assign({
@@ -11,7 +11,7 @@ const O = Object.assign({
   goldMul: [1, 1.5, 1.8, 2.2], priceMul: [1, 1.25, 1.4, 1.6], goldBoost: 1.05, goldScale: 1,
   dropBase: 1, restHeal: [2, 3, 4, 4], healPrice: 20, cupPrice: 80, maxDice: 16, bankRate: 1.5, eliteXp: 1.5,
   startDice: 6, dieEvery: 3, eventRate: 0.3, elites: 0, // elites: chance the player takes a reachable elite detour
-  buyHeal: 1, buyCup: 1, camps: 1, floors: 3, bank: 1, easy: 1, lootgobScale: 1, tables: '.',
+  buyHeal: 1, buyCup: 1, camps: 1, floors: 4, winHeal: 1, carver: 1, carverStep: 0.25, cupShelf: [0.02, 0.037, 0.056, 0.056], f1ShopRow: 6, dieWares: [[0.5, 80], [0.28, 110], [0.15, 140], [0.07, 175]], bank: 1, easy: 1, lootgobScale: 1, tables: '.',
 }, OV);
 const FLOORS = [
   { pools: [['cutpurse', 'eavesdrop', 'weathercock'], ['cutpurse', 'eavesdrop', 'weathercock', 'blackjack', 'fence', 'sanguine', 'lootgob'], ['blackjack', 'fence', 'sanguine', 'lootgob', 'cutpurse', 'eavesdrop', 'weathercock']], elites: ['ogre', 'brute'], boss: 'dealer', hi: 8, lo: 5 },
@@ -41,8 +41,8 @@ function makeFloor(fnum) {
   const lane = [].concat(...rows.slice(1)); const free = (a, b) => lane.filter(n => !n.star && !n.fix && n.row >= a && n.row <= b);
   let cp = pick(free(5, 8)); if (cp) { cp.type = 'camp'; cp.fix = 'camp'; }
   if (Math.random() < 0.6) { cp = pick(free(2, 5)); if (cp) { cp.type = 'camp'; cp.fix = 'camp'; } }
-  shuffle(free(2, 6)).slice(0, fnum >= 3 ? 2 : 1).forEach(n => { n.type = 'shop'; n.fix = 'shop'; });
-  const bags = {}; const foe = d => { const pl = cfg.pools[d <= 3 ? 0 : d <= 6 ? 1 : 2], k = pl.join(); if (!bags[k] || !bags[k].length) bags[k] = shuffle(pl); return bags[k].pop(); };
+  shuffle(fnum === 1 ? free(O.f1ShopRow, O.f1ShopRow) : free(2, 6)).slice(0, fnum >= 3 ? 2 : 1).forEach(n => { n.type = 'shop'; n.fix = 'shop'; });
+  const bags = {}; const foe = d => { const pl = cfg.pools[Math.min(cfg.pools.length - 1, d <= 3 ? 0 : d <= 6 ? 1 : 2)], k = pl.join(); if (!bags[k] || !bags[k].length) bags[k] = shuffle(pl); return bags[k].pop(); };
   lane.forEach(n => { if (n.fix) return; if (n.row >= 2 && Math.random() < O.eventRate) { n.type = 'event'; n.ev = takeEv(fnum === 1 && n.row < 5, fnum === 1 && n.row <= 3); } else { n.type = 'fight'; n.enemy = foe(n.row); } });
   lane.forEach(n => { if (n.star && !n.enemy) n.enemy = foe(Math.min(9, n.row + 2)); });
   return { rows, spine, cfg };
@@ -73,6 +73,7 @@ function fight(p, id, fnum, stats) {
   addXp(p, xp); stats.floor[fnum].xp += xp; const g0 = p.gold;
   if (id === 'lootgob' && Math.random() < 0.15) { /* bolted: no sack */ } else p.gold += id === 'lootgob' ? 60 : gold(p, e.gold[0] + rnd(e.gold[1] - e.gold[0] + 1));
   if (O.lootgobScale && id === 'lootgob') p.gold += Math.round(60 * (O.goldMul[fnum - 1] - 1)); p.gold += 2 * p.plunder * diceN; stats.floor[fnum].gold += p.gold - g0;
+  p.hp = Math.min(p.dice, p.hp + (Array.isArray(O.winHeal) ? (O.winHeal[fnum - 1] || 0) : O.winHeal));
   if (p.wind) p.hp = Math.min(p.dice, p.hp + p.wind);
   if (Math.random() < O.dropBase + 0.1 * p.grave) p.seals++;
   if (e.kind !== 'fight') { // chest: 3 options; take maxdie if offered (~weight), else gold, else heal
@@ -107,7 +108,7 @@ function shop(p, fnum, stats) {
   const pm = O.priceMul[fnum - 1]; stats.shops++; stats.goldAtShop.push(p.gold);
   const heal = Math.round(O.healPrice * pm / 5) * 5, cup = Math.round(O.cupPrice * pm / 5) * 5;
   let bought = 0;
-  if (O.buyCup) while (p.gold >= cup && p.dice < O.maxDice) { p.gold -= cup; p.dice++; p.hp++; stats.cups++; stats.spent += cup; bought++; }
+  if (O.buyCup && Math.random() < O.cupShelf[fnum - 1]) if (p.gold >= cup && p.dice < O.maxDice) { p.gold -= cup; p.dice++; p.hp++; stats.cups++; stats.spent += cup; bought++; }
   if (O.buyHeal) while (p.gold >= heal && p.hp <= p.dice - 2) { p.gold -= heal; p.hp = Math.min(p.dice, p.hp + 2); stats.heals++; stats.spent += heal; bought++; }
   if (!bought) stats.shopNothing++;
 }
@@ -115,9 +116,9 @@ function runFloor(p, fnum, stats) {
   const F = makeFloor(fnum), S = stats.floor[fnum];
   S.entered++;
   // floor 1: dummy. floors 2+: a normal fight at the dummy room.
-  if (fnum === 1) { p.xp += 1; p.gold += 1; } else { if (!fight(p, F.cfg.pools[0][rnd(3)], fnum, stats)) return false; }
+  if (fnum === 1) { p.xp += 1; p.gold += 1; } else if (fnum === 4) { } else { if (!fight(p, F.cfg.pools[0][rnd(3)], fnum, stats)) return false; }
   let col = 1;
-  for (let r = 1; r <= 8; r++) {
+  for (let r = 1; r <= (fnum === 4 ? 0 : 8); r++) {
     // rooms reachable this step: next-row rooms within one column (forward roads). Elites only by a sideways hop (optional).
     let cands = F.rows[r].filter(n => !n.star && Math.abs(n.col - col) <= 1); if (!cands.length) cands = F.rows[r].filter(n => !n.star);
     let n;
@@ -134,6 +135,8 @@ function runFloor(p, fnum, stats) {
     // optional elite detour from this row
     if (O.elites && F.rows[r].some(x => x.star) && Math.random() < O.elites && p.hp >= p.dice - 1) { const el = F.rows[r].find(x => x.star); if (!fight(p, el.enemy, fnum, stats)) { S.deaths['elite'] = (S.deaths['elite'] || 0) + 1; S.deathBy[el.enemy] = (S.deathBy[el.enemy] || 0) + 1; return false; } }
   }
+  if (O.carver && fnum <= 3) { const pm = O.priceMul[fnum - 1], offers = [0, 1, 2].map(() => { let r = Math.random(), k = 0; while (k < O.dieWares.length - 1 && r >= O.dieWares[k][0]) { r -= O.dieWares[k][0]; k++; } return O.dieWares[k][1]; }).sort((a, b) => a - b);
+    for (const b of offers) { const c = Math.round(b * (1 + O.carverStep * (p.carverN || 0)) * pm / 5) * 5; if (p.gold >= c && p.dice < O.maxDice) { p.gold -= c; p.dice++; p.hp++; p.carverN = (p.carverN || 0) + 1; stats.carver = (stats.carver || 0) + 1; } } }
   S.atBoss++; S.bossLevel.push(p.level); S.bossDice.push(p.dice); S.bossHp.push(p.hp); S.bossGold.push(p.gold);
   if (!fight(p, F.cfg.boss, fnum, stats)) { S.deaths['boss'] = (S.deaths['boss'] || 0) + 1; S.deathBy[F.cfg.boss] = (S.deathBy[F.cfg.boss] || 0) + 1; return false; }
   S.cleared++; p.hp = p.dice; // a boss win heals fully
@@ -155,5 +158,6 @@ for (let f = 1; f <= O.floors; f++) {
   console.log(`   per run that entered: fight xp ${(S.xp / S.entered).toFixed(0)}, fight gold ${(S.gold / S.entered).toFixed(0)}`);
   console.log(`   deaths by room: ${JSON.stringify(S.deaths)}  by foe: ${JSON.stringify(S.deathBy)}`);
 }
+console.log('carver dice bought', stats.carver || 0, (((stats.carver || 0) / N)).toFixed(2) + '/run');
 console.log(`shops visited ${stats.shops} (${(stats.shops / N).toFixed(2)}/run), gold at shop mean ${mean(stats.goldAtShop)}, bought nothing at ${(100 * stats.shopNothing / Math.max(1, stats.shops)).toFixed(0)}%, heals ${stats.heals}, cups ${stats.cups}, camps ${stats.camps}, fights/run ${(stats.fights / N).toFixed(1)}`);
 console.log('events', JSON.stringify(stats.ev));
